@@ -9,7 +9,7 @@ CREATE TABLE users (
   name                      VARCHAR(255) NOT NULL
 );
 
-# -- Insertions
+# --- Insertions
 
 INSERT INTO users (name) VALUES ('Sven');
 
