@@ -1,5 +1,6 @@
 # --- First database schema
- 
+# --- For heroku deployment - use PostgreSQL - see http://www.postgresql.org/
+
 # --- !Ups
  
 CREATE TABLE users (
@@ -7,7 +8,8 @@ CREATE TABLE users (
   name                      VARCHAR(255) NOT NULL
 );
 
-INSERT INTO users SET name='Sven';
+INSERT INTO users (name) VALUES ('Sven');
+
  
 # --- !Downs
  
