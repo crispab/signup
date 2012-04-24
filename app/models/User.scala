@@ -42,6 +42,12 @@ object User {
         )
     }
   }
+  
+  def find(id : Long): Seq[User] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from users where id={id}").on('id -> id).as(User.simple *)
+    }
+  }
  
   def findAll(): Seq[User] = {
     DB.withConnection { implicit connection =>
