@@ -3,18 +3,11 @@ package controllers
 import play.api._
 import play.api.mvc._
 import models.User
+import anorm.NotAssigned
 
 object Application extends Controller {
   
   def index = Action {
-    val user = new User(null, "Nisse")
-    User.create(user)
-    Ok(views.html.index("Created user"))
+    Ok(views.html.index("Hello"))
   }
-  
-  def show = Action {
-    val users = User.findAll()
-    Ok(views.html.index("Found users: " + users))
-  }
-  
 }

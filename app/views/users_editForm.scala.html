@@ -1,0 +1,93 @@
+@(user: models.User)
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/public/stylesheets/main.css">
+    <style type="text/css">
+        body { padding: 20px }
+        div.wide1 { padding-top: 30px; padding-left:12px }
+        div.wide2 { padding-top: 12px; padding-left:4px }
+    </style>
+    <title>Edit @user.firstName</title>
+ </head>
+
+
+<body>
+<h2>Edit User</h2>
+  <div class="row">
+    <div class="span6">
+      <form class="form-horizontal" action="/users" method="POST">
+        <fieldset>
+          <legend>@user.firstName</legend>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.nickName">Nick Name</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="user.nickName" name="user.nickName" value="@user.nickName">
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.firstName">First Name</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="user.firstName" name="user.firstName" value="@user.firstName">
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.lastName">Last Name</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="user.lastName" name="user.lastName" value="@user.lastName">
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.primaryEmail">Primary Email</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="user.primaryEmail" name="user.primaryEmail" value="@user.primaryEmail">
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.secondaryEmail">Secondary Email</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="user.secondaryEmail" name="user.secondaryEmail" value="@user.secondaryEmail">
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.mobileNr">Mobile Number</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="user.mobileNr" name="user.mobileNr" value="@user.mobileNr">
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label" for="user.comment">Comment</label>
+            <div class="controls">
+              <textarea class="input-xlarge" id="user.comment" name="user.comment" rows="3">@user.comment</textarea>
+            </div>
+          </div>
+
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i class="icon-ok icon-white"></i> Save</button>
+            <button type="button" class="btn" id="action" onClick='javascript:window.location="@{Users.list}"'><i class="icon-stop icon-white"></i> Cancel</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+<script src="/public/javascripts/jquery-1.7.1.min.js"></script>
+<script src="/public/javascripts/bootstrap/bootstrap-modal.js"></script> 
+
+</body>
+</html>

@@ -6,12 +6,18 @@
  
 CREATE TABLE users (
   id                        SERIAL PRIMARY KEY,
-  name                      VARCHAR(255) NOT NULL
+  first_name                VARCHAR(127) NOT NULL,
+  nick_name 				VARCHAR(127) DEFAULT '',
+  last_name 				VARCHAR(127) DEFAULT '',
+  primary_email 			VARCHAR(127) DEFAULT '',
+  secondary_email 			VARCHAR(127) DEFAULT '',
+  mobile_nr 				VARCHAR(31) DEFAULT '',
+  comment 					text default ''
 );
 
-INSERT INTO users (name) VALUES ('Sven');
+INSERT INTO users (first_name) VALUES ('Fredrik');
+INSERT INTO users (first_name, last_name) VALUES ('Göran', 'Persson');
 
- 
 # --- !Downs
  
 DROP TABLE IF EXISTS users;
