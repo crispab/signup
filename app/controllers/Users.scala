@@ -11,7 +11,7 @@ object Users extends Controller {
     
   def list = Action {
     val users = User.findAll()
-    Ok(views.html.users_list("Found users: " + users))
+    Ok(views.html.users.list("Found users: " + users))
   }
   
   def createForm = Action {
