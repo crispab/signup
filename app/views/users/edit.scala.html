@@ -1,4 +1,4 @@
-@(user: models.User)
+@(user: models.User, newUser : Boolean)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,21 +30,21 @@
           <div class="control-group">
             <label class="control-label" for="user.nickName">Nick Name</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="user.nickName" name="user.nickName" value="@user.nickName">
+              <input type="text" class="input-xlarge" id="nickName" name="nickName" value="@user.nickName">
             </div>
           </div>
           
           <div class="control-group">
             <label class="control-label" for="user.firstName">First Name</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="user.firstName" name="user.firstName" value="@user.firstName">
+              <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
             </div>
           </div>
           
           <div class="control-group">
             <label class="control-label" for="user.lastName">Last Name</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="user.lastName" name="user.lastName" value="@user.lastName">
+              <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
             </div>
           </div>
           
