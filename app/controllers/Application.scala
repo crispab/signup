@@ -8,6 +8,6 @@ import anorm.NotAssigned
 object Application extends Controller {
   
   def index = Action {
-    Ok(views.html.index("Hello"))
+    Ok(views.html.index("SignUp"))
   }
 }
