@@ -1,18 +1,42 @@
 @(event: models.Event)
-
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/assets/stylesheets/main.css">
     <title>@event.name</title>
-  </head>
-  <body>
-  	<h1>@event</h1>   
+ </head>
+
+  <body class="padded">
+  	<h2>@event.name</h2>   
+  	<p>@event.description
+  	</p>
+  	<div class="row">
+  		<div class="span1 eventlabel"> 
+  			Tid:	
+  		</div> 	
+  		<div class="span3"> 
+  			@event.when.format("yyyy-MM-dd HH:mm")
+  		</div>  		
+  	</div>
+  	<div class="row">
+  		<div class="span1 eventlabel"> 
+  			Plats:
+  		</div> 	
+  		<div class="span3"> 
+  			Globen, norra läktaren
+  		</div> 
+  	</div>
+
   </body>
 </html> 
+
+
     
     
