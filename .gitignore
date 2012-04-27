@@ -11,3 +11,4 @@ dist
 .settings
 .idea
 *.iml
+out
