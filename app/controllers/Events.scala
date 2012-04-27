@@ -18,7 +18,12 @@ object Events extends Controller {
     val event = new Event(NotAssigned)
     Ok(views.html.events.edit(event, newEvent = true))
   }
-
+  
+  def show(id : Long) = Action {
+    val event = Event.find(id)
+    Ok(views.html.events.show(event))
+  }
+  
   def create = Action {
     implicit request =>
       eventForm.bindFromRequest.fold(

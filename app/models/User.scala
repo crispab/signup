@@ -19,7 +19,7 @@ case class User(
  
 object User {
  
-  val simple = {
+  val parser = {
     get[Pk[Long]]("id") ~
     get[String]("first_name") ~
     get[String]("nick_name") ~
@@ -45,13 +45,13 @@ object User {
   
   def find(id : Long): Seq[User] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from users where id={id}").on('id -> id).as(User.simple *)
+      SQL("select * from users where id={id}").on('id -> id).as(User.parser *)
     }
   }
  
   def findAll(): Seq[User] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from users").as(User.simple *)
+      SQL("select * from users").as(User.parser *)
     }
   }
  

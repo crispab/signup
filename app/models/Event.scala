@@ -14,7 +14,7 @@ case class Event(
                   )
 
 object Event {
-  val simple = {
+  val parser = {
     get[Pk[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
@@ -32,7 +32,14 @@ object Event {
   def findAll(): Seq[Event] = {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from events").as(Event.simple *)
+        SQL("select * from events").as(Event.parser *)
+    }
+  }
+  
+  def find(id : Long): Event = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from events e where e.id={id}").on('id -> id).as(Event.parser *).head
     }
   }
 
