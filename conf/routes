@@ -10,5 +10,10 @@ GET     /users/new  				controllers.Users.createForm
 POST    /users				        controllers.Users.create
 GET     /users                      controllers.Users.list
 
+# Events
+GET     /events/new  				controllers.Events.createForm
+POST    /events				        controllers.Events.create
+GET     /events                     controllers.Events.list
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
