@@ -6,6 +6,7 @@ import play.api.data.Form
 import play.api.data.Forms.{tuple, nonEmptyText, text, optional, date}
 import anorm.NotAssigned
 import models.Event
+import models.User
 
 object Events extends Controller {
 
@@ -21,7 +22,8 @@ object Events extends Controller {
   
   def show(id : Long) = Action {
     val event = Event.find(id)
-    Ok(views.html.events.show(event))
+    val users = User.findAll()
+    Ok(views.html.events.show(event, users))
   }
   
   def create = Action {

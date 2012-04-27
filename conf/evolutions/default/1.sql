@@ -15,8 +15,8 @@ CREATE TABLE users (
   comment 					text default ''
 );
 
-INSERT INTO users (first_name) VALUES ('Fredrik');
-INSERT INTO users (first_name, last_name) VALUES ('Göran', 'Persson');
+INSERT INTO users (first_name, comment) VALUES ('Fredrik', 'En glad statsminister');
+INSERT INTO users (first_name, last_name, comment) VALUES ('Göran', 'Persson', 'En f.d. statsminister');
 
 # --- !Downs
  

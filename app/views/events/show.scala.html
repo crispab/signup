@@ -1,4 +1,4 @@
-@(event: models.Event)
+@(event: models.Event, unregisteredUsers : Seq[models.User])
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +14,7 @@
  </head>
 
   <body class="padded">
+  
   	<h2>@event.name</h2>   
   	<p>@event.description
   	</p>
@@ -33,7 +34,12 @@
   			Globen, norra läktaren
   		</div> 
   	</div>
-
+	<dl>
+      @unregisteredUsers.map { user =>
+		<dt>@user.firstName @user.lastName<dt>
+		<dd>@user.comment</dd>
+      }  	
+    </dl>
   </body>
 </html> 
 
