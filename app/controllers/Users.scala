@@ -21,7 +21,7 @@ object Users extends Controller {
   def create = Action {
     implicit request =>
       userForm.bindFromRequest.fold(
-      errors => BadRequest, {
+      errors => Redirect(routes.Users.createForm), {
         case (firstName, nickName, lastName, primaryEmail, secondaryEmail, mobileNr, comment) => {
           User.create(User(
             firstName = firstName,
