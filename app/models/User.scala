@@ -69,7 +69,7 @@ object User {
     }
   }
   
-  var insertQueryString = 
+  val insertQueryString =
     """
 INSERT INTO users (
 	  first_name,

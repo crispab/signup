@@ -28,58 +28,58 @@
           <legend>@user.firstName</legend>
           
           <div class="control-group">
-            <label class="control-label" for="user.nickName">Nick Name</label>
+            <label class="control-label" for="nickName">Nick Name</label>
             <div class="controls">
               <input type="text" class="input-xlarge" id="nickName" name="nickName" value="@user.nickName">
             </div>
           </div>
           
           <div class="control-group">
-            <label class="control-label" for="user.firstName">First Name</label>
+            <label class="control-label" for="firstName">First Name</label>
             <div class="controls">
               <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
             </div>
           </div>
           
           <div class="control-group">
-            <label class="control-label" for="user.lastName">Last Name</label>
+            <label class="control-label" for="lastName">Last Name</label>
             <div class="controls">
               <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
             </div>
           </div>
           
           <div class="control-group">
-            <label class="control-label" for="user.primaryEmail">Primary Email</label>
+            <label class="control-label" for="primaryEmail">Primary Email</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="user.primaryEmail" name="user.primaryEmail" value="@user.primaryEmail">
+              <input type="text" class="input-xlarge" id="primaryEmail" name="primaryEmail" value="@user.primaryEmail">
             </div>
           </div>
           
           <div class="control-group">
-            <label class="control-label" for="user.secondaryEmail">Secondary Email</label>
+            <label class="control-label" for="secondaryEmail">Secondary Email</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="user.secondaryEmail" name="user.secondaryEmail" value="@user.secondaryEmail">
+              <input type="text" class="input-xlarge" id="secondaryEmail" name="secondaryEmail" value="@user.secondaryEmail">
             </div>
           </div>
           
           <div class="control-group">
-            <label class="control-label" for="user.mobileNr">Mobile Number</label>
+            <label class="control-label" for="mobileNr">Mobile Number</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="user.mobileNr" name="user.mobileNr" value="@user.mobileNr">
+              <input type="text" class="input-xlarge" id="mobileNr" name="mobileNr" value="@user.mobileNr">
             </div>
           </div>
           
           <div class="control-group">
-            <label class="control-label" for="user.comment">Comment</label>
+            <label class="control-label" for="comment">Comment</label>
             <div class="controls">
-              <textarea class="input-xlarge" id="user.comment" name="user.comment" rows="3">@user.comment</textarea>
+              <textarea class="input-xlarge" id="comment" name="comment" rows="3">@user.comment</textarea>
             </div>
           </div>
 
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i class="icon-ok icon-white"></i> Save</button>
-            <button type="button" class="btn" id="action" onClick='javascript:window.location="@{Users.list}"'><i class="icon-stop icon-white"></i> Cancel</button>
+            <button type="button" class="btn" id="cancel" onClick='javascript:window.location="@routes.Users.list"'><i class="icon-stop icon-white"></i> Cancel</button>
           </div>
         </fieldset>
       </form>
