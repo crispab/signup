@@ -8,11 +8,11 @@ CREATE TABLE events (
   id                        SERIAL PRIMARY KEY,
   name                      VARCHAR(127) NOT NULL,
   description 				VARCHAR(127) DEFAULT '',
+  venue 				    VARCHAR(127) DEFAULT '',
   when  			        TIMESTAMP NOT NULL
 );
 
---INSERT INTO users (first_name) VALUES ('Fredrik');
---INSERT INTO users (first_name, last_name) VALUES ('Göran', 'Persson');
+INSERT INTO events (name, description,when,venue) VALUES ('Crisp RD', 'Vad jag lärde mig av BigFamilyTrip', TIMESTAMP '2012-05-03 18:00:00', 'Crisp Office');
 
 # --- !Downs
  

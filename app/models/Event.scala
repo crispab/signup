@@ -10,7 +10,8 @@ case class Event(
                   id: Pk[Long] = NotAssigned,
                   name: String = "",
                   description: String = "",
-                  when: Date = new Date()
+                  when: Date = new Date(),
+                  venue: String = ""
                   )
 
 object Event {
@@ -18,13 +19,15 @@ object Event {
     get[Pk[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
-      get[Date]("when") map {
-      case id ~ name ~ description ~ when =>
+      get[Date]("when") ~
+      get[String]("venue") map {
+      case id ~ name ~ description ~ when ~ venue =>
         Event(
           id = id,
           name = name,
           description = description,
-          when = when
+          when = when,
+          venue = venue
         )
     }
   }
@@ -49,7 +52,8 @@ object Event {
         SQL(insertQueryString).on(
           'name -> event.name,
           'description -> event.description,
-          'when -> event.when
+          'when -> event.when,
+          'venue -> event.venue
         ).executeUpdate()
     }
   }
@@ -59,12 +63,14 @@ object Event {
 INSERT INTO events (
 	  name,
 	  description,
-	  when
+	  when,
+      venue
     )
     values (
       {name},
       {description},
-      {when}
+      {when},
+      {venue}
     )
     """
 
