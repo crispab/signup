@@ -9,10 +9,10 @@ CREATE TABLE events (
   name                      VARCHAR(127) NOT NULL,
   description 				VARCHAR(127) DEFAULT '',
   venue 				    VARCHAR(127) DEFAULT '',
-  when  			        TIMESTAMP NOT NULL
+  whenx  			        TIMESTAMP NOT NULL
 );
 
-INSERT INTO events (id, name, description,when,venue) VALUES (-1, 'Crisp RD', 'Vad jag lärde mig av BigFamilyTrip', TIMESTAMP '2012-05-03 18:00:00', 'Crisp Office');
+INSERT INTO events (id, name, description,whenx,venue) VALUES (-1, 'Crisp RD', 'Vad jag lärde mig av BigFamilyTrip', TIMESTAMP '2012-05-03 18:00:00', 'Crisp Office');
 
 # --- !Downs
  

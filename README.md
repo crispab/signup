@@ -31,7 +31,7 @@ In order to set up the development environment you need to:
  - Clone this project from GitHub
  - Install Play 2.0
  - Install Heroku Toolkit - https://toolbelt.heroku.com/ (Optional, only needed to deploy to Heroku)
- - ```play eclipsify``` or ```play idealize```
+ - ```play eclipsify``` or ```play idea```
  
  
 Run SignUp

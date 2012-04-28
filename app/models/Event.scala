@@ -18,14 +18,14 @@ object Event {
     get[Pk[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
-      get[Date]("when") ~
+      get[Date]("whenx") ~
       get[String]("venue") map {
-      case id ~ name ~ description ~ when ~ venue =>
+      case id ~ name ~ description ~ whenx ~ venue =>
         Event(
           id = id,
           name = name,
           description = description,
-          when = when,
+          when = whenx,
           venue = venue
         )
     }
@@ -62,7 +62,7 @@ object Event {
 INSERT INTO events (
 	  name,
 	  description,
-	  when,
+	  whenx,
       venue
     )
     values (

@@ -64,7 +64,7 @@ object Participation {
 INSERT INTO participations (
       status,
       comment,
-      user,
+      userx,
       event
     )
     values (
