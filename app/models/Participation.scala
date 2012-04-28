@@ -1,8 +1,10 @@
 package models
 
+import anorm.SqlParser._
 import play.api.db.DB
-import play.api.Play.current
 import anorm._
+import java.util.Date
+import play.api.Play.current
 
 object Status extends Enumeration {
   type Status = Value
@@ -29,6 +31,33 @@ object Participation {
         ).executeUpdate()
     }
   }
+  
+  val parser = {
+    get[Pk[Long]]("id") ~
+    get[String]("status") ~
+    get[String]("comment") map {
+      case id ~ status ~ comment =>
+        Participation(
+          id = id,
+          status = Status.withName(status),
+          comment = comment,
+          user = User(firstName = "DummyUser"),
+          event = Event(name = "DummyEvent")
+        )
+    }
+  }
+  
+  def findAll(): Seq[Participation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(findAllQueryString).as(parser *)
+    }
+  }
+  
+  val findAllQueryString = 
+    """
+		  SELECT * from participations
+    """
 
   val insertQueryString =
     """

@@ -21,6 +21,13 @@ class ParticipationModelSpec extends Specification {
 
       }
     }
+    
+    "exist in database fixture" in {
+      running(FakeApplication()) {
+        val participations = Participation.findAll()
+        participations.size must greaterThan(0)
+      }
+    }
   }
 
 }

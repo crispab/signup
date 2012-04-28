@@ -12,7 +12,7 @@ CREATE TABLE events (
   when  			        TIMESTAMP NOT NULL
 );
 
-INSERT INTO events (name, description,when,venue) VALUES ('Crisp RD', 'Vad jag lärde mig av BigFamilyTrip', TIMESTAMP '2012-05-03 18:00:00', 'Crisp Office');
+INSERT INTO events (id, name, description,when,venue) VALUES (-1, 'Crisp RD', 'Vad jag lärde mig av BigFamilyTrip', TIMESTAMP '2012-05-03 18:00:00', 'Crisp Office');
 
 # --- !Downs
  
