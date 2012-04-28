@@ -1,7 +1,26 @@
 body.padded {
-	padding: 2%;
+  padding: 2%;
 }
 
-div.wide1 { padding-top: 30px; padding-left:12px }
-div.wide2 { padding-top: 12px; padding-left:4px }
-.eventlabel { font-weight: bold; }
+div.wide1 {
+  padding-top: 30px;
+  padding-left: 12px;
+}
+
+div.wide2 {
+  padding-top: 12px;
+  padding-left: 4px;
+}
+
+.eventlabel {
+  font-weight: bold;
+}
+
+.unregistered {
+  background-color: gray;
+}
+
+dl.participation {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
