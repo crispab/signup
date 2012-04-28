@@ -49,6 +49,10 @@ Deploy
 
 Deployment is done to Heroku. 
 
+It runs at [http://signup4.herokuapp.com](http://signup4.herokuapp.com)
+
+To be able to deploy to Heroku you must:
+
 * Install Heroku toolbelt. 
 * Do a 'heroku login'.
 * cd into the root of this application
