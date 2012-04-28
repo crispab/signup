@@ -28,6 +28,11 @@ class ParticipationModelSpec extends Specification {
         participations.size must greaterThan(0)
       }
     }
+
+    "be able to create a Status from a String" in {
+      val status = Status.withName("On")
+      status must beEqualTo(Status.On)
+    }
   }
 
 }
