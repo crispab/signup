@@ -6,12 +6,11 @@ import anorm._
 import java.util.Date
 import play.api.Play.current
 
-case class Event(
-                  id: Pk[Long] = NotAssigned,
-                  name: String = "",
-                  description: String = "",
-                  when: Date = new Date(),
-                  venue: String = ""
+case class Event(id: Pk[Long] = NotAssigned,
+                 name: String = "",
+                 description: String = "",
+                 when: Date = new Date(),
+                 venue: String = ""
                   )
 
 object Event {
@@ -38,8 +37,8 @@ object Event {
         SQL("select * from events").as(Event.parser *)
     }
   }
-  
-  def find(id : Long): Event = {
+
+  def find(id: Long): Event = {
     DB.withConnection {
       implicit connection =>
         SQL("select * from events e where e.id={id}").on('id -> id).as(Event.parser *).head
