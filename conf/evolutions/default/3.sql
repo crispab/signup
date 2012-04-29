@@ -8,7 +8,7 @@ CREATE TABLE participations (
   id                        SERIAL PRIMARY KEY,
   status                    VARCHAR(20) NOT NULL,
   comment 		    VARCHAR(127) DEFAULT '',
-  userx                      INTEGER,
+  userx                     INTEGER,
   event                     INTEGER,
   FOREIGN KEY(userx) REFERENCES users(id),
   FOREIGN KEY(event) REFERENCES events(id)
