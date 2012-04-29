@@ -68,7 +68,7 @@ signup=# grant all privileges on signup to signup4;
 
 Now you can start SignUp with Postgres using
 
-```./playrunpostgres.sh```
+./playrunpostgres.sh
  
 Run SignUp
 ----------
@@ -82,7 +82,7 @@ And the direct your browser to
 
 If you have a local Postgres (installed as described above) you may start SignUp using
 
-```play run```
+./playrunpostgres.sh
 
 Deploy
 ------
