@@ -65,11 +65,10 @@ Password: <Enter the password of your DATABASE user 'postgres'>
 signup=# create user signup4 password 's7p2+';
 signup=# grant all privileges on signup to signup4;
 ```
+
+Now you can start SignUp with Postgres using
+```./playrunpostgres.sh``` 
  
- 
-
-
-
  
 Run SignUp
 ----------
@@ -80,6 +79,9 @@ Once you have the development environment set up you should be able to do
 
 And the direct your browser to 
 [http://localhost:9000](http://localhost:9000)
+
+If you have a local Postgres (installed as described above) you may start SignUp using:
+```./playrunpostgres.sh```
 
 Deploy
 ------
