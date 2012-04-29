@@ -67,6 +67,7 @@ signup=# grant all privileges on signup to signup4;
 ```
 
 Now you can start SignUp with Postgres using
+
 ```./playrunpostgres.sh``` 
  
  
