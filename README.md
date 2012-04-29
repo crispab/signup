@@ -82,7 +82,7 @@ And the direct your browser to
 
 If you have a local Postgres (installed as described above) you may start SignUp using:
 
-```playrunpostgres.sh```
+```play run```
 
 Deploy
 ------
