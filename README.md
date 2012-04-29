@@ -80,7 +80,7 @@ Once you have the development environment set up you should be able to do
 And the direct your browser to 
 [http://localhost:9000](http://localhost:9000)
 
-If you have a local Postgres (installed as described above) you may start SignUp using:
+If you have a local Postgres (installed as described above) you may start SignUp using
 
 ```play run```
 
