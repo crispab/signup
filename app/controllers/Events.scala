@@ -33,11 +33,12 @@ object Events extends Controller {
         Logger.info("Errors: " + failingForm.errors)
         Redirect(routes.Events.createForm)
       }, {
-        case (name, description, when) => {
+        case (name, description, when, venue) => {
           Event.create(Event(
             name = name,
             description = description.getOrElse(""),
-            when = when
+            when = when,
+            venue = venue
           ))
           Redirect(routes.Events.list)
         }
@@ -49,7 +50,8 @@ object Events extends Controller {
     tuple(
       "name" -> nonEmptyText,
       "description" -> optional(text),
-      "when" -> date("yyyy-MM-dd HH:mm")
+      "when" -> date("yyyy-MM-dd HH:mm"),
+      "venue" -> text
     )
   )
 

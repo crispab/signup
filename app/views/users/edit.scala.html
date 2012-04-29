@@ -1,88 +1,101 @@
 @(user: models.User, newUser : Boolean)
 
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
-    <link rel="stylesheet" href="/assets/stylesheets/main.css">
-    <title>Edit @user.firstName</title>
- </head>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <title>Edit @user.firstName</title>
+</head>
 
 
 <body class="padded">
-<h2>Edit User</h2>
-  <div class="row">
-    <div class="span6">
-      <form class="form-horizontal" action="@routes.Users.create" method="POST">
-        <fieldset>
-          <legend>@user.firstName</legend>
-          
-          <div class="control-group">
-            <label class="control-label" for="nickName">Nick Name</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="nickName" name="nickName" value="@user.nickName">
-            </div>
+<h2>Redigera Användare</h2>
+
+<div class="row">
+  <div class="span6">
+    <form class="form-horizontal" action="@routes.Users.create" method="POST">
+      <fieldset>
+        <legend>@user.firstName</legend>
+
+        <div class="control-group">
+          <label class="control-label" for="nickName">Smeknamn</label>
+
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="nickName" name="nickName" value="@user.nickName">
           </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="firstName">First Name</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
-            </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="firstName">Förnamn</label>
+
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
           </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="lastName">Last Name</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
-            </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="lastName">Efternamne</label>
+
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
           </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="primaryEmail">Primary Email</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="primaryEmail" name="primaryEmail" value="@user.primaryEmail">
-            </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="primaryEmail">Epostadress</label>
+
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="primaryEmail" name="primaryEmail" value="@user.primaryEmail">
           </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="secondaryEmail">Secondary Email</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="secondaryEmail" name="secondaryEmail" value="@user.secondaryEmail">
-            </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="secondaryEmail">Alternativ epostadress</label>
+
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="secondaryEmail" name="secondaryEmail"
+                   value="@user.secondaryEmail">
           </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="mobileNr">Mobile Number</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="mobileNr" name="mobileNr" value="@user.mobileNr">
-            </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="mobileNr">Mobilnummer</label>
+
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="mobileNr" name="mobileNr" value="@user.mobileNr">
           </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="comment">Comment</label>
-            <div class="controls">
-              <textarea class="input-xlarge" id="comment" name="comment" rows="3">@user.comment</textarea>
-            </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="comment">Kommentar</label>
+
+          <div class="controls">
+            <textarea class="input-xlarge" id="comment" name="comment" rows="3">@user.comment</textarea>
           </div>
+        </div>
 
 
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i class="icon-ok icon-white"></i> Save</button>
-            <button type="button" class="btn" id="cancel" onClick='javascript:window.location="@routes.Users.list"'><i class="icon-stop icon-white"></i> Cancel</button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
+                  class="icon-ok icon-white"></i>Spara
+          </button>
+          <button type="button" class="btn" id="cancel" onClick='javascript:window.location="@routes.Users.list"'><i
+                  class="icon-stop icon-white"></i>Avbryt
+          </button>
+        </div>
+      </fieldset>
+    </form>
   </div>
+</div>
 
 <script src="/public/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/public/javascripts/bootstrap/bootstrap-modal.js"></script> 
+<script src="/public/javascripts/bootstrap/bootstrap-modal.js"></script>
 
 </body>
 </html>
