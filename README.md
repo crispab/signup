@@ -26,6 +26,8 @@ This is the fourth version of the SignUp Service.
 Setting Up Development Environment
 ----------------------------------
 
+### Basics ###
+
 In order to set up the development environment you need to:
 
  - Clone this project from GitHub
@@ -33,6 +35,41 @@ In order to set up the development environment you need to:
  - Install Heroku Toolkit - https://toolbelt.heroku.com/ (Optional, only needed to deploy to Heroku)
  - ```play eclipsify``` or ```play idea```
  
+### "Persistent Database" - Postgres ###
+
+When running SignUp as described above, the H2 database is used.
+The H2 database is running in-memory, in-process. This is handy,
+because of the simple setup, but each time you stop Play your database
+will be gone. It would be nice to have a persistent database, 
+e.g. a disk based database. When running on Heroku, Postgres will be used.
+For these reasons, a local installation of Postgres is good.
+
+To install Postgres on MacOS X:
+
+ - Download Postgres from [postgres.org](http://www.postgresql.org/)
+ - Install a standard Postgres (You may have to restart your Mac as the installation fiddles with shared memory)
+ - Set the password for the DATABASE (super)user postgres when prompted
+ - Finish the installation
+ - On MacOS X: A UNIX user is created: 'PostgreSQL' 
+   This user seem to get some password that you cannot find out. 
+   Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
+ - Do some stuff from the command prompt to create a database and a database user
+ 
+```
+$ su - PostgreSQL
+Password: <Enter the password of your UNIX user 'PostgreSQL'>
+$ createdb signup
+Password: <Enter the password of your DATABASE user 'postgres'>
+$ psql -s signup
+Password: <Enter the password of your DATABASE user 'postgres'>
+signup=# create user signup4 password 's7p2+';
+signup=# grant all privileges on signup to signup4;
+```
+ 
+ 
+
+
+
  
 Run SignUp
 ----------
