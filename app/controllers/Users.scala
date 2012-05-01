@@ -13,6 +13,11 @@ object Users extends Controller {
     val users = User.findAll()
     Ok(views.html.users.list("Found users: " + users))
   }
+  
+  def show(id : Long) = Action {
+    val user = User.find(id)
+    Ok(views.html.users.show(user))
+  }
 
   def createForm = Action {
     val user = new User(NotAssigned, "")

@@ -9,12 +9,14 @@ GET     /                           controllers.Application.index
 GET     /users/new  				controllers.Users.createForm
 POST    /users				        controllers.Users.create
 GET     /users                      controllers.Users.list
+GET     /users/:id                  controllers.Users.show(id : Long)
+
 
 # Events
 GET     /events/new  				controllers.Events.createForm
 POST    /events				        controllers.Events.create
 GET     /events                     controllers.Events.list
-GET     /events/:id                controllers.Events.show(id : Long)
+GET     /events/:id                 controllers.Events.show(id : Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

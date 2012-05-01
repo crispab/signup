@@ -13,6 +13,8 @@ class IntegrationSpec extends Specification {
       running(TestServer(3333), HTMLUNIT) { browser =>
         browser.goTo("http://localhost:3333/")
         browser.pageSource must contain("SignUp")
+        browser.goTo("http://localhost:3333/users/-1")
+        browser.pageSource must contain("Fredrik")
       }
     }
   }
