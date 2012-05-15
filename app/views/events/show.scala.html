@@ -1,4 +1,4 @@
-@(event: models.Event, unregisteredUsers : Seq[models.User])
+@(event: models.Event, unregisteredUsers : Seq[models.User], registeredUsers : Seq[models.Participation])
 <!DOCTYPE html>
 <html lang="sv">
 
@@ -38,7 +38,32 @@
 
 <div class="row">
   <div class="span4">
-    <p>
+    <p></p>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th class="registered">Registrerade</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <dl class="participation">
+            @registeredUsers.map { participation =>
+            <dt class="@participation.status">@participation.user.firstName @participation.user.lastName</dt>
+            <dd class="@participation.status">@participation.comment</dd>
+            }
+          </dl>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span4">
+    <p></p>
     <table class="table table-bordered">
       <thead>
       <tr>
@@ -50,8 +75,7 @@
         <td>
           <dl class="participation">
             @unregisteredUsers.map { user =>
-            <dt>@user.firstName @user.lastName
-            <dt>
+            <dt>@user.firstName @user.lastName</dt>
             <dd>@user.comment</dd>
             }
           </dl>
@@ -59,7 +83,6 @@
       </tr>
       </tbody>
     </table>
-    </p>
   </div>
 </div>
 </body>

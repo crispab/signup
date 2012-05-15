@@ -14,7 +14,9 @@ CREATE TABLE participations (
   FOREIGN KEY(event) REFERENCES events(id)
 );
 
+INSERT INTO participations (status, comment, userx, event) VALUES ('Off', 'Måste till svärmor', -3, -1);
 INSERT INTO participations (status, comment, userx, event) VALUES ('On', 'Trevligt!', -1, -1);
+INSERT INTO participations (status, comment, userx, event) VALUES ('Maybe', 'Får se...', -4, -1);
 
 
 # --- !Downs

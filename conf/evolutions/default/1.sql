@@ -18,6 +18,7 @@ CREATE TABLE users (
 INSERT INTO users (id, first_name, comment) VALUES (-1, 'Fredrik', 'En glad statsminister');
 INSERT INTO users (id, first_name, last_name) VALUES (-2, 'Torbjörn', 'Fälldin');
 INSERT INTO users (id, first_name, last_name, comment) VALUES (-3, 'Göran', 'Persson', 'En f.d. statsminister');
+INSERT INTO users (id, first_name, last_name, comment) VALUES (-4, 'Frodo', 'Baggins', 'Ringbärare');
 
 # --- !Downs
  

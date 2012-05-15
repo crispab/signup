@@ -50,6 +50,13 @@ object User {
     }
   }
 
+  def findUnregistered(event: Event): Seq[User] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(findUnregisteredQueryString).on('event_id -> event.id).as(parser *)
+    }
+  }
+
   def findAll(): Seq[User] = {
     DB.withConnection {
       implicit connection =>
@@ -57,7 +64,7 @@ object User {
     }
   }
 
-  def create(user: User): Unit = {
+  def create(user: User) {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(
@@ -94,5 +101,14 @@ INSERT INTO users (
     )      
     """
 
+  val findUnregisteredQueryString =
+    """
+SELECT *
+FROM users u
+WHERE u.id NOT IN (
+  SELECT p.userx FROM participations p WHERE p.event = {event_id}
+)
+ORDER BY u.first_name, u.last_name
+    """
 }
 

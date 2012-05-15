@@ -17,10 +17,47 @@ div.wide2 {
 }
 
 .unregistered {
-  background-color: gray;
+  background-color: #bbbbbb;
+}
+
+.registered {
+  background-color: #add8e6;
+}
+
+dt {
+  padding-left: 4px;
+}
+
+dd {
+  padding-left: 20px;
+  margin-left: 0;
+}
+
+dt.On {
+  background-color: #98fb98;
+}
+
+dd.On {
+  background-color: #98fb98;
+}
+
+dt.Off {
+  background-color: #ee5f5b;
+}
+
+dd.Off {
+  background-color: #ee5f5b;
+}
+
+dt.Maybe {
+  background-color: #eee8aa;
+}
+
+dd.Maybe {
+  background-color: #eee8aa;
 }
 
 dl.participation {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
 }

@@ -45,7 +45,7 @@ object Event {
     }
   }
 
-  def create(event: Event): Unit = {
+  def create(event: Event) {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(

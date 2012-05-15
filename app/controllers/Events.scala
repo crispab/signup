@@ -5,8 +5,7 @@ import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms.{tuple, nonEmptyText, text, optional, date}
 import anorm.NotAssigned
-import models.Event
-import models.User
+import models.{Participation, Event, User}
 
 object Events extends Controller {
 
@@ -22,8 +21,9 @@ object Events extends Controller {
   
   def show(id : Long) = Action {
     val event = Event.find(id)
-    val users = User.findAll()
-    Ok(views.html.events.show(event, users))
+    val registeredUsers = Participation.findRegistered(event)
+    val unregisteredUsers = User.findUnregistered(event)
+    Ok(views.html.events.show(event, unregisteredUsers, registeredUsers))
   }
   
   def create = Action {
@@ -31,7 +31,7 @@ object Events extends Controller {
       eventForm.bindFromRequest.fold(
       failingForm => {
         Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Events.createForm)
+        Redirect(routes.Events.createForm())
       }, {
         case (name, description, when, venue) => {
           Event.create(Event(
@@ -40,7 +40,7 @@ object Events extends Controller {
             when = when,
             venue = venue
           ))
-          Redirect(routes.Events.list)
+          Redirect(routes.Events.list())
         }
       }
       )
