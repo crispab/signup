@@ -7,13 +7,13 @@ import play.api.Play.current
 
 object Status extends Enumeration {
   type Status = Value
-  val On, Maybe, Off, Unregistered = Value
+  val On, Maybe, Off = Value
 }
 
 import Status._
 
 case class Participation(id: Pk[Long] = NotAssigned,
-                         status: Status = Unregistered,
+                         status: Status = On,
                          comment: String = "",
                          user: User,
                          event: Event) extends Ordered[Participation] {
@@ -21,6 +21,7 @@ case class Participation(id: Pk[Long] = NotAssigned,
 }
 
 object Participation {
+
 
   def create(participation: Participation) {
     DB.withConnection {
@@ -33,7 +34,18 @@ object Participation {
         ).executeUpdate()
     }
   }
-  
+
+  def update(id: Long, participation: Participation) {
+    DB.withConnection {
+      implicit connection =>
+        SQL(updateQueryString).on(
+          'id -> id,
+          'status -> participation.status.toString,
+          'comment -> participation.comment
+        ).executeUpdate()
+    }
+  }
+
   val parser = {
     get[Pk[Long]]("id") ~
     get[String]("status") ~
@@ -51,6 +63,13 @@ object Participation {
     }
   }
   
+  def find(id: Long): Participation = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from participations where id={id}").on('id -> id).as(Participation.parser *).head
+    }
+  }
+
   def findRegistered(event: Event):Seq[Participation] = {
     DB.withConnection {
       implicit connection =>
@@ -89,5 +108,13 @@ INSERT INTO participations (
       {user},
       {event}
     )
+    """
+
+  val updateQueryString =
+    """
+UPDATE participations
+SET status = {status},
+    comment  = {comment}
+WHERE id = {id}
     """
 }

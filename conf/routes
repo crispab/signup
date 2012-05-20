@@ -6,17 +6,24 @@
 GET     /                           controllers.Application.index
 
 # Users
-GET     /users/new  				controllers.Users.createForm
-POST    /users				        controllers.Users.create
+GET     /users/new                  controllers.Users.createForm
+POST    /users                      controllers.Users.create
 GET     /users                      controllers.Users.list
-GET     /users/:id                  controllers.Users.show(id : Long)
+GET     /users/:id                  controllers.Users.show(id: Long)
 
 
 # Events
-GET     /events/new  				controllers.Events.createForm
-POST    /events				        controllers.Events.create
+GET     /events/new                 controllers.Events.createForm
+POST    /events                     controllers.Events.create
 GET     /events                     controllers.Events.list
-GET     /events/:id                 controllers.Events.show(id : Long)
+GET     /events/:id                 controllers.Events.show(id: Long)
+
+# Participations
+GET     /participations/new         controllers.Participations.createForm(eventId: Long, userId: Long)
+GET     /participations/:id/edit    controllers.Participations.updateForm(id: Long)
+POST    /participations             controllers.Participations.create
+POST    /participations/:id         controllers.Participations.update(id: Long)
+
 
 
 # Map static resources from the /public folder to the /assets URL path

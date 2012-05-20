@@ -15,14 +15,12 @@
 
 
 <body class="padded">
-<h2>Redigera Användare</h2>
-
 <div class="row">
-  <div class="span6">
+  <div class="span5">
+    <h2>Redigera Användare</h2>
+    <p></p>
     <form class="form-horizontal" action="@routes.Users.create" method="POST">
       <fieldset>
-        <legend>@user.firstName</legend>
-
         <div class="control-group">
           <label class="control-label" for="nickName">Smeknamn</label>
 
@@ -86,7 +84,7 @@
                   class="icon-ok icon-white"></i>Spara
           </button>
           <button type="button" class="btn" id="cancel" onClick='javascript:window.location="@routes.Users.list"'><i
-                  class="icon-stop icon-white"></i>Avbryt
+                  class="icon-stop"></i>Avbryt
           </button>
         </div>
       </fieldset>
@@ -94,8 +92,8 @@
   </div>
 </div>
 
-<script src="/public/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/public/javascripts/bootstrap/bootstrap-modal.js"></script>
+<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.js"></script>
 
 </body>
 </html>

@@ -15,75 +15,71 @@
 
 <body class="padded">
 
-<h2>@event.name</h2>
-
-<p>@event.description</p>
-
 <div class="row">
-  <div class="span1 eventlabel">
-    Tid:
-  </div>
-  <div class="span3">
-    @event.when.format("yyyy-MM-dd HH:mm")
+  <div class="span5">
+    <h2>@event.name</h2>
+
+    <div class="well">
+      <p>@event.description</p>
+      <table>
+        <tr>
+          <td class="eventlabel">Tid:</td>
+          <td>@event.when.format("yyyy-MM-dd HH:mm")</td>
+        </tr>
+        <tr>
+          <td class="eventlabel">Plats:</td>
+          <td>@event.venue</td>
+        </tr>
+      </table>
+      <p></p>
+      <a href="" class="btn"><i class="icon-pencil"></i>Ändra</a></div>
   </div>
 </div>
-<div class="row">
-  <div class="span1 eventlabel">
-    Plats:
-  </div>
-  <div class="span3">
-    @event.venue
-  </div>
 </div>
 
 <div class="row">
-  <div class="span4">
+  <div class="span5">
     <p></p>
-    <table class="table table-bordered">
-      <thead>
-      <tr>
-        <th class="registered">Registrerade</th>
-      </tr>
-      </thead>
-      <tbody>
+
+    <h3>Deltagare</h3>
+    <table class="table table-striped">
+      @registeredUsers.map { participation =>
       <tr>
         <td>
           <dl class="participation">
-            @registeredUsers.map { participation =>
-            <dt class="@participation.status">@participation.user.firstName @participation.user.lastName</dt>
-            <dd class="@participation.status">@participation.comment</dd>
-            }
+            <dt><a href="/participations/@participation.id/edit">
+              @participation.user.firstName
+              @participation.user.lastName</a></dt>
+            <dd>@participation.comment</dd>
           </dl>
         </td>
+        <td>
+          <a href="/participations/@participation.id/edit">
+            <span class="label @participation.status">@participation.status</span>
+          </a>
+        </td>
       </tr>
-      </tbody>
+      }
+
+      @unregisteredUsers.map { user =>
+      <tr>
+        <td>
+          <dl class="participation">
+            <dt><a href="/participations/new?eventId=@event.id&userId=@user.id">@user.firstName @user.lastName</a></dt>
+          </dl>
+        </td>
+        <td>
+          <span class="label Unregistered">Har inte sagt något</span>
+        </td>
+      </tr>
+      }
     </table>
   </div>
 </div>
 
-<div class="row">
-  <div class="span4">
-    <p></p>
-    <table class="table table-bordered">
-      <thead>
-      <tr>
-        <th class="unregistered">Ej registrerade</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>
-          <dl class="participation">
-            @unregisteredUsers.map { user =>
-            <dt>@user.firstName @user.lastName</dt>
-            <dd>@user.comment</dd>
-            }
-          </dl>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+
+<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.js"></script>
+
 </body>
 </html>

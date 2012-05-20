@@ -14,14 +14,26 @@ div.wide2 {
 
 .eventlabel {
   font-weight: bold;
+  padding-right: 10px;
 }
 
-.unregistered {
-  background-color: #bbbbbb;
+.On {
+  background-color: #5BB75B;
+  text-transform: none;
 }
 
-.registered {
-  background-color: #add8e6;
+.Maybe {
+  background-color: #FAA732;
+  text-transform: none;
+}
+
+.Off {
+  background-color: #DA4F49;
+  text-transform: none;
+}
+
+.Unregistered {
+  text-transform: none;
 }
 
 dt {
@@ -31,30 +43,6 @@ dt {
 dd {
   padding-left: 20px;
   margin-left: 0;
-}
-
-dt.On {
-  background-color: #98fb98;
-}
-
-dd.On {
-  background-color: #98fb98;
-}
-
-dt.Off {
-  background-color: #ee5f5b;
-}
-
-dd.Off {
-  background-color: #ee5f5b;
-}
-
-dt.Maybe {
-  background-color: #eee8aa;
-}
-
-dd.Maybe {
-  background-color: #eee8aa;
 }
 
 dl.participation {

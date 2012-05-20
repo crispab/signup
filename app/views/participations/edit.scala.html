@@ -1,0 +1,102 @@
+@(participation: models.Participation, newParticipation : Boolean)
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <title>Anmälan till @participation.event.name</title>
+</head>
+
+
+<body class="padded">
+
+<div class="row">
+  <div class="span5">
+    <h2>Anmälan till @participation.event.name</h2>
+
+    <div class="well">
+      <p>@participation.event.description</p>
+      <table>
+        <tr>
+          <td class="eventlabel">Tid:</td>
+          <td>@participation.event.when.format("yyyy-MM-dd HH:mm")</td>
+        </tr>
+        <tr>
+          <td class="eventlabel">Plats:</td>
+          <td>@participation.event.venue</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="span5">
+
+    <!-- TODO: set correct action route and method depending on create/edit -->
+
+    <form class="form-horizontal" action="@routes.Participations.create" method="POST">
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label"><h3>@participation.user.firstName @participation.user.lastName</h3></label>
+
+          <!-- TODO: set correct status checked from @participation -->
+
+          <div class="controls">
+            <label class="radio">
+              <input type="radio" name="status" id="on" value="On" checked="true">
+              <span class="label On">Kommer</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="status" id="maybe" value="Maybe">
+              <span class="label Maybe">Kanske</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="status" id="off" value="Off">
+              <span class="label Off">Kommer inte</span>
+            </label>
+          </div>
+        </div>
+
+
+        <div class="control-group">
+          <label class="control-label" for="comment">Kommentar</label>
+
+          <div class="controls">
+            <textarea class="input-xlarge" id="comment" name="comment" rows="2">@participation.comment</textarea>
+          </div>
+        </div>
+
+        <input type="hidden" id="id" name="id" value="@participation.id"/>
+        <input type="hidden" id="userId" name="userId" value="@participation.user.id.get"/>
+        <input type="hidden" id="eventId" name="eventId" value="@participation.event.id.get"/>
+
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+            <i class="icon-ok icon-white"></i>
+            Spara
+          </button>
+          <button type="button" class="btn" id="cancel"
+                  onClick='javascript:window.location="@routes.Events.show(participation.event.id.get)"'>
+            <i class="icon-stop"></i>
+            Avbryt
+          </button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.js"></script>
+
+</body>
+</html>
