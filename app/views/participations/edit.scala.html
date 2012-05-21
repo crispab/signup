@@ -40,26 +40,27 @@
 <div class="row">
   <div class="span5">
 
-    <!-- TODO: set correct action route and method depending on create/edit -->
-
+    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variable på något sätt? -->
+    @if(newParticipation) {
     <form class="form-horizontal" action="@routes.Participations.create" method="POST">
+    } else {
+    <form class="form-horizontal" action="@routes.Participations.update(participation.id.get)" method="POST">
+    }
+
       <fieldset>
         <div class="control-group">
           <label class="control-label"><h3>@participation.user.firstName @participation.user.lastName</h3></label>
-
-          <!-- TODO: set correct status checked from @participation -->
-
           <div class="controls">
             <label class="radio">
-              <input type="radio" name="status" id="on" value="On" checked="true">
+              <input type="radio" name="status" id="on" value="On" @(if(newParticipation || participation.status == Status.On) "checked")>
               <span class="label On">Kommer</span>
             </label>
             <label class="radio">
-              <input type="radio" name="status" id="maybe" value="Maybe">
+              <input type="radio" name="status" id="maybe" value="Maybe" @(if(participation.status==Status.Maybe) "checked")>
               <span class="label Maybe">Kanske</span>
             </label>
             <label class="radio">
-              <input type="radio" name="status" id="off" value="Off">
+              <input type="radio" name="status" id="off" value="Off" @(if(participation.status==Status.Off) "checked")>
               <span class="label Off">Kommer inte</span>
             </label>
           </div>

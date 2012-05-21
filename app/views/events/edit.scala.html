@@ -19,7 +19,12 @@
   <div class="span5">
     <h2>Redigera Event</h2>
     <p></p>
+    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variable på något sätt? -->
+    @if(newEvent) {
     <form class="form-horizontal" action="@routes.Events.create" method="POST">
+    } else {
+    <form class="form-horizontal" action="@routes.Events.update(event.id.get)" method="POST">
+    }
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="name">Namn</label>
@@ -59,7 +64,7 @@
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
             <i class="icon-ok icon-white"></i>Spara
           </button>
-          <button type="button" class="btn" id="cancel" onClick='javascript:window.location="@routes.Events.list"'>
+          <button type="button" class="btn" id="cancel" onClick='javascript:history.go(-1)'>
             <i class="icon-stop"></i>Avbryt
           </button>
         </div>

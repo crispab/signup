@@ -32,7 +32,7 @@
         </tr>
       </table>
       <p></p>
-      <a href="" class="btn"><i class="icon-pencil"></i>Ändra</a></div>
+      <a href="/events/@event.id/edit" class="btn"><i class="icon-pencil"></i>Ändra</a></div>
   </div>
 </div>
 </div>
@@ -55,7 +55,13 @@
         </td>
         <td>
           <a href="/participations/@participation.id/edit">
-            <span class="label @participation.status">@participation.status</span>
+            <span class="label @participation.status">
+              @(participation.status match {
+                          case Status.On => "Kommer"
+                          case Status.Maybe => "Kanske"
+                          case Status.Off => "Kommer inte"
+                      })
+            </span>
           </a>
         </td>
       </tr>
@@ -69,7 +75,7 @@
           </dl>
         </td>
         <td>
-          <span class="label Unregistered">Har inte sagt något</span>
+          <a href="/participations/new?eventId=@event.id&userId=@user.id"><span class="label Unregistered">Har inte sagt något</span></a>
         </td>
       </tr>
       }

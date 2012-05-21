@@ -73,5 +73,29 @@ INSERT INTO events (
     )
     """
 
+  def update(id: Long, event: Event) {
+    DB.withConnection {
+      implicit connection =>
+        SQL(updateQueryString).on(
+          'id -> id,
+          'name -> event.name,
+          'description -> event.description,
+          'when -> event.when,
+          'venue -> event.venue
+        ).executeUpdate()
+    }
+  }
+
+
+  val updateQueryString =
+    """
+UPDATE events
+SET name = {name},
+    description = {description},
+    whenx = {when},
+    venue = {venue}
+WHERE id = {id}
+    """
+
 
 }

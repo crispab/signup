@@ -19,6 +19,11 @@ object Events extends Controller {
     Ok(views.html.events.edit(event, newEvent = true))
   }
   
+  def updateForm(id: Long) = Action {
+    val event = Event.find(id);
+    Ok(views.html.events.edit(event, newEvent = false))
+  }
+
   def show(id : Long) = Action {
     val event = Event.find(id)
     val registeredUsers = Participation.findRegistered(event)
@@ -41,6 +46,26 @@ object Events extends Controller {
             venue = venue
           ))
           Redirect(routes.Events.list())
+        }
+      }
+      )
+  }
+
+  def update(id: Long) = Action {
+    implicit request =>
+      eventForm.bindFromRequest.fold(
+      failingForm => {
+        Logger.info("Errors: " + failingForm.errors)
+        Redirect(routes.Events.createForm())
+      }, {
+        case (name, description, when, venue) => {
+          Event.update(id, Event(
+            name = name,
+            description = description.getOrElse(""),
+            when = when,
+            venue = venue
+          ))
+          Redirect(routes.Events.show(id))
         }
       }
       )

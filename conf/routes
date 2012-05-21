@@ -14,9 +14,11 @@ GET     /users/:id                  controllers.Users.show(id: Long)
 
 # Events
 GET     /events/new                 controllers.Events.createForm
+GET     /events/:id/edit            controllers.Events.updateForm(id: Long)
 POST    /events                     controllers.Events.create
 GET     /events                     controllers.Events.list
 GET     /events/:id                 controllers.Events.show(id: Long)
+POST    /events/:id                 controllers.Events.update(id: Long)
 
 # Participations
 GET     /participations/new         controllers.Participations.createForm(eventId: Long, userId: Long)
