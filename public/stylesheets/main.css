@@ -49,3 +49,9 @@ dl.participation {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.align-right {
+  float: right;
+  vertical-align: bottom;
+  margin-top: 14px;
+}

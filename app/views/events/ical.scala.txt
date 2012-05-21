@@ -1,0 +1,21 @@
+@(event: models.Event)
+BEGIN:VCALENDAR
+PRODID:-//Crisp AB//Signup//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+DTSTART:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+DTEND:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+DTSTAMP:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+UID:@event.id
+CREATED:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+DESCRIPTION:@event.description
+LAST-MODIFIED:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+LOCATION:@event.venue
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:@event.name
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR

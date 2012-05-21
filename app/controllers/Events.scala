@@ -30,6 +30,11 @@ object Events extends Controller {
     val unregisteredUsers = User.findUnregistered(event)
     Ok(views.html.events.show(event, unregisteredUsers, registeredUsers))
   }
+
+  def asCalendar(id: Long) = Action {
+    val event = Event.find(id);
+    Ok(views.txt.events.ical(event)).as("text/calendar")
+  }
   
   def create = Action {
     implicit request =>
