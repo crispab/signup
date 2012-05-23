@@ -24,6 +24,11 @@ object Users extends Controller {
     Ok(views.html.users.edit(user, newUser = true))
   }
 
+  def updateForm(id: Long) = Action {
+    val user = User.find(id)
+    Ok(views.html.users.edit(user, newUser = false))
+  }
+
   def create = Action {
     implicit request =>
       userForm.bindFromRequest.fold(
@@ -33,6 +38,29 @@ object Users extends Controller {
       }, {
         case (firstName, nickName, lastName, primaryEmail, secondaryEmail, mobileNr, comment) => {
           User.create(User(
+            firstName = firstName,
+            nickName = nickName.getOrElse(""),
+            lastName = lastName.getOrElse(""),
+            primaryEmail = primaryEmail.getOrElse(""),
+            secondaryEmail = secondaryEmail.getOrElse(""),
+            mobileNr = mobileNr.getOrElse(""),
+            comment = comment.getOrElse("")
+          ))
+          Redirect(routes.Users.list)
+        }
+      }
+    )
+  }
+
+  def update(id: Long) = Action {
+    implicit request =>
+      userForm.bindFromRequest.fold(
+      failingForm => {
+        Logger.info("Errors: " + failingForm.errors)
+        Redirect(routes.Users.createForm)
+      }, {
+        case (firstName, nickName, lastName, primaryEmail, secondaryEmail, mobileNr, comment) => {
+          User.update(id, User(
             firstName = firstName,
             nickName = nickName.getOrElse(""),
             lastName = lastName.getOrElse(""),

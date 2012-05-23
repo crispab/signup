@@ -10,16 +10,36 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <title>Redigera @event.name</title>
+  <title>Redigera event @event.name</title>
 </head>
 
 
 <body class="padded">
 <div class="row">
   <div class="span5">
-    <h2>Redigera Event</h2>
+    <ul class="breadcrumb">
+      <li>
+        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="/events">Event</a> <span class="divider">/</span>
+      </li>
+
+      @if(newEvent) {
+      <li class="active">Nytt</li>
+      } else {
+      <li>
+        <a href="/events/@event.id">@event.name</a> <span class="divider">/</span>
+      </li>
+      <li class="active">Redigera</li>
+      }
+    </ul>
+    <h2>@if(newEvent) {Nytt} else {Redigera} Event</h2>
     <p></p>
-    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variable på något sätt? -->
+
+
+    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variabel på något sätt? -->
+
     @if(newEvent) {
     <form class="form-horizontal" action="@routes.Events.create" method="POST">
     } else {

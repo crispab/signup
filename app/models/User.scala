@@ -57,6 +57,16 @@ object User {
     }
   }
 
+  val findUnregisteredQueryString =
+    """
+SELECT *
+FROM users u
+WHERE u.id NOT IN (
+  SELECT p.userx FROM participations p WHERE p.event = {event_id}
+)
+ORDER BY u.first_name, u.last_name
+    """
+
   def findAll(): Seq[User] = {
     DB.withConnection {
       implicit connection =>
@@ -101,14 +111,33 @@ INSERT INTO users (
     )      
     """
 
-  val findUnregisteredQueryString =
+  def update(id: Long, user: User) {
+    DB.withConnection {
+      implicit connection =>
+        SQL(updateQueryString).on(
+          'id -> id,
+          'firstName -> user.firstName,
+          'nickName -> user.nickName,
+          'lastName -> user.lastName,
+          'primaryEmail -> user.primaryEmail,
+          'secondaryEmail -> user.secondaryEmail,
+          'mobileNr -> user.mobileNr,
+          'comment -> user.comment
+        ).executeUpdate()
+    }
+  }
+
+  val updateQueryString =
     """
-SELECT *
-FROM users u
-WHERE u.id NOT IN (
-  SELECT p.userx FROM participations p WHERE p.event = {event_id}
-)
-ORDER BY u.first_name, u.last_name
+UPDATE users
+SET first_name = {firstName},
+    nick_name = {nickName},
+    last_name = {lastName},
+    primary_email = {primaryEmail},
+    secondary_email = {secondaryEmail},
+    mobile_nr = {mobileNr},
+    comment = {comment}
+WHERE id = {id}
     """
 }
 

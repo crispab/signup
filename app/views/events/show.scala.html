@@ -17,6 +17,15 @@
 
 <div class="row">
   <div class="span5">
+    <ul class="breadcrumb">
+      <li>
+        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="/events">Event</a> <span class="divider">/</span>
+      </li>
+      <li class="active">@event.name</li>
+    </ul>
     <h2>@event.name</h2>
 
     <div class="well">
@@ -32,7 +41,7 @@
         </tr>
       </table>
       <p></p>
-      <a href="/events/@event.id/edit" class="btn"><i class="icon-pencil"></i>Ändra</a>
+      <a href="/events/@event.id/edit" class="btn"><i class="icon-pencil"></i>Redigera</a>
       <a href="/events/@event.id/ical" rel="tooltip" title="iCal"><i class="icon-calendar align-right"></i></a>
     </div>
   </div>

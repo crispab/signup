@@ -18,6 +18,19 @@
 
 <div class="row">
   <div class="span5">
+    <ul class="breadcrumb">
+      <li>
+        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="/events">Event</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="/events/@participation.event.id">@participation.event.name</a> <span class="divider">/</span>
+      </li>
+      <li class="active">Anmälan</li>
+    </ul>
+
     <h2>Anmälan till @participation.event.name</h2>
 
     <div class="well">
@@ -40,7 +53,9 @@
 <div class="row">
   <div class="span5">
 
-    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variable på något sätt? -->
+
+    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variabel på något sätt? -->
+
     @if(newParticipation) {
     <form class="form-horizontal" action="@routes.Participations.create" method="POST">
     } else {

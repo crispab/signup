@@ -15,42 +15,57 @@
 
 <body class="padded">
 
-<h2>@user.firstName @user.lastName</h2>
+<div class="row">
+  <div class="span5">
+    <ul class="breadcrumb">
+      <li>
+        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="/users">Användare</a> <span class="divider">/</span>
+      </li>
+      <li class="active">@user.firstName @user.lastName</li>
+    </ul>
+
+    <h2>@user.firstName @user.lastName</h2>
+
+    <table class="table span4">
+      <tr>
+        <td class="right-aligned">Smeknamn:</td>
+        <td>@user.nickName</td>
+      </tr>
+      <tr>
+        <td class="right-aligned">Förnamn:</td>
+        <td>@user.firstName</td>
+      </tr>
+      <tr>
+        <td class="right-aligned">Efternamn:</td>
+        <td>@user.lastName</td>
+      </tr>
+      <tr>
+        <td class="right-aligned">Primär Epost:</td>
+        <td>@user.primaryEmail</td>
+      </tr>
+      <tr>
+        <td class="right-aligned">Sekundär Epost:</td>
+        <td>@user.secondaryEmail</td>
+      </tr>
+      <tr>
+        <td class="right-aligned">Mobiltelefon:</td>
+        <td>@user.mobileNr</td>
+      </tr>
+      <tr>
+        <td class="right-aligned">Kommentar:</td>
+        <td>@user.comment</td>
+      </tr>
+    </table>
+  </div>
+</div>
 
 <div class="row">
   <div class="span5">
-    <div class="row wide2">
-      <div class="span2">Smeknamn</div>
-      <div class="span2">@user.nickName</div>
-    </div>
-    <div class="row wide2">
-      <div class="span2">Förnamn</div>
-      <div class="span2">@user.firstName</div>
-    </div>
-    <div class="row wide2">
-      <div class="span2">Efternamn</div>
-      <div class="span2">@user.lastName</div>
-    </div>
-    <div class="row wide2">
-      <div class="span2">Primär Epost</div>
-      <div class="span2">@user.primaryEmail</div>
-    </div>
-    <div class="row wide2">
-      <div class="span2">Sekundär Epost</div>
-      <div class="span2">@user.secondaryEmail</div>
-    </div>
-    <div class="row wide2">
-      <div class="span2">Mobiltelefon</div>
-      <div class="span2">@user.mobileNr</div>
-    </div>
-    <div class="row wide2">
-      <div class="span2">Kommentar</div>
-      <div class="span2">@user.comment</div>
-    </div>
-
-    <div class="row wide2">
-      <div class="span4"><a href="" class="btn"><i class="icon-pencil"></i> Ändra</a></div>
-    </div>
+    <p></p>
+    <a href="/users/@user.id/edit" class="btn btn-primary"><i class="icon-pencil icon-white"></i> Redigera</a>
   </div>
 </div>
 

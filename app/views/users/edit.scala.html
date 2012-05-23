@@ -10,16 +10,37 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <title>Edit @user.firstName</title>
+  <title>Redigera användare @user.firstName @user.lastName</title>
 </head>
 
 
 <body class="padded">
 <div class="row">
   <div class="span5">
-    <h2>Redigera Användare</h2>
+    <ul class="breadcrumb">
+      <li>
+        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="/users">Användare</a> <span class="divider">/</span>
+      </li>
+      @if(newUser) {
+      <li class="active">Ny</li>
+      } else {
+      <li>
+        <a href="/users/@user.id">@user.firstName @user.lastName</a> <span class="divider">/</span>
+      </li>
+      <li class="active">Redigera</li>
+      }
+    </ul>
+    <h2>@if(newUser) {Ny} else {Redigera} Användare</h2>
     <p></p>
+
+    @if(newUser) {
     <form class="form-horizontal" action="@routes.Users.create" method="POST">
+    } else {
+    <form class="form-horizontal" action="@routes.Users.update(user.id.get)" method="POST">
+    }
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="nickName">Smeknamn</label>
@@ -83,7 +104,7 @@
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
                   class="icon-ok icon-white"></i>Spara
           </button>
-          <button type="button" class="btn" id="cancel" onClick='javascript:window.location="@routes.Users.list"'><i
+          <button type="button" class="btn" id="cancel" onClick='javascript:history.go(-1)'><i
                   class="icon-stop"></i>Avbryt
           </button>
         </div>

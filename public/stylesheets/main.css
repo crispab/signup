@@ -65,3 +65,7 @@ dl.participation {
 .smaller-modal {
   width: 370px;
 }
+
+td.right-aligned {
+  text-align: right;
+}
