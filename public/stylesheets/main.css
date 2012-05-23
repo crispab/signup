@@ -55,3 +55,9 @@ dl.participation {
   vertical-align: bottom;
   margin-top: 14px;
 }
+
+.transparent {
+  background: transparent;
+  padding: 0;
+  border: none;
+}

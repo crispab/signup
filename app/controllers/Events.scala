@@ -11,7 +11,7 @@ object Events extends Controller {
 
   def list = Action {
     val events = Event.findAll()
-    Ok(views.html.events.list("Found events: " + events))
+    Ok(views.html.events.list(events))
   }
 
   def createForm = Action {

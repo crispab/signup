@@ -1,18 +1,53 @@
-@(message: String)
+@(events: Seq[models.Event])
 
 <!DOCTYPE html>
 <html lang="sv">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>Events</title>
-  </head>
-  <body>
-  	<h1>@message</h1>   
-  </body>
-</html> 
-    
-    
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <title>Event</title>
+</head>
+
+<body class="padded">
+
+<div class="row">
+  <div class="span5">
+    <h2>Event</h2>
+    <table class="table table-striped">
+      @events.map { event =>
+      <tr>
+        <td>
+          <dl class="participation">
+            <dt><a href="/events/@event.id">
+              @event.name
+            </a></dt>
+            <dd>@event.description</dd>
+          </dl>
+        </td>
+        <td>
+          @event.when.format("yyyy-MM-dd HH:mm")
+        </td>
+        <td>
+          <!-- TODO: länk eller form för att göra DELETE -->
+          <button class="transparent"><i class="icon-trash"></i></button>
+        </td>
+      </tr>
+      }
+    </table>
+    <p>
+    <a href="/events/new" class="btn"><i class="icon-plus"></i> Nytt</a>
+  </div>
+</div>
+
+
+<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.js"></script>
+
+</body>
+</html>

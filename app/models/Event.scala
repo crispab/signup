@@ -34,14 +34,14 @@ object Event {
   def findAll(): Seq[Event] = {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from events").as(Event.parser *)
+        SQL("SELECT * FROM events ORDER BY whenx DESC").as(Event.parser *)
     }
   }
 
   def find(id: Long): Event = {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from events e where e.id={id}").on('id -> id).as(Event.parser *).head
+        SQL("SELECT * FROM events e WHERE e.id={id}").on('id -> id).as(Event.parser *).head
     }
   }
 
