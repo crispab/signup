@@ -20,7 +20,7 @@ object Events extends Controller {
   }
   
   def updateForm(id: Long) = Action {
-    val event = Event.find(id);
+    val event = Event.find(id)
     Ok(views.html.events.edit(event, newEvent = false))
   }
 
@@ -32,7 +32,7 @@ object Events extends Controller {
   }
 
   def asCalendar(id: Long) = Action {
-    val event = Event.find(id);
+    val event = Event.find(id)
     Ok(views.txt.events.ical(event)).as("text/calendar")
   }
   
@@ -74,6 +74,11 @@ object Events extends Controller {
         }
       }
       )
+  }
+
+  def delete(id: Long) = Action {
+    Event.delete(id)
+    Redirect(routes.Events.list())
   }
 
   val eventForm = Form(

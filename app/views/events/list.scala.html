@@ -34,14 +34,35 @@
           @event.when.format("yyyy-MM-dd HH:mm")
         </td>
         <td>
-          <!-- TODO: länk eller form för att göra DELETE -->
-          <button class="transparent"><i class="icon-trash"></i></button>
+          <a data-toggle="modal" href="#radera_@event.id" class="transparent"><i class="icon-trash"></i></a>
+
+          <div id="radera_@event.id" class="modal smaller-modal" style="display: none">
+            <div class="modal-header">
+              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <h3>Vill du radera event?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att radera eventet @event.name.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+              <form action="@routes.Events.delete(event.id.get)" method="POST">
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+              </form>
+            </div>
+          </div>
         </td>
       </tr>
       }
     </table>
     <p>
-    <a href="/events/new" class="btn"><i class="icon-plus"></i> Nytt</a>
+      <a href="/events/new" class="btn btn-primary"><i class="icon-plus icon-white"></i> Nytt</a>
+    </p>
   </div>
 </div>
 

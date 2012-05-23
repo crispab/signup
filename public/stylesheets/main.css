@@ -61,3 +61,7 @@ dl.participation {
   padding: 0;
   border: none;
 }
+
+.smaller-modal {
+  width: 370px;
+}

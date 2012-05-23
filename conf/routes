@@ -20,6 +20,8 @@ GET     /events                     controllers.Events.list
 GET     /events/:id                 controllers.Events.show(id: Long)
 POST    /events/:id                 controllers.Events.update(id: Long)
 GET     /events/:id/ical            controllers.Events.asCalendar(id: Long)
+POST    /events/:id/delete          controllers.Events.delete(id:Long)
+
 
 # Participations
 GET     /participations/new         controllers.Participations.createForm(eventId: Long, userId: Long)

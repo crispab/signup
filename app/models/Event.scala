@@ -97,5 +97,14 @@ SET name = {name},
 WHERE id = {id}
     """
 
-
+  def delete(id: Long) {
+    DB.withConnection {
+      implicit connection =>
+        SQL("DELETE FROM participations p WHERE p.event={id}").on('id -> id).executeUpdate()
+    }
+    DB.withConnection {
+      implicit connection =>
+        SQL("DELETE FROM events e WHERE e.id={id}").on('id -> id).executeUpdate()
+    }
+  }
 }
