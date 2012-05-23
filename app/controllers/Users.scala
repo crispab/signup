@@ -11,7 +11,7 @@ object Users extends Controller {
 
   def list = Action {
     val users = User.findAll()
-    Ok(views.html.users.list("Found users: " + users))
+    Ok(views.html.users.list(users))
   }
   
   def show(id : Long) = Action {
@@ -73,6 +73,11 @@ object Users extends Controller {
         }
       }
     )
+  }
+
+  def delete(id: Long) = Action {
+    User.delete(id)
+    Redirect(routes.Users.list())
   }
 
   val userForm = Form(

@@ -139,5 +139,17 @@ SET first_name = {firstName},
     comment = {comment}
 WHERE id = {id}
     """
+
+  def delete(id: Long) {
+    DB.withConnection {
+      implicit connection =>
+        SQL("DELETE FROM participations p WHERE p.userx={id}").on('id -> id).executeUpdate()
+    }
+    DB.withConnection {
+      implicit connection =>
+        SQL("DELETE FROM users u WHERE u.id={id}").on('id -> id).executeUpdate()
+    }
+  }
+
 }
 

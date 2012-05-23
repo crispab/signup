@@ -1,4 +1,4 @@
-@(message: String)
+@(users: Seq[User])
 
 <!DOCTYPE html>
 <html lang="sv">
@@ -24,9 +24,56 @@
       <li class="active">Användare</li>
     </ul>
     <h2>Användare</h2>
-    <p>@message</p>
+    <table class="table table-striped">
+      @users.map { user =>
+      <tr>
+        <td>
+          <dl class="participation">
+            <dt><a href="/users/@user.id">
+              @user.firstName @user.lastName
+            </a></dt>
+            <dd>@user.comment</dd>
+          </dl>
+        </td>
+        <td>
+          @user.primaryEmail
+        </td>
+        <td>
+          <a data-toggle="modal" href="#radera_@user.id" class="transparent"><i class="icon-trash"></i></a>
+
+          <div id="radera_@user.id" class="modal smaller-modal" style="display: none">
+            <div class="modal-header">
+              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <h3>Vill du radera användaren?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att radera användaren @user.firstName @user.lastName.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+              <form action="@routes.Users.delete(user.id.get)" method="POST">
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+              </form>
+            </div>
+          </div>
+        </td>
+      </tr>
+      }
+    </table>
+    <p>
+      <a href="/users/new" class="btn btn-primary"><i class="icon-plus icon-white"></i> Ny</a>
+    </p>
   </div>
 </div>
+
+<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.js"></script>
+
 </body>
 </html> 
     

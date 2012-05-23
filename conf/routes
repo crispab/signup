@@ -12,6 +12,7 @@ POST    /users                      controllers.Users.create
 GET     /users                      controllers.Users.list
 GET     /users/:id                  controllers.Users.show(id: Long)
 POST    /users/:id                  controllers.Users.update(id: Long)
+POST    /users/:id/delete           controllers.Users.delete(id:Long)
 
 
 # Events
