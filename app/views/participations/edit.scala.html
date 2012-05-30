@@ -53,15 +53,15 @@
 <div class="row">
   <div class="span5">
 
-
-    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variabel på något sätt? -->
-
-    @if(newParticipation) {
-    <form class="form-horizontal" action="@routes.Participations.create" method="POST">
-    } else {
-    <form class="form-horizontal" action="@routes.Participations.update(participation.id.get)" method="POST">
+    @the_action() = @{
+      if(newParticipation) {
+        routes.Participations.create
+      } else {
+        routes.Participations.update(participation.id.get)
+      }
     }
 
+    <form class="form-horizontal" action="@the_action" method="POST">
       <fieldset>
         <div class="control-group">
           <label class="control-label"><h3>@participation.user.firstName @participation.user.lastName</h3></label>

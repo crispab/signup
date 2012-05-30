@@ -6,6 +6,7 @@ import play.api.data.Form
 import play.api.data.Forms.{tuple, nonEmptyText, text, optional, date}
 import anorm.NotAssigned
 import models.{Participation, Event, User}
+import java.text.SimpleDateFormat
 
 object Events extends Controller {
 
@@ -43,11 +44,13 @@ object Events extends Controller {
         Logger.info("Errors: " + failingForm.errors)
         Redirect(routes.Events.createForm())
       }, {
-        case (name, description, when, venue) => {
+        case (name, description, start_date, start_time, end_time, venue) => {
+          val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
+          val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
           Event.create(Event(
             name = name,
             description = description.getOrElse(""),
-            when = when,
+            when = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
             venue = venue
           ))
           Redirect(routes.Events.list())
@@ -63,11 +66,13 @@ object Events extends Controller {
         Logger.info("Errors: " + failingForm.errors)
         Redirect(routes.Events.createForm())
       }, {
-        case (name, description, when, venue) => {
+        case (name, description, start_date, start_time, end_time, venue) => {
+          val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
+          val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
           Event.update(id, Event(
             name = name,
             description = description.getOrElse(""),
-            when = when,
+            when = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
             venue = venue
           ))
           Redirect(routes.Events.show(id))
@@ -85,7 +90,9 @@ object Events extends Controller {
     tuple(
       "name" -> nonEmptyText,
       "description" -> optional(text),
-      "when" -> date("yyyy-MM-dd HH:mm"),
+      "start_date" -> date("yyyy-MM-dd"),
+      "start_time" -> date("HH:mm"),
+      "end_time" -> date("HH:mm"),
       "venue" -> text
     )
   )

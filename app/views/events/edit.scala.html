@@ -9,6 +9,8 @@
   <meta name="author" content="">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap-combobox/css/bootstrap-combobox.css">
+  <link rel="stylesheet" href="/assets/bootstrap-datepicker/css/datepicker.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
   <title>Redigera event @event.name</title>
 </head>
@@ -38,13 +40,15 @@
     <p></p>
 
 
-    <!-- TODO: är det så här man skall göra? Kan man stoppa action i en variabel på något sätt? -->
-
-    @if(newEvent) {
-    <form class="form-horizontal" action="@routes.Events.create" method="POST">
-    } else {
-    <form class="form-horizontal" action="@routes.Events.update(event.id.get)" method="POST">
+    @the_action() = @{
+      if(newEvent) {
+        routes.Events.create
+      } else {
+        routes.Events.update(event.id.get)
+      }
     }
+
+    <form class="form-horizontal" action="@the_action()" method="POST">
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="name">Namn</label>
@@ -63,15 +67,6 @@
         </div>
 
         <div class="control-group">
-          <label class="control-label" for="when">Tid</label>
-
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="when" name="when"
-                   value='@event.when.format("yyyy-MM-dd HH:mm")'>
-          </div>
-        </div>
-
-        <div class="control-group">
           <label class="control-label" for="venue">Plats</label>
 
           <div class="controls">
@@ -79,6 +74,50 @@
           </div>
         </div>
 
+        <div class="control-group">
+          <label class="control-label" for="start_date">Dag</label>
+
+          <div class="controls">
+            <input type="text" class="input-small" id="start_date" name="start_date"
+                   value='@event.when.format("yyyy-MM-dd")'>
+          </div>
+        </div>
+
+        @all_times() = @{
+          Seq(
+          "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
+          "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
+          "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
+          "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+          "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
+          "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+          "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
+          )
+        }
+
+        <div class="control-group">
+          <label class="control-label" for="start_time">Från kl</label>
+
+          <div class="controls time">
+            <select id="start_time" class="combobox" name="start_time">
+              @all_times().map { tod =>
+                <option value="@tod" @if(tod.equals(event.when.format("HH:mm"))) {selected=""}>@tod</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="end_time">Till kl</label>
+
+          <div class="controls time">
+            <select id="end_time" class="combobox" name="end_time">
+              @all_times().map { tod =>
+              <option value="@tod" @if(tod.equals(event.when.format("HH:mm"))) {selected=""}>@tod</option>
+              }
+            </select>
+          </div>
+        </div>
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
@@ -95,6 +134,22 @@
 
 <script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
 <script src="/assets/bootstrap/js/bootstrap.js"></script>
+<script src="/assets/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+<script src="/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="/assets/bootstrap-datepicker/js/locales/bootstrap-datepicker.sv.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.combobox').combobox();
+  });
+
+  $('#start_date').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      language: 'sv',
+      weekStart: 1
+  });
+</script>
 
 </body>
 </html>

@@ -69,7 +69,7 @@ object Users extends Controller {
             mobileNr = mobileNr.getOrElse(""),
             comment = comment.getOrElse("")
           ))
-          Redirect(routes.Users.list)
+          Redirect(routes.Users.show(id))
         }
       }
     )

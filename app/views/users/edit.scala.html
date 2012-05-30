@@ -36,11 +36,15 @@
     <h2>@if(newUser) {Ny} else {Redigera} Användare</h2>
     <p></p>
 
-    @if(newUser) {
-    <form class="form-horizontal" action="@routes.Users.create" method="POST">
-    } else {
-    <form class="form-horizontal" action="@routes.Users.update(user.id.get)" method="POST">
+    @the_action() = @{
+      if(newUser) {
+        routes.Users.create
+      } else {
+        routes.Users.update(user.id.get)
+      }
     }
+
+    <form class="form-horizontal" action="@the_action" method="POST">
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="nickName">Smeknamn</label>
