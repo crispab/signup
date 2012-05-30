@@ -63,7 +63,7 @@ Password: <Enter the password of your DATABASE user 'postgres'>
 $ psql -s signup
 Password: <Enter the password of your DATABASE user 'postgres'>
 signup=# create user signup4 password 's7p2+';
-signup=# grant all privileges on signup to signup4;
+signup=# grant all privileges on database signup to signup4;
 ```
 
 Now you can start SignUp with Postgres using

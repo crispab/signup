@@ -9,7 +9,8 @@ import play.api.Play.current
 case class Event(id: Pk[Long] = NotAssigned,
                  name: String = "",
                  description: String = "",
-                 when: Date = new Date(),
+                 start_time: Date = new Date(),
+                 end_time: Date = new Date(),
                  venue: String = ""
                   )
 
@@ -18,14 +19,16 @@ object Event {
     get[Pk[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
-      get[Date]("whenx") ~
+      get[Date]("start_time") ~
+      get[Date]("end_time") ~
       get[String]("venue") map {
-      case id ~ name ~ description ~ whenx ~ venue =>
+      case id ~ name ~ description ~ start_time ~ end_time ~ venue =>
         Event(
           id = id,
           name = name,
           description = description,
-          when = whenx,
+          start_time = start_time,
+          end_time = end_time,
           venue = venue
         )
     }
@@ -34,7 +37,7 @@ object Event {
   def findAll(): Seq[Event] = {
     DB.withConnection {
       implicit connection =>
-        SQL("SELECT * FROM events ORDER BY whenx DESC").as(Event.parser *)
+        SQL("SELECT * FROM events ORDER BY start_time DESC").as(Event.parser *)
     }
   }
 
@@ -51,7 +54,8 @@ object Event {
         SQL(insertQueryString).on(
           'name -> event.name,
           'description -> event.description,
-          'when -> event.when,
+          'start_time -> event.start_time,
+          'end_time -> event.end_time,
           'venue -> event.venue
         ).executeUpdate()
     }
@@ -60,15 +64,17 @@ object Event {
   val insertQueryString =
     """
 INSERT INTO events (
-	  name,
-	  description,
-	  whenx,
+      name,
+      description,
+      start_time,
+      end_time,
       venue
     )
     values (
       {name},
       {description},
-      {when},
+      {start_time},
+      {end_time},
       {venue}
     )
     """
@@ -80,7 +86,8 @@ INSERT INTO events (
           'id -> id,
           'name -> event.name,
           'description -> event.description,
-          'when -> event.when,
+          'start_time -> event.start_time,
+          'end_time -> event.end_time,
           'venue -> event.venue
         ).executeUpdate()
     }
@@ -92,7 +99,8 @@ INSERT INTO events (
 UPDATE events
 SET name = {name},
     description = {description},
-    whenx = {when},
+    start_time = {start_time},
+    end_time = {end_time},
     venue = {venue}
 WHERE id = {id}
     """

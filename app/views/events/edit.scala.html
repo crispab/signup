@@ -79,7 +79,7 @@
 
           <div class="controls">
             <input type="text" class="input-small" id="start_date" name="start_date"
-                   value='@event.when.format("yyyy-MM-dd")'>
+                   value='@event.start_time.format("yyyy-MM-dd")'>
           </div>
         </div>
 
@@ -101,7 +101,7 @@
           <div class="controls time">
             <select id="start_time" class="combobox" name="start_time">
               @all_times().map { tod =>
-                <option value="@tod" @if(tod.equals(event.when.format("HH:mm"))) {selected=""}>@tod</option>
+                <option value="@tod" @if(tod.equals(event.start_time.format("HH:mm"))) {selected=""}>@tod</option>
               }
             </select>
           </div>
@@ -113,7 +113,7 @@
           <div class="controls time">
             <select id="end_time" class="combobox" name="end_time">
               @all_times().map { tod =>
-              <option value="@tod" @if(tod.equals(event.when.format("HH:mm"))) {selected=""}>@tod</option>
+              <option value="@tod" @if(tod.equals(event.end_time.format("HH:mm"))) {selected=""}>@tod</option>
               }
             </select>
           </div>

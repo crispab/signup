@@ -37,7 +37,8 @@
           </dl>
         </td>
         <td>
-          @event.when.format("yyyy-MM-dd HH:mm")
+          <strong>@event.start_time.format("yyyy-MM-dd")</strong><br/>
+          @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
         </td>
         <td>
           <a data-toggle="modal" href="#radera_@event.id" class="transparent"><i class="icon-trash"></i></a>

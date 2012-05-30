@@ -47,10 +47,12 @@ object Events extends Controller {
         case (name, description, start_date, start_time, end_time, venue) => {
           val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
           val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
+          val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
           Event.create(Event(
             name = name,
             description = description.getOrElse(""),
-            when = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
+            start_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
+            end_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
             venue = venue
           ))
           Redirect(routes.Events.list())
@@ -69,10 +71,12 @@ object Events extends Controller {
         case (name, description, start_date, start_time, end_time, venue) => {
           val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
           val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
+          val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
           Event.update(id, Event(
             name = name,
             description = description.getOrElse(""),
-            when = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
+            start_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
+            end_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
             venue = venue
           ))
           Redirect(routes.Events.show(id))

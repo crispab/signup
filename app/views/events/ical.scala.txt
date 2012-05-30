@@ -5,13 +5,13 @@ VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:REQUEST
 BEGIN:VEVENT
-DTSTART:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
-DTEND:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
-DTSTAMP:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+DTSTART:@event.start_time.format("yyyyMMdd'T'HHmmss'Z'")
+DTEND:@event.end_time.format("yyyyMMdd'T'HHmmss'Z'")
+DTSTAMP:@event.start_time.format("yyyyMMdd'T'HHmmss'Z'")
 UID:@event.id
-CREATED:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+CREATED:@{new java.util.Date().format("yyyyMMdd'T'HHmmss'Z'")}
 DESCRIPTION:@event.description
-LAST-MODIFIED:@event.when.format("yyyyMMdd'T'HHmmss'Z'")
+LAST-MODIFIED:@{new java.util.Date().format("yyyyMMdd'T'HHmmss'Z'")}
 LOCATION:@event.venue
 SEQUENCE:0
 STATUS:CONFIRMED
