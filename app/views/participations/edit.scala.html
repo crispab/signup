@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
   <title>Anmälan till @participation.event.name</title>
 </head>
 
@@ -61,20 +62,25 @@
       }
     }
 
-    <form class="form-horizontal" action="@the_action" method="POST">
+    <form action="@the_action" method="POST">
       <fieldset>
         <div class="control-group">
-          <label class="control-label"><h3>@participation.user.firstName @participation.user.lastName</h3></label>
+          <label class="control-label">
+            <h3>
+              <img src="@util.Gravatar.url(participation.user.email)"  class="gravatar" rel="tooltip" title="Gravatar för @participation.user.email"/>
+              @participation.user.firstName @participation.user.lastName
+            </h3>
+          </label>
           <div class="controls">
-            <label class="radio">
+            <label class="radio inline">
               <input type="radio" name="status" id="on" value="On" @(if(newParticipation || participation.status == Status.On) "checked")>
               <span class="label On">Kommer</span>
             </label>
-            <label class="radio">
+            <label class="radio inline">
               <input type="radio" name="status" id="maybe" value="Maybe" @(if(participation.status==Status.Maybe) "checked")>
               <span class="label Maybe">Kanske</span>
             </label>
-            <label class="radio">
+            <label class="radio inline">
               <input type="radio" name="status" id="off" value="Off" @(if(participation.status==Status.Off) "checked")>
               <span class="label Off">Kommer inte</span>
             </label>
@@ -84,9 +90,8 @@
 
         <div class="control-group">
           <label class="control-label" for="comment">Kommentar</label>
-
           <div class="controls">
-            <textarea class="input-xlarge" id="comment" name="comment" rows="2">@participation.comment</textarea>
+            <textarea class="span5" id="comment" name="comment" rows="2">@participation.comment</textarea>
           </div>
         </div>
 

@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
   <title>Redigera användare @user.firstName @user.lastName</title>
 </head>
 
@@ -47,14 +48,6 @@
     <form class="form-horizontal" action="@the_action" method="POST">
       <fieldset>
         <div class="control-group">
-          <label class="control-label" for="nickName">Smeknamn</label>
-
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="nickName" name="nickName" value="@user.nickName">
-          </div>
-        </div>
-
-        <div class="control-group">
           <label class="control-label" for="firstName">Förnamn</label>
 
           <div class="controls">
@@ -71,27 +64,18 @@
         </div>
 
         <div class="control-group">
-          <label class="control-label" for="primaryEmail">Epostadress</label>
+          <label class="control-label" for="email">Epost</label>
 
           <div class="controls">
-            <input type="text" class="input-xlarge" id="primaryEmail" name="primaryEmail" value="@user.primaryEmail">
+            <input type="text" class="input-xlarge" id="email" name="email" value="@user.email">
           </div>
         </div>
 
         <div class="control-group">
-          <label class="control-label" for="secondaryEmail">Alternativ epostadress</label>
+          <label class="control-label" for="phone">Telefon</label>
 
           <div class="controls">
-            <input type="text" class="input-xlarge" id="secondaryEmail" name="secondaryEmail"
-                   value="@user.secondaryEmail">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label" for="mobileNr">Mobilnummer</label>
-
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="mobileNr" name="mobileNr" value="@user.mobileNr">
+            <input type="text" class="input-xlarge" id="phone" name="phone" value="@user.phone">
           </div>
         </div>
 
@@ -108,7 +92,7 @@
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
                   class="icon-ok icon-white"></i>Spara
           </button>
-          <button type="button" class="btn" id="cancel" onClick='javascript:history.go(-1)'><i
+          <button type="button" class="btn" id="cancel" onClick='history.go(-1)'><i
                   class="icon-stop"></i>Avbryt
           </button>
         </div>

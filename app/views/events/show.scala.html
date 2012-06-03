@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
   <title>@event.name</title>
 </head>
 
@@ -56,6 +57,11 @@
       @registeredUsers.map { participation =>
       <tr>
         <td>
+          <a href="/participations/@participation.id/edit">
+            <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @participation.user.email"/>
+          </a>
+        </td>
+        <td>
           <dl class="participation">
             <dt><a href="/participations/@participation.id/edit">
               @participation.user.firstName
@@ -79,6 +85,11 @@
 
       @unregisteredUsers.map { user =>
       <tr>
+        <td>
+          <a href="/participations/new?eventId=@event.id&userId=@user.id">
+            <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email"/>
+          </a>
+        </td>
         <td>
           <dl class="participation">
             <dt><a href="/participations/new?eventId=@event.id&userId=@user.id">@user.firstName @user.lastName</a></dt>

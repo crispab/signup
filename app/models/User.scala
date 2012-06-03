@@ -9,11 +9,9 @@ import anorm.SqlParser._
 case class User(
                  id: Pk[Long] = NotAssigned,
                  firstName: String,
-                 nickName: String = "",
-                 lastName: String = "",
-                 primaryEmail: String = "",
-                 secondaryEmail: String = "",
-                 mobileNr: String = "",
+                 lastName: String,
+                 email: String,
+                 phone: String = "",
                  comment: String = ""
                  )
 
@@ -22,21 +20,17 @@ object User {
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("first_name") ~
-      get[String]("nick_name") ~
       get[String]("last_name") ~
-      get[String]("primary_email") ~
-      get[String]("secondary_email") ~
-      get[String]("mobile_nr") ~
+      get[String]("email") ~
+      get[String]("phone") ~
       get[String]("comment") map {
-      case id ~ firstName ~ nickName ~ lastName ~ primaryEmail ~ secondaryEmail ~ mobileNr ~ comment =>
+      case id ~ firstName ~ lastName ~ email ~ phone ~ comment =>
         User(
           id = id,
           firstName = firstName,
-          nickName = nickName,
           lastName = lastName,
-          primaryEmail = primaryEmail,
-          secondaryEmail = secondaryEmail,
-          mobileNr = mobileNr,
+          email = email,
+          phone = phone,
           comment = comment
 
         )
@@ -70,7 +64,7 @@ ORDER BY u.first_name, u.last_name
   def findAll(): Seq[User] = {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from users").as(User.parser *)
+        SQL("select * from users u ORDER BY u.first_name, u.last_name").as(User.parser *)
     }
   }
 
@@ -79,11 +73,9 @@ ORDER BY u.first_name, u.last_name
       implicit connection =>
         SQL(insertQueryString).on(
           'firstName -> user.firstName,
-          'nickName -> user.nickName,
           'lastName -> user.lastName,
-          'primaryEmail -> user.primaryEmail,
-          'secondaryEmail -> user.secondaryEmail,
-          'mobileNr -> user.mobileNr,
+          'email -> user.email,
+          'phone -> user.phone,
           'comment -> user.comment
         ).executeUpdate()
     }
@@ -93,20 +85,16 @@ ORDER BY u.first_name, u.last_name
     """
 INSERT INTO users (
       first_name,
-      nick_name,
-	  last_name,
-      primary_email,
-      secondary_email,
-	  mobile_nr,
+      last_name,
+      email,
+      phone,
       comment
     )
     values (
       {firstName},
-      {nickName},
       {lastName},
-      {primaryEmail},
-      {secondaryEmail},
-      {mobileNr},
+      {email},
+      {phone},
       {comment}
     )      
     """
@@ -117,11 +105,9 @@ INSERT INTO users (
         SQL(updateQueryString).on(
           'id -> id,
           'firstName -> user.firstName,
-          'nickName -> user.nickName,
           'lastName -> user.lastName,
-          'primaryEmail -> user.primaryEmail,
-          'secondaryEmail -> user.secondaryEmail,
-          'mobileNr -> user.mobileNr,
+          'email -> user.email,
+          'phone -> user.phone,
           'comment -> user.comment
         ).executeUpdate()
     }
@@ -131,11 +117,9 @@ INSERT INTO users (
     """
 UPDATE users
 SET first_name = {firstName},
-    nick_name = {nickName},
     last_name = {lastName},
-    primary_email = {primaryEmail},
-    secondary_email = {secondaryEmail},
-    mobile_nr = {mobileNr},
+    email = {email},
+    phone = {phone},
     comment = {comment}
 WHERE id = {id}
     """

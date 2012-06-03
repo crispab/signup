@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
   <title>Användare</title>
 </head>
 
@@ -28,6 +29,11 @@
       @users.map { user =>
       <tr>
         <td>
+          <a href="/users/@user.id">
+            <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email"/>
+          </a>
+        </td>
+        <td>
           <dl class="participation">
             <dt><a href="/users/@user.id">
               @user.firstName @user.lastName
@@ -36,7 +42,7 @@
           </dl>
         </td>
         <td>
-          @user.primaryEmail
+          @user.email
         </td>
         <td>
           <a data-toggle="modal" href="#radera_@user.id" class="transparent"><i class="icon-trash"></i></a>
@@ -48,7 +54,7 @@
             </div>
             <div class="modal-body">
               <p>
-                Du håller på att radera användaren @user.firstName @user.lastName.
+                Du håller på att radera användaren <strong>@user.firstName @user.lastName</strong>.
               </p>
               <p>
                 Vill du fortsätta?

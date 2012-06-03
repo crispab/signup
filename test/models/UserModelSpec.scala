@@ -4,6 +4,7 @@ import org.specs2.mutable._
 
 import play.api.test._
 import play.api.test.Helpers._
+import anorm.NotAssigned
 
 class UserModelSpec extends Specification {
 
@@ -11,7 +12,7 @@ class UserModelSpec extends Specification {
 
     "be persistable" in {
       running(FakeApplication()) {
-        val user = new User(firstName = "Jan")
+        val user = new User(NotAssigned, "Jan", "Grape", "jg@superb.se")
         User.create(user)
         User.findAll().exists(_.firstName == "Jan") must beTrue
       }

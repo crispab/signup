@@ -3,7 +3,7 @@ package controllers
 import play.api.mvc._
 import play.api.Logger
 import play.api.data.Form
-import play.api.data.Forms.{tuple, nonEmptyText, text, email, optional}
+import play.api.data.Forms.{tuple, nonEmptyText, text, optional}
 import models.User
 import anorm.NotAssigned
 
@@ -20,7 +20,10 @@ object Users extends Controller {
   }
 
   def createForm = Action {
-    val user = new User(NotAssigned, "")
+    val user = new User(id = NotAssigned,
+                        firstName = "",
+                        lastName = "",
+                        email = "")
     Ok(views.html.users.edit(user, newUser = true))
   }
 
@@ -34,19 +37,17 @@ object Users extends Controller {
       userForm.bindFromRequest.fold(
       failingForm => {
         Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Users.createForm)
+        Redirect(routes.Users.createForm())
       }, {
-        case (firstName, nickName, lastName, primaryEmail, secondaryEmail, mobileNr, comment) => {
+        case (firstName, lastName, email, phone, comment) => {
           User.create(User(
             firstName = firstName,
-            nickName = nickName.getOrElse(""),
-            lastName = lastName.getOrElse(""),
-            primaryEmail = primaryEmail.getOrElse(""),
-            secondaryEmail = secondaryEmail.getOrElse(""),
-            mobileNr = mobileNr.getOrElse(""),
+            lastName = lastName,
+            email = email,
+            phone = phone.getOrElse(""),
             comment = comment.getOrElse("")
           ))
-          Redirect(routes.Users.list)
+          Redirect(routes.Users.list())
         }
       }
     )
@@ -57,16 +58,14 @@ object Users extends Controller {
       userForm.bindFromRequest.fold(
       failingForm => {
         Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Users.createForm)
+        Redirect(routes.Users.createForm())
       }, {
-        case (firstName, nickName, lastName, primaryEmail, secondaryEmail, mobileNr, comment) => {
+        case (firstName, lastName, email, phone, comment) => {
           User.update(id, User(
             firstName = firstName,
-            nickName = nickName.getOrElse(""),
-            lastName = lastName.getOrElse(""),
-            primaryEmail = primaryEmail.getOrElse(""),
-            secondaryEmail = secondaryEmail.getOrElse(""),
-            mobileNr = mobileNr.getOrElse(""),
+            lastName = lastName,
+            email = email,
+            phone = phone.getOrElse(""),
             comment = comment.getOrElse("")
           ))
           Redirect(routes.Users.show(id))
@@ -83,11 +82,9 @@ object Users extends Controller {
   val userForm = Form(
     tuple(
       "firstName" -> nonEmptyText,
-      "nickName" -> optional(text),
-      "lastName" -> optional(text),
-      "primaryEmail" -> optional(email),
-      "secondaryEmail" -> optional(email),
-      "mobileNr" -> optional(text),
+      "lastName" -> nonEmptyText,
+      "email" -> play.api.data.Forms.email,
+      "phone" -> optional(text),
       "comment" -> optional(text)
 
     )

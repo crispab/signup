@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
   <title>@user.firstName</title>
 </head>
 
@@ -27,13 +28,10 @@
       <li class="active">@user.firstName @user.lastName</li>
     </ul>
 
+    <img src="@util.Gravatar.url(user.email)" align="left" class="gravatar" rel="tooltip" title="Gravatar för @user.email"/>
     <h2>@user.firstName @user.lastName</h2>
 
     <table class="table span4">
-      <tr>
-        <td class="right-aligned">Smeknamn:</td>
-        <td>@user.nickName</td>
-      </tr>
       <tr>
         <td class="right-aligned">Förnamn:</td>
         <td>@user.firstName</td>
@@ -43,16 +41,12 @@
         <td>@user.lastName</td>
       </tr>
       <tr>
-        <td class="right-aligned">Primär Epost:</td>
-        <td>@user.primaryEmail</td>
+        <td class="right-aligned">Epost:</td>
+        <td>@user.email</td>
       </tr>
       <tr>
-        <td class="right-aligned">Sekundär Epost:</td>
-        <td>@user.secondaryEmail</td>
-      </tr>
-      <tr>
-        <td class="right-aligned">Mobiltelefon:</td>
-        <td>@user.mobileNr</td>
+        <td class="right-aligned">Telefon:</td>
+        <td>@user.phone</td>
       </tr>
       <tr>
         <td class="right-aligned">Kommentar:</td>
