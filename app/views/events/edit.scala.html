@@ -7,12 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" href="/assets/bootstrap-combobox/css/bootstrap-combobox.css">
-  <link rel="stylesheet" href="/assets/bootstrap-datepicker/css/datepicker.css">
-  <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-combobox/css/bootstrap-combobox.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-datepicker/css/datepicker.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
+  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
   <title>Redigera event @event.name</title>
 </head>
 
@@ -22,17 +22,17 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="/events">Event</a> <span class="divider">/</span>
+        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
       </li>
 
       @if(newEvent) {
       <li class="active">Nytt</li>
       } else {
       <li>
-        <a href="/events/@event.id">@event.name</a> <span class="divider">/</span>
+        <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">/</span>
       </li>
       <li class="active">Redigera</li>
       }
@@ -124,7 +124,7 @@
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
             <i class="icon-ok icon-white"></i>Spara
           </button>
-          <button type="button" class="btn" id="cancel" onClick='javascript:history.go(-1)'>
+          <button type="button" class="btn" id="cancel" onClick='history.go(-1)'>
             <i class="icon-stop"></i>Avbryt
           </button>
         </div>
@@ -133,11 +133,11 @@
   </div>
 </div>
 
-<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.js"></script>
-<script src="/assets/bootstrap-combobox/js/bootstrap-combobox.js"></script>
-<script src="/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="/assets/bootstrap-datepicker/js/locales/bootstrap-datepicker.sv.js"></script>
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
+<script src='@routes.Assets.at("bootstrap-combobox/js/bootstrap-combobox.js")'></script>
+<script src='@routes.Assets.at("bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
+<script src='@routes.Assets.at("bootstrap-datepicker/js/locales/bootstrap-datepicker.sv.js")'></script>
 
 <script type="text/javascript">
   $(document).ready(function(){

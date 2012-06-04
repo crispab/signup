@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
+  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
   <title>Anmälan till @participation.event.name</title>
 </head>
 
@@ -21,13 +21,13 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="/events">Event</a> <span class="divider">/</span>
+        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="/events/@participation.event.id">@participation.event.name</a> <span class="divider">/</span>
+        <a href="@routes.Events.show(participation.event.id.get)">@participation.event.name</a> <span class="divider">/</span>
       </li>
       <li class="active">Anmälan</li>
     </ul>
@@ -106,7 +106,7 @@
             Spara
           </button>
           <button type="button" class="btn" id="cancel"
-                  onClick='javascript:window.location="@routes.Events.show(participation.event.id.get)"'>
+                  onClick='window.location="@routes.Events.show(participation.event.id.get)"'>
             <i class="icon-stop"></i>
             Avbryt
           </button>
@@ -116,8 +116,8 @@
   </div>
 </div>
 
-<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.js"></script>
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
 
 </body>
 </html>

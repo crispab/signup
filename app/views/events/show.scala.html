@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
+  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
   <title>@event.name</title>
 </head>
 
@@ -20,10 +20,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="/events">Event</a> <span class="divider">/</span>
+        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
       </li>
       <li class="active">@event.name</li>
     </ul>
@@ -42,8 +42,8 @@
         </tr>
       </table>
       <p></p>
-      <a href="/events/@event.id/edit" class="btn"><i class="icon-pencil"></i>Redigera</a>
-      <a href="/events/@event.id/ical" rel="tooltip" title="iCal"><i class="icon-calendar align-right"></i></a>
+      <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i>Redigera</a>
+      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal"><i class="icon-calendar align-right"></i></a>
     </div>
   </div>
 </div>
@@ -57,20 +57,20 @@
       @registeredUsers.map { participation =>
       <tr>
         <td>
-          <a href="/participations/@participation.id/edit">
+          <a href="@routes.Participations.updateForm(participation.id.get)">
             <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @participation.user.email"/>
           </a>
         </td>
         <td>
           <dl class="participation">
-            <dt><a href="/participations/@participation.id/edit">
+            <dt><a href="@routes.Participations.updateForm(participation.id.get)">
               @participation.user.firstName
               @participation.user.lastName</a></dt>
             <dd>@participation.comment</dd>
           </dl>
         </td>
         <td>
-          <a href="/participations/@participation.id/edit">
+          <a href="@routes.Participations.updateForm(participation.id.get)">
             <span class="label @participation.status">
               @(participation.status match {
                           case Status.On => "Kommer"
@@ -86,17 +86,17 @@
       @unregisteredUsers.map { user =>
       <tr>
         <td>
-          <a href="/participations/new?eventId=@event.id&userId=@user.id">
+          <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
             <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email"/>
           </a>
         </td>
         <td>
           <dl class="participation">
-            <dt><a href="/participations/new?eventId=@event.id&userId=@user.id">@user.firstName @user.lastName</a></dt>
+            <dt><a href="@routes.Participations.createForm(event.id.get, user.id.get)">@user.firstName @user.lastName</a></dt>
           </dl>
         </td>
         <td>
-          <a href="/participations/new?eventId=@event.id&userId=@user.id"><span class="label Unregistered">Har inte sagt något</span></a>
+          <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span class="label Unregistered">Har inte sagt något</span></a>
         </td>
       </tr>
       }
@@ -105,8 +105,8 @@
 </div>
 
 
-<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.js"></script>
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
 
 </body>
 </html>

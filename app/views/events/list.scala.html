@@ -8,10 +8,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
+  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
   <title>Event</title>
 </head>
 
@@ -21,7 +21,7 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li class="active">Event</li>
     </ul>
@@ -31,7 +31,7 @@
       <tr>
         <td>
           <dl class="participation">
-            <dt><a href="/events/@event.id">
+            <dt><a href="@routes.Events.show(event.id.get)">
               @event.name
             </a></dt>
             <dd>@event.description</dd>
@@ -51,7 +51,7 @@
             </div>
             <div class="modal-body">
               <p>
-                Du håller på att radera eventet @event.name.
+                Du håller på att radera eventet <strong>@event.name</strong>.
               </p>
               <p>
                 Vill du fortsätta?
@@ -69,14 +69,14 @@
       }
     </table>
     <p>
-      <a href="/events/new" class="btn btn-primary"><i class="icon-plus icon-white"></i> Nytt</a>
+      <a href="@routes.Events.createForm" class="btn btn-primary"><i class="icon-plus icon-white"></i> Nytt</a>
     </p>
   </div>
 </div>
 
 
-<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.js"></script>
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
 
 </body>
 </html>

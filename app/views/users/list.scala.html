@@ -8,10 +8,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" href="/assets/stylesheets/main.css">
-  <link rel="shortcut icon" href="http:/assets/images/favicon.png" />
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
+  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
   <title>Användare</title>
 </head>
 
@@ -20,7 +20,7 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="/"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li class="active">Användare</li>
     </ul>
@@ -29,13 +29,13 @@
       @users.map { user =>
       <tr>
         <td>
-          <a href="/users/@user.id">
+          <a href="@routes.Users.show(user.id.get)">
             <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email"/>
           </a>
         </td>
         <td>
           <dl class="participation">
-            <dt><a href="/users/@user.id">
+            <dt><a href="@routes.Users.show(user.id.get)">
               @user.firstName @user.lastName
             </a></dt>
             <dd>@user.comment</dd>
@@ -72,13 +72,13 @@
       }
     </table>
     <p>
-      <a href="/users/new" class="btn btn-primary"><i class="icon-plus icon-white"></i> Ny</a>
+      <a href="@routes.Users.createForm" class="btn btn-primary"><i class="icon-plus icon-white"></i> Ny</a>
     </p>
   </div>
 </div>
 
-<script src="/assets/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.js"></script>
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
 
 </body>
 </html> 
