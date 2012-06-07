@@ -1,23 +1,26 @@
 @(event: models.Event, newEvent : Boolean)
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-combobox/css/bootstrap-combobox.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-datepicker/css/datepicker.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
-  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
-  <title>Redigera event @event.name</title>
-</head>
+@the_action() = @{
+  if(newEvent) {
+    routes.Events.create
+  } else {
+    routes.Events.update(event.id.get)
+  }
+}
 
+@all_times() = @{
+  Seq(
+  "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
+  "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
+  "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
+  "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
+  "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+  "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
+  )
+}
 
-<body class="padded">
+@page("Redigera event " + event.name){
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -39,15 +42,6 @@
     </ul>
     <h2>@if(newEvent) {Nytt} else {Redigera} Event</h2>
     <p></p>
-
-
-    @the_action() = @{
-      if(newEvent) {
-        routes.Events.create
-      } else {
-        routes.Events.update(event.id.get)
-      }
-    }
 
     <form class="form-horizontal" action="@the_action()" method="POST">
       <fieldset>
@@ -83,18 +77,6 @@
                    value='@event.start_time.format("yyyy-MM-dd")'>
           </div>
         </div>
-
-        @all_times() = @{
-          Seq(
-          "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
-          "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
-          "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
-          "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-          "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
-          "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-          "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
-          )
-        }
 
         <div class="control-group">
           <label class="control-label" for="start_time">Från kl</label>
@@ -132,25 +114,4 @@
     </form>
   </div>
 </div>
-
-<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
-<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
-<script src='@routes.Assets.at("bootstrap-combobox/js/bootstrap-combobox.js")'></script>
-<script src='@routes.Assets.at("bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
-<script src='@routes.Assets.at("bootstrap-datepicker/js/locales/bootstrap-datepicker.sv.js")'></script>
-
-<script type="text/javascript">
-  $(document).ready(function(){
-    $('.combobox').combobox();
-  });
-
-  $('#start_date').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      language: 'sv',
-      weekStart: 1
-  });
-</script>
-
-</body>
-</html>
+}

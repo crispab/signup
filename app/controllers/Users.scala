@@ -24,12 +24,12 @@ object Users extends Controller {
                         firstName = "",
                         lastName = "",
                         email = "")
-    Ok(views.html.users.edit(user, newUser = true))
+    Ok(views.html.users.edit(user, creating = true))
   }
 
   def updateForm(id: Long) = Action {
     val user = User.find(id)
-    Ok(views.html.users.edit(user, newUser = false))
+    Ok(views.html.users.edit(user, creating = false))
   }
 
   def create = Action {
@@ -86,9 +86,7 @@ object Users extends Controller {
       "email" -> play.api.data.Forms.email,
       "phone" -> optional(text),
       "comment" -> optional(text)
-
     )
   )
-
 }
 

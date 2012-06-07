@@ -1,21 +1,6 @@
 @(user: models.User)
-<!DOCTYPE html>
-<html lang="sv">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
-  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
-  <title>@user.firstName</title>
-</head>
-
-<body class="padded">
-
+@page(user.firstName + " " + user.lastName) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -62,9 +47,4 @@
     <a href="@routes.Users.updateForm(user.id.get)" class="btn btn-primary"><i class="icon-pencil icon-white"></i> Redigera</a>
   </div>
 </div>
-
-<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
-<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
-
-</body>
-</html>
+}

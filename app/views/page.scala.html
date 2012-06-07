@@ -1,0 +1,53 @@
+@(title: String)(body: Html)
+
+@import helper._
+@import helper.FieldConstructor
+@import helper.twitterBootstrap2._
+@implicitField = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
+
+<!DOCTYPE html>
+
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-combobox/css/bootstrap-combobox.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-datepicker/css/datepicker.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
+  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
+  <title>@title</title>
+</head>
+
+
+<body>
+<div class="container">
+
+  @body
+
+</div>
+
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
+<script src='@routes.Assets.at("bootstrap-combobox/js/bootstrap-combobox.js")'></script>
+<script src='@routes.Assets.at("bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
+<script src='@routes.Assets.at("bootstrap-datepicker/js/locales/bootstrap-datepicker.sv.js")'></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.combobox').combobox();
+  });
+
+  $('#start_date').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      language: 'sv',
+      weekStart: 1
+  });
+</script>
+
+</body>
+</html>

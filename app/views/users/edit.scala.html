@@ -1,108 +1,102 @@
-@(user: models.User, newUser : Boolean)
+@(user: models.User, creating : Boolean)
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
-  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
-  <title>Redigera användare @user.firstName @user.lastName</title>
-</head>
+@the_action() = @{
+  if(creating) {
+    routes.Users.create
+  } else {
+    routes.Users.update(user.id.get)
+  }
+}
+
+@page("Redigera användare @user.firstName @user.lastName") {
+
+  <header>
+    <div class="row">
+      <div class="span5">
+        <ul class="breadcrumb">
+          <li>
+            <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+          </li>
+          <li>
+            <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
+          </li>
+
+          @if(creating) {
+            <li class="active">Ny</li>
+          } else {
+            <li>
+              <a href="@routes.Users.show(user.id.get)">@user.firstName @user.lastName</a> <span class="divider">/</span>
+            </li>
+            <li class="active">Redigera</li>
+          }
+
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="row">
+    <div class="span5">
+      <h2>@if(creating) {Ny} else {Redigera} Användare</h2>
+
+      <p></p>
 
 
-<body class="padded">
-<div class="row">
-  <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
-      </li>
-      <li>
-        <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
-      </li>
-      @if(newUser) {
-      <li class="active">Ny</li>
-      } else {
-      <li>
-        <a href="@routes.Users.show(user.id.get)">@user.firstName @user.lastName</a> <span class="divider">/</span>
-      </li>
-      <li class="active">Redigera</li>
-      }
-    </ul>
-    <h2>@if(newUser) {Ny} else {Redigera} Användare</h2>
-    <p></p>
+      <form class="form-horizontal" action="@the_action" method="POST">
+        <fieldset>
+          <div class="control-group">
+            <label class="control-label" for="firstName">Förnamn</label>
 
-    @the_action() = @{
-      if(newUser) {
-        routes.Users.create
-      } else {
-        routes.Users.update(user.id.get)
-      }
-    }
-
-    <form class="form-horizontal" action="@the_action" method="POST">
-      <fieldset>
-        <div class="control-group">
-          <label class="control-label" for="firstName">Förnamn</label>
-
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
+            </div>
           </div>
-        </div>
 
-        <div class="control-group">
-          <label class="control-label" for="lastName">Efternamn</label>
+          <div class="control-group">
+            <label class="control-label" for="lastName">Efternamn</label>
 
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
+            </div>
           </div>
-        </div>
 
-        <div class="control-group">
-          <label class="control-label" for="email">Epost</label>
 
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="email" name="email" value="@user.email">
+          <div class="control-group">
+            <label class="control-label" for="email">Epost</label>
+
+            <div class="controls">
+              <input type="email" class="input-xlarge" id="email" name="email" value="@user.email">
+            </div>
           </div>
-        </div>
 
-        <div class="control-group">
-          <label class="control-label" for="phone">Telefon</label>
+          <div class="control-group">
+            <label class="control-label" for="phone">Telefon</label>
 
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="phone" name="phone" value="@user.phone">
+            <div class="controls">
+              <input type="tel" class="input-xlarge" id="phone" name="phone" value="@user.phone">
+            </div>
           </div>
-        </div>
 
-        <div class="control-group">
-          <label class="control-label" for="comment">Kommentar</label>
+          <div class="control-group">
+            <label class="control-label" for="comment">Kommentar</label>
 
-          <div class="controls">
-            <textarea class="input-xlarge" id="comment" name="comment" rows="3">@user.comment</textarea>
+            <div class="controls">
+              <textarea class="input-xlarge" id="comment" name="comment" rows="3">@user.comment</textarea>
+            </div>
           </div>
-        </div>
 
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
-                  class="icon-ok icon-white"></i>Spara
-          </button>
-          <button type="button" class="btn" id="cancel" onClick='history.go(-1)'><i
-                  class="icon-stop"></i>Avbryt
-          </button>
-        </div>
-      </fieldset>
-    </form>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
+                    class="icon-ok icon-white"></i>Spara
+            </button>
+            <button type="button" class="btn" id="cancel" onClick='history.go(-1)'><i
+                    class="icon-stop"></i>Avbryt
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
   </div>
-</div>
 
-<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
-<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
-
-</body>
-</html>
+}

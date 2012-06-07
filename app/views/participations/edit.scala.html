@@ -1,22 +1,14 @@
 @(participation: models.Participation, newParticipation : Boolean)
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
-  <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
-  <title>Anmälan till @participation.event.name</title>
-</head>
+@the_action() = @{
+  if(newParticipation) {
+    routes.Participations.create
+  } else {
+    routes.Participations.update(participation.id.get)
+  }
+}
 
-
-<body class="padded">
-
+@page("Anmälan till " + participation.event.name) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -53,15 +45,6 @@
 
 <div class="row">
   <div class="span5">
-
-    @the_action() = @{
-      if(newParticipation) {
-        routes.Participations.create
-      } else {
-        routes.Participations.update(participation.id.get)
-      }
-    }
-
     <form action="@the_action" method="POST">
       <fieldset>
         <div class="control-group">
@@ -115,9 +98,4 @@
     </form>
   </div>
 </div>
-
-<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
-<script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
-
-</body>
-</html>
+}

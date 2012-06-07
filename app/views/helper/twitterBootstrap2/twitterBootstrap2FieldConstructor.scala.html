@@ -1,0 +1,12 @@
+@(elements: views.html.helper.FieldElements)
+
+@import play.api.i18n._
+@import views.html.helper._
+
+<div class="control-group @if(elements.hasErrors) {error}">
+    <label for="@elements.id" class="control-label">@elements.label</label>
+    <div class="controls">
+        @elements.input
+        <span class="help-inline">@elements.infos.mkString(", ")</span>
+    </div>
+</div>
