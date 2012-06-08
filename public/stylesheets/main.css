@@ -1,17 +1,3 @@
-body.padded {
-  padding: 2%;
-}
-
-div.wide1 {
-  padding-top: 30px;
-  padding-left: 12px;
-}
-
-div.wide2 {
-  padding-top: 12px;
-  padding-left: 4px;
-}
-
 .eventlabel {
   font-weight: bold;
   padding-right: 10px;
@@ -77,3 +63,20 @@ td.right-aligned {
 .gravatar {
   padding: 4px;
 }
+
+.showOnError {
+  display: none;
+}
+
+.error .showOnError {
+  display: inline-block;
+  *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+  vertical-align: middle;
+  padding-left: 5px;
+  margin-bottom: 0;
+  color: #b94a48;
+}
+

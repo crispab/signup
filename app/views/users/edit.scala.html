@@ -1,14 +1,18 @@
-@(user: models.User, creating : Boolean)
+@(userForm: Form[User], idToUpdate: Option[Long] = None)
 
-@the_action() = @{
-  if(creating) {
+@field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
+
+@hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "error" } }
+
+@theAction() = @{
+  if(idToUpdate.isEmpty) {
     routes.Users.create
   } else {
-    routes.Users.update(user.id.get)
+    routes.Users.update(idToUpdate.get)
   }
 }
 
-@page("Redigera användare @user.firstName @user.lastName") {
+@page("Redigera användare" +  field("firstName") + field("lastName")) {
 
   <header>
     <div class="row">
@@ -21,11 +25,11 @@
             <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
           </li>
 
-          @if(creating) {
+          @if(idToUpdate.isEmpty) {
             <li class="active">Ny</li>
           } else {
             <li>
-              <a href="@routes.Users.show(user.id.get)">@user.firstName @user.lastName</a> <span class="divider">/</span>
+              <a href="@routes.Users.show(idToUpdate.get)">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
             </li>
             <li class="active">Redigera</li>
           }
@@ -37,51 +41,49 @@
 
   <div class="row">
     <div class="span5">
-      <h2>@if(creating) {Ny} else {Redigera} Användare</h2>
-
+      <h2>@if(idToUpdate.isEmpty) {Ny} else {Redigera} Användare</h2>
       <p></p>
-
-
-      <form class="form-horizontal" action="@the_action" method="POST">
+      <form class="form-horizontal" action="@theAction" method="POST">
         <fieldset>
-          <div class="control-group">
+
+          <div class='control-group @hasErrors("firstName")'>
             <label class="control-label" for="firstName">Förnamn</label>
-
             <div class="controls">
-              <input type="text" class="input-xlarge" id="firstName" name="firstName" value="@user.firstName">
+              <input type="text" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")'>
+              <span class="showOnError">Fyll i ett förnamn</span>
             </div>
           </div>
 
-          <div class="control-group">
+          <div class='control-group @hasErrors("lastName")'>
             <label class="control-label" for="lastName">Efternamn</label>
-
             <div class="controls">
-              <input type="text" class="input-xlarge" id="lastName" name="lastName" value="@user.lastName">
+              <input type="text" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")'>
+              <span class="showOnError">Fyll i ett efternamn</span>
             </div>
           </div>
 
 
-          <div class="control-group">
+          <div class='control-group @hasErrors("email")'>
             <label class="control-label" for="email">Epost</label>
-
             <div class="controls">
-              <input type="email" class="input-xlarge" id="email" name="email" value="@user.email">
+              <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")'>
+              <span class="showOnError">Fyll i en korrekt epostadress</span>
             </div>
           </div>
 
-          <div class="control-group">
+          <div class='control-group @hasErrors("phone")'>
             <label class="control-label" for="phone">Telefon</label>
-
             <div class="controls">
-              <input type="tel" class="input-xlarge" id="phone" name="phone" value="@user.phone">
+              <input type="tel" class="input-xlarge" id="phone" name="phone" value='@field("phone")'>
+              <span class="showOnError">Ogiltigt telefonnummer</span>
             </div>
           </div>
 
-          <div class="control-group">
+          <div class='control-group @hasErrors("comment")'>
             <label class="control-label" for="comment">Kommentar</label>
-
             <div class="controls">
-              <textarea class="input-xlarge" id="comment" name="comment" rows="3">@user.comment</textarea>
+              <textarea class="input-xlarge" id="comment" name="comment" rows="3">@field("comment")</textarea>
+              <span class="showOnError">Det här var en skum kommentar</span>
             </div>
           </div>
 

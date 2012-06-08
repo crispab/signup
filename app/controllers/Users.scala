@@ -1,11 +1,10 @@
 package controllers
 
 import play.api.mvc._
-import play.api.Logger
-import play.api.data.Form
-import play.api.data.Forms.{tuple, nonEmptyText, text, optional}
+import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
 import models.User
-import anorm.NotAssigned
+import anorm.{Pk, NotAssigned}
+import play.api.data.Form
 
 object Users extends Controller {
 
@@ -20,58 +19,34 @@ object Users extends Controller {
   }
 
   def createForm = Action {
-    val user = new User(id = NotAssigned,
-                        firstName = "",
-                        lastName = "",
-                        email = "")
-    Ok(views.html.users.edit(user, creating = true))
+    Ok(views.html.users.edit(userForm))
   }
 
   def updateForm(id: Long) = Action {
     val user = User.find(id)
-    Ok(views.html.users.edit(user, creating = false))
+    Ok(views.html.users.edit(userForm.fill(user), Option(id)))
   }
 
   def create = Action {
     implicit request =>
       userForm.bindFromRequest.fold(
-      failingForm => {
-        Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Users.createForm())
-      }, {
-        case (firstName, lastName, email, phone, comment) => {
-          User.create(User(
-            firstName = firstName,
-            lastName = lastName,
-            email = email,
-            phone = phone.getOrElse(""),
-            comment = comment.getOrElse("")
-          ))
+        formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
+        user => {
+          User.create(user)
           Redirect(routes.Users.list())
         }
-      }
-    )
+      )
   }
 
   def update(id: Long) = Action {
     implicit request =>
       userForm.bindFromRequest.fold(
-      failingForm => {
-        Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Users.createForm())
-      }, {
-        case (firstName, lastName, email, phone, comment) => {
-          User.update(id, User(
-            firstName = firstName,
-            lastName = lastName,
-            email = email,
-            phone = phone.getOrElse(""),
-            comment = comment.getOrElse("")
-          ))
+        formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
+        user => {
+          User.update(id, user)
           Redirect(routes.Users.show(id))
         }
-      }
-    )
+      )
   }
 
   def delete(id: Long) = Action {
@@ -79,14 +54,16 @@ object Users extends Controller {
     Redirect(routes.Users.list())
   }
 
-  val userForm = Form(
-    tuple(
+  val userForm: Form[User] = Form(
+    mapping(
+      "id" -> ignored(NotAssigned:Pk[Long]),
       "firstName" -> nonEmptyText,
       "lastName" -> nonEmptyText,
       "email" -> play.api.data.Forms.email,
-      "phone" -> optional(text),
-      "comment" -> optional(text)
-    )
+      "phone" -> text,
+      "comment" -> text
+    )(User.apply)(User.unapply)
   )
+
 }
 
