@@ -7,13 +7,13 @@ import anorm._
 import anorm.SqlParser._
 
 case class User(
-                 id: Pk[Long] = NotAssigned,
-                 firstName: String,
-                 lastName: String,
-                 email: String,
-                 phone: String = "",
-                 comment: String = ""
-                 )
+  id: Pk[Long] = NotAssigned,
+  firstName: String,
+  lastName: String,
+  email: String,
+  phone: String = "",
+  comment: String = ""
+)
 
 object User {
 
@@ -32,7 +32,6 @@ object User {
           email = email,
           phone = phone,
           comment = comment
-
         )
     }
   }
