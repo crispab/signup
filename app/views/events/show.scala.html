@@ -1,5 +1,21 @@
 @(event: models.Event, unregisteredUsers : Seq[models.User], registeredUsers : Seq[models.Participation])
 
+@as_css_class(status: models.Status.Value) = @{
+status match {
+    case Status.On => "participation-on"
+    case Status.Maybe => "participation-maybe"
+    case Status.Off => "participation-off"
+  }
+}
+
+@as_message(status: models.Status.Value) = @{
+status match {
+    case Status.On => "Kommer"
+    case Status.Maybe => "Kanske"
+    case Status.Off => "Kommer inte"
+  }
+}
+
 @page(event.name) {
 <div class="row">
   <div class="span5">
@@ -27,8 +43,31 @@
         </tr>
       </table>
       <p></p>
-      <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i>Redigera</a>
-      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal"><i class="icon-calendar align-right"></i></a>
+      <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
+      <a data-toggle="modal" href="#radera_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+
+      <div id="radera_@event.id" class="modal smaller-modal" style="display: none">
+        <div class="modal-header">
+          <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+          <h3>Vill du radera event?</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Du håller på att radera eventet <strong>@event.name</strong>.
+          </p>
+          <p>
+            Vill du fortsätta?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+          <form action="@routes.Events.delete(event.id.get)" method="POST">
+            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+          </form>
+        </div>
+      </div>
+
+      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal" class="btn align-right"><i class="icon-calendar"></i> Inbjudan</a>
     </div>
   </div>
 </div>
@@ -56,12 +95,8 @@
         </td>
         <td>
           <a href="@routes.Participations.updateForm(participation.id.get)">
-            <span class="label @participation.status">
-              @(participation.status match {
-                          case Status.On => "Kommer"
-                          case Status.Maybe => "Kanske"
-                          case Status.Off => "Kommer inte"
-                      })
+            <span class="label @as_css_class(participation.status)">
+              @as_message(participation.status)
             </span>
           </a>
         </td>
@@ -81,7 +116,7 @@
           </dl>
         </td>
         <td>
-          <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span class="label Unregistered">Har inte sagt något</span></a>
+          <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span class="label participation-unregistered">Har inte sagt något</span></a>
         </td>
       </tr>
       }

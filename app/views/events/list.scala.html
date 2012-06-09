@@ -25,30 +25,6 @@
           <strong>@event.start_time.format("yyyy-MM-dd")</strong><br/>
           @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
         </td>
-        <td>
-          <a data-toggle="modal" href="#radera_@event.id" class="transparent"><i class="icon-trash"></i></a>
-
-          <div id="radera_@event.id" class="modal smaller-modal" style="display: none">
-            <div class="modal-header">
-              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-              <h3>Vill du radera event?</h3>
-            </div>
-            <div class="modal-body">
-              <p>
-                Du håller på att radera eventet <strong>@event.name</strong>.
-              </p>
-              <p>
-                Vill du fortsätta?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
-              <form action="@routes.Events.delete(event.id.get)" method="POST">
-                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
-              </form>
-            </div>
-          </div>
-        </td>
       </tr>
       }
     </table>

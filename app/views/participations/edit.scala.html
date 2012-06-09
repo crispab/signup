@@ -57,15 +57,15 @@
           <div class="controls">
             <label class="radio inline">
               <input type="radio" name="status" id="on" value="On" @(if(newParticipation || participation.status == Status.On) "checked")>
-              <span class="label On">Kommer</span>
+              <span class="label participation-on">Kommer</span>
             </label>
             <label class="radio inline">
               <input type="radio" name="status" id="maybe" value="Maybe" @(if(participation.status==Status.Maybe) "checked")>
-              <span class="label Maybe">Kanske</span>
+              <span class="label participation-maybe">Kanske</span>
             </label>
             <label class="radio inline">
               <input type="radio" name="status" id="off" value="Off" @(if(participation.status==Status.Off) "checked")>
-              <span class="label Off">Kommer inte</span>
+              <span class="label participation-off">Kommer inte</span>
             </label>
           </div>
         </div>

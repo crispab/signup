@@ -3,22 +3,22 @@
   padding-right: 10px;
 }
 
-.On {
+.participation-on {
   background-color: #5BB75B;
   text-transform: none;
 }
 
-.Maybe {
+.participation-maybe {
   background-color: #FAA732;
   text-transform: none;
 }
 
-.Off {
+.participation-off {
   background-color: #DA4F49;
   text-transform: none;
 }
 
-.Unregistered {
+.participation-unregistered {
   text-transform: none;
 }
 
@@ -39,7 +39,6 @@ dl.participation {
 .align-right {
   float: right;
   vertical-align: bottom;
-  margin-top: 14px;
 }
 
 .transparent {
@@ -64,11 +63,11 @@ td.right-aligned {
   padding: 4px;
 }
 
-.showOnError {
+.show-on-error {
   display: none;
 }
 
-.error .showOnError {
+.error .show-on-error {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */

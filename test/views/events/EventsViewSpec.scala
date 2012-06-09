@@ -12,7 +12,7 @@ class EventsViewSpec extends Specification {
 
     "be able to map status" in {
       running(FakeApplication()) {
-        val status = Status.Maybe;
+        val status = Status.Maybe
         val description =
          status match {
             case Status.On => "Kommer"

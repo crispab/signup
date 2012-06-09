@@ -30,32 +30,6 @@
         <td>
           @user.email
         </td>
-        <td>
-          <a data-toggle="modal" href="#radera_@user.id" class="transparent"><i class="icon-trash"></i></a>
-
-          <div id="radera_@user.id" class="modal smaller-modal" style="display: none">
-            <div class="modal-header">
-              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-              <h3>Vill du radera användaren?</h3>
-            </div>
-            <div class="modal-body">
-              <p>
-                Du håller på att radera användaren <strong>@user.firstName @user.lastName</strong>.
-              </p>
-
-              <p>
-                Vill du fortsätta?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
-
-              <form action="@routes.Users.delete(user.id.get)" method="POST">
-                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
-              </form>
-            </div>
-          </div>
-        </td>
       </tr>
       }
     </table>
