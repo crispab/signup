@@ -54,7 +54,7 @@ To install Postgres on MacOS X:
    This user seem to get some password that you cannot find out. 
    Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
  - Do some stuff from the command prompt to create a database and a database user
- 
+
 ```
 $ su - PostgreSQL
 Password: <Enter the password of your UNIX user 'PostgreSQL'>
@@ -102,3 +102,35 @@ To be able to deploy to Heroku you must:
 I (Mats) had to do a 'heroku keys:add ~/.ssh/id_rsa.pub' on one of my
 machines as I first got 'Permission denied (publickey).' when trying
 to 'git push heroku master'
+
+Access Postgres on Heroku
+-------------------------
+
+Install the [SQL console plugin](https://github.com/ddollar/heroku-sql-console) in Heroku:
+
+```heroku plugins:install git://github.com/ddollar/heroku-sql-console.git```
+
+Run the SQL console in Heroku:
+```
+pyttemackan:signup janne$ heroku sql
+SQL console for signup4.heroku.com
+SQL> show tables
++-----------------+
+|   table_name    |
++-----------------+
+| events          |
+| participations  |
+| play_evolutions |
+| users           |
++-----------------+
+SQL> select * from users
++--------------------------------------------------------------------------------+
+| id | first_name | last_name |        comment        |      email       | phone |
++--------------------------------------------------------------------------------+
+| -2 | Torbjörn   | Fälldin   |                       | unknown@crisp.se |       |
+| -3 | Göran      | Persson   | En f.d. statsminister | unknown@crisp.se |       |
+| -4 | Frodo      | Baggins   | Ringbärare            | unknown@crisp.se |       |
+| -1 | Fredrik    | Unknown   | En glad statsminister | unknown@crisp.se |       |
++--------------------------------------------------------------------------------+
+SQL>
+```
