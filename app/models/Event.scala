@@ -6,13 +6,14 @@ import anorm._
 import java.util.Date
 import play.api.Play.current
 
-case class Event(id: Pk[Long] = NotAssigned,
-                 name: String = "",
-                 description: String = "",
-                 start_time: Date = new Date(),
-                 end_time: Date = new Date(),
-                 venue: String = ""
-                  )
+case class Event(
+  id: Pk[Long] = NotAssigned,
+  name: String = "",
+  description: String = "",
+  start_time: Date = new Date(),
+  end_time: Date = new Date(),
+  venue: String = ""
+)
 
 object Event {
   val parser = {

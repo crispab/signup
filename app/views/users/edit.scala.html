@@ -4,8 +4,12 @@
 
 @hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "error" } }
 
+@isCreatingNew() = @{
+  idToUpdate.isEmpty
+}
+
 @theAction() = @{
-  if(idToUpdate.isEmpty) {
+  if(isCreatingNew) {
     routes.Users.create
   } else {
     routes.Users.update(idToUpdate.get)
@@ -25,7 +29,7 @@
             <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
           </li>
 
-          @if(idToUpdate.isEmpty) {
+          @if(isCreatingNew) {
             <li class="active">Ny</li>
           } else {
             <li>
@@ -41,7 +45,7 @@
 
   <div class="row">
     <div class="span5">
-      <h2>@if(idToUpdate.isEmpty) {Ny} else {Redigera} Användare</h2>
+      <h2>@if(isCreatingNew) {Ny} else {Redigera} Användare</h2>
       <p></p>
       <form class="form-horizontal" action="@theAction" method="POST">
         <fieldset>
@@ -49,7 +53,7 @@
           <div class='control-group @hasErrors("firstName")'>
             <label class="control-label" for="firstName">Förnamn</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")'>
+              <input type="text" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")' required>
               <span class="show-on-error">Fyll i ett förnamn</span>
             </div>
           </div>
@@ -57,7 +61,7 @@
           <div class='control-group @hasErrors("lastName")'>
             <label class="control-label" for="lastName">Efternamn</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")'>
+              <input type="text" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")' required>
               <span class="show-on-error">Fyll i ett efternamn</span>
             </div>
           </div>
@@ -66,7 +70,7 @@
           <div class='control-group @hasErrors("email")'>
             <label class="control-label" for="email">Epost</label>
             <div class="controls">
-              <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")'>
+              <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")' required>
               <span class="show-on-error">Fyll i en korrekt epostadress</span>
             </div>
           </div>

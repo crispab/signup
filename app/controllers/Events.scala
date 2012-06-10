@@ -1,12 +1,12 @@
 package controllers
 
-import play.api.mvc._
-import play.api.Logger
-import play.api.data.Form
-import play.api.data.Forms.{tuple, nonEmptyText, text, optional, date}
-import anorm.NotAssigned
 import models.{Participation, Event, User}
 import java.text.SimpleDateFormat
+import play.api.data.Form
+import play.api.data.Forms._
+import java.util.Date
+import play.api.mvc._
+import anorm.{Pk, NotAssigned}
 
 object Events extends Controller {
 
@@ -17,12 +17,12 @@ object Events extends Controller {
 
   def createForm = Action {
     val event = new Event(NotAssigned)
-    Ok(views.html.events.edit(event, newEvent = true))
+    Ok(views.html.events.edit(eventForm))
   }
   
   def updateForm(id: Long) = Action {
     val event = Event.find(id)
-    Ok(views.html.events.edit(event, newEvent = false))
+    Ok(views.html.events.edit(eventForm.fill(event), Option(id)))
   }
 
   def show(id : Long) = Action {
@@ -40,66 +40,69 @@ object Events extends Controller {
   def create = Action {
     implicit request =>
       eventForm.bindFromRequest.fold(
-      failingForm => {
-        Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Events.createForm())
-      }, {
-        case (name, description, start_date, start_time, end_time, venue) => {
-          val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
-          val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
-          val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
-          Event.create(Event(
-            name = name,
-            description = description.getOrElse(""),
-            start_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
-            end_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
-            venue = venue
-          ))
+        formWithErrors => BadRequest(views.html.events.edit(formWithErrors)),
+        event => {
+          Event.create(event)
           Redirect(routes.Events.list())
         }
-      }
       )
   }
+
 
   def update(id: Long) = Action {
     implicit request =>
       eventForm.bindFromRequest.fold(
-      failingForm => {
-        Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Events.createForm())
-      }, {
-        case (name, description, start_date, start_time, end_time, venue) => {
-          val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
-          val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
-          val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
-          Event.update(id, Event(
-            name = name,
-            description = description.getOrElse(""),
-            start_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
-            end_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
-            venue = venue
-          ))
+        formWithErrors => BadRequest(views.html.events.edit(formWithErrors, Option(id))),
+        event => {
+          Event.update(id, event)
           Redirect(routes.Events.show(id))
         }
-      }
       )
   }
+
 
   def delete(id: Long) = Action {
     Event.delete(id)
     Redirect(routes.Events.list())
   }
 
-  val eventForm = Form(
-    tuple(
-      "name" -> nonEmptyText,
-      "description" -> optional(text),
-      "start_date" -> date("yyyy-MM-dd"),
-      "start_time" -> date("HH:mm"),
-      "end_time" -> date("HH:mm"),
-      "venue" -> text
+  val eventForm: Form[Event] =
+    Form(
+      mapping(
+        "id" -> ignored(NotAssigned:Pk[Long]),
+        "name" -> nonEmptyText,
+        "description" -> text,
+        "start_date" -> date("yyyy-MM-dd"),
+        "start_time" -> date("HH:mm"),
+        "end_time" -> date("HH:mm"),
+        "venue" -> text
+      )(toEvent)(fromEvent)
     )
-  )
 
+  def fromEvent(event: Event) = {
+    Option((event.id, event.name, event.description, event.start_time, event.start_time, event.end_time, event.venue))
+  }
+
+  def toEvent(
+    id: Pk[Long],
+    name: String,
+    description: String,
+    start_date: Date,
+    start_time: Date,
+    end_time: Date,
+    venue: String): Event = {
+
+    val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
+    val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
+    val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
+    Event(
+      id = id,
+      name = name,
+      description = description,
+      start_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
+      end_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
+      venue = venue
+    )
+  }
 }
 
