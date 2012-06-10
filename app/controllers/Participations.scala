@@ -1,75 +1,82 @@
 package controllers
 
-import play.api.mvc._
-import play.api.Logger
-import play.api.data.Form
-import play.api.data.Forms.{tuple, nonEmptyText, text, optional, longNumber}
-import models.{Participation, Event, User}
 import scala.Long
+import play.api.data.Form
+import play.api.data.Forms._
+import anorm.{Pk, NotAssigned}
+import models.{Participation, Event, User}
+import play.api.mvc._
 
 object Participations extends Controller {
 
   def createForm(eventId: Long, userId: Long) = Action {
-    val event = Event.find(eventId);
-    val user = User.find(userId);
-    val participation = new Participation(user = user, event = event);
-    Ok(views.html.participations.edit(participation, newParticipation = true))
+    Ok(views.html.participations.edit(participationForm, User.find(userId), Event.find(eventId)))
   }
 
   def create = Action {
     implicit request =>
       participationForm.bindFromRequest.fold(
-      failingForm => {
-        Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Participations.createForm(-1, -1)) // TODO: Felhantering; user, event
-      }, {
-        case (status, comment, userId, eventId) => {
-          Participation.create(Participation(
-            status = models.Status.withName(status),
-            comment = comment.getOrElse(""),
-            user = User.find(userId),
-            event = Event.find(eventId)
-          ))
-          Redirect(routes.Events.show(eventId))
+        formWithErrors => {
+          val event = Event.find(formWithErrors("eventId").value.get.toLong)
+          val user = User.find(formWithErrors("userId").value.get.toLong)
+          BadRequest(views.html.participations.edit(formWithErrors, user, event))
+        },
+        participation => {
+          Participation.create(participation)
+          Redirect(routes.Events.show(participation.event.id.get))
         }
-      }
       )
   }
 
   def updateForm(id: Long) = Action {
-    val participation = Participation.find(id);
-    Ok(views.html.participations.edit(participation, newParticipation = false))
+    val participation = Participation.find(id)
+    Ok(views.html.participations.edit(participationForm.fill(participation), participation.user, participation.event, Option(id)))
   }
 
   def update(id: Long) = Action {
     implicit request =>
       participationForm.bindFromRequest.fold(
-      failingForm => {
-        Logger.info("Errors: " + failingForm.errors)
-        Redirect(routes.Participations.createForm(-1, -1)) // TODO: Felhantering; user, event
-      }, {
-        case (status, comment, userId, eventId) => {
-          Participation.update(id, Participation(
-            status = models.Status.withName(status),
-            comment = comment.getOrElse(""),
-            user = User.find(userId),
-            event = Event.find(eventId)
-          ))
-          Redirect(routes.Events.show(eventId))
+        formWithErrors => {
+          val event = Event.find(formWithErrors("eventId").value.get.toLong)
+          val user = User.find(formWithErrors("userId").value.get.toLong)
+          BadRequest(views.html.participations.edit(formWithErrors, user, event, Option(id)))
+        },
+        participation => {
+          Participation.update(id, participation)
+          Redirect(routes.Events.show(participation.event.id.get))
         }
-      }
       )
   }
 
-
-  val participationForm = Form(
-    tuple(
-      "status" -> nonEmptyText,
-      "comment" -> optional(text),
-      "userId" -> longNumber,
-      "eventId" -> longNumber
+  val participationForm:Form[Participation] =
+    Form(
+      mapping(
+        "id" -> ignored(NotAssigned:Pk[Long]),
+        "status" -> nonEmptyText,
+        "comment" -> text,
+        "userId" -> longNumber,
+        "eventId" -> longNumber
+      )(toParticipation)(fromParticipation)
     )
-  )
 
+  def toParticipation(
+    id: Pk[Long],
+    status: String,
+    comment: String,
+    userId: Long,
+    eventId: Long): Participation = {
+
+    Participation(
+      id = id,
+      status = models.Status.withName(status),
+      comment = comment,
+      user = User.find(userId),
+      event = Event.find(eventId)
+    )
+  }
+
+  def fromParticipation(participation: Participation) = {
+    Option((participation.id, participation.status.toString, participation.comment, participation.user.id.get, participation.event.id.get))
+  }
 }
 

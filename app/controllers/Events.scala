@@ -15,16 +15,6 @@ object Events extends Controller {
     Ok(views.html.events.list(events))
   }
 
-  def createForm = Action {
-    val event = new Event(NotAssigned)
-    Ok(views.html.events.edit(eventForm))
-  }
-  
-  def updateForm(id: Long) = Action {
-    val event = Event.find(id)
-    Ok(views.html.events.edit(eventForm.fill(event), Option(id)))
-  }
-
   def show(id : Long) = Action {
     val event = Event.find(id)
     val registeredUsers = Participation.findRegistered(event)
@@ -37,6 +27,10 @@ object Events extends Controller {
     Ok(views.txt.events.ical(event)).as("text/calendar")
   }
   
+  def createForm = Action {
+    Ok(views.html.events.edit(eventForm))
+  }
+
   def create = Action {
     implicit request =>
       eventForm.bindFromRequest.fold(
@@ -48,6 +42,11 @@ object Events extends Controller {
       )
   }
 
+
+  def updateForm(id: Long) = Action {
+    val event = Event.find(id)
+    Ok(views.html.events.edit(eventForm.fill(event), Option(id)))
+  }
 
   def update(id: Long) = Action {
     implicit request =>

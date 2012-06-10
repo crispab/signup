@@ -1,14 +1,22 @@
-@(participation: models.Participation, newParticipation : Boolean)
+@(participationForm: Form[Participation], user: User, event: Event, idToUpdate: Option[Long] = None)
+
+@field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
+
+@hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
+
+@isCreatingNew() = @{
+  idToUpdate.isEmpty
+}
 
 @the_action() = @{
-  if(newParticipation) {
+  if(isCreatingNew) {
     routes.Participations.create
   } else {
-    routes.Participations.update(participation.id.get)
+    routes.Participations.update(idToUpdate.get)
   }
 }
 
-@page("Anmälan till " + participation.event.name) {
+@page("Anmälan till " + event.name) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -19,23 +27,23 @@
         <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Events.show(participation.event.id.get)">@participation.event.name</a> <span class="divider">/</span>
+        <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">/</span>
       </li>
       <li class="active">Anmälan</li>
     </ul>
 
-    <h2>Anmälan till @participation.event.name</h2>
+    <h2>Anmälan till @event.name</h2>
 
     <div class="well">
-      <p>@participation.event.description</p>
+      <p>@event.description</p>
       <table>
         <tr>
           <td class="eventlabel">Tid:</td>
-          <td>@participation.event.start_time.format("yyyy-MM-dd, HH:mm")-@participation.event.end_time.format("HH:mm")</td>
+          <td>@event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</td>
         </tr>
         <tr>
           <td class="eventlabel">Plats:</td>
-          <td>@participation.event.venue</td>
+          <td>@event.venue</td>
         </tr>
       </table>
     </div>
@@ -47,40 +55,39 @@
   <div class="span5">
     <form action="@the_action" method="POST">
       <fieldset>
-        <div class="control-group">
+        <div class='control-group  @hasErrors("status")'>
           <label class="control-label">
             <h3>
-              <img src="@util.Gravatar.url(participation.user.email)"  class="gravatar" rel="tooltip" title="Gravatar för @participation.user.email"/>
-              @participation.user.firstName @participation.user.lastName
+              <img src="@util.Gravatar.url(user.email)"  class="gravatar" rel="tooltip" title="Gravatar för @user.email"/>
+              @user.firstName @user.lastName
             </h3>
           </label>
           <div class="controls">
             <label class="radio inline">
-              <input type="radio" name="status" id="on" value="On" @(if(newParticipation || participation.status == Status.On) "checked")>
+              <input type="radio" name="status" id="on" value="On" @(if(isCreatingNew || field("status") == "On") "checked")>
               <span class="label participation-on">Kommer</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="maybe" value="Maybe" @(if(participation.status==Status.Maybe) "checked")>
+              <input type="radio" name="status" id="maybe" value="Maybe" @(if(field("status") == "Maybe") "checked")>
               <span class="label participation-maybe">Kanske</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="off" value="Off" @(if(participation.status==Status.Off) "checked")>
+              <input type="radio" name="status" id="off" value="Off" @(if(field("status") == "Off") "checked")>
               <span class="label participation-off">Kommer inte</span>
             </label>
           </div>
         </div>
 
 
-        <div class="control-group">
+        <div class='control-group  @hasErrors("comment")'>
           <label class="control-label" for="comment">Kommentar</label>
           <div class="controls">
-            <textarea class="span5" id="comment" name="comment" rows="2">@participation.comment</textarea>
+            <textarea class="span5" id="comment" name="comment" rows="2">@field("comment")</textarea>
           </div>
         </div>
 
-        <input type="hidden" id="id" name="id" value="@participation.id"/>
-        <input type="hidden" id="userId" name="userId" value="@participation.user.id.get"/>
-        <input type="hidden" id="eventId" name="eventId" value="@participation.event.id.get"/>
+        <input type="hidden" id="userId" name="userId" value="@user.id.get"/>
+        <input type="hidden" id="eventId" name="eventId" value="@event.id.get"/>
 
 
         <div class="form-actions">
@@ -89,7 +96,7 @@
             Spara
           </button>
           <button type="button" class="btn" id="cancel"
-                  onClick='window.location="@routes.Events.show(participation.event.id.get)"'>
+                  onClick='window.location="@routes.Events.show(event.id.get)"'>
             <i class="icon-stop"></i>
             Avbryt
           </button>
