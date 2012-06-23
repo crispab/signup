@@ -1,0 +1,73 @@
+@(group: models.Group, events: Seq[models.Event])
+
+@page(group.name) {
+<div class="row">
+  <div class="span5">
+    <ul class="breadcrumb">
+      <li>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+      </li>
+      <li class="active">@group.name</li>
+    </ul>
+    <h2>@group.name</h2>
+
+    <div class="well">
+      <p>@group.description</p>
+      <p></p>
+      <a href="@routes.Groups.updateForm(group.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
+      <a data-toggle="modal" href="#radera_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+
+      <div id="radera_@group.id" class="modal smaller-modal" style="display: none">
+        <div class="modal-header">
+          <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+          <h3>Vill du radera gruppen?</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Du håller på att radera gruppen <strong>@group.name</strong>.
+          </p>
+          <p>
+            Vill du fortsätta?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+          <form action="@routes.Groups.delete(group.id.get)" method="POST">
+            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5">
+    <h3>Event</h3>
+    <table class="table table-striped">
+      @events.map { event =>
+      <tr>
+        <td>
+          <dl class="participation">
+            <dt><a href="@routes.Events.show(event.id.get)">
+              @event.name
+            </a></dt>
+            <dd>@event.description</dd>
+          </dl>
+        </td>
+        <td>
+          <strong>@event.start_time.format("yyyy-MM-dd")</strong><br/>
+          @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
+        </td>
+      </tr>
+      }
+    </table>
+    <p>
+      <a href="@routes.Events.createForm(group.id.get)" class="btn btn-primary"><i class="icon-plus icon-white"></i> Nytt event</a>
+    </p>
+  </div>
+</div>
+}

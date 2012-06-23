@@ -16,7 +16,7 @@
         <td>
           <dl class="participation">
             <dt><a href="@routes.Events.show(event.id.get)">
-              @event.name
+              @event.name [@event.group.name]
             </a></dt>
             <dd>@event.description</dd>
           </dl>
@@ -28,9 +28,6 @@
       </tr>
       }
     </table>
-    <p>
-      <a href="@routes.Events.createForm" class="btn btn-primary"><i class="icon-plus icon-white"></i> Nytt</a>
-    </p>
   </div>
 </div>
 }

@@ -89,6 +89,15 @@
         <input type="hidden" id="userId" name="userId" value="@user.id.get"/>
         <input type="hidden" id="eventId" name="eventId" value="@event.id.get"/>
 
+        @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
+        <div class="alert alert-error">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">Inmatningsfel!</h4>
+          <p>@participationForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@participationForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+        </div>
+        }
+
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save">

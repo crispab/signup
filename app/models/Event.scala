@@ -3,15 +3,16 @@ package models
 import anorm.SqlParser._
 import play.api.db.DB
 import anorm._
-import java.util.Date
 import play.api.Play.current
+import java.util
 
 case class Event(
   id: Pk[Long] = NotAssigned,
-  name: String = "",
+  group: Group,
+  name: String,
   description: String = "",
-  start_time: Date = new Date(),
-  end_time: Date = new Date(),
+  start_time: util.Date,
+  end_time: util.Date,
   venue: String = ""
 )
 
@@ -20,17 +21,19 @@ object Event {
     get[Pk[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
-      get[Date]("start_time") ~
-      get[Date]("end_time") ~
-      get[String]("venue") map {
-      case id ~ name ~ description ~ start_time ~ end_time ~ venue =>
+      get[util.Date]("start_time") ~
+      get[util.Date]("end_time") ~
+      get[String]("venue") ~
+      get[Long]("groupx") map {
+      case id ~ name ~ description ~ start_time ~ end_time ~ venue ~ groupx =>
         Event(
           id = id,
           name = name,
           description = description,
           start_time = start_time,
           end_time = end_time,
-          venue = venue
+          venue = venue,
+          group = Group.find(groupx)
         )
     }
   }
@@ -39,6 +42,13 @@ object Event {
     DB.withConnection {
       implicit connection =>
         SQL("SELECT * FROM events ORDER BY start_time DESC").as(Event.parser *)
+    }
+  }
+
+  def findByGroup(group: Group): Seq[Event] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("SELECT * FROM events WHERE groupx={groupId} ORDER BY start_time DESC").on('groupId -> group.id.get).as(Event.parser *)
     }
   }
 
@@ -57,7 +67,8 @@ object Event {
           'description -> event.description,
           'start_time -> event.start_time,
           'end_time -> event.end_time,
-          'venue -> event.venue
+          'venue -> event.venue,
+          'groupx -> event.group.id
         ).executeUpdate()
     }
   }
@@ -69,14 +80,16 @@ INSERT INTO events (
       description,
       start_time,
       end_time,
-      venue
+      venue,
+      groupx
     )
     values (
       {name},
       {description},
       {start_time},
       {end_time},
-      {venue}
+      {venue},
+      {groupx}
     )
     """
 
@@ -89,7 +102,8 @@ INSERT INTO events (
           'description -> event.description,
           'start_time -> event.start_time,
           'end_time -> event.end_time,
-          'venue -> event.venue
+          'venue -> event.venue,
+          'groupx -> event.group.id
         ).executeUpdate()
     }
   }
@@ -102,7 +116,8 @@ SET name = {name},
     description = {description},
     start_time = {start_time},
     end_time = {end_time},
-    venue = {venue}
+    venue = {venue},
+    groupx = {groupx}
 WHERE id = {id}
     """
 
@@ -110,9 +125,6 @@ WHERE id = {id}
     DB.withConnection {
       implicit connection =>
         SQL("DELETE FROM participations p WHERE p.event={id}").on('id -> id).executeUpdate()
-    }
-    DB.withConnection {
-      implicit connection =>
         SQL("DELETE FROM events e WHERE e.id={id}").on('id -> id).executeUpdate()
     }
   }

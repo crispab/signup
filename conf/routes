@@ -15,8 +15,18 @@ POST    /users/:id                  controllers.Users.update(id: Long)
 POST    /users/:id/delete           controllers.Users.delete(id:Long)
 
 
+# Groups
+GET     /groups/new                 controllers.Groups.createForm
+GET     /groups/:id/edit            controllers.Groups.updateForm(id: Long)
+POST    /groups                     controllers.Groups.create
+GET     /groups                     controllers.Groups.list
+GET     /groups/:id                 controllers.Groups.show(id: Long)
+POST    /groups/:id                 controllers.Groups.update(id: Long)
+POST    /groups/:id/delete          controllers.Groups.delete(id:Long)
+
+
 # Events
-GET     /events/new                 controllers.Events.createForm
+GET     /events/new                 controllers.Events.createForm(groupId: Long)
 GET     /events/:id/edit            controllers.Events.updateForm(id: Long)
 POST    /events                     controllers.Events.create
 GET     /events                     controllers.Events.list

@@ -24,7 +24,10 @@ status match {
         <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a> <span class="divider">/</span>
       </li>
       <li class="active">@event.name</li>
     </ul>

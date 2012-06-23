@@ -4,6 +4,7 @@ import org.specs2.mutable._
 
 import play.api.test._
 import play.api.test.Helpers._
+import java.util
 
 class EventModelSpec extends Specification {
 
@@ -11,7 +12,10 @@ class EventModelSpec extends Specification {
 
     "be persistable" in {
       running(FakeApplication()) {
-        val event = new Event(name = "Julafton")
+        val group = new Group(name = "Crisp RD", description = "Cool gang of hackers")
+        Group.create(group)
+        val crisp = Group.findAll().head
+        val event = new Event(name = "Julafton", group = crisp, start_time = new util.Date(), end_time = new util.Date())
         Event.create(event)
         Event.findAll().exists(_.name == "Julafton") must beTrue
       }
