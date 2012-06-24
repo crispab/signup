@@ -1,6 +1,6 @@
 package controllers
 
-import models.{Group, Participation, Event, User}
+import models._
 import java.text.SimpleDateFormat
 import play.api.data.Form
 import play.api.data.Forms._
@@ -17,9 +17,12 @@ object Events extends Controller {
 
   def show(id : Long) = Action {
     val event = Event.find(id)
-    val registeredUsers = Participation.findRegistered(event)
-    val unregisteredUsers = User.findUnregistered(event)
-    Ok(views.html.events.show(event, unregisteredUsers, registeredUsers))
+    val registrations = Participation.findRegistered(event)
+    val registeredUsers = registrations.map(_.user)
+    val memberships = Membership.findMembers(event.group)
+    val memberUsers = memberships.map(_.user)
+    val unregisteredUsers = memberUsers.diff(registeredUsers)
+    Ok(views.html.events.show(event, unregisteredUsers, registrations))
   }
 
   def asCalendar(id: Long) = Action {
@@ -28,14 +31,18 @@ object Events extends Controller {
   }
   
   def createForm(groupId: Long) = Action {
-    // TODO: use groupId
-    Ok(views.html.events.edit(eventForm))
+    val group = Group.find(groupId)
+    Ok(views.html.events.edit(eventForm, group))
   }
 
   def create = Action {
     implicit request =>
       eventForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.events.edit(formWithErrors)),
+        formWithErrors => {
+          val groupId = formWithErrors("groupId").value.get.toLong
+          val group = Group.find(groupId)
+          BadRequest(views.html.events.edit(formWithErrors, group))
+        },
         event => {
           Event.create(event)
           Redirect(routes.Groups.show(event.group.id.get))
@@ -46,13 +53,16 @@ object Events extends Controller {
 
   def updateForm(id: Long) = Action {
     val event = Event.find(id)
-    Ok(views.html.events.edit(eventForm.fill(event), Option(id)))
+    Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
   }
 
   def update(id: Long) = Action {
     implicit request =>
       eventForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.events.edit(formWithErrors, Option(id))),
+        formWithErrors => {
+          val event = Event.find(id)
+          BadRequest(views.html.events.edit(formWithErrors, event.group, Option(id)))
+        },
         event => {
           Event.update(id, event)
           Redirect(routes.Events.show(id))
@@ -63,7 +73,7 @@ object Events extends Controller {
 
   def delete(id: Long) = Action {
     val event = Event.find(id)
-    val groupId = event.group.id.get;
+    val groupId = event.group.id.get
     Event.delete(id)
     Redirect(routes.Groups.show(groupId))
   }

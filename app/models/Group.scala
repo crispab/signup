@@ -75,7 +75,6 @@ INSERT INTO groups (
     }
   }
 
-
   val updateQueryString =
     """
 UPDATE groups

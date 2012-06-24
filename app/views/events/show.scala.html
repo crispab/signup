@@ -47,9 +47,9 @@ status match {
       </table>
       <p></p>
       <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
-      <a data-toggle="modal" href="#radera_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+      <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-      <div id="radera_@event.id" class="modal smaller-modal" style="display: none">
+      <div id="remove_event_@event.id" class="modal smaller-modal" style="display: none">
         <div class="modal-header">
           <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
           <h3>Vill du radera event?</h3>

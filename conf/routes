@@ -25,6 +25,11 @@ POST    /groups/:id                 controllers.Groups.update(id: Long)
 POST    /groups/:id/delete          controllers.Groups.delete(id:Long)
 
 
+# Memberships
+POST    /memberships                controllers.Memberships.create
+POST    /memberships/:id/delete     controllers.Memberships.delete(id:Long)
+
+
 # Events
 GET     /events/new                 controllers.Events.createForm(groupId: Long)
 GET     /events/:id/edit            controllers.Events.updateForm(id: Long)

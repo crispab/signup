@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
-import models.{Event, Group}
+import models.{Membership, Event, Group}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
 
@@ -16,24 +16,39 @@ object Groups extends Controller {
   def show(id: Long) = Action {
     val group = Group.find(id)
     val events = Event.findByGroup(group)
-    Ok(views.html.groups.show(group, events))
+    val members = Membership.findMembers(group)
+    Ok(views.html.groups.show(group, events, members))
   }
 
   def createForm = Action {
-    NotImplemented
+    Ok(views.html.groups.edit(groupForm))
   }
 
   def updateForm(id: Long) = Action {
     val group = Group.find(id)
-    NotImplemented
+    Ok(views.html.groups.edit(groupForm.fill(group), Option(id)))
   }
 
   def create = Action {
-    NotImplemented
+    implicit request =>
+      groupForm.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.groups.edit(formWithErrors)),
+        group => {
+          Group.create(group)
+          Redirect(routes.Groups.list())
+        }
+      )
   }
 
   def update(id: Long) = Action {
-    NotImplemented
+    implicit request =>
+      groupForm.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.groups.edit(formWithErrors, Option(id))),
+        group => {
+          Group.update(id, group)
+          Redirect(routes.Groups.show(id))
+        }
+      )
   }
 
   def delete(id: Long) = Action {

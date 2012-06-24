@@ -24,7 +24,7 @@ object Membership {
   val insertQueryString =
     """
 INSERT INTO memberships (
-  group,
+  groupx,
   userx
 ) VALUES (
   {group},
@@ -34,12 +34,12 @@ INSERT INTO memberships (
 
   val parser = {
     get[Pk[Long]]("id") ~
-    get[Long]("group") ~
+    get[Long]("groupx") ~
     get[Long]("userx") map {
-    case id ~ group ~ userx  =>
+    case id ~ groupx ~ userx  =>
       Membership(
         id = id,
-        group = Group.find(group),
+        group = Group.find(groupx),
         user = User.find(userx)
       )
     }
@@ -48,7 +48,7 @@ INSERT INTO memberships (
   def find(id: Long): Membership = {
     DB.withConnection {
       implicit connection =>
-        SQL("SELECT * FROM memberships WHERE id={id}").on('id -> id).as(Membership.parser *).head
+        SQL("SELECT * FROM memberships WHERE id={id}").on('id -> id).as(Membership.parser single)
     }
   }
 
@@ -58,4 +58,22 @@ INSERT INTO memberships (
         SQL("SELECT * FROM memberships").as(parser *)
     }
   }
+
+  def findMembers(group: Group): Seq[Membership] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("SELECT m.* FROM memberships m, users u WHERE m.userx=u.id AND m.groupx={groupId} ORDER BY u.first_name, u.last_name").on('groupId -> group.id.get).as(parser *)
+    }
+  }
+
+  def delete(id: Long) {
+    DB.withConnection {
+      implicit connection => {
+        SQL("DELETE FROM memberships m WHERE m.id={id}").on('id -> id).executeUpdate()
+      }
+    }
+
+  }
+
+
 }

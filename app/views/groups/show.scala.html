@@ -1,4 +1,4 @@
-@(group: models.Group, events: Seq[models.Event])
+@(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership])
 
 @page(group.name) {
 <div class="row">
@@ -18,9 +18,9 @@
       <p>@group.description</p>
       <p></p>
       <a href="@routes.Groups.updateForm(group.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
-      <a data-toggle="modal" href="#radera_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+      <a data-toggle="modal" href="#remove_group_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-      <div id="radera_@group.id" class="modal smaller-modal" style="display: none">
+      <div id="remove_group_@group.id" class="modal smaller-modal" style="display: none">
         <div class="modal-header">
           <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
           <h3>Vill du radera gruppen?</h3>
@@ -46,7 +46,12 @@
 
 <div class="row">
   <div class="span5">
-    <h3>Event</h3>
+    <h3>
+      Event
+    </h3>
+    <p>
+      <a href="@routes.Events.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Nytt event</a>
+    </p>
     <table class="table table-striped">
       @events.map { event =>
       <tr>
@@ -65,9 +70,61 @@
       </tr>
       }
     </table>
+    <h3>Medlemmar</h3>
     <p>
-      <a href="@routes.Events.createForm(group.id.get)" class="btn btn-primary"><i class="icon-plus icon-white"></i> Nytt event</a>
+      <!-- TODO: add member -->
+      <a href="TODO: fixme" class="btn"><i class="icon-plus"></i> Ny medlem</a>
     </p>
+    <table class="table table-striped">
+      @members.map { membership =>
+      <tr>
+        <td>
+          <a href="@routes.Users.show(membership.user.id.get)">
+            <img src="@util.Gravatar.url(membership.user.email, size=40)" align="top" rel="tooltip"
+                 title="Gravatar för @membership.user.email"/>
+          </a>
+        </td>
+        <td>
+          <dl class="participation">
+            <dt><a href="@routes.Users.show(membership.user.id.get)">
+              @membership.user.firstName @membership.user.lastName
+            </a></dt>
+            <dd>@membership.user.comment</dd>
+          </dl>
+        </td>
+        <td>
+          @membership.user.email
+        </td>
+        <td>
+          <a data-toggle="modal" href="#remove_member_@membership.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+
+          <div id="remove_member_@membership.id" class="modal smaller-modal" style="display: none">
+            <div class="modal-header">
+              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <h3>Vill du ta bort medlemmen?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
+                från gruppen <strong>@group.name</strong>.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+
+              <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+              </form>
+            </div>
+          </div>
+
+        </td>
+      </tr>
+      }
+    </table>
   </div>
 </div>
 }

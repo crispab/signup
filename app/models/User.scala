@@ -131,13 +131,5 @@ WHERE id = {id}
       }
     }
   }
-
-  def findByGroup(groupId: Long): Seq[User] = {
-    DB.withConnection {
-      implicit connection =>
-        SQL("SELECT u.* FROM users u, memberships m WHERE u.id=m.userx AND m.group={groupId} ORDER BY u.first_name, u.last_name").on('groupId -> groupId).as(User.parser *)
-    }
-  }
-
 }
 

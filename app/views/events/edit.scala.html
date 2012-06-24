@@ -1,4 +1,4 @@
-@(eventForm: Form[Event], idToUpdate: Option[Long] = None)
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
@@ -40,7 +40,10 @@
         <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="@routes.Groups.show(group.id.get)">@group.name</a> <span class="divider">/</span>
       </li>
 
       @if(isCreatingNew) {
@@ -107,16 +110,15 @@
         <div class='control-group  @hasErrors("end_time")'>
           <label class="control-label" for="end_time">Till kl</label>
           <div class="controls time">
-            <select id="end_time" name="end_time" class="input-small" required>
-              @all_times().map { tod =>
-              <option value="@tod"
-                      @if(tod.equals(field("end_time").format("HH:mm"))) {selected=""}>@tod</option>
-              }
-            </select>
+
+            <input type="text" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
+                   required pattern="[0-2][0-9]:[0-5][0-9]"
+                   data-provide="typeahead" data-items="4"
+                   data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
           </div>
         </div>
 
-        <input type="hidden" id="groupId" name="groupId" value='@field("groupId")'/>
+        <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
 
         @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
         <div class="alert alert-error">

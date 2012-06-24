@@ -1,8 +1,8 @@
-@(eventForm: Form[Event], idToUpdate: Option[Long] = None)
+@(groupForm: Form[Group], idToUpdate: Option[Long] = None)
 
-@field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
+@field(fieldName: String) = @{ groupForm(fieldName).value.getOrElse("") }
 
-@hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(groupForm(fieldName).hasErrors) { "error" } }
 
 @isCreatingNew() = @{
   idToUpdate.isEmpty
@@ -10,29 +10,14 @@
 
 @the_action() = @{
   if(isCreatingNew) {
-    routes.Events.create
+    routes.Groups.create
   } else {
-    routes.Events.update(idToUpdate.get)
+    routes.Groups.update(idToUpdate.get)
   }
 }
 
-@all_times() = @{
-  Seq(
-    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
-    "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
-    "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
-    "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
-    "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
-  )
-}
 
-@today() = @{
-  new java.util.Date().format("yyyy-MM-dd")
-}
-
-@page("Redigera event " + field("name")){
+@page("Redigera grupp " + field("name")){
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -40,19 +25,19 @@
         <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
       </li>
 
       @if(isCreatingNew) {
-      <li class="active">Nytt</li>
+      <li class="active">Ny grupp</li>
       } else {
       <li>
-        <a href="@routes.Events.show(idToUpdate.get)">@field("name")</a> <span class="divider">/</span>
+        <a href="@routes.Groups.show(idToUpdate.get)">@field("name")</a> <span class="divider">/</span>
       </li>
       <li class="active">Redigera</li>
       }
     </ul>
-    <h2>@if(isCreatingNew) {Nytt} else {Redigera} Event</h2>
+    <h2>@if(isCreatingNew) {Ny} else {Redigera} Grupp</h2>
 
     <p></p>
 
@@ -62,7 +47,7 @@
           <label class="control-label" for="name">Namn</label>
           <div class="controls">
             <input type="text" class="input-xlarge" id="name" name="name" value='@field("name")' required>
-            <span class="show-on-error">Fyll i ett namn på eventet</span>
+            <span class="show-on-error">Fyll i ett namn på gruppen</span>
           </div>
         </div>
 
@@ -74,56 +59,12 @@
           </div>
         </div>
 
-        <div class='control-group  @hasErrors("venue")'>
-          <label class="control-label" for="venue">Plats</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="venue" name="venue" value='@field("venue")'>
-            <span class="show-on-error">Fyll i en plats där eventet äger rum</span>
-          </div>
-        </div>
-
-        <div class='control-group  @hasErrors("start_date")'>
-          <label class="control-label" for="start_date">Dag</label>
-          <div class="controls">
-            <input type="text" class="input-small datepicker" id="start_date" name="start_date"
-                   value='@field("start_date").format("yyyy-MM-dd")' min="@today()" required
-                   pattern="20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]">
-            <span class="show-on-error">Ogiltigt datum</span>
-          </div>
-        </div>
-
-        <div class='control-group  @hasErrors("start_time")'>
-          <label class="control-label" for="start_time">Från kl</label>
-          <div class="controls time">
-            <select id="start_time" name="start_time" class="input-small" required>
-              @all_times().map { tod =>
-              <option value="@tod"
-                      @if(tod.equals(field("start_time").format("HH:mm"))) {selected=""}>@tod</option>
-              }
-            </select>
-          </div>
-        </div>
-
-        <div class='control-group  @hasErrors("end_time")'>
-          <label class="control-label" for="end_time">Till kl</label>
-          <div class="controls time">
-            <select id="end_time" name="end_time" class="input-small" required>
-              @all_times().map { tod =>
-              <option value="@tod"
-                      @if(tod.equals(field("end_time").format("HH:mm"))) {selected=""}>@tod</option>
-              }
-            </select>
-          </div>
-        </div>
-
-        <input type="hidden" id="groupId" name="groupId" value='@field("groupId")'/>
-
-        @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
+        @if(groupForm.hasErrors || groupForm.hasGlobalErrors) {
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel!</h4>
-          <p>@eventForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-          <p>@eventForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@groupForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@groupForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
         </div>
         }
 

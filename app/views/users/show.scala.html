@@ -45,9 +45,9 @@
   <div class="span5">
     <p></p>
     <a href="@routes.Users.updateForm(user.id.get)" class="btn btn-primary"><i class="icon-pencil icon-white"></i> Redigera</a>
-    <a data-toggle="modal" href="#radera_@user.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+    <a data-toggle="modal" href="#remove_user_@user.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-    <div id="radera_@user.id" class="modal smaller-modal" style="display: none">
+    <div id="remove_user_@user.id" class="modal smaller-modal" style="display: none">
       <div class="modal-header">
         <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
         <h3>Vill du radera användaren?</h3>
@@ -56,7 +56,6 @@
         <p>
           Du håller på att radera användaren <strong>@user.firstName @user.lastName</strong>.
         </p>
-
         <p>
           Vill du fortsätta?
         </p>
