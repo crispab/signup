@@ -111,7 +111,7 @@
           <label class="control-label" for="end_time">Till kl</label>
           <div class="controls time">
 
-            <input type="text" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
+            <input type="time" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
                    required pattern="[0-2][0-9]:[0-5][0-9]"
                    data-provide="typeahead" data-items="4"
                    data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
