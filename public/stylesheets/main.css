@@ -55,10 +55,6 @@ td.right-aligned {
   text-align: right;
 }
 
-.time input {
-  width: 4em;
-}
-
 .gravatar {
   padding: 4px;
 }

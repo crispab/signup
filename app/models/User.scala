@@ -43,20 +43,21 @@ object User {
     }
   }
 
-  def findUnregistered(event: Event): Seq[User] = {
+
+  def findUnregisteredMembers(event: Event): Seq[User] = {
     DB.withConnection {
       implicit connection =>
-        SQL(findUnregisteredQueryString).on('event_id -> event.id).as(parser *)
+        SQL(findUnregisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id).as(parser *)
     }
   }
 
-  val findUnregisteredQueryString =
+  val findUnregisteredMembersQueryString =
     """
-SELECT *
-FROM users u
-WHERE u.id NOT IN (
-  SELECT p.userx FROM participations p WHERE p.event = {event_id}
-)
+SELECT u.*
+FROM users u, memberships m
+WHERE m.userx = u.id
+  AND m.groupx = {group_id}
+  AND u.id NOT IN (SELECT p.userx FROM participations p WHERE p.event = {event_id})
 ORDER BY u.first_name, u.last_name
     """
 

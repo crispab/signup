@@ -17,12 +17,7 @@ object Events extends Controller {
 
   def show(id : Long) = Action {
     val event = Event.find(id)
-    val registrations = Participation.findRegistered(event)
-    val registeredUsers = registrations.map(_.user)
-    val memberships = Membership.findMembers(event.group)
-    val memberUsers = memberships.map(_.user)
-    val unregisteredUsers = memberUsers.diff(registeredUsers)
-    Ok(views.html.events.show(event, unregisteredUsers, registrations))
+    Ok(views.html.events.show(event, User.findUnregisteredMembers(event), Participation.findRegisteredMembers(event), Participation.findGuests(event)))
   }
 
   def asCalendar(id: Long) = Action {

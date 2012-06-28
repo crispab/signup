@@ -22,30 +22,6 @@ case class Participation(id: Pk[Long] = NotAssigned,
 
 object Participation {
 
-
-  def create(participation: Participation) {
-    DB.withConnection {
-      implicit connection =>
-        SQL(insertQueryString).on(
-          'status -> participation.status.toString,
-          'comment -> participation.comment,
-          'user -> participation.user.id,
-          'event -> participation.event.id
-        ).executeUpdate()
-    }
-  }
-
-  def update(id: Long, participation: Participation) {
-    DB.withConnection {
-      implicit connection =>
-        SQL(updateQueryString).on(
-          'id -> id,
-          'status -> participation.status.toString,
-          'comment -> participation.comment
-        ).executeUpdate()
-    }
-  }
-
   val parser = {
     get[Pk[Long]]("id") ~
     get[String]("status") ~
@@ -62,37 +38,18 @@ object Participation {
         )
     }
   }
-  
-  def find(id: Long): Participation = {
+
+  def create(participation: Participation) {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from participations where id={id}").on('id -> id).as(Participation.parser *).head
+        SQL(insertQueryString).on(
+          'status -> participation.status.toString,
+          'comment -> participation.comment,
+          'user -> participation.user.id,
+          'event -> participation.event.id
+        ).executeUpdate()
     }
   }
-
-  def findRegistered(event: Event):Seq[Participation] = {
-    DB.withConnection {
-      implicit connection =>
-        SQL(findRegisteredQueryString).on('event_id -> event.id).as(parser *).sorted
-    }
-  }
-
-  def findAll(): Seq[Participation] = {
-    DB.withConnection {
-      implicit connection =>
-        SQL(findAllQueryString).as(parser *)
-    }
-  }
-  
-  val findAllQueryString =
-    """
-SELECT * FROM participations
-    """
-
-  val findRegisteredQueryString =
-    """
-SELECT * FROM participations p WHERE p.event={event_id}
-    """
 
   val insertQueryString =
     """
@@ -110,6 +67,18 @@ INSERT INTO participations (
     )
     """
 
+
+  def update(id: Long, participation: Participation) {
+    DB.withConnection {
+      implicit connection =>
+        SQL(updateQueryString).on(
+          'id -> id,
+          'status -> participation.status.toString,
+          'comment -> participation.comment
+        ).executeUpdate()
+    }
+  }
+
   val updateQueryString =
     """
 UPDATE participations
@@ -117,4 +86,60 @@ SET status = {status},
     comment  = {comment}
 WHERE id = {id}
     """
+
+
+  def find(id: Long): Participation = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(Participation.parser *).head
+    }
+  }
+
+  def findRegisteredMembers(event: Event):Seq[Participation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(findRegisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id.get).as(parser *).sorted
+    }
+  }
+
+  val findRegisteredMembersQueryString =
+    """
+SELECT p.*
+FROM participations p
+WHERE p.event={event_id}
+  AND p.userx IN (
+    SELECT m.userx
+    FROM memberships m
+    WHERE m.groupx={group_id}
+  )
+    """
+
+
+  def findGuests(event: Event):Seq[Participation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(findGuestsQueryString).on('event_id -> event.id, 'group_id -> event.group.id.get).as(parser *).sorted
+    }
+  }
+
+  val findGuestsQueryString =
+    """
+SELECT p.*
+FROM participations p
+WHERE p.event={event_id}
+  AND p.userx NOT IN (
+    SELECT m.userx
+    FROM memberships m
+    WHERE m.groupx={group_id}
+  )
+    """
+
+
+  def findAll(): Seq[Participation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("SELECT * FROM participations").as(parser *)
+    }
+  }
+
 }

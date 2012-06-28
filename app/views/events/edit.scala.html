@@ -96,26 +96,25 @@
         </div>
 
         <div class='control-group  @hasErrors("start_time")'>
-          <label class="control-label" for="start_time">Från kl</label>
-          <div class="controls time">
-            <select id="start_time" name="start_time" class="input-small" required>
-              @all_times().map { tod =>
-              <option value="@tod"
-                      @if(tod.equals(field("start_time").format("HH:mm"))) {selected=""}>@tod</option>
-              }
-            </select>
+          <label class="control-label" for="start_time">Till kl</label>
+          <div class="controls">
+            <input type="time" class="input-mini" id="start_time" name="start_time" value='@field("start_time")'
+                   required pattern="[0-2][0-9]:[0-5][0-9]"
+                   data-provide="typeahead" data-items="4"
+                   data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
+            <span class="show-on-error">Ogiltigt klockslag</span>
           </div>
         </div>
 
         <div class='control-group  @hasErrors("end_time")'>
           <label class="control-label" for="end_time">Till kl</label>
-          <div class="controls time">
-
-            <input type="time" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
+          <div class="controls">
+            <input type="time" class="input-mini" id="end_time" name="end_time" value='@field("end_time")'
                    required pattern="[0-2][0-9]:[0-5][0-9]"
                    data-provide="typeahead" data-items="4"
                    data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
           </div>
+          <span class="show-on-error">Ogiltigt klockslag</span>
         </div>
 
         <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
