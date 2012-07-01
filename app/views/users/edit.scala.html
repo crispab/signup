@@ -1,4 +1,4 @@
-@(userForm: Form[User], idToUpdate: Option[Long] = None)
+@(userForm: Form[User], idToUpdate: Option[Long] = None, memberGroupId: Option[Long] = None)
 
 @field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
 
@@ -100,6 +100,7 @@
           </div>
           }
 
+          <input type="hidden" id="memberGroupId" name="memberGroupId" value='@memberGroupId.getOrElse("")'>
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i

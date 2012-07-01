@@ -6,25 +6,24 @@ import anorm._
 import play.api.Play.current
 
 
-
 case class Group(
-  id: Pk[Long] = NotAssigned,
-  name: String,
-  description: String = ""
-)
+                  id: Pk[Long] = NotAssigned,
+                  name: String,
+                  description: String = ""
+                  )
 
 
 object Group {
   val parser = {
     get[Pk[Long]]("id") ~
-    get[String]("name") ~
-    get[String]("description") map {
-    case id ~ name ~ description =>
-      Group(
-        id = id,
-        name = name,
-        description = description
-      )
+      get[String]("name") ~
+      get[String]("description") map {
+      case id ~ name ~ description =>
+        Group(
+          id = id,
+          name = name,
+          description = description
+        )
     }
   }
 
@@ -38,17 +37,20 @@ object Group {
   def find(id: Long): Group = {
     DB.withConnection {
       implicit connection =>
-        SQL("SELECT * FROM groups g WHERE g.id={id}").on('id -> id).as(Group.parser *).head
+        SQL("SELECT * FROM groups g WHERE g.id={id}").on('id -> id).as(Group.parser single)
     }
   }
 
-  def create(group: Group) {
+  def create(group: Group): Long = {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(
           'name -> group.name,
           'description -> group.description
-        ).executeUpdate()
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
 

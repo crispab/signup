@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
-import models.User
+import models.{Membership, User}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
 
@@ -18,13 +18,13 @@ object Users extends Controller {
     Ok(views.html.users.show(user))
   }
 
-  def createForm = Action {
-    Ok(views.html.users.edit(userForm))
+  def createForm(memberGroupId: Option[Long]) = Action {
+    Ok(views.html.users.edit(userForm, memberGroupId = memberGroupId))
   }
 
   def updateForm(id: Long) = Action {
     val user = User.find(id)
-    Ok(views.html.users.edit(userForm.fill(user), Option(id)))
+    Ok(views.html.users.edit(userForm.fill(user), idToUpdate = Option(id)))
   }
 
   def create = Action {
@@ -32,8 +32,14 @@ object Users extends Controller {
       userForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
-          User.create(user)
-          Redirect(routes.Users.list())
+          val userId = User.create(user)
+          val memberGroupid = request.body.asFormUrlEncoded.get("memberGroupId").head
+          if (memberGroupid.isEmpty) {
+            Redirect(routes.Users.list())
+          } else {
+            Membership.create(groupId = memberGroupid.toLong, userId = userId)
+            Redirect(routes.Groups.show(memberGroupid.toLong))
+          }
         }
       )
   }

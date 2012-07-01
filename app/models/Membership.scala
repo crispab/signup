@@ -11,13 +11,29 @@ case class Membership(id: Pk[Long] = NotAssigned,
 
 object Membership {
 
-  def create(membership: Membership) {
+  def create(membership: Membership): Long = {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(
           'group -> membership.group.id,
           'user -> membership.user.id
-        ).executeUpdate()
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
+    }
+  }
+
+  def create(groupId: Long, userId: Long): Long = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(insertQueryString).on(
+          'group -> groupId,
+          'user -> userId
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
 
@@ -34,14 +50,14 @@ INSERT INTO memberships (
 
   val parser = {
     get[Pk[Long]]("id") ~
-    get[Long]("groupx") ~
-    get[Long]("userx") map {
-    case id ~ groupx ~ userx  =>
-      Membership(
-        id = id,
-        group = Group.find(groupx),
-        user = User.find(userx)
-      )
+      get[Long]("groupx") ~
+      get[Long]("userx") map {
+      case id ~ groupx ~ userx =>
+        Membership(
+          id = id,
+          group = Group.find(groupx),
+          user = User.find(userx)
+        )
     }
   }
 

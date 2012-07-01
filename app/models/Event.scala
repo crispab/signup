@@ -7,14 +7,14 @@ import play.api.Play.current
 import java.util
 
 case class Event(
-  id: Pk[Long] = NotAssigned,
-  group: Group,
-  name: String,
-  description: String = "",
-  start_time: util.Date,
-  end_time: util.Date,
-  venue: String = ""
-)
+                  id: Pk[Long] = NotAssigned,
+                  group: Group,
+                  name: String,
+                  description: String = "",
+                  start_time: util.Date,
+                  end_time: util.Date,
+                  venue: String = ""
+                  )
 
 object Event {
   val parser = {
@@ -55,11 +55,11 @@ object Event {
   def find(id: Long): Event = {
     DB.withConnection {
       implicit connection =>
-        SQL("SELECT * FROM events e WHERE e.id={id}").on('id -> id).as(Event.parser *).head
+        SQL("SELECT * FROM events e WHERE e.id={id}").on('id -> id).as(Event.parser single)
     }
   }
 
-  def create(event: Event) {
+  def create(event: Event): Long = {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(
@@ -69,7 +69,10 @@ object Event {
           'end_time -> event.end_time,
           'venue -> event.venue,
           'groupx -> event.group.id
-        ).executeUpdate()
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
 

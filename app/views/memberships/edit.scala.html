@@ -1,0 +1,80 @@
+@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])
+
+@field(fieldName: String) = @{ membershipForm(fieldName).value.getOrElse("") }
+
+@hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
+
+
+@page("Ny medlem i " + group.name) {
+<div class="row">
+  <div class="span5">
+    <ul class="breadcrumb">
+      <li>
+        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+      </li>
+      <li>
+        <a href="@routes.Groups.show(group.id.get)">@group.name</a> <span class="divider">/</span>
+      </li>
+      <li class="active">Ny medlem</li>
+    </ul>
+
+    <h2>Ny medlem i @group.name</h2>
+    <p></p>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="span5">
+    <form action="@routes.Memberships.create" method="POST">
+      <fieldset>
+
+        <div class='control-group @hasErrors("userId")'>
+          <label class="control-label" for="userId">Befintlig användare</label>
+          <div class="controls">
+            <select id="userId" name="userId" required>
+              <option>Ingen vald</option>
+              @nonMembers.map { user =>
+              <option value="@user.id.get"
+                      @if(user.id.get.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName (@user.email)</option>
+              }
+            </select>
+            <span class="show-on-error">Välj en användare som medlem</span>
+          </div>
+        </div>
+
+        <input type="hidden" id="groupId" name="groupId" value="@group.id.get"/>
+
+        @if(membershipForm.hasErrors || membershipForm.hasGlobalErrors) {
+        <div class="alert alert-error">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">Inmatningsfel!</h4>
+          <p>@membershipForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@membershipForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+        </div>
+        }
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+            <i class="icon-ok icon-white"></i>
+            Lägg till
+          </button>
+          <button type="button" class="btn" id="create"
+                  onClick='window.location="@routes.Users.createForm(Option(group.id.get))"'>
+            <i class="icon-plus"></i>
+            Ny användare
+          </button>
+          <button type="button" class="btn" id="cancel"
+                  onClick='window.location="@routes.Groups.show(group.id.get)"'>
+            <i class="icon-stop"></i>
+            Avbryt
+          </button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+}

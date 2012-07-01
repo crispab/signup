@@ -7,13 +7,13 @@ import anorm._
 import anorm.SqlParser._
 
 case class User(
-  id: Pk[Long] = NotAssigned,
-  firstName: String,
-  lastName: String,
-  email: String,
-  phone: String = "",
-  comment: String = ""
-)
+                 id: Pk[Long] = NotAssigned,
+                 firstName: String,
+                 lastName: String,
+                 email: String,
+                 phone: String = "",
+                 comment: String = ""
+                 )
 
 object User {
 
@@ -39,7 +39,7 @@ object User {
   def find(id: Long): User = {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from users where id={id}").on('id -> id).as(User.parser *).head
+        SQL("select * from users where id={id}").on('id -> id).as(User.parser single)
     }
   }
 
@@ -61,6 +61,20 @@ WHERE m.userx = u.id
 ORDER BY u.first_name, u.last_name
     """
 
+  def findNonMembers(groupId: Long): Seq[User] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(findNonMembersQueryString).on('group_id -> groupId).as(parser *)
+    }
+  }
+
+  val findNonMembersQueryString =
+    """
+SELECT u.*
+FROM users u
+WHERE u.id NOT IN (SELECT m.userx FROM memberships m WHERE m.groupx = {group_id})
+    """
+
   def findAll(): Seq[User] = {
     DB.withConnection {
       implicit connection =>
@@ -68,7 +82,7 @@ ORDER BY u.first_name, u.last_name
     }
   }
 
-  def create(user: User) {
+  def create(user: User): Long = {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(
@@ -77,7 +91,10 @@ ORDER BY u.first_name, u.last_name
           'email -> user.email,
           'phone -> user.phone,
           'comment -> user.comment
-        ).executeUpdate()
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
 

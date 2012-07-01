@@ -6,13 +6,13 @@
 GET     /                           controllers.Application.index
 
 # Users
-GET     /users/new                  controllers.Users.createForm
+GET     /users/new                  controllers.Users.createForm(memberGroupId: Option[Long])
 GET     /users/:id/edit             controllers.Users.updateForm(id: Long)
 POST    /users                      controllers.Users.create
 GET     /users                      controllers.Users.list
 GET     /users/:id                  controllers.Users.show(id: Long)
 POST    /users/:id                  controllers.Users.update(id: Long)
-POST    /users/:id/delete           controllers.Users.delete(id:Long)
+POST    /users/:id/delete           controllers.Users.delete(id: Long)
 
 
 # Groups
@@ -22,12 +22,13 @@ POST    /groups                     controllers.Groups.create
 GET     /groups                     controllers.Groups.list
 GET     /groups/:id                 controllers.Groups.show(id: Long)
 POST    /groups/:id                 controllers.Groups.update(id: Long)
-POST    /groups/:id/delete          controllers.Groups.delete(id:Long)
+POST    /groups/:id/delete          controllers.Groups.delete(id: Long)
 
 
 # Memberships
+GET     /memberships/new            controllers.Memberships.createForm(groupId: Long)
 POST    /memberships                controllers.Memberships.create
-POST    /memberships/:id/delete     controllers.Memberships.delete(id:Long)
+POST    /memberships/:id/delete     controllers.Memberships.delete(id: Long)
 
 
 # Events
@@ -38,7 +39,7 @@ GET     /events                     controllers.Events.list
 GET     /events/:id                 controllers.Events.show(id: Long)
 POST    /events/:id                 controllers.Events.update(id: Long)
 GET     /events/:id/ical            controllers.Events.asCalendar(id: Long)
-POST    /events/:id/delete          controllers.Events.delete(id:Long)
+POST    /events/:id/delete          controllers.Events.delete(id: Long)
 
 
 # Participations

@@ -15,7 +15,7 @@ class ParticipationModelSpec extends Specification {
         val event = Event.findAll().filter(_.name == "Crisp RD").head
 
         val participation = Participation(status = Status.On, user = user, event = event)
-        Participation.create(participation)
+        Participation.create(participation) must beGreaterThanOrEqualTo(1L)
 
         true must beTrue
 

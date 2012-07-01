@@ -7,7 +7,7 @@ import play.api.Play.current
 
 object Status extends Enumeration {
   type Status = Value
-  val On, Maybe, Off = Value
+  val On, Maybe, Off, Unregistered = Value
 }
 
 import Status._
@@ -24,10 +24,10 @@ object Participation {
 
   val parser = {
     get[Pk[Long]]("id") ~
-    get[String]("status") ~
-    get[String]("comment") ~
-    get[Long]("userx") ~
-    get[Long]("event") map {
+      get[String]("status") ~
+      get[String]("comment") ~
+      get[Long]("userx") ~
+      get[Long]("event") map {
       case id ~ status ~ comment ~ userx ~ event =>
         Participation(
           id = id,
@@ -39,7 +39,7 @@ object Participation {
     }
   }
 
-  def create(participation: Participation) {
+  def create(participation: Participation): Long = {
     DB.withConnection {
       implicit connection =>
         SQL(insertQueryString).on(
@@ -47,7 +47,10 @@ object Participation {
           'comment -> participation.comment,
           'user -> participation.user.id,
           'event -> participation.event.id
-        ).executeUpdate()
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
 
@@ -91,11 +94,11 @@ WHERE id = {id}
   def find(id: Long): Participation = {
     DB.withConnection {
       implicit connection =>
-        SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(Participation.parser *).head
+        SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(Participation.parser single)
     }
   }
 
-  def findRegisteredMembers(event: Event):Seq[Participation] = {
+  def findRegisteredMembers(event: Event): Seq[Participation] = {
     DB.withConnection {
       implicit connection =>
         SQL(findRegisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id.get).as(parser *).sorted
@@ -115,7 +118,7 @@ WHERE p.event={event_id}
     """
 
 
-  def findGuests(event: Event):Seq[Participation] = {
+  def findGuests(event: Event): Seq[Participation] = {
     DB.withConnection {
       implicit connection =>
         SQL(findGuestsQueryString).on('event_id -> event.id, 'group_id -> event.group.id.get).as(parser *).sorted

@@ -11,8 +11,8 @@ class GroupModelSpec extends Specification {
 
     "be persistable" in {
       running(FakeApplication()) {
-        val group = new Group(name = "Crisp RD", description = "Cool gang of hackers")
-        Group.create(group)
+        val group: Group = new Group(name = "Crisp RD", description = "Cool gang of hackers")
+        Group.create(group) must beGreaterThanOrEqualTo(1L)
         Group.findAll().exists(_.name == "Crisp RD") must beTrue
       }
     }

@@ -72,8 +72,7 @@
     </table>
     <h3>Medlemmar</h3>
     <p>
-      <!-- TODO: add member -->
-      <a href="TODO: fixme" class="btn"><i class="icon-plus"></i> Ny medlem</a>
+      <a href="@routes.Memberships.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny medlem</a>
     </p>
     <table class="table table-striped">
       @members.map { membership =>

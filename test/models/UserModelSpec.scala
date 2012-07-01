@@ -13,7 +13,7 @@ class UserModelSpec extends Specification {
     "be persistable" in {
       running(FakeApplication()) {
         val user = new User(NotAssigned, "Jan", "Grape", "jg@superb.se")
-        User.create(user)
+        User.create(user) must beGreaterThanOrEqualTo(1L)
         User.findAll().exists(_.firstName == "Jan") must beTrue
       }
     }

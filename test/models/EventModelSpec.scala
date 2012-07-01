@@ -16,7 +16,7 @@ class EventModelSpec extends Specification {
         Group.create(group)
         val crisp = Group.findAll().head
         val event = new Event(name = "Julafton", group = crisp, start_time = new util.Date(), end_time = new util.Date())
-        Event.create(event)
+        Event.create(event) must beGreaterThanOrEqualTo(1L)
         Event.findAll().exists(_.name == "Julafton") must beTrue
       }
     }

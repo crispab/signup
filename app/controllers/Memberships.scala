@@ -8,8 +8,23 @@ import play.api.data.Form
 
 object Memberships extends Controller {
 
+  def createForm(groupId: Long) = Action {
+    Ok(views.html.memberships.edit(membershipForm, Group.find(groupId), User.findNonMembers(groupId)))
+  }
+
   def create = Action {
-    NotImplemented
+    implicit request =>
+      membershipForm.bindFromRequest.fold(
+        formWithErrors => {
+          val group = Group.find(formWithErrors("groupId").value.get.toLong)
+          val nonMembers = User.findNonMembers(group.id.get)
+          BadRequest(views.html.memberships.edit(formWithErrors, group, nonMembers))
+        },
+        membership => {
+          Membership.create(membership)
+          Redirect(routes.Groups.show(membership.group.id.get))
+        }
+      )
   }
 
   def delete(id: Long) = Action {
@@ -33,8 +48,8 @@ object Memberships extends Controller {
   val membershipForm: Form[Membership] = Form(
     mapping(
       "id" -> ignored(NotAssigned: Pk[Long]),
-      "groupx" -> longNumber,
-      "userx" -> longNumber
+      "groupId" -> longNumber,
+      "userId" -> longNumber
     )(toMembership)(fromMembership)
   )
 
