@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
-import models.{Membership, User}
+import models.{Participation, Membership, User}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
 
@@ -18,9 +18,18 @@ object Users extends Controller {
     Ok(views.html.users.show(user))
   }
 
-  def createForm(memberGroupId: Option[Long]) = Action {
-    Ok(views.html.users.edit(userForm, memberGroupId = memberGroupId))
+  def createForm = Action {
+    Ok(views.html.users.edit(userForm))
   }
+
+  def createMemberForm(groupId: Long) = Action {
+    Ok(views.html.users.edit(userForm, groupId = Option(groupId)))
+  }
+
+  def createGuestForm(eventId: Long) = Action {
+    Ok(views.html.users.edit(userForm, eventId = Option(eventId)))
+  }
+
 
   def updateForm(id: Long) = Action {
     val user = User.find(id)
@@ -32,14 +41,30 @@ object Users extends Controller {
       userForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
-          val userId = User.create(user)
-          val memberGroupid = request.body.asFormUrlEncoded.get("memberGroupId").head
-          if (memberGroupid.isEmpty) {
-            Redirect(routes.Users.list())
-          } else {
-            Membership.create(groupId = memberGroupid.toLong, userId = userId)
-            Redirect(routes.Groups.show(memberGroupid.toLong))
-          }
+          User.create(user)
+          Redirect(routes.Users.list())
+        }
+      )
+  }
+
+  def createMember(groupId: Long) = Action {
+    implicit request =>
+      userForm.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
+        user => {
+          Membership.create(groupId = groupId, userId = User.create(user))
+          Redirect(routes.Groups.show(groupId))
+        }
+      )
+  }
+
+  def createGuest(eventId: Long) = Action {
+    implicit request =>
+      userForm.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
+        user => {
+          Participation.createGuest(eventId = eventId, userId = User.create(user))
+          Redirect(routes.Events.show(eventId))
         }
       )
   }

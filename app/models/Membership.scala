@@ -12,16 +12,7 @@ case class Membership(id: Pk[Long] = NotAssigned,
 object Membership {
 
   def create(membership: Membership): Long = {
-    DB.withConnection {
-      implicit connection =>
-        SQL(insertQueryString).on(
-          'group -> membership.group.id,
-          'user -> membership.user.id
-        ).executeInsert()
-    } match {
-      case Some(primaryKey) => primaryKey
-      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
-    }
+    create(membership.group.id.get, membership.user.id.get)
   }
 
   def create(groupId: Long, userId: Long): Long = {

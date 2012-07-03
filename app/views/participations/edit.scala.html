@@ -64,15 +64,15 @@
           </label>
           <div class="controls">
             <label class="radio inline">
-              <input type="radio" name="status" id="on" value="On" @(if(isCreatingNew || field("status") == "On") "checked")>
+              <input type="radio" name="status" id="on" value="On" @(if(isCreatingNew || field("status") == Status.On.toString  || field("status") == Status.Unregistered.toString) "checked")>
               <span class="label participation-on">Kommer</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="maybe" value="Maybe" @(if(field("status") == "Maybe") "checked")>
+              <input type="radio" name="status" id="maybe" value="Maybe" @(if(field("status") == Status.Maybe.toString) "checked")>
               <span class="label participation-maybe">Kanske</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="off" value="Off" @(if(field("status") == "Off") "checked")>
+              <input type="radio" name="status" id="off" value="Off" @(if(field("status") == Status.Off.toString) "checked")>
               <span class="label participation-off">Kommer inte</span>
             </label>
           </div>

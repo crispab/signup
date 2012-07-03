@@ -75,6 +75,21 @@ FROM users u
 WHERE u.id NOT IN (SELECT m.userx FROM memberships m WHERE m.groupx = {group_id})
     """
 
+  def findNonGuests(eventId: Long): Seq[User] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(findNonGuestsQueryString).on('eventId -> eventId).as(parser *)
+    }
+  }
+
+  val findNonGuestsQueryString =
+    """
+SELECT u.*
+FROM users u
+WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx = e.groupx AND e.id = {eventId})
+                   UNION (SELECT p.userx FROM participations p WHERE p.event = {eventId}))
+    """
+
   def findAll(): Seq[User] = {
     DB.withConnection {
       implicit connection =>

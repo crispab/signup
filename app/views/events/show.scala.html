@@ -134,10 +134,6 @@ status match {
     <p></p>
 
     <h3>Gäster</h3>
-    <p>
-      <!-- TODO: add member -->
-      <a href="TODO: fixme" class="btn"><i class="icon-plus"></i> Ny gäst</a>
-    </p>
     <table class="table table-striped">
       @guests.map { participation =>
       <tr>
@@ -164,6 +160,9 @@ status match {
       </tr>
       }
     </table>
+    <p>
+      <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
+    </p>
   </div>
 </div>
 }

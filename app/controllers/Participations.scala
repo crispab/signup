@@ -28,6 +28,25 @@ object Participations extends Controller {
       )
   }
 
+  def createGuestForm(eventId: Long) = Action {
+    val event = Event.find(eventId)
+    Ok(views.html.participations.addGuest(participationForm, event, User.findNonGuests(event.id.get)))
+  }
+
+  def createGuest = Action {
+    implicit request =>
+      participationForm.bindFromRequest.fold(
+        formWithErrors => {
+          val event = Event.find(formWithErrors("eventId").value.get.toLong)
+          BadRequest(views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
+        },
+        participation => {
+          Participation.create(participation)
+          Redirect(routes.Events.show(participation.event.id.get))
+        }
+      )
+  }
+
   def updateForm(id: Long) = Action {
     val participation = Participation.find(id)
     Ok(views.html.participations.edit(participationForm.fill(participation), participation.user, participation.event, Option(id)))

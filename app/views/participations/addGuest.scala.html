@@ -1,11 +1,11 @@
-@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])
 
-@field(fieldName: String) = @{ membershipForm(fieldName).value.getOrElse("") }
+@field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
-@hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
 
 
-@page("Ny medlem i " + group.name) {
+@page("Gäst till " + event.name) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -13,15 +13,15 @@
         <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Events.list">Grupper</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Groups.show(group.id.get)">@group.name</a> <span class="divider">/</span>
+        <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">/</span>
       </li>
-      <li class="active">Ny medlem</li>
+      <li class="active">Gäst</li>
     </ul>
 
-    <h2>Ny medlem i @group.name</h2>
+    <h2>Ny gäst till @event.name</h2>
     <p></p>
   </div>
 </div>
@@ -29,7 +29,7 @@
 
 <div class="row">
   <div class="span5">
-    <form action="@routes.Memberships.create" method="POST">
+    <form action="@routes.Participations.createGuest" method="POST">
       <fieldset>
 
         <div class='control-group @hasErrors("userId")'>
@@ -37,7 +37,7 @@
           <div class="controls">
             <select id="userId" name="userId" required>
               <option>Ingen vald</option>
-              @nonMembers.map { user =>
+              @nonGuests.map { user =>
               <option value="@user.id.get"
                       @if(user.id.get.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName (@user.email)</option>
               }
@@ -46,14 +46,16 @@
           </div>
         </div>
 
-        <input type="hidden" id="groupId" name="groupId" value="@group.id.get"/>
+        <input type="hidden" id="eventId" name="eventId" value="@event.id.get"/>
+        <input type="hidden" id="status" name="status" value="@Status.Unregistered.toString"/>
+        <input type="hidden" id="comment" name="comment" value=""/>
 
-        @if(membershipForm.hasErrors || membershipForm.hasGlobalErrors) {
+        @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel!</h4>
-          <p>@membershipForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-          <p>@membershipForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@participationForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@participationForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
         </div>
         }
 
@@ -63,12 +65,12 @@
             Lägg till
           </button>
           <button type="button" class="btn" id="create"
-                  onClick='window.location="@routes.Users.createMemberForm(group.id.get)"'>
+                  onClick='window.location="@routes.Users.createGuestForm(event.id.get)"'>
             <i class="icon-plus"></i>
             Ny användare
           </button>
           <button type="button" class="btn" id="cancel"
-                  onClick='window.location="@routes.Groups.show(group.id.get)"'>
+                  onClick='window.location="@routes.Events.show(event.id.get)"'>
             <i class="icon-stop"></i>
             Avbryt
           </button>

@@ -1,18 +1,31 @@
-@(userForm: Form[User], idToUpdate: Option[Long] = None, memberGroupId: Option[Long] = None)
+@(userForm: Form[User], idToUpdate: Option[Long] = None, groupId: Option[Long] = None, eventId: Option[Long] = None)
 
 @field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "error" } }
 
-@isCreatingNew() = @{
-  idToUpdate.isEmpty
+@isUpdating() = @{
+  idToUpdate.isDefined
 }
 
+@isCreatingMember() = @{
+  groupId.isDefined
+}
+
+@isCreatingGuest() = @{
+  eventId.isDefined
+}
+
+
 @theAction() = @{
-  if(isCreatingNew) {
-    routes.Users.create
-  } else {
+  if(isUpdating) {
     routes.Users.update(idToUpdate.get)
+  } else if(isCreatingMember) {
+    routes.Users.createMember(groupId.get)
+  } else if(isCreatingGuest) {
+    routes.Users.createGuest(eventId.get)
+  } else {
+    routes.Users.create
   }
 }
 
@@ -29,15 +42,14 @@
             <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
           </li>
 
-          @if(isCreatingNew) {
-            <li class="active">Ny</li>
+          @if(isUpdating) {
+          <li>
+            <a href="@routes.Users.show(idToUpdate.get)">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
+          </li>
+          <li class="active">Redigera</li>
           } else {
-            <li>
-              <a href="@routes.Users.show(idToUpdate.get)">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
-            </li>
-            <li class="active">Redigera</li>
+          <li class="active">Ny</li>
           }
-
         </ul>
       </div>
     </div>
@@ -45,7 +57,7 @@
 
   <div class="row">
     <div class="span5">
-      <h2>@if(isCreatingNew) {Ny} else {Redigera} Användare</h2>
+      <h2>@if(isUpdating) {Redigera} else {Ny} Användare</h2>
       <p></p>
       <form class="form-horizontal" action="@theAction" method="POST">
         <fieldset>
@@ -100,7 +112,8 @@
           </div>
           }
 
-          <input type="hidden" id="memberGroupId" name="memberGroupId" value='@memberGroupId.getOrElse("")'>
+          <input type="hidden" id="groupId" name="groupId" value='@groupId.getOrElse("")'>
+          <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")'>
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i

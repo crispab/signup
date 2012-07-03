@@ -6,9 +6,13 @@
 GET     /                           controllers.Application.index
 
 # Users
-GET     /users/new                  controllers.Users.createForm(memberGroupId: Option[Long])
+GET     /users/new                  controllers.Users.createForm
+GET     /users/newMember            controllers.Users.createMemberForm(groupId: Long)
+GET     /users/newGuest             controllers.Users.createGuestForm(eventId: Long)
 GET     /users/:id/edit             controllers.Users.updateForm(id: Long)
 POST    /users                      controllers.Users.create
+POST    /users/newMember/:groupId   controllers.Users.createMember(groupId: Long)
+POST    /users/newGuest/:eventId    controllers.Users.createGuest(eventId: Long)
 GET     /users                      controllers.Users.list
 GET     /users/:id                  controllers.Users.show(id: Long)
 POST    /users/:id                  controllers.Users.update(id: Long)
@@ -44,6 +48,8 @@ POST    /events/:id/delete          controllers.Events.delete(id: Long)
 
 # Participations
 GET     /participations/new         controllers.Participations.createForm(eventId: Long, userId: Long)
+GET     /participations/newGuest    controllers.Participations.createGuestForm(eventId: Long)
+POST    /participations/newGuest    controllers.Participations.createGuest
 GET     /participations/:id/edit    controllers.Participations.updateForm(id: Long)
 POST    /participations             controllers.Participations.create
 POST    /participations/:id         controllers.Participations.update(id: Long)

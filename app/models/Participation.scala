@@ -54,6 +54,21 @@ object Participation {
     }
   }
 
+  def createGuest(eventId: Long, userId: Long): Long = {
+    DB.withConnection {
+      implicit connection =>
+        SQL(insertQueryString).on(
+          'status -> Status.Unregistered.toString,
+          'comment -> "",
+          'user -> userId,
+          'event -> eventId
+        ).executeInsert()
+    } match {
+      case Some(primaryKey) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
+    }
+  }
+
   val insertQueryString =
     """
 INSERT INTO participations (
