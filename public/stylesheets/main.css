@@ -80,7 +80,7 @@ td.right-aligned {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .navbar {
@@ -89,4 +89,18 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
   padding-top: 40px;
+}
+
+.list-row {
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: rgba(0, 0, 0, 0.046875);
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-top: 4px;
+  background-color: #fafafa;
+}
+
+.btn-row {
+  margin-top: 6px;
 }
