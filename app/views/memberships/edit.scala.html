@@ -5,7 +5,7 @@
 @hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
 
 
-@page("Ny medlem i " + group.name) {
+@page("Ny medlem i " + group.name, inGroups = true) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">

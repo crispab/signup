@@ -1,4 +1,4 @@
-@(title: String)(body: Html)
+@(title: String, inGroups: Boolean)(body: Html)
 
 @import helper._
 @import helper.FieldConstructor
@@ -24,10 +24,22 @@
 
 
 <body>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="@routes.Application.index">
+        SignUp
+      </a>
+      <ul class="nav">
+        <li @if(inGroups){class="active"}><a href="@routes.Groups.list">Grupper</a></li>
+        <li @if(!inGroups){class="active"}><a href="@routes.Users.list">Användare</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <div class="container">
-
   @body
-
 </div>
 
 <script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>

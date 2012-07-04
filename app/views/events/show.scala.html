@@ -18,7 +18,7 @@ status match {
   }
 }
 
-@page(event.name) {
+@page(event.name, inGroups = true) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -54,11 +54,11 @@ status match {
       <div id="remove_event_@event.id" class="modal smaller-modal" style="display: none">
         <div class="modal-header">
           <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-          <h3>Vill du radera event?</h3>
+          <h3>Vill du ta bort event?</h3>
         </div>
         <div class="modal-body">
           <p>
-            Du håller på att radera eventet <strong>@event.name</strong>.
+            Du håller på att ta bort eventet <strong>@event.name</strong>.
           </p>
           <p>
             Vill du fortsätta?
@@ -67,7 +67,7 @@ status match {
         <div class="modal-footer">
           <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
           <form action="@routes.Events.delete(event.id.get)" method="POST">
-            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
           </form>
         </div>
       </div>

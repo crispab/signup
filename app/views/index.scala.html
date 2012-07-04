@@ -1,4 +1,4 @@
-@page(title = "SignUp") {
+@page(title = "SignUp", inGroups = true) {
   <div class="row">
     <div class="span5">
       <ul class="breadcrumb">
@@ -6,12 +6,20 @@
           <a href="@routes.Application.index"><i class="icon-home"></i> Start</a>
         </li>
       </ul>
-      <h2>SignUp</h2>
+      <h2>Välkommen till SignUp</h2>
       <p>
-        <a href="@routes.Groups.list">Grupper</a>
+        SignUp är en tjänst för grupper som vill ha ordning på sina sammankomster.
       </p>
       <p>
-        <a href="@routes.Events.list">Event</a>
+        Du kan lägga upp nya sammankomster i gruppens kalender och medlemmarna kan själva
+        gå in och markera ifall de kan komma eller inte.
+      </p>
+      <p>
+        Signup skickar automatiskt ut inbjudningar och påminnelser till alla medlemmar i
+        gruppen för varje sammankomst.
+      </p>
+      <p>
+        <a href="@routes.Groups.list">Grupper</a>
       </p>
       <p>
         <a href="@routes.Users.list">Användare</a>

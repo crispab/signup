@@ -1,6 +1,6 @@
 @(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership])
 
-@page(group.name) {
+@page(group.name, inGroups = true) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -23,11 +23,11 @@
       <div id="remove_group_@group.id" class="modal smaller-modal" style="display: none">
         <div class="modal-header">
           <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-          <h3>Vill du radera gruppen?</h3>
+          <h3>Vill du ta bort gruppen?</h3>
         </div>
         <div class="modal-body">
           <p>
-            Du håller på att radera gruppen <strong>@group.name</strong>.
+            Du håller på att ta bort gruppen <strong>@group.name</strong>.
           </p>
           <p>
             Vill du fortsätta?
@@ -36,7 +36,7 @@
         <div class="modal-footer">
           <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
           <form action="@routes.Groups.delete(group.id.get)" method="POST">
-            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
           </form>
         </div>
       </div>
@@ -110,7 +110,7 @@
               <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
 
               <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
-                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Radera</button>
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
               </form>
             </div>
           </div>
