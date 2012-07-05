@@ -9,24 +9,36 @@
       </li>
       <li class="active">Grupper</li>
     </ul>
-    <h2>Grupper</h2>
-    <table class="table table-striped">
-      @groups.map { group =>
-      <tr>
-        <td>
-          <dl class="participation">
-            <dt><a href="@routes.Groups.show(group.id.get)">
-              @group.name
-            </a></dt>
-            <dd>@group.description</dd>
-          </dl>
-        </td>
-      </tr>
-      }
-    </table>
-    <p>
-      <a href="@routes.Groups.createForm" class="btn"><i class="icon-plus"></i> Ny grupp</a>
-    </p>
   </div>
 </div>
+
+<div class="row">
+  <div class="span5">
+    <h2>Grupper</h2>
+  </div>
+</div>
+
+@groups.map { group =>
+<div class="row">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span5">
+        <dl class="participation">
+          <dt><a href="@routes.Groups.show(group.id.get)">
+            @group.name
+          </a></dt>
+          <dd>@group.description</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<div class="row">
+  <div class="span5 btn-row">
+    <a href="@routes.Groups.createForm" class="btn"><i class="icon-plus"></i> Ny grupp</a>
+  </div>
+</div>
+
 }

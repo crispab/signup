@@ -9,25 +9,33 @@
       </li>
       <li class="active">Event</li>
     </ul>
-    <h2>Event</h2>
-    <table class="table table-striped">
-      @events.map { event =>
-      <tr>
-        <td>
-          <dl class="participation">
-            <dt><a href="@routes.Events.show(event.id.get)">
-              @event.name [@event.group.name]
-            </a></dt>
-            <dd>@event.description</dd>
-          </dl>
-        </td>
-        <td>
-          <strong>@event.start_time.format("yyyy-MM-dd")</strong><br/>
-          @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
-        </td>
-      </tr>
-      }
-    </table>
   </div>
 </div>
+
+<div class="row">
+  <div class="span5">
+    <h2>Event</h2>
+  </div>
+</div>
+
+@events.map { event =>
+<div class="row">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span3">
+        <dl class="participation">
+          <dt><a href="@routes.Events.show(event.id.get)">
+            @event.name [@event.group.name]
+          </a></dt>
+          <dd>@event.description</dd>
+        </dl>
+      </div>
+      <div class="span2">
+        <strong>@event.start_time.format("yyyy-MM-dd")</strong><br/>
+        @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
+      </div>
+    </div>
+  </div>
+</div>
+}
 }

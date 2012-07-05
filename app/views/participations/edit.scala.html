@@ -36,16 +36,10 @@
 
     <div class="well">
       <p>@event.description</p>
-      <table>
-        <tr>
-          <td class="eventlabel">Tid:</td>
-          <td>@event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</td>
-        </tr>
-        <tr>
-          <td class="eventlabel">Plats:</td>
-          <td>@event.venue</td>
-        </tr>
-      </table>
+      <ul>
+        <li><strong>Tid:</strong> @event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</li>
+        <li><strong>Plats:</strong> @event.venue</li>
+      </ul>
     </div>
   </div>
 </div>

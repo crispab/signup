@@ -33,25 +33,23 @@ status match {
       </li>
       <li class="active">@event.name</li>
     </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5">
     <h2>@event.name</h2>
 
     <div class="well">
       <p>@event.description</p>
-      <table>
-        <tr>
-          <td class="eventlabel">Tid:</td>
-          <td>@event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</td>
-        </tr>
-        <tr>
-          <td class="eventlabel">Plats:</td>
-          <td>@event.venue</td>
-        </tr>
-      </table>
-      <p></p>
+      <ul>
+        <li><strong>Tid:</strong> @event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</li>
+        <li><strong>Plats:</strong> @event.venue</li>
+      </ul>
       <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
       <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-      <div id="remove_event_@event.id" class="modal smaller-modal" style="display: none">
+      <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
         <div class="modal-header">
           <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
           <h3>Vill du ta bort event?</h3>
@@ -65,104 +63,121 @@ status match {
           </p>
         </div>
         <div class="modal-footer">
-          <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
           <form action="@routes.Events.delete(event.id.get)" method="POST">
+            <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
             <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
           </form>
         </div>
       </div>
 
-      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal" class="btn align-right"><i class="icon-calendar"></i></a>
+      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal" class="btn pull-right"><i class="icon-calendar"></i></a>
     </div>
   </div>
 </div>
 
 <div class="row">
   <div class="span5">
-    <p></p>
-
     <h3>Medlemmar</h3>
-    <table class="table table-striped">
-      @registeredMembers.map { participation =>
-      <tr>
-        <td>
-          <a href="@routes.Participations.updateForm(participation.id.get)">
-            <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @participation.user.email" alt=""/>
-          </a>
-        </td>
-        <td>
-          <dl class="participation">
-            <dt><a href="@routes.Participations.updateForm(participation.id.get)">
-              @participation.user.firstName
-              @participation.user.lastName</a></dt>
-            <dd>@participation.comment</dd>
-          </dl>
-        </td>
-        <td>
-          <a href="@routes.Participations.updateForm(participation.id.get)">
-            <span class="label @as_css_class(participation.status)">
-              @as_message(participation.status)
-            </span>
-          </a>
-        </td>
-      </tr>
-      }
-
-      @unregisteredMembers.map { user =>
-      <tr>
-        <td>
-          <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
-            <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email" alt=""/>
-          </a>
-        </td>
-        <td>
-          <dl class="participation">
-            <dt><a href="@routes.Participations.createForm(event.id.get, user.id.get)">@user.firstName @user.lastName</a></dt>
-          </dl>
-        </td>
-        <td>
-          <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span class="label participation-unregistered">Har inte sagt något</span></a>
-        </td>
-      </tr>
-      }
-    </table>
   </div>
 </div>
 
+@registeredMembers.map { participation =>
 <div class="row">
-  <div class="span5">
-    <p></p>
-
-    <h3>Gäster</h3>
-    <table class="table table-striped">
-      @guests.map { participation =>
-      <tr>
-        <td>
-          <a href="@routes.Participations.updateForm(participation.id.get)">
-            <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @participation.user.email" alt=""/>
-          </a>
-        </td>
-        <td>
-          <dl class="participation">
-            <dt><a href="@routes.Participations.updateForm(participation.id.get)">
-              @participation.user.firstName
-              @participation.user.lastName</a></dt>
-            <dd>@participation.comment</dd>
-          </dl>
-        </td>
-        <td>
-          <a href="@routes.Participations.updateForm(participation.id.get)">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span1">
+        <a href="@routes.Participations.updateForm(participation.id.get)">
+          <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip"
+               title="Gravatar för @participation.user.email" alt=""/>
+        </a>
+      </div>
+      <div class="span2">
+        <dl class="participation">
+          <dt><a href="@routes.Participations.updateForm(participation.id.get)">
+            @participation.user.firstName
+            @participation.user.lastName</a></dt>
+          <dd class="email-address">@participation.user.email</dd>
+          <dd>@participation.comment</dd>
+        </dl>
+      </div>
+      <div class="span2">
+        <a href="@routes.Participations.updateForm(participation.id.get)">
             <span class="label @as_css_class(participation.status)">
               @as_message(participation.status)
             </span>
-          </a>
-        </td>
-      </tr>
-      }
-    </table>
-    <p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+@unregisteredMembers.map { user =>
+<div class="row">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span1">
+        <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
+          <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email"
+               alt=""/>
+        </a>
+      </div>
+      <div class="span2">
+        <dl class="participation">
+          <dt><a href="@routes.Participations.createForm(event.id.get, user.id.get)">@user.firstName @user.lastName</a>
+          </dt>
+          <dd class="email-address">@user.email</dd>
+        </dl>
+      </div>
+      <div class="span2">
+        <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span
+                class="label participation-unregistered">Har inte sagt något</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<div class="row">
+  <div class="span5">
+    <h3>Gäster</h3>
+  </div>
+</div>
+
+@guests.map { participation =>
+<div class="row">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span1">
+        <a href="@routes.Participations.updateForm(participation.id.get)">
+          <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip"
+               title="Gravatar för @participation.user.email" alt=""/>
+        </a>
+      </div>
+      <div class="span2">
+        <dl class="participation">
+          <dt><a href="@routes.Participations.updateForm(participation.id.get)">
+            @participation.user.firstName
+            @participation.user.lastName</a></dt>
+          <dd class="email-address">@participation.user.email</dd>
+          <dd>@participation.comment</dd>
+        </dl>
+      </div>
+      <div class="span2">
+        <a href="@routes.Participations.updateForm(participation.id.get)">
+            <span class="label @as_css_class(participation.status)">
+              @as_message(participation.status)
+            </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<div class="row">
+  <div class="span5 btn-row">
       <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
-    </p>
   </div>
 </div>
 }

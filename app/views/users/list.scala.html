@@ -9,33 +9,45 @@
       </li>
       <li class="active">Användare</li>
     </ul>
-    <h2>Användare</h2>
-    <table class="table table-striped">
-      @users.map { user =>
-      <tr>
-        <td>
-          <a href="@routes.Users.show(user.id.get)">
-            <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip"
-                 title="Gravatar för @user.email" alt=""/>
-          </a>
-        </td>
-        <td>
-          <dl class="participation">
-            <dt><a href="@routes.Users.show(user.id.get)">
-              @user.firstName @user.lastName
-            </a></dt>
-            <dd>@user.comment</dd>
-          </dl>
-        </td>
-        <td>
-          @user.email
-        </td>
-      </tr>
-      }
-    </table>
-    <p>
-      <a href="@routes.Users.createForm" class="btn"><i class="icon-plus"></i> Ny användare</a>
-    </p>
   </div>
 </div>
+
+<div class="row">
+  <div class="span5">
+    <h2>Användare</h2>
+  </div>
+</div>
+
+@users.map { user =>
+<div class="row">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span1">
+        <a href="@routes.Users.show(user.id.get)">
+          <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip"
+               title="Gravatar för @user.email" alt=""/>
+        </a>
+      </div>
+      <div class="span2">
+        <dl class="participation">
+          <dt><a href="@routes.Users.show(user.id.get)">
+            @user.firstName @user.lastName
+          </a></dt>
+          <dd>@user.comment</dd>
+        </dl>
+      </div>
+      <div class="span2 email-address">
+        @user.email
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<div class="row">
+  <div class="span5 btn-row">
+    <a href="@routes.Users.createForm" class="btn"><i class="icon-plus"></i> Ny användare</a>
+  </div>
+</div>
+
 }
