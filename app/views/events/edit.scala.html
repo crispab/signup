@@ -32,7 +32,9 @@
   new java.util.Date().format("yyyy-MM-dd")
 }
 
-@page("Redigera event " + field("name"), inGroups = true){
+@import util.Section._
+
+@page("Redigera event " + field("name"), section = Groups){
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">

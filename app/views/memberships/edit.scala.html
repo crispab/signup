@@ -4,8 +4,9 @@
 
 @hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
 
+@import util.Section._
 
-@page("Ny medlem i " + group.name, inGroups = true) {
+@page("Ny medlem i " + group.name, section = Groups) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">

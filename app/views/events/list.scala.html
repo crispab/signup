@@ -1,6 +1,8 @@
 @(events: Seq[models.Event])
 
-@page("Event", inGroups = true){
+@import util.Section._
+
+@page("Event", section = Other){
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">

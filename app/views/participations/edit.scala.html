@@ -16,7 +16,9 @@
   }
 }
 
-@page("Anmälan till " + event.name, inGroups = true) {
+@import util.Section._
+
+@page("Anmälan till " + event.name, section = Groups) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">

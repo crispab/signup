@@ -29,7 +29,9 @@
   }
 }
 
-@page("Redigera användare" +  field("firstName") + field("lastName"), inGroups = false) {
+@import util.Section._
+
+@page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
 
   <header>
     <div class="row">

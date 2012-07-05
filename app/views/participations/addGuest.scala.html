@@ -5,7 +5,9 @@
 @hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
 
 
-@page("Gäst till " + event.name, inGroups = true) {
+@import util.Section._
+
+@page("Gäst till " + event.name, section = Groups) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">

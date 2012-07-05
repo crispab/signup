@@ -1,4 +1,4 @@
-@(title: String, inGroups: Boolean)(body: Html)
+@(title: String, section: util.Section.Section)(body: Html)
 
 @import helper._
 @import helper.FieldConstructor
@@ -30,8 +30,8 @@
         SignUp
       </a>
       <ul class="nav">
-        <li @if(inGroups){class="active"}><a href="@routes.Groups.list">Grupper</a></li>
-        <li @if(!inGroups){class="active"}><a href="@routes.Users.list">Användare</a></li>
+        <li @if(section.equals(util.Section.Groups)){class="active"}><a href="@routes.Groups.list">Grupper</a></li>
+        <li @if(section.equals(util.Section.Users)){class="active"}><a href="@routes.Users.list">Användare</a></li>
       </ul>
     </div>
   </div>
