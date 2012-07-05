@@ -15,7 +15,6 @@
   <meta name="author" content="">
   <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-combobox/css/bootstrap-combobox.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("bootstrap-datepicker/css/datepicker.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'>
   <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
@@ -44,15 +43,10 @@
 
 <script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
 <script src='@routes.Assets.at("bootstrap/js/bootstrap.js")'></script>
-<script src='@routes.Assets.at("bootstrap-combobox/js/bootstrap-combobox.js")'></script>
 <script src='@routes.Assets.at("bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
 <script src='@routes.Assets.at("bootstrap-datepicker/js/locales/bootstrap-datepicker.sv.js")'></script>
 
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('.combobox').combobox();
-  });
-
   $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
       autoclose: true,
