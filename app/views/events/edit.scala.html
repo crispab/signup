@@ -5,31 +5,31 @@
 @hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "error" } }
 
 @isCreatingNew() = @{
-  idToUpdate.isEmpty
+idToUpdate.isEmpty
 }
 
 @the_action() = @{
-  if(isCreatingNew) {
-    routes.Events.create
-  } else {
-    routes.Events.update(idToUpdate.get)
-  }
+if(isCreatingNew) {
+routes.Events.create
+} else {
+routes.Events.update(idToUpdate.get)
+}
 }
 
 @all_times() = @{
-  Seq(
-    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
-    "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
-    "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
-    "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
-    "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
-  )
+Seq(
+"00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
+"03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
+"07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
+"10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+"14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
+"17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+"21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
+)
 }
 
 @today() = @{
-  new java.util.Date().format("yyyy-MM-dd")
+new java.util.Date().format("yyyy-MM-dd")
 }
 
 @import util.Section._
@@ -57,14 +57,22 @@
       <li class="active">Redigera</li>
       }
     </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5">
     <h2>@if(isCreatingNew) {Nytt} else {Redigera} Event</h2>
+  </div>
+</div>
 
-    <p></p>
-
-    <form class="form-horizontal" action="@the_action()" method="POST">
+<div class="row">
+  <div class="span5">
+    <form class="form" action="@the_action()" method="POST">
       <fieldset>
         <div class='control-group @hasErrors("name")'>
           <label class="control-label" for="name">Namn</label>
+
           <div class="controls">
             <input type="text" class="input-xlarge" id="name" name="name" value='@field("name")' required>
             <span class="show-on-error">Fyll i ett namn på eventet</span>
@@ -73,50 +81,43 @@
 
         <div class='control-group  @hasErrors("description")'>
           <label class="control-label" for="description">Beskrivning</label>
+
           <div class="controls">
-            <textarea class="input-xlarge" id="description" name="description" rows="3">@field("description")</textarea>
+            <textarea class="span5 rich-textarea" id="description" name="description" rows="7">@field("description")</textarea>
             <span class="show-on-error">Det här var en underlig beskrivning</span>
           </div>
         </div>
 
         <div class='control-group  @hasErrors("venue")'>
           <label class="control-label" for="venue">Plats</label>
+
           <div class="controls">
             <input type="text" class="input-xlarge" id="venue" name="venue" value='@field("venue")'>
             <span class="show-on-error">Fyll i en plats där eventet äger rum</span>
           </div>
         </div>
 
-        <div class='control-group  @hasErrors("start_date")'>
-          <label class="control-label" for="start_date">Dag</label>
-          <div class="controls">
-            <input type="text" class="input-small datepicker" id="start_date" name="start_date"
-                   value='@field("start_date").format("yyyy-MM-dd")' min="@today()" required
-                   pattern="20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]">
-            <span class="show-on-error">Ogiltigt datum</span>
-          </div>
-        </div>
+        <div class='form-inline control-group @hasErrors("start_date") @hasErrors("start_time") @hasErrors("end_time")'>
+          <label class="control-label" for="start_date">Dag </label>
 
-        <div class='control-group  @hasErrors("start_time")'>
-          <label class="control-label" for="start_time">Från kl</label>
-          <div class="controls">
-            <input type="time" class="input-mini" id="start_time" name="start_time" value='@field("start_time")'
-                   required pattern="[0-2][0-9]:[0-5][0-9]"
-                   data-provide="typeahead" data-items="4"
-                   data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
-            <span class="show-on-error">Ogiltigt klockslag</span>
-          </div>
-        </div>
+          <input type="text" class="input-small datepicker" id="start_date" name="start_date"
+                 value='@field("start_date").format("yyyy-MM-dd")' min="@today()" required
+                 pattern="20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]">
 
-        <div class='control-group  @hasErrors("end_time")'>
-          <label class="control-label" for="end_time">Till kl</label>
-          <div class="controls">
-            <input type="time" class="input-mini" id="end_time" name="end_time" value='@field("end_time")'
-                   required pattern="[0-2][0-9]:[0-5][0-9]"
-                   data-provide="typeahead" data-items="4"
-                   data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
-          </div>
-          <span class="show-on-error">Ogiltigt klockslag</span>
+          <label class="control-label" for="start_time"> från kl</label>
+
+          <input type="time" class="input-mini" id="start_time" name="start_time" value='@field("start_time")'
+                 required pattern="[0-2][0-9]:[0-5][0-9]"
+                 data-provide="typeahead" data-items="4"
+                 data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
+
+          <label class="control-label" for="end_time"> till kl</label>
+
+          <input type="time" class="input-mini" id="end_time" name="end_time" value='@field("end_time")'
+                 required pattern="[0-2][0-9]:[0-5][0-9]"
+                 data-provide="typeahead" data-items="4"
+                 data-source='@all_times().mkString("[\"", "\", \"", "\"]")'>
+          <div class="show-on-error">Ogiltigt datum eller klockslag</div>
         </div>
 
         <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
@@ -124,8 +125,10 @@
         @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel!</h4>
+          <h4 class="alert-heading">Inmatningsfel</h4>
+
           <p>@eventForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+
           <p>@eventForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
         </div>
         }

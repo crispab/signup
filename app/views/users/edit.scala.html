@@ -108,7 +108,7 @@
           @if(userForm.hasErrors || userForm.hasGlobalErrors) {
           <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">×</a>
-            <h4 class="alert-heading">Inmatningsfel!</h4>
+            <h4 class="alert-heading">Inmatningsfel</h4>
             <p>@userForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
             <p>@userForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
           </div>

@@ -43,7 +43,7 @@ status match {
     <h2>@event.name</h2>
 
     <div class="well">
-      <p>@event.description</p>
+      <p>@Html(event.description)</p>
       <ul>
         <li><strong>Tid:</strong> @event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</li>
         <li><strong>Plats:</strong> @event.venue</li>

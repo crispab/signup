@@ -37,7 +37,7 @@
     <h2>Anmälan till @event.name</h2>
 
     <div class="well">
-      <p>@event.description</p>
+      <p>@Html(event.description)</p>
       <ul>
         <li><strong>Tid:</strong> @event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</li>
         <li><strong>Plats:</strong> @event.venue</li>
@@ -88,7 +88,7 @@
         @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel!</h4>
+          <h4 class="alert-heading">Inmatningsfel</h4>
           <p>@participationForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
           <p>@participationForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
         </div>

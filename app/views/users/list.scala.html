@@ -30,16 +30,14 @@
                title="Gravatar för @user.email" alt=""/>
         </a>
       </div>
-      <div class="span2">
+      <div class="span4">
         <dl class="participation">
           <dt><a href="@routes.Users.show(user.id.get)">
             @user.firstName @user.lastName
           </a></dt>
+          <dd class="email-address">@user.email</dd>
           <dd>@user.comment</dd>
         </dl>
-      </div>
-      <div class="span2 email-address">
-        @user.email
       </div>
     </div>
   </div>

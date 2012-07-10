@@ -52,7 +52,7 @@
         @if(membershipForm.hasErrors || membershipForm.hasGlobalErrors) {
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel!</h4>
+          <h4 class="alert-heading">Inmatningsfel</h4>
           <p>@membershipForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
           <p>@membershipForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
         </div>

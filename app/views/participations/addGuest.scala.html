@@ -55,7 +55,7 @@
         @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel!</h4>
+          <h4 class="alert-heading">Inmatningsfel</h4>
           <p>@participationForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
           <p>@participationForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
         </div>
