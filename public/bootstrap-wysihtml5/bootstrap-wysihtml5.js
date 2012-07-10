@@ -8,53 +8,53 @@
                            "</a>" +
                            "<ul class='dropdown-menu'>" +
                                "<li><a data-wysihtml5-command='formatBlock' data-wysihtml5-command-value='div'>Normal text</a></li>" +
-                               "<li><a data-wysihtml5-command='formatBlock' data-wysihtml5-command-value='h1'>Heading 1</a></li>" +
-                               "<li><a data-wysihtml5-command='formatBlock' data-wysihtml5-command-value='h2'>Heading 2</a></li>" +
+                               "<li><a data-wysihtml5-command='formatBlock' data-wysihtml5-command-value='h1'>Rubrik 1</a></li>" +
+                               "<li><a data-wysihtml5-command='formatBlock' data-wysihtml5-command-value='h2'>Rubrik 2</a></li>" +
                            "</ul>" +
                        "</li>",
         "emphasis":    "<li>" +
                            "<div class='btn-group'>" +
-                               "<a class='btn' data-wysihtml5-command='bold' title='CTRL+B'>Bold</a>" +
-                               "<a class='btn' data-wysihtml5-command='italic' title='CTRL+I'>Italic</a>" +
-                               "<a class='btn' data-wysihtml5-command='underline' title='CTRL+U'>Underline</a>" +
+                               "<a class='btn' data-wysihtml5-command='bold' title='CTRL+B'>Fet</a>" +
+                               "<a class='btn' data-wysihtml5-command='italic' title='CTRL+I'>Kursiv</a>" +
+                               "<a class='btn' data-wysihtml5-command='underline' title='CTRL+U'>Understruken</a>" +
                            "</div>" +
                        "</li>",
         "lists":       "<li>" +
                            "<div class='btn-group'>" +
-                               "<a class='btn' data-wysihtml5-command='insertUnorderedList' title='Unordered List'><i class='icon-list'></i></a>" +
-                               "<a class='btn' data-wysihtml5-command='insertOrderedList' title='Ordered List'><i class='icon-th-list'></i></a>" +
-                               "<a class='btn' data-wysihtml5-command='Outdent' title='Outdent'><i class='icon-indent-right'></i></a>" +
-                               "<a class='btn' data-wysihtml5-command='Indent' title='Indent'><i class='icon-indent-left'></i></a>" +
+                               "<a class='btn' data-wysihtml5-command='insertUnorderedList' title='Punktlista'><i class='icon-list'></i></a>" +
+                               "<a class='btn' data-wysihtml5-command='insertOrderedList' title='Numrerad lista'><i class='icon-th-list'></i></a>" +
+                               "<a class='btn' data-wysihtml5-command='Outdent' title='Skjut åt vänster'><i class='icon-indent-right'></i></a>" +
+                               "<a class='btn' data-wysihtml5-command='Indent' title='Skjut åt höger'><i class='icon-indent-left'></i></a>" +
                            "</div>" +
                        "</li>",
         "link":        "<li>" +
                            "<div class='bootstrap-wysihtml5-insert-link-modal modal hide fade'>" +
                                "<div class='modal-header'>" +
                                    "<a class='close' data-dismiss='modal'>&times;</a>" +
-                                   "<h3>Insert Link</h3>" +
+                                   "<h3>Infoga länk</h3>" +
                                "</div>" +
                                "<div class='modal-body'>" +
                                    "<input value='http://' class='bootstrap-wysihtml5-insert-link-url input-xlarge'>" +
                                "</div>" +
                                "<div class='modal-footer'>" +
-                                   "<a href='#' class='btn' data-dismiss='modal'>Cancel</a>" +
-                                   "<a href='#' class='btn btn-primary' data-dismiss='modal'>Insert link</a>" +
+                                   "<a href='#' class='btn' data-dismiss='modal'>Avbry</a>" +
+                                   "<a href='#' class='btn btn-primary' data-dismiss='modal'>Infoga länk</a>" +
                                "</div>" +
                            "</div>" +
-                           "<a class='btn' data-wysihtml5-command='createLink' title='Link'><i class='icon-share'></i></a>" +
+                           "<a class='btn' data-wysihtml5-command='createLink' title='Infoga länk'><i class='icon-share'></i></a>" +
                        "</li>",
         "image":       "<li>" +
                            "<div class='bootstrap-wysihtml5-insert-image-modal modal hide fade'>" +
                                "<div class='modal-header'>" +
                                    "<a class='close' data-dismiss='modal'>&times;</a>" +
-                                   "<h3>Insert Image</h3>" +
+                                   "<h3>Infoga bild</h3>" +
                                "</div>" +
                                "<div class='modal-body'>" +
                                    "<input value='http://' class='bootstrap-wysihtml5-insert-image-url input-xlarge'>" +
                                "</div>" +
                                "<div class='modal-footer'>" +
-                                   "<a href='#' class='btn' data-dismiss='modal'>Cancel</a>" +
-                                   "<a href='#' class='btn btn-primary' data-dismiss='modal'>Insert image</a>" +
+                                   "<a href='#' class='btn' data-dismiss='modal'>Avbryt</a>" +
+                                   "<a href='#' class='btn btn-primary' data-dismiss='modal'>Infoga bild</a>" +
                                "</div>" +
                            "</div>" +
                            "<a class='btn' data-wysihtml5-command='insertImage' title='Insert image'><i class='icon-picture'></i></a>" +
@@ -63,7 +63,7 @@
         "html":
                        "<li>" +
                            "<div class='btn-group'>" +
-                               "<a class='btn' data-wysihtml5-action='change_view' title='Edit HTML'><i class='icon-pencil'></i></a>" +
+                               "<a class='btn' data-wysihtml5-action='change_view' title='Redigera HTML'><i class='icon-pencil'></i></a>" +
                            "</div>" +
                        "</li>"
     };
