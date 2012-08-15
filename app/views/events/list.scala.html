@@ -7,7 +7,7 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li class="active">Event</li>
     </ul>
@@ -33,8 +33,8 @@
         </dl>
       </div>
       <div class="span2">
-        <strong>@event.start_time.format("yyyy-MM-dd")</strong><br/>
-        @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
+        <strong>@event.startTime.format("yyyy-MM-dd")</strong><br/>
+        @event.startTime.format("HH:mm")-@event.endTime.format("HH:mm")
       </div>
     </div>
   </div>

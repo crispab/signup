@@ -108,7 +108,7 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
           'comment -> user.comment
         ).executeInsert()
     } match {
-      case Some(primaryKey) => primaryKey
+      case Some(primaryKey: Long) => primaryKey
       case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }

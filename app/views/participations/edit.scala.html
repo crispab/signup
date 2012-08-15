@@ -4,13 +4,13 @@
 
 @hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
 
-@isCreatingNew() = @{
+@creatingNew() = @{
   idToUpdate.isEmpty
 }
 
-@the_action() = @{
-  if(isCreatingNew) {
-    routes.Participations.create
+@theAction() = @{
+  if(creatingNew()) {
+    routes.Participations.create()
   } else {
     routes.Participations.update(idToUpdate.get)
   }
@@ -23,10 +23,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Events.list">Event</a> <span class="divider">/</span>
+        <a href="@routes.Events.list()">Event</a> <span class="divider">/</span>
       </li>
       <li>
         <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">/</span>
@@ -39,7 +39,7 @@
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</li>
+        <li><strong>Tid:</strong> @event.startTime.format("yyyy-MM-dd, HH:mm")-@event.endTime.format("HH:mm")</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
     </div>
@@ -49,26 +49,24 @@
 
 <div class="row">
   <div class="span5">
-    <form action="@the_action" method="POST">
+    <form action="@theAction()" method="POST">
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
-          <label class="control-label">
-            <h3>
-              <img src="@util.Gravatar.url(user.email)"  class="gravatar" rel="tooltip" title="Gravatar för @user.email" alt=""/>
-              @user.firstName @user.lastName
-            </h3>
+          <label class="control-label big-name">
+            <img class="gravatar" src="@util.Gravatar.url(user.email)" rel="tooltip" title="Gravatar för @user.email" alt=""/>
+            @user.firstName @user.lastName
           </label>
           <div class="controls">
             <label class="radio inline">
-              <input type="radio" name="status" id="on" value="On" @(if(isCreatingNew || field("status") == Status.On.toString  || field("status") == Status.Unregistered.toString) "checked")>
+              <input type="radio" name="status" id="on" value="On" @if(creatingNew() || field("status") == Status.On.toString  || field("status") == Status.Unregistered.toString) {checked=""}/>
               <span class="label participation-on">Kommer</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="maybe" value="Maybe" @(if(field("status") == Status.Maybe.toString) "checked")>
+              <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""}/>
               <span class="label participation-maybe">Kanske</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="off" value="Off" @(if(field("status") == Status.Off.toString) "checked")>
+              <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""}/>
               <span class="label participation-off">Kommer inte</span>
             </label>
           </div>

@@ -1,6 +1,6 @@
 @(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])
 
-@as_css_class(status: models.Status.Value) = @{
+@asCssClass(status: models.Status.Value) = @{
 status match {
     case Status.On => "participation-on"
     case Status.Maybe => "participation-maybe"
@@ -9,7 +9,7 @@ status match {
   }
 }
 
-@as_message(status: models.Status.Value) = @{
+@asMessage(status: models.Status.Value) = @{
 status match {
     case Status.On => "Kommer"
     case Status.Maybe => "Kanske"
@@ -25,10 +25,10 @@ status match {
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">/</span>
       </li>
       <li>
         <a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a> <span class="divider">/</span>
@@ -45,7 +45,7 @@ status match {
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @event.start_time.format("yyyy-MM-dd, HH:mm")-@event.end_time.format("HH:mm")</li>
+        <li><strong>Tid:</strong> @event.startTime.format("yyyy-MM-dd, HH:mm")-@event.endTime.format("HH:mm")</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
       <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
@@ -89,7 +89,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-          <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip"
+          <img class="gravatar" src="@util.Gravatar.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
@@ -104,8 +104,8 @@ status match {
       </div>
       <div class="span2">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-            <span class="label @as_css_class(participation.status)">
-              @as_message(participation.status)
+            <span class="label @asCssClass(participation.status)">
+              @asMessage(participation.status)
             </span>
         </a>
       </div>
@@ -120,7 +120,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
-          <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip" title="Gravatar för @user.email"
+          <img class="gravatar" src="@util.Gravatar.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
                alt=""/>
         </a>
       </div>
@@ -152,7 +152,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-          <img src="@util.Gravatar.url(participation.user.email, size=40)" align="top" rel="tooltip"
+          <img class="gravatar" src="@util.Gravatar.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
@@ -167,8 +167,8 @@ status match {
       </div>
       <div class="span2">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-            <span class="label @as_css_class(participation.status)">
-              @as_message(participation.status)
+            <span class="label @asCssClass(participation.status)">
+              @asMessage(participation.status)
             </span>
         </a>
       </div>

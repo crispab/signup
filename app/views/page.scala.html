@@ -1,11 +1,12 @@
 @(title: String, section: util.Section.Section)(body: Html)
 
+<!DOCTYPE html>
+
 @import helper._
 @import helper.FieldConstructor
 @import helper.twitterBootstrap2._
-@implicitField = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
+@implicitField() = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
 
-<!DOCTYPE html>
 
 <html lang="sv">
 <head>
@@ -13,10 +14,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("bootstrap-datepicker/css/datepicker.css")'>
+  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("stylesheets/signup.css")'>
   <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.png")'>
   <title>@title</title>
@@ -27,12 +28,12 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="@routes.Application.index">
+      <a class="brand" href="@routes.Application.index()">
         SignUp
       </a>
       <ul class="nav">
-        <li @if(section.equals(util.Section.Groups)){class="active"}><a href="@routes.Groups.list">Grupper</a></li>
-        <li @if(section.equals(util.Section.Users)){class="active"}><a href="@routes.Users.list">Användare</a></li>
+        <li @if(section.equals(util.Section.Groups)){class="active"}><a href="@routes.Groups.list()">Grupper</a></li>
+        <li @if(section.equals(util.Section.Users)){class="active"}><a href="@routes.Users.list()">Användare</a></li>
       </ul>
     </div>
   </div>

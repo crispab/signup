@@ -43,6 +43,7 @@ dl.participation {
 
 .gravatar {
   padding: 4px;
+  vertical-align: top;
 }
 
 .show-on-error {
@@ -85,8 +86,16 @@ body {
 
 .btn-row {
   margin-top: 6px;
+  margin-bottom: 20px;
 }
 
 .email-address {
   color: #909090;
+}
+
+.big-name {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 27px;
+  margin-top: 12px;
 }

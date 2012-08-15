@@ -4,28 +4,28 @@
 
 @hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "error" } }
 
-@isUpdating() = @{
+@updating() = @{
   idToUpdate.isDefined
 }
 
-@isCreatingMember() = @{
+@creatingMember() = @{
   groupId.isDefined
 }
 
-@isCreatingGuest() = @{
+@creatingGuest() = @{
   eventId.isDefined
 }
 
 
 @theAction() = @{
-  if(isUpdating) {
+  if(updating()) {
     routes.Users.update(idToUpdate.get)
-  } else if(isCreatingMember) {
+  } else if(creatingMember()) {
     routes.Users.createMember(groupId.get)
-  } else if(isCreatingGuest) {
+  } else if(creatingGuest()) {
     routes.Users.createGuest(eventId.get)
   } else {
-    routes.Users.create
+    routes.Users.create()
   }
 }
 
@@ -38,13 +38,13 @@
       <div class="span5">
         <ul class="breadcrumb">
           <li>
-            <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+            <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
           </li>
           <li>
-            <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
+            <a href="@routes.Users.list()">Användare</a> <span class="divider">/</span>
           </li>
 
-          @if(isUpdating) {
+          @if(updating()) {
           <li>
             <a href="@routes.Users.show(idToUpdate.get)">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
           </li>
@@ -59,15 +59,15 @@
 
   <div class="row">
     <div class="span5">
-      <h2>@if(isUpdating) {Redigera} else {Ny} Användare</h2>
+      <h2>@if(updating()) {Redigera} else {Ny} Användare</h2>
       <p></p>
-      <form class="form-horizontal" action="@theAction" method="POST">
+      <form class="form-horizontal" action="@theAction()" method="POST">
         <fieldset>
 
           <div class='control-group @hasErrors("firstName")'>
             <label class="control-label" for="firstName">Förnamn</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")' required>
+              <input type="text" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")' required="" />
               <span class="show-on-error">Fyll i ett förnamn</span>
             </div>
           </div>
@@ -75,7 +75,7 @@
           <div class='control-group @hasErrors("lastName")'>
             <label class="control-label" for="lastName">Efternamn</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")' required>
+              <input type="text" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")' required="" />
               <span class="show-on-error">Fyll i ett efternamn</span>
             </div>
           </div>
@@ -84,7 +84,7 @@
           <div class='control-group @hasErrors("email")'>
             <label class="control-label" for="email">Epost</label>
             <div class="controls">
-              <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")' required>
+              <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")' required="" />
               <span class="show-on-error">Fyll i en korrekt epostadress</span>
             </div>
           </div>
@@ -92,7 +92,7 @@
           <div class='control-group @hasErrors("phone")'>
             <label class="control-label" for="phone">Telefon</label>
             <div class="controls">
-              <input type="tel" class="input-xlarge" id="phone" name="phone" value='@field("phone")'>
+              <input type="tel" class="input-xlarge" id="phone" name="phone" value='@field("phone")' />
               <span class="show-on-error">Ogiltigt telefonnummer</span>
             </div>
           </div>
@@ -114,8 +114,8 @@
           </div>
           }
 
-          <input type="hidden" id="groupId" name="groupId" value='@groupId.getOrElse("")'>
-          <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")'>
+          <input type="hidden" id="groupId" name="groupId" value='@groupId.getOrElse("")' />
+          <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")' />
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i

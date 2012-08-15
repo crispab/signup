@@ -7,10 +7,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">/</span>
       </li>
       <li class="active">@group.name</li>
     </ul>
@@ -70,8 +70,8 @@
         </dl>
       </div>
       <div class="span2">
-        <strong>@event.start_time.format("yyyy-MM-dd"),</strong>
-        @event.start_time.format("HH:mm")-@event.end_time.format("HH:mm")
+        <strong>@event.startTime.format("yyyy-MM-dd"),</strong>
+        @event.startTime.format("HH:mm")-@event.endTime.format("HH:mm")
       </div>
     </div>
   </div>
@@ -95,7 +95,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(membership.user.id.get)">
-          <img src="@util.Gravatar.url(membership.user.email, size=40)" align="top" rel="tooltip"
+          <img class="gravatar" src="@util.Gravatar.url(membership.user.email, size=40)" rel="tooltip"
                title="Gravatar för @membership.user.email" alt="" alt=""/>
         </a>
       </div>

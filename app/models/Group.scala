@@ -49,7 +49,7 @@ object Group {
           'description -> group.description
         ).executeInsert()
     } match {
-      case Some(primaryKey) => primaryKey
+      case Some(primaryKey: Long) => primaryKey
       case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }

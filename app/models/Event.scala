@@ -11,8 +11,8 @@ case class Event(
                   group: Group,
                   name: String,
                   description: String = "",
-                  start_time: util.Date,
-                  end_time: util.Date,
+                  startTime: util.Date,
+                  endTime: util.Date,
                   venue: String = ""
                   )
 
@@ -30,8 +30,8 @@ object Event {
           id = id,
           name = name,
           description = description,
-          start_time = start_time,
-          end_time = end_time,
+          startTime = start_time,
+          endTime = end_time,
           venue = venue,
           group = Group.find(groupx)
         )
@@ -65,13 +65,13 @@ object Event {
         SQL(insertQueryString).on(
           'name -> event.name,
           'description -> event.description,
-          'start_time -> event.start_time,
-          'end_time -> event.end_time,
+          'start_time -> event.startTime,
+          'end_time -> event.endTime,
           'venue -> event.venue,
           'groupx -> event.group.id
         ).executeInsert()
     } match {
-      case Some(primaryKey) => primaryKey
+      case Some(primaryKey: Long) => primaryKey
       case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
@@ -103,8 +103,8 @@ INSERT INTO events (
           'id -> id,
           'name -> event.name,
           'description -> event.description,
-          'start_time -> event.start_time,
-          'end_time -> event.end_time,
+          'start_time -> event.startTime,
+          'end_time -> event.endTime,
           'venue -> event.venue,
           'groupx -> event.group.id
         ).executeUpdate()

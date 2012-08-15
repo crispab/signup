@@ -5,9 +5,9 @@ VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:REQUEST
 BEGIN:VEVENT
-DTSTART:@event.start_time.format("yyyyMMdd'T'HHmmss'Z'")
-DTEND:@event.end_time.format("yyyyMMdd'T'HHmmss'Z'")
-DTSTAMP:@event.start_time.format("yyyyMMdd'T'HHmmss'Z'")
+DTSTART:@event.startTime.format("yyyyMMdd'T'HHmmss'Z'")
+DTEND:@event.endTime.format("yyyyMMdd'T'HHmmss'Z'")
+DTSTAMP:@event.startTime.format("yyyyMMdd'T'HHmmss'Z'")
 UID:@event.id
 CREATED:@{new java.util.Date().format("yyyyMMdd'T'HHmmss'Z'")}
 DESCRIPTION:@event.description

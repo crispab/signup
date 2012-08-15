@@ -88,7 +88,7 @@ object Events extends Controller {
     )
 
   def fromEvent(event: Event) = {
-    Option((event.id, event.name, event.description, event.start_time, event.start_time, event.end_time, event.venue, event.group.id.get))
+    Option((event.id, event.name, event.description, event.startTime, event.startTime, event.endTime, event.venue, event.group.id.get))
   }
 
   def toEvent(
@@ -108,8 +108,8 @@ object Events extends Controller {
       id = id,
       name = name,
       description = description,
-      start_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
-      end_time = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
+      startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
+      endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
       venue = venue,
       group = Group.find(groupId)
     )

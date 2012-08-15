@@ -7,10 +7,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Users.list">Användare</a> <span class="divider">/</span>
+        <a href="@routes.Users.list()">Användare</a> <span class="divider">/</span>
       </li>
       <li class="active">@user.firstName @user.lastName</li>
     </ul>
@@ -18,7 +18,7 @@
 </div>
 <div class="row">
   <div class="span5">
-    <img src="@util.Gravatar.url(user.email)" align="left" class="gravatar" rel="tooltip"
+    <img class="gravatar" src="@util.Gravatar.url(user.email)" rel="tooltip"
          title="Gravatar för @user.email" alt=""/>
     <h2>@user.firstName @user.lastName</h2>
   </div>

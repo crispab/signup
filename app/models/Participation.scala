@@ -49,7 +49,7 @@ object Participation {
           'event -> participation.event.id
         ).executeInsert()
     } match {
-      case Some(primaryKey) => primaryKey
+      case Some(primaryKey: Long) => primaryKey
       case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }
@@ -64,7 +64,7 @@ object Participation {
           'event -> eventId
         ).executeInsert()
     } match {
-      case Some(primaryKey) => primaryKey
+      case Some(primaryKey: Long) => primaryKey
       case _ => throw new RuntimeException("Could not insert into database, no PK returned")
     }
   }

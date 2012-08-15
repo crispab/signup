@@ -12,10 +12,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Events.list">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Events.list()">Grupper</a> <span class="divider">/</span>
       </li>
       <li>
         <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">/</span>
@@ -31,13 +31,13 @@
 
 <div class="row">
   <div class="span5">
-    <form action="@routes.Participations.createGuest" method="POST">
+    <form action="@routes.Participations.createGuest()" method="POST">
       <fieldset>
 
         <div class='control-group @hasErrors("userId")'>
           <label class="control-label" for="userId">Befintlig användare</label>
           <div class="controls">
-            <select id="userId" name="userId" required>
+            <select id="userId" name="userId" required="">
               <option>Ingen vald</option>
               @nonGuests.map { user =>
               <option value="@user.id.get"

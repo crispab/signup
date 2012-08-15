@@ -1,11 +1,11 @@
 @import util.Section._
 
-@page(title = "SignUp", Other) {
+@page(title = "SignUp", section = Other) {
   <div class="row">
     <div class="span5">
       <ul class="breadcrumb">
         <li class="active">
-          <a href="@routes.Application.index"><i class="icon-home"></i> Start</a>
+          <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a>
         </li>
       </ul>
       <h2>Välkommen till SignUp</h2>
@@ -21,10 +21,10 @@
         gruppen för varje sammankomst.
       </p>
       <p>
-        <a href="@routes.Groups.list">Grupper</a>
+        <a href="@routes.Groups.list()">Grupper</a>
       </p>
       <p>
-        <a href="@routes.Users.list">Användare</a>
+        <a href="@routes.Users.list()">Användare</a>
       </p>
     </div>
   </div>

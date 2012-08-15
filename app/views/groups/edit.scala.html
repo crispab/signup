@@ -4,13 +4,13 @@
 
 @hasErrors(fieldName: String) = @{ if(groupForm(fieldName).hasErrors) { "error" } }
 
-@isCreatingNew() = @{
+@creatingNew() = @{
   idToUpdate.isEmpty
 }
 
-@the_action() = @{
-  if(isCreatingNew) {
-    routes.Groups.create
+@theAction() = @{
+  if(creatingNew()) {
+    routes.Groups.create()
   } else {
     routes.Groups.update(idToUpdate.get)
   }
@@ -23,13 +23,13 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li>
-        <a href="@routes.Groups.list">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">/</span>
       </li>
 
-      @if(isCreatingNew) {
+      @if(creatingNew()) {
       <li class="active">Ny grupp</li>
       } else {
       <li>
@@ -38,16 +38,16 @@
       <li class="active">Redigera</li>
       }
     </ul>
-    <h2>@if(isCreatingNew) {Ny} else {Redigera} Grupp</h2>
+    <h2>@if(creatingNew()) {Ny} else {Redigera} Grupp</h2>
 
     <p></p>
 
-    <form class="form-horizontal" action="@the_action()" method="POST">
+    <form class="form-horizontal" action="@theAction()" method="POST">
       <fieldset>
         <div class='control-group @hasErrors("name")'>
           <label class="control-label" for="name">Namn</label>
           <div class="controls">
-            <input type="text" class="input-xlarge" id="name" name="name" value='@field("name")' required>
+            <input type="text" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
             <span class="show-on-error">Fyll i ett namn på gruppen</span>
           </div>
         </div>

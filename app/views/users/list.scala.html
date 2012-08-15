@@ -7,7 +7,7 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
       </li>
       <li class="active">Användare</li>
     </ul>
@@ -26,7 +26,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img src="@util.Gravatar.url(user.email, size=40)" align="top" rel="tooltip"
+          <img class="gravatar" src="@util.Gravatar.url(user.email, size=40)" rel="tooltip"
                title="Gravatar för @user.email" alt=""/>
         </a>
       </div>
@@ -46,7 +46,7 @@
 
 <div class="row">
   <div class="span5 btn-row">
-    <a href="@routes.Users.createForm" class="btn"><i class="icon-plus"></i> Ny användare</a>
+    <a href="@routes.Users.createForm()" class="btn"><i class="icon-plus"></i> Ny användare</a>
   </div>
 </div>
 
