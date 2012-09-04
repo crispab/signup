@@ -8,19 +8,19 @@ class GravatarUtilSpec extends Specification {
   "Gravatar util" should {
 
     "handle simple case" in {
-      Gravatar.url("myemailaddress@example.com") must beEqualTo(CORRECT_URL)
+      GravatarHelper.url("myemailaddress@example.com") must beEqualTo(CORRECT_URL)
     }
 
     "handle CamelCase" in {
-      Gravatar.url("MyEmailAddress@example.com") must beEqualTo(CORRECT_URL)
+      GravatarHelper.url("MyEmailAddress@example.com") must beEqualTo(CORRECT_URL)
     }
 
     "handle white space" in {
-      Gravatar.url("  MyEmailAddress@example.com ") must beEqualTo(CORRECT_URL)
+      GravatarHelper.url("  MyEmailAddress@example.com ") must beEqualTo(CORRECT_URL)
     }
 
     "handle empty string" in {
-      Gravatar.url("").size must beGreaterThan(0)
+      GravatarHelper.url("").size must beGreaterThan(0)
     }
   }
 }

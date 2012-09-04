@@ -1,7 +1,6 @@
 @(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership])
 
-@import util.Section._
-
+@@
 @page(group.name, section = Groups) {
 <div class="row">
   <div class="span5">
@@ -70,8 +69,8 @@
         </dl>
       </div>
       <div class="span2">
-        <strong>@event.startTime.format("yyyy-MM-dd"),</strong>
-        @event.startTime.format("HH:mm")-@event.endTime.format("HH:mm")
+        <strong>@DateHelper.asDate(event.startTime),</strong>
+        @DateHelper.asTime(event.startTime)-@DateHelper.asTime(event.endTime)
       </div>
     </div>
   </div>
@@ -95,7 +94,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(membership.user.id.get)">
-          <img class="gravatar" src="@util.Gravatar.url(membership.user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@util.GravatarHelper.url(membership.user.email, size=40)" rel="tooltip"
                title="Gravatar för @membership.user.email" alt="" alt=""/>
         </a>
       </div>

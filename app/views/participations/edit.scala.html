@@ -16,8 +16,7 @@
   }
 }
 
-@import util.Section._
-
+@@@
 @page("Anmälan till " + event.name, section = Groups) {
 <div class="row">
   <div class="span5">
@@ -39,7 +38,7 @@
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @event.startTime.format("yyyy-MM-dd, HH:mm")-@event.endTime.format("HH:mm")</li>
+        <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime)-@DateHelper.asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
     </div>
@@ -53,7 +52,7 @@
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
-            <img class="gravatar" src="@util.Gravatar.url(user.email)" rel="tooltip" title="Gravatar för @user.email" alt=""/>
+            <img class="gravatar" src="@util.GravatarHelper.url(user.email)" rel="tooltip" title="Gravatar för @user.email" alt=""/>
             @user.firstName @user.lastName
           </label>
           <div class="controls">
@@ -87,8 +86,7 @@
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@participationForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-          <p>@participationForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@FormHelper.errors(participationForm).mkString(", ")</p>
         </div>
         }
 
@@ -99,7 +97,7 @@
             Spara
           </button>
           <button type="button" class="btn" id="cancel"
-                  onClick='window.location="@routes.Events.show(event.id.get)"'>
+                  onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
             <i class="icon-stop"></i>
             Avbryt
           </button>

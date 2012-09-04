@@ -29,8 +29,7 @@
   }
 }
 
-@import util.Section._
-
+@@
 @page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
 
   <header>
@@ -46,7 +45,7 @@
 
           @if(updating()) {
           <li>
-            <a href="@routes.Users.show(idToUpdate.get)">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
+            <a href="@routes.Users.show(idToUpdate.get) ">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
           </li>
           <li class="active">Redigera</li>
           } else {
@@ -109,8 +108,7 @@
           <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">×</a>
             <h4 class="alert-heading">Inmatningsfel</h4>
-            <p>@userForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-            <p>@userForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+            <p>@FormHelper.errors(userForm).mkString(", ")</p>
           </div>
           }
 

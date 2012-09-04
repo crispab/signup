@@ -1,7 +1,6 @@
 @(users: Seq[User])
 
-@import util.Section._
-
+@
 @page("Användare", section = Users) {
 <div class="row">
   <div class="span5">
@@ -26,7 +25,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img class="gravatar" src="@util.Gravatar.url(user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@util.GravatarHelper.url(user.email, size=40)" rel="tooltip"
                title="Gravatar för @user.email" alt=""/>
         </a>
       </div>

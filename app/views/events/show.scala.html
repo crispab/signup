@@ -1,5 +1,6 @@
 @(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])
 
+@
 @asCssClass(status: models.Status.Value) = @{
 status match {
     case Status.On => "participation-on"
@@ -18,8 +19,7 @@ status match {
   }
 }
 
-@import util.Section._
-
+@
 @page(event.name, section = Groups) {
 <div class="row">
   <div class="span5">
@@ -45,7 +45,7 @@ status match {
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @event.startTime.format("yyyy-MM-dd, HH:mm")-@event.endTime.format("HH:mm")</li>
+        <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime)-@DateHelper.asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
       <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
@@ -89,7 +89,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-          <img class="gravatar" src="@util.Gravatar.url(participation.user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@util.GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
@@ -120,7 +120,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
-          <img class="gravatar" src="@util.Gravatar.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
+          <img class="gravatar" src="@util.GravatarHelper.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
                alt=""/>
         </a>
       </div>
@@ -152,7 +152,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-          <img class="gravatar" src="@util.Gravatar.url(participation.user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@util.GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>

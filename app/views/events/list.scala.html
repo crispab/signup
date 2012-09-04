@@ -1,8 +1,7 @@
 @(events: Seq[models.Event])
 
-@import util.Section._
-
-@page("Event", section = Other){
+@@
+@page("Event", section = Other) {
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -33,11 +32,12 @@
         </dl>
       </div>
       <div class="span2">
-        <strong>@event.startTime.format("yyyy-MM-dd")</strong><br/>
-        @event.startTime.format("HH:mm")-@event.endTime.format("HH:mm")
+        <strong>@DateHelper.asDate(event.startTime)</strong><br/>
+        @DateHelper.asTime(event.startTime)-@DateHelper.asTime(event.endTime)
       </div>
     </div>
   </div>
 </div>
 }
+<div></div>
 }

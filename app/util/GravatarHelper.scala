@@ -2,7 +2,7 @@ package util
 
 import org.apache.commons.codec.digest.DigestUtils
 
-object Gravatar {
+object GravatarHelper {
 
   def GRAVATAR_BASE_URL = "https://secure.gravatar.com/avatar/"
   def GRAVATAR_DEFAULT_SIZE = 80

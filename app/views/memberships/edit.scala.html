@@ -4,8 +4,7 @@
 
 @hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
 
-@import util.Section._
-
+@@
 @page("Ny medlem i " + group.name, section = Groups) {
 <div class="row">
   <div class="span5">
@@ -53,8 +52,7 @@
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@membershipForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-          <p>@membershipForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@FormHelper.errors(membershipForm).mkString(", ")</p>
         </div>
         }
 
@@ -64,12 +62,12 @@
             Lägg till
           </button>
           <button type="button" class="btn" id="create"
-                  onClick='window.location="@routes.Users.createMemberForm(group.id.get)"'>
+                  onClick='window.location.assign("@routes.Users.createMemberForm(group.id.get)") '>
             <i class="icon-plus"></i>
             Ny användare
           </button>
           <button type="button" class="btn" id="cancel"
-                  onClick='window.location="@routes.Groups.show(group.id.get)"'>
+                  onClick='window.location.assign("@routes.Groups.show(group.id.get)") '>
             <i class="icon-stop"></i>
             Avbryt
           </button>

@@ -5,6 +5,7 @@ import play.api.db.DB
 import anorm._
 import play.api.Play.current
 import java.util
+import org.joda.time.DateMidnight
 
 case class Event(
                   id: Pk[Long] = NotAssigned,
@@ -45,10 +46,11 @@ object Event {
     }
   }
 
-  def findByGroup(group: Group): Seq[Event] = {
+  def findFutureEventsByGroup(group: Group): Seq[Event] = {
     DB.withConnection {
+      val today = new DateMidnight().toDate
       implicit connection =>
-        SQL("SELECT * FROM events WHERE groupx={groupId} ORDER BY start_time DESC").on('groupId -> group.id.get).as(Event.parser *)
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.start_time DESC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
     }
   }
 

@@ -2,10 +2,10 @@
 
 <!DOCTYPE html>
 
-@import helper._
-@import helper.FieldConstructor
-@import helper.twitterBootstrap2._
-@implicitField() = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
+@@@@@implicitField() = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
+
+@sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
+
 
 
 <html lang="sv">
@@ -32,8 +32,8 @@
         SignUp
       </a>
       <ul class="nav">
-        <li @if(section.equals(util.Section.Groups)){class="active"}><a href="@routes.Groups.list()">Grupper</a></li>
-        <li @if(section.equals(util.Section.Users)){class="active"}><a href="@routes.Users.list()">Användare</a></li>
+        <li class='@sectionClass(util.Section.Groups.toString)'><a href="@routes.Groups.list()">Grupper</a></li>
+        <li class='@sectionClass(util.Section.Users.toString)'><a href="@routes.Users.list()">Användare</a></li>
       </ul>
     </div>
   </div>

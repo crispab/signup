@@ -5,8 +5,7 @@
 @hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
 
 
-@import util.Section._
-
+@@
 @page("Gäst till " + event.name, section = Groups) {
 <div class="row">
   <div class="span5">
@@ -56,8 +55,7 @@
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@participationForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-          <p>@participationForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@FormHelper.errors(participationForm).mkString(", ")</p>
         </div>
         }
 
@@ -67,12 +65,12 @@
             Lägg till
           </button>
           <button type="button" class="btn" id="create"
-                  onClick='window.location="@routes.Users.createGuestForm(event.id.get)"'>
+                  onClick='window.location.assign("@routes.Users.createGuestForm(event.id.get)") '>
             <i class="icon-plus"></i>
             Ny användare
           </button>
           <button type="button" class="btn" id="cancel"
-                  onClick='window.location="@routes.Events.show(event.id.get)"'>
+                  onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
             <i class="icon-stop"></i>
             Avbryt
           </button>

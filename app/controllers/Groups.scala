@@ -15,7 +15,7 @@ object Groups extends Controller {
 
   def show(id: Long) = Action {
     val group = Group.find(id)
-    val events = Event.findByGroup(group)
+    val events = Event.findFutureEventsByGroup(group)
     val members = Membership.findMembers(group)
     Ok(views.html.groups.show(group, events, members))
   }

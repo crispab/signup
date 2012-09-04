@@ -29,11 +29,10 @@
 }
 
 @today() = @{
-  new java.util.Date().format("yyyy-MM-dd")
+  util.DateHelper.asDate(new java.util.Date())
 }
 
-@import util.Section._
-
+@@
 @page("Redigera event " + field("name"), section = Groups){
 <div class="row">
   <div class="span5">
@@ -52,7 +51,7 @@
       <li class="active">Nytt</li>
       } else {
       <li>
-        <a href="@routes.Events.show(idToUpdate.get)">@field("name")</a> <span class="divider">/</span>
+        <a href="@routes.Events.show(idToUpdate.get) ">@field("name")</a> <span class="divider">/</span>
       </li>
       <li class="active">Redigera</li>
       }
@@ -101,7 +100,7 @@
           <label class="control-label" for="start_date">Dag </label>
 
           <input type="text" class="input-small datepicker" id="start_date" name="start_date"
-                 value='@field("start_date").format("yyyy-MM-dd")' min="@today()" required=""
+                 value='@field("start_date")' min="@today()" required=""
                  pattern="20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]"/>
 
           <label class="control-label" for="start_time"> från kl</label>
@@ -127,9 +126,7 @@
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
 
-          <p>@eventForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-
-          <p>@eventForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@FormHelper.errors(eventForm).mkString(", ")</p>
         </div>
         }
 

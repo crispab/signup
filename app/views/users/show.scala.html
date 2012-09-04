@@ -1,7 +1,6 @@
 @(user: models.User)
 
-@import util.Section._
-
+@
 @page(user.firstName + " " + user.lastName, section = Users) {
 <div class="row">
   <div class="span5">
@@ -18,7 +17,7 @@
 </div>
 <div class="row">
   <div class="span5">
-    <img class="gravatar" src="@util.Gravatar.url(user.email)" rel="tooltip"
+    <img class="gravatar" src="@util.GravatarHelper.url(user.email)" rel="tooltip"
          title="Gravatar för @user.email" alt=""/>
     <h2>@user.firstName @user.lastName</h2>
   </div>

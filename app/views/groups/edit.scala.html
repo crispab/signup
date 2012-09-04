@@ -16,8 +16,7 @@
   }
 }
 
-@import util.Section._
-
+@@
 @page("Redigera grupp " + field("name"), section = Groups){
 <div class="row">
   <div class="span5">
@@ -33,7 +32,7 @@
       <li class="active">Ny grupp</li>
       } else {
       <li>
-        <a href="@routes.Groups.show(idToUpdate.get)">@field("name")</a> <span class="divider">/</span>
+        <a href="@routes.Groups.show(idToUpdate.get) ">@field("name")</a> <span class="divider">/</span>
       </li>
       <li class="active">Redigera</li>
       }
@@ -64,8 +63,7 @@
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@groupForm.globalErrors.map(e => e.message + ": " + e.key).mkString(", ")</p>
-          <p>@groupForm.errors.map(e => e.message + ": " + e.key).mkString(", ")</p>
+          <p>@FormHelper.errors(groupForm).mkString(", ")</p>
         </div>
         }
 
