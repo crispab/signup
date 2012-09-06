@@ -2,7 +2,12 @@
 
 <!DOCTYPE html>
 
-@@@@@implicitField() = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
+@import helper._
+@import helper.FieldConstructor
+@import helper.twitterBootstrap2._
+@import util.DateHelper
+
+@implicitField() = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 

@@ -1,5 +1,8 @@
 @(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)
 
+@import util.FormHelper
+@import util.Section._
+
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "error" } }

@@ -1,6 +1,9 @@
 @(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])
 
-@
+@import util.DateHelper
+@import util.Section._
+
+
 @asCssClass(status: models.Status.Value) = @{
 status match {
     case Status.On => "participation-on"
@@ -19,7 +22,7 @@ status match {
   }
 }
 
-@
+
 @page(event.name, section = Groups) {
 <div class="row">
   <div class="span5">

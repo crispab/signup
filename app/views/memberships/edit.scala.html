@@ -1,10 +1,13 @@
 @(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])
 
+@import util.FormHelper
+@import util.Section._
+
 @field(fieldName: String) = @{ membershipForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
 
-@@
+
 @page("Ny medlem i " + group.name, section = Groups) {
 <div class="row">
   <div class="span5">

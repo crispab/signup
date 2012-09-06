@@ -1,5 +1,8 @@
 @(userForm: Form[User], idToUpdate: Option[Long] = None, groupId: Option[Long] = None, eventId: Option[Long] = None)
 
+@import util.FormHelper
+@import util.Section._
+
 @field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "error" } }
@@ -29,7 +32,7 @@
   }
 }
 
-@@
+
 @page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
 
   <header>

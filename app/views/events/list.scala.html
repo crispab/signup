@@ -1,6 +1,8 @@
 @(events: Seq[models.Event])
 
-@@
+@import util.DateHelper
+@import util.Section._
+
 @page("Event", section = Other) {
 <div class="row">
   <div class="span5">

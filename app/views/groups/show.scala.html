@@ -1,6 +1,8 @@
 @(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership])
 
-@@
+@import util.DateHelper
+@import util.Section._
+
 @page(group.name, section = Groups) {
 <div class="row">
   <div class="span5">

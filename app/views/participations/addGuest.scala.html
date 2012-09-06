@@ -1,11 +1,13 @@
 @(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])
 
+@import util.FormHelper
+@import util.Section._
+
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
 
 
-@@
 @page("Gäst till " + event.name, section = Groups) {
 <div class="row">
   <div class="span5">
