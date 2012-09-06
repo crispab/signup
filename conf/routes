@@ -24,7 +24,7 @@ GET     /groups/new                 controllers.Groups.createForm
 GET     /groups/:id/edit            controllers.Groups.updateForm(id: Long)
 POST    /groups                     controllers.Groups.create
 GET     /groups                     controllers.Groups.list
-GET     /groups/:id                 controllers.Groups.show(id: Long)
+GET     /groups/:id                 controllers.Groups.show(id: Long, showAll: Boolean ?= false)
 POST    /groups/:id                 controllers.Groups.update(id: Long)
 POST    /groups/:id/delete          controllers.Groups.delete(id: Long)
 

@@ -13,11 +13,14 @@ object Groups extends Controller {
     Ok(views.html.groups.list(groups))
   }
 
-  def show(id: Long) = Action {
+  def show(id: Long, showAll: Boolean) = Action {
     val group = Group.find(id)
-    val events = Event.findFutureEventsByGroup(group)
     val members = Membership.findMembers(group)
-    Ok(views.html.groups.show(group, events, members))
+    if(showAll) {
+      Ok(views.html.groups.show(group, Event.findAllEventsByGroup(group) , members, showingAll = true))
+    } else {
+      Ok(views.html.groups.show(group, Event.findFutureEventsByGroup(group), members))
+    }
   }
 
   def createForm = Action {

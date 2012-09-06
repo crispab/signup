@@ -54,6 +54,13 @@ object Event {
     }
   }
 
+  def findAllEventsByGroup(group: Group): Seq[Event] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time DESC").on('groupId -> group.id.get).as(Event.parser *)
+    }
+  }
+
   def find(id: Long): Event = {
     DB.withConnection {
       implicit connection =>

@@ -1,4 +1,4 @@
-@(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership])
+@(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership], showingAll: Boolean = false)
 
 @import util.DateHelper
 @import util.Section._
@@ -55,6 +55,11 @@
 <div class="row">
   <div class="span5">
     <h3>Event</h3>
+    @if(showingAll) {
+      <a href="@routes.Groups.show(group.id.get)">Visa bara framtida</a>
+    } else {
+      <a href="@routes.Groups.show(group.id.get, showAll = true)">Visa alla</a>
+    }
   </div>
 </div>
 
