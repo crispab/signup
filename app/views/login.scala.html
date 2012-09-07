@@ -1,0 +1,41 @@
+@import util.Section._
+
+
+@page(title = "SignUp", section = Login) {
+<div class="row">
+  <div class="span5">
+    <ul class="breadcrumb">
+      <li>
+        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+      </li>
+      <li class="active">Logga in</li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5">
+    <form class="form-horizontal" action="@routes.Application.login" method="POST">
+      <div class="control-group">
+        <label class="control-label" for="email">Epost</label>
+        <div class="controls">
+          <input type="text" id="email" placeholder="jag@@firman.se">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="inputPassword">Password</label>
+        <div class="controls">
+          <input type="password" id="inputPassword">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn">Logga in</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+}
+
+    

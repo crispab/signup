@@ -37,8 +37,11 @@
         SignUp
       </a>
       <ul class="nav">
-        <li class='@sectionClass(util.Section.Groups.toString)'><a href="@routes.Groups.list()">Grupper</a></li>
-        <li class='@sectionClass(util.Section.Users.toString)'><a href="@routes.Users.list()">Användare</a></li>
+        <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
+        <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.Users.list()">Användare</a></li>
+      </ul>
+      <ul class="nav pull-right">
+        <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-white icon-user"></i> Logga in</a></li>
       </ul>
     </div>
   </div>

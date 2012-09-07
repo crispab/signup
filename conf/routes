@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /login                      controllers.Application.loginForm
+POST    /login                      controllers.Application.login
 
 # Users
 GET     /users/new                  controllers.Users.createForm
