@@ -1,7 +1,15 @@
-@import util.Section._
+@(loginForm: Form[Application.LoginDataForm])
 
+@import util.Section._
+@import util.FormHelper
+
+@field(fieldName: String) = @{ loginForm(fieldName).value.getOrElse("") }
+
+@hasErrors(fieldName: String) = @{ if(loginForm(fieldName).hasErrors) { "error" } }
 
 @page(title = "SignUp", section = Login) {
+
+
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -15,17 +23,17 @@
 
 <div class="row">
   <div class="span5">
-    <form class="form-horizontal" action="@routes.Application.login" method="POST">
+    <form class="form-horizontal" action="@routes.Application.authenticate" method="POST">
       <div class="control-group">
         <label class="control-label" for="email">Epost</label>
         <div class="controls">
-          <input type="text" id="email" placeholder="jag@@firman.se">
+          <input type="text" id="email" name="email" placeholder="jag@@firman.se">
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label" for="inputPassword">Password</label>
+        <label class="control-label" for="password">Password</label>
         <div class="controls">
-          <input type="password" id="inputPassword">
+          <input type="password" id="password" name="password">
         </div>
       </div>
       <div class="control-group">
@@ -34,6 +42,14 @@
         </div>
       </div>
     </form>
+    @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">Inmatningsfel</h4>
+
+            <p>@FormHelper.errors(loginForm).mkString(", ")</p>
+        </div>
+    }
   </div>
 </div>
 }

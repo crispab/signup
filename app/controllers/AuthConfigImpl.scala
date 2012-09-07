@@ -52,12 +52,12 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * Where to redirect the user after logging out
    */
-  def logoutSucceeded[A](request: Request[A]): PlainResult = Redirect(routes.Application.login)
+  def logoutSucceeded[A](request: Request[A]): PlainResult = Redirect(routes.Application.index)
 
   /**
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
-  def authenticationFailed[A](request: Request[A]): PlainResult = Redirect(routes.Application.login)
+  def authenticationFailed[A](request: Request[A]): PlainResult = Redirect(routes.Application.loginForm)
 
   /**
    * If authorization failed (usually incorrect password) redirect the user as follows:
@@ -69,7 +69,7 @@ trait AuthConfigImpl extends AuthConfig {
    * You should alter this procedure to suit your application.
    */
   def authorize(user: User, authority: Authority): Boolean =
-    (user.email == "john@doe.net", authority) match {
+    (user.email == "john@doe.net", authority) match {   // TODO: Replace hard coded email
       case (true, _) => true
       case (false, NormalUser) => true
       case (false, Administrator) => false

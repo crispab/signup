@@ -5,8 +5,10 @@ import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
 import models.{Membership, Event, Group}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
+import jp.t2v.lab.play20.auth.Auth
+import models.security.Administrator
 
-object Groups extends Controller {
+object Groups extends Controller with Auth with AuthConfigImpl {
 
   def list = Action {
     val groups = Group.findAll()
@@ -23,7 +25,7 @@ object Groups extends Controller {
     }
   }
 
-  def createForm = Action {
+  def createForm = authorizedAction(Administrator) { user => implicit request =>
     Ok(views.html.groups.edit(groupForm))
   }
 
