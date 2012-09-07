@@ -3,6 +3,7 @@ package controllers
 import jp.t2v.lab.play20.auth.AuthConfig
 import models.security.{NormalUser, Administrator, Permission}
 import play.api.mvc._
+import play.api.mvc.Results._
 
 trait AuthConfigImpl extends AuthConfig {
 
