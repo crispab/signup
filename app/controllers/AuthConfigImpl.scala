@@ -4,6 +4,7 @@ import jp.t2v.lab.play20.auth.AuthConfig
 import models.security.{NormalUser, Administrator, Permission}
 import play.api.mvc._
 import play.api.mvc.Results._
+import play.api.Logger
 
 trait AuthConfigImpl extends AuthConfig {
 
@@ -43,6 +44,7 @@ trait AuthConfigImpl extends AuthConfig {
    * You can alter the procedure to suit your application.
    */
   def resolveUser(id: Id): Option[User] = {
+    Logger.debug("Resolving user with id " + id)
     Option(models.User.find(id))
   }
 
@@ -53,6 +55,7 @@ trait AuthConfigImpl extends AuthConfig {
   def loginSucceeded[A](request: Request[A]): PlainResult = {
     val uri = request.session.get("access_uri").getOrElse(routes.Application.index.url.toString)
     request.session - "access_uri"
+    Logger.debug("Login succeeded. Redirecting to uri " + uri)
     Redirect(uri)
   }
 
@@ -76,12 +79,14 @@ trait AuthConfigImpl extends AuthConfig {
    * A function that determines what `Authority` a user has.
    * You should alter this procedure to suit your application.
    */
-  def authorize(user: User, authority: Authority): Boolean =
+  def authorize(user: User, authority: Authority): Boolean = {
+    Logger.debug("Will try to authorize user " + user)
     (user.email == "john@doe.net", authority) match {   // TODO: Replace hard coded email
       case (true, _) => true
       case (false, NormalUser) => true
       case (false, Administrator) => false
       case _ => false
     }
+  }
 }
 
