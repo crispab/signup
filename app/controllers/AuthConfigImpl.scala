@@ -42,12 +42,19 @@ trait AuthConfigImpl extends AuthConfig {
    * A function that returns a `User` object from an `Id`.
    * You can alter the procedure to suit your application.
    */
-  def resolveUser(id: Id): Option[User] = Option(models.User.find(id))
+  def resolveUser(id: Id): Option[User] = {
+    Option(models.User.find(id))
+  }
 
   /**
    * Where to redirect the user after a successful login.
    */
-  def loginSucceeded[A](request: Request[A]): PlainResult = Redirect(routes.Application.index)
+
+  def loginSucceeded[A](request: Request[A]): PlainResult = {
+    val uri = request.session.get("access_uri").getOrElse(routes.Application.index.url.toString)
+    request.session - "access_uri"
+    Redirect(uri)
+  }
 
   /**
    * Where to redirect the user after logging out
@@ -57,7 +64,8 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
-  def authenticationFailed[A](request: Request[A]): PlainResult = Redirect(routes.Application.loginForm)
+  def authenticationFailed[A](request: Request[A]): PlainResult =
+    Redirect(routes.Application.loginForm).withSession("access_uri" -> request.uri)
 
   /**
    * If authorization failed (usually incorrect password) redirect the user as follows:
