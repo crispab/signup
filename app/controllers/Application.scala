@@ -3,9 +3,8 @@ package controllers
 import play.api.mvc._
 import jp.t2v.lab.play20.auth.LoginLogout
 import play.api.data.Form
-import models.{Membership, User, Group}
+import models.User
 import play.api.data.Forms._
-import anorm.{Pk, NotAssigned}
 
 object Application extends Controller with LoginLogout with AuthConfigImpl {
 
@@ -20,23 +19,33 @@ object Application extends Controller with LoginLogout with AuthConfigImpl {
   def authenticate = Action { implicit request =>
     loginDataForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.login(formWithErrors)),
-      user => gotoLoginSucceeded(user.id.getOrElse(0L))
+      user => gotoLoginSucceeded(user.get.id.get)
     )
   }
 
-  val loginDataForm: Form[models.User] = Form(
+  val loginDataForm: Form[Option[models.User]] = Form(
     mapping(
       "email" -> nonEmptyText,
       "password" -> nonEmptyText
-    )(toUser)(fromUser)
+    )(toUser)(fromUser).verifying(user => user.isDefined)
   )
 
-  def toUser(email: String, password: String): models.User = {
-    User.find(-5L) // TODO: Replace hard coded id of John Doe
+  def toUser(email: String, password: String): Option[models.User] = {
+    val user = User.findByEmail(email.trim)
+    checkPassword(user, password)
   }
 
-  def fromUser(user: models.User) = {
-    Option((user.email, ""))
+  def checkPassword(user : Option[models.User], password: String): Option[models.User] = {
+     user.filter { usr => password == "123" }
+  }
+
+
+  def fromUser(user: Option[models.User]): Option[(String, String)] = {
+    if(user.isDefined) {
+      Option((user.get.email, ""))
+    } else {
+      Option.empty
+    }
   }
 
   case class LoginDataForm(email : String, password : String)

@@ -44,6 +44,13 @@ object User {
   }
 
 
+  def findByEmail(email: String): Option[User] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from users where email={email}").on('email -> email).as(User.parser singleOpt)
+    }
+  }
+
   def findUnregisteredMembers(event: Event): Seq[User] = {
     DB.withConnection {
       implicit connection =>
