@@ -4,8 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /login                      controllers.Application.loginForm
-POST    /login                      controllers.Application.authenticate
+GET     /loginx                     controllers.Application.loginForm
+POST    /loginx                     controllers.Application.authenticate
 
 # Users
 GET     /users/new                  controllers.Users.createForm
@@ -56,6 +56,18 @@ GET     /participations/:id/edit    controllers.Participations.updateForm(id: Lo
 POST    /participations             controllers.Participations.create
 POST    /participations/:id         controllers.Participations.update(id: Long)
 
+
+# Login page
+GET     /login                      securesocial.controllers.LoginPage.login
+GET     /logout                     securesocial.controllers.LoginPage.logout
+
+# User Registration
+GET     /signup                     securesocial.controllers.Registration.signUp
+POST    /signup                     securesocial.controllers.Registration.handleSignUp
+
+# Providers entry points
+GET     /authenticate/:provider     securesocial.controllers.LoginPage.authenticate(provider)
+POST    /authenticate/:provider     securesocial.controllers.LoginPage.authenticateByPost(provider)
 
 
 # Map static resources from the /public folder to the /assets URL path

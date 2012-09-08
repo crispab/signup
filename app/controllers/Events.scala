@@ -7,8 +7,9 @@ import play.api.data.Forms._
 import play.api.mvc._
 import anorm.{Pk, NotAssigned}
 import java.util
+import play.api.Logger
 
-object Events extends Controller {
+object Events extends Controller with securesocial.core.SecureSocial {
 
   def list = Action {
     val events = Event.findAll()
@@ -24,8 +25,9 @@ object Events extends Controller {
     val event = Event.find(id)
     Ok(views.txt.events.ical(event)).as("text/calendar")
   }
-  
-  def createForm(groupId: Long) = Action {
+
+  def createForm(groupId: Long) = SecuredAction() { implicit request =>
+    Logger("User is " + request.user)
     val group = Group.find(groupId)
     Ok(views.html.events.edit(eventForm, group))
   }
