@@ -1,4 +1,4 @@
-@(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])
+@(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])(implicit flash: Flash, lang: Lang)
 
 @import util.DateHelper
 @import util.Section._
@@ -18,7 +18,7 @@ status match {
     case Status.On => "Kommer"
     case Status.Maybe => "Kanske"
     case Status.Off => "Kommer inte"
-    case Status.Unregistered => "Har inte sagt något"
+    case Status.Unregistered => "Har inte svarat"
   }
 }
 
@@ -28,13 +28,13 @@ status match {
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
       </li>
       <li>
-        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">»</span>
       </li>
       <li>
-        <a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a> <span class="divider">/</span>
+        <a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a> <span class="divider">»</span>
       </li>
       <li class="active">@event.name</li>
     </ul>
@@ -44,6 +44,13 @@ status match {
 <div class="row">
   <div class="span5">
     <h2>@event.name</h2>
+
+    @if(flash.get("success").isDefined) {
+      <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        @flash.get("success")
+      </div>
+    }
 
     <div class="well">
       <p>@Html(event.description)</p>
@@ -69,8 +76,31 @@ status match {
         </div>
         <div class="modal-footer">
           <form action="@routes.Events.delete(event.id.get)" method="POST">
-            <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+            <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
             <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+          </form>
+        </div>
+      </div>
+
+      <a data-toggle="modal" href="#notify_participants_@event.id" class="btn"><i class="icon-envelope"></i> Påminn de som inte svarat</a>
+
+      <div id="notify_participants_@event.id" class="modal smaller-modal hide fade" style="display: none">
+        <div class="modal-header">
+          <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+          <h3>Vill du e-posta de som ännu inte svarat?</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till eventet <strong>@event.name</strong> som ännu inte svarat.
+          </p>
+          <p>
+            Vill du fortsätta?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <form action="@routes.Events.notifyParticipants(event.id.get)" method="POST">
+            <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+            <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn de som inte svarat</button>
           </form>
         </div>
       </div>
@@ -136,7 +166,7 @@ status match {
       </div>
       <div class="span2">
         <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span
-                class="label participation-unregistered">Har inte sagt något</span></a>
+                class="label participation-unregistered">Har inte svarat</span></a>
       </div>
     </div>
   </div>

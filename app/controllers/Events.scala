@@ -8,6 +8,8 @@ import play.api.mvc._
 import anorm.{Pk, NotAssigned}
 import java.util
 import play.api.Logger
+import play.api.libs.concurrent.Akka
+import services.EventNotifier
 
 object Events extends Controller with securesocial.core.SecureSocial {
 
@@ -16,7 +18,7 @@ object Events extends Controller with securesocial.core.SecureSocial {
     Ok(views.html.events.list(events))
   }
 
-  def show(id : Long) = Action {
+  def show(id : Long) = Action { implicit request =>
     val event = Event.find(id)
     Ok(views.html.events.show(event, User.findUnregisteredMembers(event), Participation.findRegisteredMembers(event), Participation.findGuests(event)))
   }
@@ -24,6 +26,22 @@ object Events extends Controller with securesocial.core.SecureSocial {
   def asCalendar(id: Long) = Action {
     val event = Event.find(id)
     Ok(views.txt.events.ical(event)).as("text/calendar")
+  }
+
+  def asEmail(id: Long) = Action {
+    val event = Event.find(id)
+    Ok(views.html.events.email(event))
+  }
+
+  def notifyParticipants(id: Long) = Action { implicit request =>
+    val event = Event.find(id)
+
+    import play.api.Play.current
+    Akka.future {
+      EventNotifier.notifyParticipants(event)
+    }
+
+    Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
   }
 
   def createForm(groupId: Long) = SecuredAction() { implicit request =>

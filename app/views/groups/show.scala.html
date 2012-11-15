@@ -8,10 +8,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
       </li>
       <li>
-        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">/</span>
+        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">»</span>
       </li>
       <li class="active">@group.name</li>
     </ul>
@@ -43,7 +43,7 @@
         </div>
         <div class="modal-footer">
           <form action="@routes.Groups.delete(group.id.get)" method="POST">
-            <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+            <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
             <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
           </form>
         </div>
@@ -134,7 +134,7 @@
           </div>
           <div class="modal-footer">
             <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
               <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
             </form>
           </div>

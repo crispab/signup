@@ -1,0 +1,33 @@
+@(event: models.Event, baseURL: String = "")
+@import util.DateHelper
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@event.group.name : @event.name</title>
+    <style>
+      body {font-family: Helvetica, Arial, sans-serif; font-size: small; margin: 1em }
+      .well {background-color: #dddddd; padding: 1em; border-radius: 0.3em;}
+      .btn {font-weight: bold; padding: 0.5em}
+      a:link, a:visited, a:hover, a:active {text-decoration: none; color: #000000}
+    </style>
+  </head>
+  <body>
+    <h2>@event.group.name</h2>
+    <p>
+      Nu är det dags att anmäla sig till nästa event!
+    </p>
+    <div class="well">
+      <h3>@event.name</h3>
+      <p>@Html(event.description)</p>
+      <ul>
+        <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime) - @DateHelper.asTime(event.endTime)</li>
+        <li><strong>Plats:</strong> @event.venue</li>
+      </ul>
+    </div>
+    <p>
+      <button><a class="btn" href="@baseURL@routes.Events.show(event.id.get)">Anmäl dig här!</a></button>
+    </p>
+  </body>
+</html>

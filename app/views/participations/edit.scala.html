@@ -26,13 +26,13 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
       </li>
       <li>
-        <a href="@routes.Events.list()">Event</a> <span class="divider">/</span>
+        <a href="@routes.Events.list()">Event</a> <span class="divider">»</span>
       </li>
       <li>
-        <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">/</span>
+        <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">»</span>
       </li>
       <li class="active">Anmälan</li>
     </ul>
@@ -102,7 +102,7 @@
           </button>
           <button type="button" class="btn" id="cancel"
                   onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
-            <i class="icon-stop"></i>
+            <i class="icon-ban-circle"></i>
             Avbryt
           </button>
         </div>

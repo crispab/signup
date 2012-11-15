@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
 
   val ssDependencies = Seq(
     // Add your project dependencies here,
-    "com.typesafe" %% "play-plugins-util" % "2.0.1",
+    "com.typesafe" %% "play-plugins-util" % "2.0.3",
     "org.mindrot" % "jbcrypt" % "0.3m"
   )
 
@@ -25,7 +25,8 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq(
     "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
     "joda-time" % "joda-time" % "2.1",
-    "jp.t2v" %% "play20.auth" % "0.3-SNAPSHOT"
+    "jp.t2v" %% "play20.auth" % "0.3-SNAPSHOT",
+    "com.typesafe" %% "play-plugins-mailer" % "2.0.4"
   )
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(

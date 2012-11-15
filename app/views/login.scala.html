@@ -14,7 +14,7 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
       </li>
       <li class="active">Logga in</li>
     </ul>
@@ -23,11 +23,11 @@
 
 <div class="row">
   <div class="span5">
-    <form class="form-horizontal" action="@routes.Application.authenticate" method="POST">
+    <form class="form-horizontal" action="@routes.Application.authenticate()" method="POST">
       <div class="control-group">
         <label class="control-label" for="email">Epost</label>
         <div class="controls">
-          <input type="text" id="email" name="email" placeholder="jag@@firman.se">
+          <input type="text" id="email" name="email">
         </div>
       </div>
       <div class="control-group">
@@ -41,17 +41,16 @@
           <button type="submit" class="btn">Logga in</button>
         </div>
       </div>
-    </form>
-    @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
+      @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
         <div class="alert alert-error">
-            <a class="close" data-dismiss="alert" href="#">×</a>
-            <h4 class="alert-heading">Inmatningsfel</h4>
-
-            <p>@FormHelper.errors(loginForm).mkString(", ")</p>
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">Inmatningsfel</h4>
+          <p>@FormHelper.errors(loginForm).mkString(", ")</p>
         </div>
-    }
+      }
+    </form>
   </div>
 </div>
 }
 
-    
+

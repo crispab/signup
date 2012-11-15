@@ -40,15 +40,15 @@
       <div class="span5">
         <ul class="breadcrumb">
           <li>
-            <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+            <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
           </li>
           <li>
-            <a href="@routes.Users.list()">Användare</a> <span class="divider">/</span>
+            <a href="@routes.Users.list()">Användare</a> <span class="divider">»</span>
           </li>
 
           @if(updating()) {
           <li>
-            <a href="@routes.Users.show(idToUpdate.get) ">@field("firstName") @field("lastName")</a> <span class="divider">/</span>
+            <a href="@routes.Users.show(idToUpdate.get) ">@field("firstName") @field("lastName")</a> <span class="divider">»</span>
           </li>
           <li class="active">Redigera</li>
           } else {
@@ -123,7 +123,7 @@
                     class="icon-ok icon-white"></i>Spara
             </button>
             <button type="button" class="btn" id="cancel" onClick='history.go(-1)'><i
-                    class="icon-stop"></i>Avbryt
+                    class="icon-ban-circle"></i>Avbryt
             </button>
           </div>
         </fieldset>

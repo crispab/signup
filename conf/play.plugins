@@ -5,3 +5,5 @@
 10002:securesocial.core.providers.GoogleProvider
 10003:securesocial.core.providers.LinkedInProvider
 10004:securesocial.core.providers.UsernamePasswordProvider
+1500:com.typesafe.plugin.CommonsMailerPlugin
+

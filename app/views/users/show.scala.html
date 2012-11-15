@@ -7,10 +7,10 @@
   <div class="span5">
     <ul class="breadcrumb">
       <li>
-        <a href="@routes.Application.index()"><i class="icon-home"></i> Start</a> <span class="divider">/</span>
+        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
       </li>
       <li>
-        <a href="@routes.Users.list()">Användare</a> <span class="divider">/</span>
+        <a href="@routes.Users.list()">Användare</a> <span class="divider">»</span>
       </li>
       <li class="active">@user.firstName @user.lastName</li>
     </ul>
@@ -66,7 +66,7 @@
       </div>
       <div class="modal-footer">
         <form action="@routes.Users.delete(user.id.get)" method="POST">
-          <a href="#" class="btn" data-dismiss="modal"><i class="icon-stop"></i> Avbryt</a>
+          <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
           <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
         </form>
       </div>
