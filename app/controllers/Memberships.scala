@@ -5,15 +5,18 @@ import play.api.data.Forms.{mapping, ignored, longNumber}
 import models._
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
+import jp.t2v.lab.play20.auth.Auth
+import models.security.{NormalUser, Administrator}
 
-object Memberships extends Controller {
+object Memberships extends Controller with Auth with AuthConfigImpl {
 
-  def createForm(groupId: Long) = Action {
+  def createForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     Ok(views.html.memberships.edit(membershipForm, Group.find(groupId), User.findNonMembers(groupId)))
   }
 
-  def create = Action {
-    implicit request =>
+  def create = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       membershipForm.bindFromRequest.fold(
         formWithErrors => {
           val group = Group.find(formWithErrors("groupId").value.get.toLong)
@@ -27,7 +30,7 @@ object Memberships extends Controller {
       )
   }
 
-  def delete(id: Long) = Action {
+  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     val membership = Membership.find(id)
     Membership.delete(id)
     Redirect(routes.Groups.show(membership.group.id.get))

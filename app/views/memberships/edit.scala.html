@@ -1,4 +1,4 @@
-@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])
+@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User])
 
 @import util.FormHelper
 @import util.Section._

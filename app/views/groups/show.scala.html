@@ -1,5 +1,6 @@
-@(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership], showingAll: Boolean = false)
+@(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User])
 
+@import util.AuthHelper
 @import util.DateHelper
 @import util.Section._
 
@@ -24,30 +25,32 @@
     <div class="well">
       <p>@group.description</p>
 
-      <p></p>
-      <a href="@routes.Groups.updateForm(group.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
-      <a data-toggle="modal" href="#remove_group_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+      @if(AuthHelper.isAdmin(loggedInUser)) {
+        <p></p>
+        <a href="@routes.Groups.updateForm(group.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
+        <a data-toggle="modal" href="#remove_group_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-      <div id="remove_group_@group.id" class="modal smaller-modal hide fade" style="display: none">
-        <div class="modal-header">
-          <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-          <h3>Vill du ta bort gruppen?</h3>
+        <div id="remove_group_@group.id" class="modal smaller-modal hide fade" style="display: none">
+          <div class="modal-header">
+            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Vill du ta bort gruppen?</h3>
+          </div>
+          <div class="modal-body">
+            <p>
+              Du håller på att ta bort gruppen <strong>@group.name</strong>.
+            </p>
+            <p>
+              Vill du fortsätta?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <form action="@routes.Groups.delete(group.id.get)" method="POST">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+            </form>
+          </div>
         </div>
-        <div class="modal-body">
-          <p>
-            Du håller på att ta bort gruppen <strong>@group.name</strong>.
-          </p>
-          <p>
-            Vill du fortsätta?
-          </p>
-        </div>
-        <div class="modal-footer">
-          <form action="@routes.Groups.delete(group.id.get)" method="POST">
-            <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
-          </form>
-        </div>
-      </div>
+      }
     </div>
   </div>
 </div>
@@ -84,11 +87,13 @@
 </div>
 }
 
-<div class="row">
-  <div class="span5 btn-row">
-    <a href="@routes.Events.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Nytt event</a>
+@if(AuthHelper.isAdmin(loggedInUser)) {
+  <div class="row">
+    <div class="span5 btn-row">
+      <a href="@routes.Events.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Nytt event</a>
+    </div>
   </div>
-</div>
+}
 
 <div class="row">
   <div class="span5">
@@ -114,40 +119,46 @@
           <dd>@membership.user.comment</dd>
         </dl>
       </div>
-      <div class="span2">
-        <a data-toggle="modal" href="#remove_member_@membership.id" class="btn pull-right"><i class="icon-trash"></i> Ta
-          bort</a>
 
-        <div id="remove_member_@membership.id" class="modal smaller-modal hide fade" style="display: none">
-          <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du ta bort medlemmen?</h3>
-          </div>
-          <div class="modal-body">
-            <p>
-              Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
-              från gruppen <strong>@group.name</strong>.
-            </p>
-            <p>
-              Vill du fortsätta?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
-            </form>
+      @if(AuthHelper.isAdmin(loggedInUser)) {
+        <div class="span2">
+          <a data-toggle="modal" href="#remove_member_@membership.id" class="btn pull-right"><i class="icon-trash"></i> Ta
+            bort</a>
+
+          <div id="remove_member_@membership.id" class="modal smaller-modal hide fade" style="display: none">
+            <div class="modal-header">
+              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <h3>Vill du ta bort medlemmen?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
+                från gruppen <strong>@group.name</strong>.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
+                <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      }
+
     </div>
   </div>
 </div>
 }
 
-<div class="row">
-  <div class="span5 btn-row">
-    <a href="@routes.Memberships.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny medlem</a>
+@if(AuthHelper.isAdmin(loggedInUser)) {
+  <div class="row">
+    <div class="span5 btn-row">
+      <a href="@routes.Memberships.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny medlem</a>
+    </div>
   </div>
-</div>
+}
 }

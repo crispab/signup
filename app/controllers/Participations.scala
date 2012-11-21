@@ -6,20 +6,21 @@ import play.api.data.Forms._
 import anorm.{Pk, NotAssigned}
 import models.{Participation, Event, User}
 import play.api.mvc._
+import jp.t2v.lab.play20.auth.Auth
+import models.security.{NormalUser, Administrator}
 
-object Participations extends Controller {
+object Participations extends Controller with Auth with AuthConfigImpl {
 
-  def createForm(eventId: Long, userId: Long) = Action {
+  def createForm(eventId: Long, userId: Long) = optionalUserAction { implicit user => implicit request =>
     Ok(views.html.participations.edit(participationForm, User.find(userId), Event.find(eventId)))
   }
 
-  def create = Action {
-    implicit request =>
+  def create = optionalUserAction { implicit user => implicit request =>
       participationForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(formWithErrors("eventId").value.get.toLong)
-          val user = User.find(formWithErrors("userId").value.get.toLong)
-          BadRequest(views.html.participations.edit(formWithErrors, user, event))
+          val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
+          BadRequest(views.html.participations.edit(formWithErrors, userToAttend, event))
         },
         participation => {
           Participation.create(participation)
@@ -28,13 +29,14 @@ object Participations extends Controller {
       )
   }
 
-  def createGuestForm(eventId: Long) = Action {
+  def createGuestForm(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     val event = Event.find(eventId)
     Ok(views.html.participations.addGuest(participationForm, event, User.findNonGuests(event.id.get)))
   }
 
-  def createGuest = Action {
-    implicit request =>
+  def createGuest = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       participationForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(formWithErrors("eventId").value.get.toLong)
@@ -47,18 +49,17 @@ object Participations extends Controller {
       )
   }
 
-  def updateForm(id: Long) = Action {
+  def updateForm(id: Long) = optionalUserAction { implicit user => implicit request =>
     val participation = Participation.find(id)
     Ok(views.html.participations.edit(participationForm.fill(participation), participation.user, participation.event, Option(id)))
   }
 
-  def update(id: Long) = Action {
-    implicit request =>
+  def update(id: Long) = optionalUserAction { implicit user => implicit request =>
       participationForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(formWithErrors("eventId").value.get.toLong)
-          val user = User.find(formWithErrors("userId").value.get.toLong)
-          BadRequest(views.html.participations.edit(formWithErrors, user, event, Option(id)))
+          val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
+          BadRequest(views.html.participations.edit(formWithErrors, userToAttend, event, Option(id)))
         },
         participation => {
           Participation.update(id, participation)

@@ -5,39 +5,45 @@ import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
 import models.{Participation, Membership, User}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
+import jp.t2v.lab.play20.auth.Auth
+import models.security.{NormalUser, Administrator}
 
-object Users extends Controller {
+object Users extends Controller with Auth with AuthConfigImpl {
 
-  def list = Action {
-    val users = User.findAll()
-    Ok(views.html.users.list(users))
-  }
-  
-  def show(id : Long) = Action {
-    val user = User.find(id)
-    Ok(views.html.users.show(user))
+  def list = optionalUserAction { implicit user => implicit request =>
+    val usersToList = User.findAll()
+    Ok(views.html.users.list(usersToList))
   }
 
-  def createForm = Action {
+  def show(id : Long) = optionalUserAction { implicit user => implicit request =>
+    val userToShow = User.find(id)
+    Ok(views.html.users.show(userToShow))
+  }
+
+  def createForm = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     Ok(views.html.users.edit(userForm))
   }
 
-  def createMemberForm(groupId: Long) = Action {
+  def createMemberForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     Ok(views.html.users.edit(userForm, groupId = Option(groupId)))
   }
 
-  def createGuestForm(eventId: Long) = Action {
+  def createGuestForm(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     Ok(views.html.users.edit(userForm, eventId = Option(eventId)))
   }
 
 
-  def updateForm(id: Long) = Action {
-    val user = User.find(id)
-    Ok(views.html.users.edit(userForm.fill(user), idToUpdate = Option(id)))
+  def updateForm(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
+    val userToUpdate = User.find(id)
+    Ok(views.html.users.edit(userForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
-  def create = Action {
-    implicit request =>
+  def create = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       userForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
@@ -47,8 +53,8 @@ object Users extends Controller {
       )
   }
 
-  def createMember(groupId: Long) = Action {
-    implicit request =>
+  def createMember(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       userForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
@@ -58,8 +64,8 @@ object Users extends Controller {
       )
   }
 
-  def createGuest(eventId: Long) = Action {
-    implicit request =>
+  def createGuest(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       userForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
@@ -69,8 +75,8 @@ object Users extends Controller {
       )
   }
 
-  def update(id: Long) = Action {
-    implicit request =>
+  def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       userForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
         user => {
@@ -80,7 +86,7 @@ object Users extends Controller {
       )
   }
 
-  def delete(id: Long) = Action {
+  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     User.delete(id)
     Redirect(routes.Users.list())
   }

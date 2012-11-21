@@ -1,4 +1,4 @@
-@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User])
 
 @import util.FormHelper
 @import util.Section._

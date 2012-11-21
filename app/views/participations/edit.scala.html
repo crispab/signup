@@ -1,4 +1,4 @@
-@(participationForm: Form[Participation], user: User, event: Event, idToUpdate: Option[Long] = None)
+@(participationForm: Form[Participation], user: User, event: Event, idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
 
 @import util.DateHelper
 @import util.FormHelper

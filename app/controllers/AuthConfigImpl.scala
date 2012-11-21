@@ -5,6 +5,7 @@ import models.security.{NormalUser, Administrator, Permission}
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.Logger
+import util.AuthHelper
 
 trait AuthConfigImpl extends AuthConfig {
 
@@ -48,6 +49,7 @@ trait AuthConfigImpl extends AuthConfig {
     Option(models.User.find(id))
   }
 
+
   /**
    * Where to redirect the user after a successful login.
    */
@@ -68,25 +70,19 @@ trait AuthConfigImpl extends AuthConfig {
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
   def authenticationFailed[A](request: Request[A]): PlainResult =
-    Redirect(routes.Application.loginForm()).withSession("access_uri" -> request.uri)
+    Redirect(routes.Application.loginForm()).withSession("access_uri" -> request.uri).flashing("error" -> "Nädu, det här får du inte göra utan att logga in som administratör!")
 
   /**
    * If authorization failed (usually incorrect password) redirect the user as follows:
    */
-  def authorizationFailed[A](request: Request[A]): PlainResult = Forbidden("Nädu, det här får du inte göra!!")
+  def authorizationFailed[A](request: Request[A]): PlainResult = Forbidden("Nädu, det här får du inte göra utan att logga in som administratör!")
 
   /**
    * A function that determines what `Authority` a user has.
    * You should alter this procedure to suit your application.
    */
   def authorize(user: User, authority: Authority): Boolean = {
-    Logger.debug("Will try to authorize user " + user)
-    (user.email == "john@doe.net", authority) match {   // TODO: Replace hard coded email
-      case (true, _) => true
-      case (false, NormalUser) => true
-      case (false, Administrator) => false
-      case _ => false
-    }
+    AuthHelper.authorize(user, authority)
   }
 }
 

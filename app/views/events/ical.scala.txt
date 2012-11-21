@@ -1,4 +1,4 @@
-@(event: models.Event)
+@(event: models.Event)(implicit loggedInUser: Option[User])
 BEGIN:VCALENDAR
 PRODID:-//Crisp AB//Signup//EN
 VERSION:2.0

@@ -1,4 +1,4 @@
-@(events: Seq[models.Event])
+@(events: Seq[models.Event])(implicit loggedInUser: Option[User])
 
 @import util.DateHelper
 @import util.Section._

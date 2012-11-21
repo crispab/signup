@@ -1,4 +1,4 @@
-@(groupForm: Form[Group], idToUpdate: Option[Long] = None)
+@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
 
 @import util.FormHelper
 @import util.Section._

@@ -10,20 +10,22 @@ import java.util
 import play.api.Logger
 import play.api.libs.concurrent.Akka
 import services.EventNotifier
+import jp.t2v.lab.play20.auth.Auth
+import models.security.{NormalUser, Administrator}
 
-object Events extends Controller with securesocial.core.SecureSocial {
+object Events extends Controller with Auth with AuthConfigImpl {
 
-  def list = Action {
+  def list = optionalUserAction { implicit user => implicit request =>
     val events = Event.findAll()
     Ok(views.html.events.list(events))
   }
 
-  def show(id : Long) = Action { implicit request =>
+  def show(id : Long) = optionalUserAction { implicit user => implicit request =>
     val event = Event.find(id)
     Ok(views.html.events.show(event, User.findUnregisteredMembers(event), Participation.findRegisteredMembers(event), Participation.findGuests(event)))
   }
 
-  def asCalendar(id: Long) = Action {
+  def asCalendar(id: Long) = optionalUserAction { implicit user => implicit request =>
     val event = Event.find(id)
     Ok(views.txt.events.ical(event)).as("text/calendar")
   }
@@ -33,7 +35,7 @@ object Events extends Controller with securesocial.core.SecureSocial {
     Ok(views.html.events.email(event))
   }
 
-  def notifyParticipants(id: Long) = Action { implicit request =>
+  def notifyParticipants(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     val event = Event.find(id)
 
     import play.api.Play.current
@@ -44,14 +46,14 @@ object Events extends Controller with securesocial.core.SecureSocial {
     Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
   }
 
-  def createForm(groupId: Long) = SecuredAction() { implicit request =>
-    Logger("User is " + request.user)
+  def createForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     val group = Group.find(groupId)
     Ok(views.html.events.edit(eventForm, group))
   }
 
-  def create = Action {
-    implicit request =>
+  def create = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val groupId = formWithErrors("groupId").value.get.toLong
@@ -66,13 +68,14 @@ object Events extends Controller with securesocial.core.SecureSocial {
   }
 
 
-  def updateForm(id: Long) = Action {
+  def updateForm(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     val event = Event.find(id)
     Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
   }
 
-  def update(id: Long) = Action {
-    implicit request =>
+  def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(id)
@@ -86,7 +89,7 @@ object Events extends Controller with securesocial.core.SecureSocial {
   }
 
 
-  def delete(id: Long) = Action {
+  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     val event = Event.find(id)
     val groupId = event.group.id.get
     Event.delete(id)

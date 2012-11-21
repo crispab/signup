@@ -1,6 +1,7 @@
-@(user: models.User)
+@(user: models.User)(implicit loggedInUser: Option[User])
 
 @import util.Section._
+@import util.AuthHelper
 
 @page(user.firstName + " " + user.lastName, section = Users) {
 <div class="row">
@@ -44,7 +45,8 @@
   </div>
 </div>
 
-<div class="row">
+@if(AuthHelper.isAdmin(loggedInUser)) {
+  <div class="row">
   <div class="span5">
     <p></p>
     <a href="@routes.Users.updateForm(user.id.get)" class="btn btn-primary"><i class="icon-pencil icon-white"></i>
@@ -73,4 +75,6 @@
     </div>
   </div>
 </div>
+}
+
 }

@@ -1,13 +1,11 @@
-@(title: String, section: util.Section.Section)(body: Html)
+@(title: String, section: util.Section.Section)(body: Html)(implicit loggedInUser: Option[User])
 
 <!DOCTYPE html>
 
 @import helper._
 @import helper.FieldConstructor
-@import helper.twitterBootstrap2._
 @import util.DateHelper
-
-@implicitField() = @{ FieldConstructor(twitterBootstrap2FieldConstructor.f) }
+@import util.AuthHelper
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
@@ -40,9 +38,20 @@
         <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
         <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.Users.list()">Användare</a></li>
       </ul>
-      <ul class="nav pull-right">
-        <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-white icon-user"></i> Logga in</a></li>
-      </ul>
+      @if(AuthHelper.isLoggedIn(loggedInUser)){
+        <ul class="nav pull-right">
+          <li class="dropdown @sectionClass(util.Section.Login.toString)">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-white icon-user"></i> @loggedInUser.get.firstName @loggedInUser.get.lastName <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="@routes.Application.logout()">Logga ut</a></li>
+            </ul>
+          </li>
+        </ul>
+      } else {
+        <ul class="nav pull-right">
+          <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-white icon-user"></i> Logga in</a></li>
+        </ul>
+      }
     </div>
   </div>
 </div>

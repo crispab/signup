@@ -6,16 +6,16 @@ import models.{Membership, Event, Group}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
 import jp.t2v.lab.play20.auth.Auth
-import models.security.Administrator
+import models.security.{NormalUser, Administrator}
 
 object Groups extends Controller with Auth with AuthConfigImpl {
 
-  def list = Action {
+  def list = optionalUserAction { implicit user => implicit request =>
     val groups = Group.findAll()
     Ok(views.html.groups.list(groups))
   }
 
-  def show(id: Long, showAll: Boolean) = Action {
+  def show(id: Long, showAll: Boolean) = optionalUserAction { implicit user => implicit request =>
     val group = Group.find(id)
     val members = Membership.findMembers(group)
     if(showAll) {
@@ -26,16 +26,18 @@ object Groups extends Controller with Auth with AuthConfigImpl {
   }
 
   def createForm = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     Ok(views.html.groups.edit(groupForm))
   }
 
-  def updateForm(id: Long) = Action {
+  def updateForm(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     val group = Group.find(id)
     Ok(views.html.groups.edit(groupForm.fill(group), Option(id)))
   }
 
-  def create = Action {
-    implicit request =>
+  def create = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.groups.edit(formWithErrors)),
         group => {
@@ -45,8 +47,8 @@ object Groups extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def update(id: Long) = Action {
-    implicit request =>
+  def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.groups.edit(formWithErrors, Option(id))),
         group => {
@@ -56,7 +58,8 @@ object Groups extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def delete(id: Long) = Action {
+  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    implicit val loggedInUser = Option(user)
     // Group.delete(id)
     NotImplemented
   }

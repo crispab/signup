@@ -1,5 +1,6 @@
-@(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])(implicit flash: Flash, lang: Lang)
+@(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
+@import util.AuthHelper
 @import util.DateHelper
 @import util.Section._
 
@@ -58,54 +59,57 @@ status match {
         <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime)-@DateHelper.asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
-      <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
-      <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-      <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
-        <div class="modal-header">
-          <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-          <h3>Vill du ta bort event?</h3>
-        </div>
-        <div class="modal-body">
-          <p>
-            Du håller på att ta bort eventet <strong>@event.name</strong>.
-          </p>
-          <p>
-            Vill du fortsätta?
-          </p>
-        </div>
-        <div class="modal-footer">
-          <form action="@routes.Events.delete(event.id.get)" method="POST">
-            <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-            <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
-          </form>
-        </div>
-      </div>
+      @if(AuthHelper.isAdmin(loggedInUser)) {
+        <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
+        <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-      <a data-toggle="modal" href="#notify_participants_@event.id" class="btn"><i class="icon-envelope"></i> Påminn de som inte svarat</a>
+        <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
+          <div class="modal-header">
+            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Vill du ta bort event?</h3>
+          </div>
+          <div class="modal-body">
+            <p>
+              Du håller på att ta bort eventet <strong>@event.name</strong>.
+            </p>
+            <p>
+              Vill du fortsätta?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <form action="@routes.Events.delete(event.id.get)" method="POST">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+            </form>
+          </div>
+        </div>
 
-      <div id="notify_participants_@event.id" class="modal smaller-modal hide fade" style="display: none">
-        <div class="modal-header">
-          <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-          <h3>Vill du e-posta de som ännu inte svarat?</h3>
-        </div>
-        <div class="modal-body">
-          <p>
-            Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till eventet <strong>@event.name</strong> som ännu inte svarat.
-          </p>
-          <p>
-            Vill du fortsätta?
-          </p>
-        </div>
-        <div class="modal-footer">
-          <form action="@routes.Events.notifyParticipants(event.id.get)" method="POST">
-            <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-            <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn de som inte svarat</button>
-          </form>
-        </div>
-      </div>
+        <a data-toggle="modal" href="#notify_participants_@event.id" class="btn"><i class="icon-envelope"></i> Påminn de som inte svarat</a>
 
-      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal" class="btn pull-right"><i class="icon-calendar"></i></a>
+        <div id="notify_participants_@event.id" class="modal smaller-modal hide fade" style="display: none">
+          <div class="modal-header">
+            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Vill du e-posta de som ännu inte svarat?</h3>
+          </div>
+          <div class="modal-body">
+            <p>
+              Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till eventet <strong>@event.name</strong> som ännu inte svarat.
+            </p>
+            <p>
+              Vill du fortsätta?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <form action="@routes.Events.notifyParticipants(event.id.get)" method="POST">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn de som inte svarat</button>
+            </form>
+          </div>
+        </div>
+      }
+
+      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal" class="btn"><i class="icon-calendar"></i></a>
     </div>
   </div>
 </div>
@@ -179,6 +183,10 @@ status match {
   </div>
 </div>
 
+@if(guests.isEmpty) {
+  <p>Inga extra gäster</p>
+}
+
 @guests.map { participation =>
 <div class="row">
   <div class="span5 list-row">
@@ -210,9 +218,11 @@ status match {
 </div>
 }
 
-<div class="row">
-  <div class="span5 btn-row">
-      <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
+@if(AuthHelper.isAdmin(loggedInUser)) {
+  <div class="row">
+    <div class="span5 btn-row">
+        <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
+    </div>
   </div>
-</div>
+}
 }

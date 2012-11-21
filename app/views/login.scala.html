@@ -1,15 +1,13 @@
-@(loginForm: Form[Option[models.User]])
+@(loginForm: Form[Option[models.User]])(implicit flash: Flash, lang: Lang)
 
 @import util.Section._
 @import util.FormHelper
 
 @field(fieldName: String) = @{ loginForm(fieldName).value.getOrElse("") }
 
-@hasErrors(fieldName: String) = @{ if(loginForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(loginForm.hasErrors || loginForm.hasGlobalErrors) { "error" } }
 
-@page(title = "SignUp", section = Login) {
-
-
+@page(title = "SignUp", section = Login){
 <div class="row">
   <div class="span5">
     <ul class="breadcrumb">
@@ -23,34 +21,48 @@
 
 <div class="row">
   <div class="span5">
+    @if(flash.get("success").isDefined) {
+      <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        @flash.get("success")
+      </div>
+    }
+    @if(flash.get("error").isDefined) {
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        @flash.get("error")
+      </div>
+    }
+    @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
+      <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <p>Felaktig epostadress eller lösenord.</p>
+      </div>
+    }
     <form class="form-horizontal" action="@routes.Application.authenticate()" method="POST">
-      <div class="control-group">
+
+      <div class='control-group @hasErrors("email")'>
         <label class="control-label" for="email">Epost</label>
         <div class="controls">
-          <input type="text" id="email" name="email">
+          <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")' required="" />
         </div>
       </div>
-      <div class="control-group">
-        <label class="control-label" for="password">Password</label>
+
+      <div class='control-group @hasErrors("password")'>
+        <label class="control-label" for="password">Lösenord</label>
         <div class="controls">
-          <input type="password" id="password" name="password">
+          <input type="password" id="password" name="password" value='@field("password")' required="" />
         </div>
       </div>
+
       <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn">Logga in</button>
         </div>
       </div>
-      @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
-        <div class="alert alert-error">
-          <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@FormHelper.errors(loginForm).mkString(", ")</p>
-        </div>
-      }
     </form>
   </div>
 </div>
-}
+}(loggedInUser = None)
 
 
