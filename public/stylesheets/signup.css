@@ -46,6 +46,10 @@ dl.participation {
   vertical-align: top;
 }
 
+.login-gravatar {
+  vertical-align: middle;
+}
+
 .show-on-error {
   display: none;
 }

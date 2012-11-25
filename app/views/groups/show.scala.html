@@ -2,6 +2,7 @@
 
 @import util.AuthHelper
 @import util.DateHelper
+@import util.GravatarHelper
 @import util.Section._
 
 @page(group.name, section = Groups) {
@@ -106,7 +107,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(membership.user.id.get)">
-          <img class="gravatar" src="@util.GravatarHelper.url(membership.user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@GravatarHelper.url(membership.user.email, size=40)" rel="tooltip"
                title="Gravatar för @membership.user.email" alt="" alt=""/>
         </a>
       </div>
@@ -161,4 +162,5 @@
     </div>
   </div>
 }
+<div></div>
 }

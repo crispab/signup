@@ -2,6 +2,7 @@
 
 @import util.Section._
 @import util.AuthHelper
+@import util.GravatarHelper
 
 @page("Användare", section = Users) {
 <div class="row">
@@ -27,7 +28,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img class="gravatar" src="@util.GravatarHelper.url(user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@GravatarHelper.url(user.email, size=40)" rel="tooltip"
                title="Gravatar för @user.email" alt=""/>
         </a>
       </div>
@@ -52,5 +53,5 @@
     </div>
   </div>
 }
-
+<div></div>
 }

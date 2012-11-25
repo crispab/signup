@@ -2,6 +2,7 @@
 
 @import util.AuthHelper
 @import util.DateHelper
+@import util.GravatarHelper
 @import util.Section._
 
 
@@ -126,7 +127,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-          <img class="gravatar" src="@util.GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
@@ -157,7 +158,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
-          <img class="gravatar" src="@util.GravatarHelper.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
+          <img class="gravatar" src="@GravatarHelper.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
                alt=""/>
         </a>
       </div>
@@ -193,7 +194,7 @@ status match {
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.updateForm(participation.id.get)">
-          <img class="gravatar" src="@util.GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
+          <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
@@ -225,4 +226,5 @@ status match {
     </div>
   </div>
 }
+<div></div>
 }
