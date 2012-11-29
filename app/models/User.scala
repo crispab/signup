@@ -16,7 +16,6 @@ case class User(
                  )
 
 object User {
-
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("first_name") ~
@@ -29,7 +28,7 @@ object User {
           id = id,
           firstName = firstName,
           lastName = lastName,
-          email = email,
+          email = email.toLowerCase,
           phone = phone,
           comment = comment
         )
@@ -47,7 +46,7 @@ object User {
   def findByEmail(email: String): Option[User] = {
     DB.withConnection {
       implicit connection =>
-        SQL("select * from users where email={email}").on('email -> email).as(User.parser singleOpt)
+        SQL("select * from users where lower(email)={email}").on('email -> email.toLowerCase).as(User.parser singleOpt)
     }
   }
 
@@ -110,7 +109,7 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
         SQL(insertQueryString).on(
           'firstName -> user.firstName,
           'lastName -> user.lastName,
-          'email -> user.email,
+          'email -> user.email.toLowerCase,
           'phone -> user.phone,
           'comment -> user.comment
         ).executeInsert()
@@ -135,7 +134,7 @@ INSERT INTO users (
       {email},
       {phone},
       {comment}
-    )      
+    )
     """
 
   def update(id: Long, user: User) {
@@ -145,7 +144,7 @@ INSERT INTO users (
           'id -> id,
           'firstName -> user.firstName,
           'lastName -> user.lastName,
-          'email -> user.email,
+          'email -> user.email.toLowerCase,
           'phone -> user.phone,
           'comment -> user.comment
         ).executeUpdate()
@@ -170,6 +169,11 @@ WHERE id = {id}
         SQL("DELETE FROM users u WHERE u.id={id}").on('id -> id).executeUpdate()
       }
     }
+  }
+
+  def verifyUniqueEmail(userToVerify: User): Boolean = {
+    val userInDb = User.findByEmail(userToVerify.email)
+    userInDb.isEmpty || userToVerify.id.isDefined && (userInDb.get.id == userToVerify.id)
   }
 }
 

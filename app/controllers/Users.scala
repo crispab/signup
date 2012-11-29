@@ -1,9 +1,9 @@
 package controllers
 
 import play.api.mvc._
-import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
+import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, optional, longNumber}
 import models.{Participation, Membership, User}
-import anorm.{Pk, NotAssigned}
+import anorm.{Id, Pk, NotAssigned}
 import play.api.data.Form
 import jp.t2v.lab.play20.auth.Auth
 import models.security.{NormalUser, Administrator}
@@ -22,29 +22,29 @@ object Users extends Controller with Auth with AuthConfigImpl {
 
   def createForm = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-    Ok(views.html.users.edit(userForm))
+    Ok(views.html.users.edit(userCreateForm))
   }
 
   def createMemberForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-    Ok(views.html.users.edit(userForm, groupId = Option(groupId)))
+    Ok(views.html.users.edit(userCreateForm, groupId = Option(groupId)))
   }
 
   def createGuestForm(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-    Ok(views.html.users.edit(userForm, eventId = Option(eventId)))
+    Ok(views.html.users.edit(userCreateForm, eventId = Option(eventId)))
   }
 
 
   def updateForm(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
     val userToUpdate = User.find(id)
-    Ok(views.html.users.edit(userForm.fill(userToUpdate), idToUpdate = Option(id)))
+    Ok(views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
   def create = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-      userForm.bindFromRequest.fold(
+      userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
           User.create(user)
@@ -55,7 +55,7 @@ object Users extends Controller with Auth with AuthConfigImpl {
 
   def createMember(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-      userForm.bindFromRequest.fold(
+      userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
           Membership.create(groupId = groupId, userId = User.create(user))
@@ -66,7 +66,7 @@ object Users extends Controller with Auth with AuthConfigImpl {
 
   def createGuest(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-      userForm.bindFromRequest.fold(
+      userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
           Participation.createGuest(eventId = eventId, userId = User.create(user))
@@ -77,7 +77,7 @@ object Users extends Controller with Auth with AuthConfigImpl {
 
   def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-      userForm.bindFromRequest.fold(
+      userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
         user => {
           User.update(id, user)
@@ -91,15 +91,36 @@ object Users extends Controller with Auth with AuthConfigImpl {
     Redirect(routes.Users.list())
   }
 
-  val userForm: Form[User] = Form(
+  val userCreateForm: Form[User] = Form(
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
+      "firstName" -> nonEmptyText,
+      "lastName" -> nonEmptyText,
+      "email" -> play.api.data.Forms.email.verifying("Epostadressen används av någon annan", User.findByEmail(_).isEmpty),
+      "phone" -> text,
+      "comment" -> text
+    )(User.apply)(User.unapply)
+  )
+
+  val primaryKey = optional(longNumber).transform(
+    (optionLong: Option[Long]) =>
+      if (optionLong.isDefined) {
+        Id(optionLong.get)
+      } else {
+        NotAssigned:Pk[Long]
+      },
+    (pkLong: Pk[Long]) =>
+      pkLong.toOption)
+
+  val userUpdateForm: Form[User] = Form(
+    mapping(
+      "id" -> primaryKey,
       "firstName" -> nonEmptyText,
       "lastName" -> nonEmptyText,
       "email" -> play.api.data.Forms.email,
       "phone" -> text,
       "comment" -> text
-    )(User.apply)(User.unapply)
+    )(User.apply)(User.unapply).verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
   )
 
 }
