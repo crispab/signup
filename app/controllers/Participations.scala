@@ -7,7 +7,7 @@ import anorm.{Pk, NotAssigned}
 import models.{Participation, Event, User}
 import play.api.mvc._
 import jp.t2v.lab.play20.auth.Auth
-import models.security.{NormalUser, Administrator}
+import models.security.Administrator
 
 object Participations extends Controller with Auth with AuthConfigImpl {
 

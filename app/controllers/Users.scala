@@ -6,7 +6,7 @@ import models.{Participation, Membership, User}
 import anorm.{Id, Pk, NotAssigned}
 import play.api.data.Form
 import jp.t2v.lab.play20.auth.Auth
-import models.security.{NormalUser, Administrator}
+import models.security.Administrator
 
 object Users extends Controller with Auth with AuthConfigImpl {
 

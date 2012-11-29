@@ -1,7 +1,7 @@
 package util
 
 import models.User
-import play.api.{Play, Logger}
+import play.api.Play
 import models.security.{Permission, Administrator, NormalUser}
 
 object AuthHelper {
