@@ -2,7 +2,9 @@ package util
 
 import models.User
 import play.api.Play
+import play.api.Logger
 import models.security.{Permission, Administrator, NormalUser}
+import java.security.MessageDigest
 
 object AuthHelper {
   def isAdmin(user: Option[User]):Boolean = {
@@ -18,26 +20,18 @@ object AuthHelper {
   }
 
   def authorize(user: User, permission: Permission): Boolean = {
-    require (user.email.length > 0)
-    val adminEmail = Play.current.configuration.getString("signup.admin.email").getOrElse("")
-
-    (user.email == adminEmail, permission) match {
-      case (true, _) => true
-      case (_, NormalUser) => true
-      case _ => false
-    }
+    user.permission == permission
   }
 
   def checkPassword(user : Option[User], password: String): Option[User] = {
-    val adminPassword = Play.current.configuration.getString("signup.admin.password")
-    val adminEmail = Play.current.configuration.getString("signup.admin.email")
-
-    if (adminPassword.isDefined && adminEmail.isDefined && password == adminPassword.get) {
-      user.filter(usr => usr.email == adminEmail.get)
-    } else {
-      None
-    }
+    user.filter(usr => usr.password.toLowerCase == md5(password))
   }
 
+
+  def md5(s: String): String = {
+    val hash = MessageDigest.getInstance("MD5").digest(s.getBytes).map("%02X".format(_)).mkString.toLowerCase
+    Logger.debug("MD5 of '" + s + "' is '" + hash + "'")
+    hash
+  }
 
 }

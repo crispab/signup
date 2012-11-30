@@ -5,6 +5,7 @@ import play.api.Play.current
 
 import anorm._
 import anorm.SqlParser._
+import security.{Permission, NormalUser}
 
 case class User(
                  id: Pk[Long] = NotAssigned,
@@ -12,7 +13,9 @@ case class User(
                  lastName: String,
                  email: String,
                  phone: String = "",
-                 comment: String = ""
+                 comment: String = "",
+                 permission: Permission = NormalUser,
+                 password: String = "*"
                  )
 
 object User {
@@ -22,15 +25,19 @@ object User {
       get[String]("last_name") ~
       get[String]("email") ~
       get[String]("phone") ~
-      get[String]("comment") map {
-      case id ~ firstName ~ lastName ~ email ~ phone ~ comment =>
+      get[String]("comment") ~
+      get[String]("permission") ~
+      get[String]("pwd") map {
+      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd =>
         User(
           id = id,
           firstName = firstName,
           lastName = lastName,
           email = email.toLowerCase,
           phone = phone,
-          comment = comment
+          comment = comment,
+          permission = Permission.withName(permission),
+          password = pwd
         )
     }
   }

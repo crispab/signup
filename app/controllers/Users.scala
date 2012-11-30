@@ -6,7 +6,7 @@ import models.{Participation, Membership, User}
 import anorm.{Id, Pk, NotAssigned}
 import play.api.data.Form
 import jp.t2v.lab.play20.auth.Auth
-import models.security.Administrator
+import models.security.{NormalUser, Permission, Administrator}
 
 object Users extends Controller with Auth with AuthConfigImpl {
 
@@ -98,7 +98,9 @@ object Users extends Controller with Auth with AuthConfigImpl {
       "lastName" -> nonEmptyText,
       "email" -> play.api.data.Forms.email.verifying("Epostadressen används av någon annan", User.findByEmail(_).isEmpty),
       "phone" -> text,
-      "comment" -> text
+      "comment" -> text,
+      "permission" -> ignored(NormalUser: Permission),
+      "password" -> ignored("*")
     )(User.apply)(User.unapply)
   )
 
@@ -119,7 +121,9 @@ object Users extends Controller with Auth with AuthConfigImpl {
       "lastName" -> nonEmptyText,
       "email" -> play.api.data.Forms.email,
       "phone" -> text,
-      "comment" -> text
+      "comment" -> text,
+      "permission" -> ignored(NormalUser: Permission),
+      "password" -> ignored("*")
     )(User.apply)(User.unapply).verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
   )
 
