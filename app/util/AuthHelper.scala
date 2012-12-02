@@ -1,9 +1,7 @@
 package util
 
 import models.User
-import play.api.Play
-import play.api.Logger
-import models.security.{Permission, Administrator, NormalUser}
+import models.security.{Permission, Administrator}
 import java.security.MessageDigest
 
 object AuthHelper {
@@ -30,7 +28,6 @@ object AuthHelper {
 
   def md5(s: String): String = {
     val hash = MessageDigest.getInstance("MD5").digest(s.getBytes).map("%02X".format(_)).mkString.toLowerCase
-    Logger.debug("MD5 of '" + s + "' is '" + hash + "'")
     hash
   }
 
