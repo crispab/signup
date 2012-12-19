@@ -115,11 +115,16 @@ body {
   background-image: linear-gradient(top, #00759F, #0F4C61);
 }
 
-.footer {
+.footer-mid {
   margin-top: 20px;
   min-height: 53px;
   background-color: #EFEAE5;
   background: url(http://www.crisp.se/wp-content/themes/crisp/images/taggkant-full.png) repeat-x bottom left;
+}
+
+.footer-bottom {
+  min-height: 10px;
+  background-color: #00759F;
 }
 
 .alert-footer {
