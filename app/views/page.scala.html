@@ -54,15 +54,28 @@
         </ul>
       } else {
         <ul class="nav pull-right">
-          <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-white icon-user"></i> Logga in</a></li>
+          <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-user"></i> Logga in</a></li>
         </ul>
       }
     </div>
   </div>
+  <div class="navigation-divider"></div>
 </div>
 
 <div class="container">
   @body
+</div>
+
+<div class="footer">
+  <div class="container">
+  <div class="row">
+    <div class="span5">
+      <div class="alert alert-footer">
+    Created by <a href="http://www.crisp.se"><img src='@routes.Assets.at("images/crisp-logo-tiny.png")'></a>
+  </div>
+  </div>
+  </div>
+  </div>
 </div>
 
 <script src='@routes.Assets.at("javascripts/wysihtml5-0.3.0.min.js")'></script>

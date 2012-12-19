@@ -24,9 +24,8 @@
   padding-left:  20px;
   padding-right: 20px;
   #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
-  border: 1px solid @navbarBorder;
+  border: 4px solid @navbarBorder;
   .border-radius(@baseBorderRadius);
-  .box-shadow(0 1px 4px rgba(0,0,0,.065));
 
   // Prevent floats from breaking the navbar
   .clearfix();
@@ -56,7 +55,6 @@
   font-size: 20px;
   font-weight: 200;
   color: @navbarBrandColor;
-  text-shadow: 0 1px 0 @navbarBackgroundHighlight;
   &:hover {
     text-decoration: none;
   }
@@ -175,7 +173,7 @@
 }
 .navbar-fixed-top .navbar-inner,
 .navbar-static-top .navbar-inner {
-  border-width: 0 0 1px;
+  border-width: 0 0 4px;
 }
 .navbar-fixed-bottom .navbar-inner {
   border-width: 1px 0 0;
@@ -202,7 +200,6 @@
 .navbar-fixed-top,
 .navbar-static-top {
   .navbar-inner {
-    .box-shadow(~"0 1px 10px rgba(0,0,0,.1)");
   }
 }
 
@@ -210,7 +207,6 @@
 .navbar-fixed-bottom {
   bottom: 0;
   .navbar-inner {
-    .box-shadow(~"0 -1px 10px rgba(0,0,0,.1)");
   }
 }
 
@@ -232,6 +228,7 @@
 }
 .navbar .nav > li {
   float: left;
+  font-weight: bold;
 }
 
 // Links
@@ -241,7 +238,6 @@
   padding: ((@navbarHeight - @baseLineHeight) / 2) 15px ((@navbarHeight - @baseLineHeight) / 2);
   color: @navbarLinkColor;
   text-decoration: none;
-  text-shadow: 0 1px 0 @navbarBackgroundHighlight;
 }
 .navbar .nav .dropdown-toggle .caret {
   margin-top: 8px;
@@ -253,16 +249,24 @@
   background-color: @navbarLinkBackgroundHover; // "transparent" is default to differentiate :hover from .active
   color: @navbarLinkColorHover;
   text-decoration: none;
+  border-top-right-radius: @borderRadiusLarge;
+  border-top-left-radius: @borderRadiusLarge;
 }
 
 // Active nav items
-.navbar .nav > .active > a,
-.navbar .nav > .active > a:hover,
-.navbar .nav > .active > a:focus {
+.navbar .nav > .active > a {
   color: @navbarLinkColorActive;
   text-decoration: none;
   background-color: @navbarLinkBackgroundActive;
-  .box-shadow(inset 0 3px 8px rgba(0,0,0,.125));
+  font-weight: normal;
+  border-top-right-radius: @borderRadiusLarge;
+  border-top-left-radius: @borderRadiusLarge;
+}
+
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus {
+  color: @navbarLinkColorHover;
+  background-color: @navbarLinkBackgroundActive;
 }
 
 // Navbar button for toggling navbar items in responsive layouts
@@ -274,7 +278,6 @@
   margin-left: 5px;
   margin-right: 5px;
   .buttonBackground(darken(@navbarBackgroundHighlight, 5%), darken(@navbarBackground, 5%));
-  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.075)");
 }
 .navbar .btn-navbar .icon-bar {
   display: block;
@@ -282,7 +285,6 @@
   height: 2px;
   background-color: #f5f5f5;
   .border-radius(1px);
-  .box-shadow(0 1px 0 rgba(0,0,0,.25));
 }
 .btn-navbar .icon-bar + .icon-bar {
   margin-top: 3px;
@@ -389,7 +391,6 @@
   .brand,
   .nav > li > a {
     color: @navbarInverseLinkColor;
-    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
     &:hover {
       color: @navbarInverseLinkColorHover;
     }
@@ -446,7 +447,6 @@
       color: @white;
       background-color: @navbarInverseSearchBackground;
       border-color: @navbarInverseSearchBorder;
-      .box-shadow(~"inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15)");
       .transition(none);
       .placeholder(@navbarInverseSearchPlaceholderColor);
 
@@ -455,10 +455,8 @@
       &.focused {
         padding: 5px 15px;
         color: @grayDark;
-        text-shadow: 0 1px 0 @white;
         background-color: @navbarInverseSearchBackgroundFocus;
         border: 0;
-        .box-shadow(0 0 3px rgba(0,0,0,.15));
         outline: 0;
       }
     }
