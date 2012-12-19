@@ -14,8 +14,15 @@ object ApplicationBuild extends Build {
     "com.typesafe" %% "play-plugins-mailer" % "2.0.4"
   )
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
-    resolvers += "t2v.jp repo" at "http://www.t2v.jp/maven-repo/"
+  // Only compile the LESS files listed here. Others will be included by the top ones.
+  def customLessEntryPoints(base: File): PathFinder = (
+    (base / "app" / "assets" / "stylesheets" / "bootstrap" * "bootstrap.less") +++
+    (base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less") +++
+    (base / "app" / "assets" / "stylesheets" / "bootstrap-datepicker" * "build.less")
   )
 
+  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+    resolvers += "t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
+    lessEntryPoints <<= baseDirectory(customLessEntryPoints)
+  )
 }
