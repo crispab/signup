@@ -48,6 +48,8 @@ dl.participation {
 
 .login-gravatar {
   vertical-align: middle;
+  margin:0;
+  padding:0
 }
 
 .show-on-error {
@@ -75,17 +77,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-  padding-top: 65px;
+  padding-top: 69px;
 }
 
 .list-row {
   border-top-width: 2px;
   border-top-style: solid;
-  border-top-color: rgba(0, 0, 0, 0.046875);
+  border-top-color: #e3deda;
   padding-top: 4px;
   padding-bottom: 4px;
   margin-top: 4px;
-  background-color: #fafafa;
+  background-color: #EFEAE5;
 }
 
 .btn-row {
