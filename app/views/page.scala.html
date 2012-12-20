@@ -29,34 +29,48 @@
 
 
 <body>
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-static-top">
   <div class="navbar-inner">
     <div class="container">
+
+    <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+
       <a class="brand" href="@routes.Application.index()">
         SignUp
       </a>
-      <ul class="nav">
-        <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
-        <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.Users.list()">Användare</a></li>
-      </ul>
-      @if(AuthHelper.isLoggedIn(loggedInUser)){
-        <ul class="nav pull-right">
-          <li class="dropdown @sectionClass(util.Section.Login.toString)">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img class="login-gravatar" src="@GravatarHelper.url(loggedInUser.get.email, size=16)" rel="tooltip" title="Gravatar för @loggedInUser.get.email" alt=""/>
-              @loggedInUser.get.firstName @loggedInUser.get.lastName
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="@routes.Application.logout()">Logga ut</a></li>
-            </ul>
-          </li>
+
+      <div class="nav-collapse collapse">
+
+        <ul class="nav">
+          <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
+          <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.Users.list()">Användare</a></li>
         </ul>
-      } else {
-        <ul class="nav pull-right">
-          <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-user"></i> Logga in</a></li>
-        </ul>
-      }
+        @if(AuthHelper.isLoggedIn(loggedInUser)){
+          <ul class="nav pull-right">
+            <li class="dropdown @sectionClass(util.Section.Login.toString)">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img class="login-gravatar" src="@GravatarHelper.url(loggedInUser.get.email, size=16)" rel="tooltip" title="Gravatar för @loggedInUser.get.email" alt=""/>
+                @loggedInUser.get.firstName @loggedInUser.get.lastName
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="@routes.Application.logout()">Logga ut</a></li>
+              </ul>
+            </li>
+          </ul>
+        } else {
+          <ul class="nav pull-right">
+            <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-user"></i> Logga in</a></li>
+          </ul>
+        }
+
+      </div>
     </div>
   </div>
   <div class="navigation-divider"></div>
