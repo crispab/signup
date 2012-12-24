@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc._
-import play.api.data.Forms.{mapping, ignored, nonEmptyText, text}
+import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, number, boolean, email}
 import models.{Membership, Event, Group}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
@@ -60,7 +60,6 @@ object Groups extends Controller with Auth with AuthConfigImpl {
 
   def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-    // Group.delete(id)
     NotImplemented
   }
 
@@ -68,9 +67,14 @@ object Groups extends Controller with Auth with AuthConfigImpl {
     mapping(
       "id" -> ignored(NotAssigned: Pk[Long]),
       "name" -> nonEmptyText,
-      "description" -> text
+      "description" -> text,
+      "smtp_host" -> nonEmptyText,
+      "smtp_port" -> number,
+      "smtp_useSsl" -> boolean,
+      "smtp_useTls" -> boolean,
+      "smtp_user" -> text,
+      "smtp_password" -> text,
+      "smtp_from" -> email
     )(Group.apply)(Group.unapply)
   )
-
 }
-

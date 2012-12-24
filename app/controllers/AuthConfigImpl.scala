@@ -45,7 +45,6 @@ trait AuthConfigImpl extends AuthConfig {
    * You can alter the procedure to suit your application.
    */
   def resolveUser(id: Id): Option[User] = {
-    Logger.debug("Resolving user with id " + id)
     Option(models.User.find(id))
   }
 

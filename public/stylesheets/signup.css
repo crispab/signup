@@ -132,5 +132,13 @@ body {
 .created-by {
   color: white;
   padding-top: 10px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
 }
 
+.input-group {
+  padding: 10px;
+  border: #CCC solid 1px;
+  border-radius: 4px;
+}

@@ -31,7 +31,9 @@ object Events extends Controller with Auth with AuthConfigImpl {
 
   def asEmail(id: Long) = Action {
     val event = Event.find(id)
-    Ok(views.html.events.email(event))
+    import play.api.Play.current
+    val baseUrl = play.api.Play.configuration.getString("email.notification.base.url").getOrElse("")
+    Ok(views.html.events.email(event, baseUrl))
   }
 
   def notifyParticipants(id: Long) = authorizedAction(Administrator) { user => implicit request =>
