@@ -1,21 +1,13 @@
-@(event: models.Event)(implicit loggedInUser: Option[User])
-BEGIN:VCALENDAR
-PRODID:-//Crisp AB//Signup//EN
+@(event: models.Event)(implicit loggedInUser: Option[User])BEGIN:VCALENDAR
 VERSION:2.0
-CALSCALE:GREGORIAN
-METHOD:REQUEST
+PRODID:-//Crisp AB//NONSGML SignUp4//EN
 BEGIN:VEVENT
-DTSTART:@event.startTime.format("yyyyMMdd'T'HHmmss'Z'")
-DTEND:@event.endTime.format("yyyyMMdd'T'HHmmss'Z'")
-DTSTAMP:@event.startTime.format("yyyyMMdd'T'HHmmss'Z'")
-UID:@event.id
-CREATED:@{new java.util.Date().format("yyyyMMdd'T'HHmmss'Z'")}
-DESCRIPTION:@event.description
-LAST-MODIFIED:@{new java.util.Date().format("yyyyMMdd'T'HHmmss'Z'")}
+UID:@event.id@@signup.crisp.se
+DTSTAMP:@util.DateHelper.asUtcDateTime(event.startTime)
+ORGANIZER;CN="@event.group.name":mailto:@event.group.smtp_from
+DTSTART:@util.DateHelper.asUtcDateTime(event.startTime)
+DTEND:@util.DateHelper.asUtcDateTime(event.endTime)
 LOCATION:@event.venue
-SEQUENCE:0
-STATUS:CONFIRMED
 SUMMARY:@event.name
-TRANSP:OPAQUE
 END:VEVENT
 END:VCALENDAR

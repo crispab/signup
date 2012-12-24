@@ -1,6 +1,6 @@
 package util
 
-import java.util.Date
+import java.util.{TimeZone, Date}
 import java.text.SimpleDateFormat
 
 object DateHelper {
@@ -20,4 +20,10 @@ object DateHelper {
   def asTime(date: Date): String = formatted(date, TIME)
 
   def asDateTime(date: Date): String = formatted(date, DATE_TIME)
+
+  def asUtcDateTime(date: Date): String = {
+    val utcFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+    utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+    utcFormat.format(date)
+  }
 }
