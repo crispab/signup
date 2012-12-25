@@ -47,14 +47,18 @@ object EventNotifier {
 
   def notifyParticipants(event: Event) {
     val receivers = findReceivers(event)
-    val emailMessage = createEmailMessage(event)
-    val emailSubject = event.group.name + ": " + event.name
-    val mailer = createMailer(event.group)
+    if (!receivers.isEmpty) {
+      val emailMessage = createEmailMessage(event)
+      val emailSubject = event.group.name + ": " + event.name
+      val mailer = createMailer(event.group)
 
-    receivers.foreach {receiver => mailer.addRecipient(receiver)}
-    mailer.setSubject(emailSubject)
+      receivers.foreach {receiver => mailer.addRecipient(receiver)}
+      mailer.setSubject(emailSubject)
 
-    Logger.debug("    *-*-*-* Sending notification email for " + event.name + " to " + receivers)
-    mailer.sendHtml(emailMessage.toString())
+      Logger.debug("    *-*-*-* Sending notification email for " + event.name + " to " + receivers)
+      mailer.sendHtml(emailMessage.toString())
+    } else {
+      Logger.debug("    *-*-*-* No participants need to be notifies about " + event.name)
+    }
   }
 }
