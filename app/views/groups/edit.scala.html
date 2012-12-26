@@ -61,9 +61,8 @@
           </div>
         </div>
 
-        <div class="input-group">
-
-          <h4>För utskick via epost (SMTP)</h4>
+        <fieldset>
+          <legend>Konfigurering av SMTP</legend>
 
           <div class='control-group @hasErrors("smtp_from")'>
             <label class="control-label" for="smtp_from">Avsändare</label>
@@ -121,7 +120,7 @@
             </div>
           </div>
 
-        </div>
+        </fieldset>
 
         @if(groupForm.hasErrors || groupForm.hasGlobalErrors) {
         <div class="alert alert-error">

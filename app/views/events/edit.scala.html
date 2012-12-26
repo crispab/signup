@@ -19,18 +19,6 @@
   }
 }
 
-@all_times() = @{
-  Seq(
-    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00",
-    "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
-    "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
-    "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
-    "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
-  )
-}
-
 @today() = @{
   util.DateHelper.asDate(new java.util.Date())
 }
@@ -101,23 +89,18 @@
         <div class='form-inline control-group @hasErrors("start_date") @hasErrors("start_time") @hasErrors("end_time")'>
           <label class="control-label" for="start_date">Dag </label>
 
-          <input type="text" class="input-small datepicker" id="start_date" name="start_date"
-                 value='@field("start_date")' min="@today()" required=""
-                 pattern="20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]"/>
+          <input type="date" class="input-small" id="start_date" name="start_date"
+                 value='@field("start_date")' min="@today()" required=""/>
 
           <label class="control-label" for="start_time"> från kl</label>
 
           <input type="time" class="input-mini" id="start_time" name="start_time" value='@field("start_time")'
-                 required="" pattern="[0-2][0-9]:[0-5][0-9]"
-                 data-provide="typeahead" data-items="4"
-                 data-source='@all_times().mkString("[\"", "\", \"", "\"]")'/>
+                 required=""/>
 
           <label class="control-label" for="end_time"> till kl</label>
 
           <input type="time" class="input-mini" id="end_time" name="end_time" value='@field("end_time")'
-                 required="" pattern="[0-2][0-9]:[0-5][0-9]"
-                 data-provide="typeahead" data-items="4"
-                 data-source='@all_times().mkString("[\"", "\", \"", "\"]")'/>
+                 required=""/>
           <div class="show-on-error">Ogiltigt datum eller klockslag</div>
         </div>
 
