@@ -55,10 +55,15 @@ object EventNotifier {
       receivers.foreach {receiver => mailer.addRecipient(receiver)}
       mailer.setSubject(emailSubject)
 
-      Logger.debug("    *-*-*-* Sending notification email for " + event.name + " to " + receivers)
-      mailer.sendHtml(emailMessage.toString())
+      try {
+        Logger.info("Sending notification email for " + event.name + " to " + receivers)
+        mailer.sendHtml(emailMessage.toString())
+        Logger.info("DONE sending notification email for " + event.name + " to " + receivers)
+      } catch {
+        case ex: Exception => Logger.error("FAILED sending notification email for " + event.name + " to " + receivers, ex)
+      }
     } else {
-      Logger.debug("    *-*-*-* No participants need to be notifies about " + event.name)
+      Logger.info("No participants need to be notified about " + event.name)
     }
   }
 }
