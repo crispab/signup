@@ -84,8 +84,7 @@ body {
   border-top-width: 2px;
   border-top-style: solid;
   border-top-color: #e3deda;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 4px;
   margin-top: 4px;
   background-color: #EFEAE5;
 }
