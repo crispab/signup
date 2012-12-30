@@ -17,7 +17,7 @@ This is the fourth version of the SignUp Service.
 
  - Play 2.0.4 - http://www.playframework.org/
  - Scala 2.9.1 (part of Play) - http://www.scala-lang.org/
- - Anorm (part of play) - http://www.playframework.org/documentation/2.0/ScalaAnorm
+ - Anorm (part of Play) - http://www.playframework.org/documentation/2.0/ScalaAnorm
 
 ### Presentation ###
 
@@ -27,7 +27,7 @@ This is the fourth version of the SignUp Service.
  - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
 
 ### Services ###
- - Play2.x module for Authentication and Authorization 0.3 - http://github.com/t2v/play20-auth
+ - Play2.x module for Authentication and Authorization 0.5 - http://github.com/t2v/play20-auth
  - Emailer Plugin 2.0.4 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 
@@ -35,9 +35,9 @@ License, credits and stuff
 --------------------------
 
 The Twitter Bootstrap LESS files that are included in the source code
-and are Copyright 2012 Twitter, Inc and licensed under the Apache
+are Copyright 2012 Twitter, Inc and licensed under the Apache
 License v2.0.
-Modifications have been done by us to create a project specific look & feel.
+Modifications have been made by us to create a project specific look & feel.
 
 The rest of the code is Copyright 2012 by Mats Strandberg and Jan Grape and
 licensed under the Apache License v2.0 (the "License");
