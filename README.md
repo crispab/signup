@@ -15,23 +15,32 @@ This is the fourth version of the SignUp Service.
 
 ### Play Framework ###
 
- - Play 2.0 - http://www.playframework.org/
+ - Play 2.0.4 - http://www.playframework.org/
  - Scala 2.9.1 (part of Play) - http://www.scala-lang.org/
  - Anorm (part of play) - http://www.playframework.org/documentation/2.0/ScalaAnorm
 
 ### Presentation ###
 
- - Twitter Bootstrap 2.0
+ - Twitter Bootstrap 2.2.1 - http://twitter.github.com/bootstrap
+ - jQuery 1.8.3 (used by Twitter Bootstrap) - http://jquery.com
+ - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
+ - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
+
+### Services ###
+ - Play2.x module for Authentication and Authorization 0.3 - http://github.com/t2v/play20-auth
+ - Emailer Plugin 2.0.4 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 
 License, credits and stuff
 --------------------------
 
-The module securesocial is written by Jorge Aliss (jaliss at gmail dot com, twitter: @jaliss) and
-is licensed under the Apache License, Version 2.0. You'll find his project at https://github.com/jaliss/securesocial.
+The Twitter Bootstrap LESS files that are included in the source code
+and are Copyright 2012 Twitter, Inc and licensed under the Apache
+License v2.0.
+Modifications have been done by us to create a project specific look & feel.
 
-The rest of the code is (c) by Mats Strandberg and Jan Grape and is
-licensed under the Apache License, Version 2.0 (the "License");
+The rest of the code is Copyright 2012 by Mats Strandberg and Jan Grape and
+licensed under the Apache License v2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -124,34 +133,3 @@ I (Mats) had to do a 'heroku keys:add ~/.ssh/id_rsa.pub' on one of my
 machines as I first got 'Permission denied (publickey).' when trying
 to 'git push heroku master'
 
-Access Postgres on Heroku
--------------------------
-
-Install the [SQL console plugin](https://github.com/ddollar/heroku-sql-console) in Heroku:
-
-```heroku plugins:install git://github.com/ddollar/heroku-sql-console.git```
-
-Run the SQL console in Heroku:
-```
-pyttemackan:signup janne$ heroku sql
-SQL console for signup4.heroku.com
-SQL> show tables
-+-----------------+
-|   table_name    |
-+-----------------+
-| events          |
-| participations  |
-| play_evolutions |
-| users           |
-+-----------------+
-SQL> select * from users
-+--------------------------------------------------------------------------------+
-| id | first_name | last_name |        comment        |      email       | phone |
-+--------------------------------------------------------------------------------+
-| -2 | Torbjörn   | Fälldin   |                       | unknown@crisp.se |       |
-| -3 | Göran      | Persson   | En f.d. statsminister | unknown@crisp.se |       |
-| -4 | Frodo      | Baggins   | Ringbärare            | unknown@crisp.se |       |
-| -1 | Fredrik    | Unknown   | En glad statsminister | unknown@crisp.se |       |
-+--------------------------------------------------------------------------------+
-SQL>
-```
