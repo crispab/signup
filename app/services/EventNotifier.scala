@@ -52,7 +52,7 @@ object EventNotifier {
       val emailSubject = event.group.name + ": " + event.name
       val mailer = createMailer(event.group)
 
-      receivers.foreach {receiver => mailer.addRecipient(receiver)}
+      mailer.addRecipient(receivers: _*)
       mailer.setSubject(emailSubject)
 
       try {
