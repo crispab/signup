@@ -4,6 +4,7 @@ PRODID:-//Crisp AB//NONSGML SignUp4//EN
 BEGIN:VEVENT
 UID:@event.id@@signup.crisp.se
 DTSTAMP:@util.DateHelper.asUtcDateTime(event.startTime)
+METHOD:PUBLISH
 ORGANIZER;CN="@event.group.name":mailto:@event.group.smtp_from
 DTSTART:@util.DateHelper.asUtcDateTime(event.startTime)
 DTEND:@util.DateHelper.asUtcDateTime(event.endTime)

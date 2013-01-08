@@ -26,7 +26,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
 
   def asCalendar(id: Long) = optionalUserAction { implicit user => implicit request =>
     val event = Event.find(id)
-    Ok(views.txt.events.ical(event)).as("text/calendar")
+    Ok(views.txt.events.ical(event)).as("text/calendar; method=\"PUBLISH\"; component=\"VEVENT\"")
   }
 
   def asEmail(id: Long) = Action {

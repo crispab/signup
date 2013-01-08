@@ -2,7 +2,7 @@ package util
 
 import org.specs2.mutable._
 
-class GravatarUtilSpec extends Specification {
+class GravatarHelperSpec extends Specification {
 
   def CORRECT_URL = "https://secure.gravatar.com/avatar/0bc83cb571cd1c50ba6f3e8a78ef1346.jpg?default=mm"
   "Gravatar util" should {
