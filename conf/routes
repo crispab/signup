@@ -48,14 +48,13 @@ POST    /events/:id                 controllers.Events.update(id: Long)
 GET     /events/:id/ical            controllers.Events.asCalendar(id: Long)
 POST    /events/:id/delete          controllers.Events.delete(id: Long)
 POST    /events/:id/notify          controllers.Events.notifyParticipants(id: Long)
-GET     /events/:id/email           controllers.Events.asEmail(id: Long)
+GET     /events/:id/email           controllers.Events.asEmail(id: Long, userId: Long)
 
 
 # Participations
-GET     /participations/new         controllers.Participations.createForm(eventId: Long, userId: Long)
+GET     /participations/edit        controllers.Participations.editForm(eventId: Long, userId: Long)
 GET     /participations/newGuest    controllers.Participations.createGuestForm(eventId: Long)
 POST    /participations/newGuest    controllers.Participations.createGuest
-GET     /participations/:id/edit    controllers.Participations.updateForm(id: Long)
 POST    /participations             controllers.Participations.create
 POST    /participations/:id         controllers.Participations.update(id: Long)
 

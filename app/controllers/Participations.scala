@@ -11,8 +11,13 @@ import models.security.Administrator
 
 object Participations extends Controller with Auth with AuthConfigImpl {
 
-  def createForm(eventId: Long, userId: Long) = optionalUserAction { implicit user => implicit request =>
-    Ok(views.html.participations.edit(participationForm, User.find(userId), Event.find(eventId)))
+  def editForm(eventId: Long, userId: Long) = optionalUserAction { implicit user => implicit request =>
+    val participation = Participation.findByEventAndUser(eventId, userId)
+    if(participation.isDefined) {
+      Ok(views.html.participations.edit(participationForm.fill(participation.get), User.find(userId), Event.find(eventId), Option(participation.get.id.get)))
+    } else {
+      Ok(views.html.participations.edit(participationForm, User.find(userId), Event.find(eventId)))
+    }
   }
 
   def create = optionalUserAction { implicit user => implicit request =>
@@ -49,10 +54,6 @@ object Participations extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def updateForm(id: Long) = optionalUserAction { implicit user => implicit request =>
-    val participation = Participation.find(id)
-    Ok(views.html.participations.edit(participationForm.fill(participation), participation.user, participation.event, Option(id)))
-  }
 
   def update(id: Long) = optionalUserAction { implicit user => implicit request =>
       participationForm.bindFromRequest.fold(

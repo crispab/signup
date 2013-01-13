@@ -8,16 +8,16 @@ import com.typesafe.plugin.{MockMailer, CommonsMailer, MailerAPI}
 
 
 object EventNotifier {
-  private def findReceivers(event: Event): Seq[String] = {
-    val unregisteredMembers = User.findUnregisteredMembers(event) map {_.email}
-    val unregisteredGuests = Participation.findGuests(event).filter {participation => participation.status == Unregistered} map {_.user.email}
+  private def findReceivers(event: Event): Seq[User] = {
+    val unregisteredMembers = User.findUnregisteredMembers(event)
+    val unregisteredGuests = Participation.findGuests(event).filter {participation => participation.status == Unregistered} map {_.user}
     unregisteredMembers union unregisteredGuests
   }
 
-  private def createEmailMessage(event: Event) : Html = {
+  private def createEmailMessage(event: Event, user: User) : Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("email.notification.base.url").getOrElse("")
-    views.html.events.email(event, baseUrl)
+    views.html.events.email(event, user, baseUrl)
   }
 
 
@@ -47,23 +47,22 @@ object EventNotifier {
 
   def notifyParticipants(event: Event) {
     val receivers = findReceivers(event)
-    if (!receivers.isEmpty) {
-      val emailMessage = createEmailMessage(event)
+    Logger.debug("Found receivers: " + receivers)
+    receivers map { receiver =>
+      val emailMessage = createEmailMessage(event, receiver)
       val emailSubject = event.group.name + ": " + event.name
       val mailer = createMailer(event.group)
 
-      mailer.addRecipient(receivers: _*)
+      mailer.addRecipient(receiver.email)
       mailer.setSubject(emailSubject)
 
       try {
-        Logger.info("Sending notification email for " + event.name + " to " + receivers)
+        Logger.debug("Sending notification email for " + event.name + " to " + receiver)
         mailer.sendHtml(emailMessage.toString())
-        Logger.info("DONE sending notification email for " + event.name + " to " + receivers)
+        Logger.info("DONE sending notification email for " + event.name + " to " + receiver)
       } catch {
-        case ex: Exception => Logger.error("FAILED sending notification email for " + event.name + " to " + receivers, ex)
+        case ex: Exception => Logger.error("FAILED sending notification email for " + event.name + " to " + receiver, ex)
       }
-    } else {
-      Logger.info("No participants need to be notified about " + event.name)
     }
   }
 }

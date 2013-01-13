@@ -113,6 +113,13 @@ WHERE id = {id}
     }
   }
 
+  def findByEventAndUser(eventId: Long, userId: Long): Option[Participation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("SELECT * FROM participations WHERE event={eventId} AND userx={userId}").on('eventId -> eventId, 'userId -> userId).as(Participation.parser singleOpt)
+    }
+  }
+
   def findRegisteredMembers(event: Event): Seq[Participation] = {
     DB.withConnection {
       implicit connection =>

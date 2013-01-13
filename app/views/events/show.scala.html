@@ -126,14 +126,14 @@ status match {
   <div class="span5 list-row">
     <div class="row">
       <div class="span1">
-        <a href="@routes.Participations.updateForm(participation.id.get)">
+        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
           <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
       <div class="span2">
         <dl class="participation">
-          <dt><a href="@routes.Participations.updateForm(participation.id.get)">
+          <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
             @participation.user.firstName
             @participation.user.lastName</a></dt>
           <dd class="email-address">@participation.user.email</dd>
@@ -141,7 +141,7 @@ status match {
         </dl>
       </div>
       <div class="span2">
-        <a href="@routes.Participations.updateForm(participation.id.get)">
+        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
             <span class="label @asCssClass(participation.status)">
               @asMessage(participation.status)
             </span>
@@ -157,20 +157,20 @@ status match {
   <div class="span5 list-row">
     <div class="row">
       <div class="span1">
-        <a href="@routes.Participations.createForm(event.id.get, user.id.get)">
+        <a href="@routes.Participations.editForm(event.id.get, user.id.get)">
           <img class="gravatar" src="@GravatarHelper.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
                alt=""/>
         </a>
       </div>
       <div class="span2">
         <dl class="participation">
-          <dt><a href="@routes.Participations.createForm(event.id.get, user.id.get)">@user.firstName @user.lastName</a>
+          <dt><a href="@routes.Participations.editForm(event.id.get, user.id.get)">@user.firstName @user.lastName</a>
           </dt>
           <dd class="email-address">@user.email</dd>
         </dl>
       </div>
       <div class="span2">
-        <a href="@routes.Participations.createForm(event.id.get, user.id.get)"><span
+        <a href="@routes.Participations.editForm(event.id.get, user.id.get)"><span
                 class="label participation-unregistered">Har inte svarat</span></a>
       </div>
     </div>
@@ -193,14 +193,14 @@ status match {
   <div class="span5 list-row">
     <div class="row">
       <div class="span1">
-        <a href="@routes.Participations.updateForm(participation.id.get)">
+        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
           <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
                title="Gravatar för @participation.user.email" alt=""/>
         </a>
       </div>
       <div class="span2">
         <dl class="participation">
-          <dt><a href="@routes.Participations.updateForm(participation.id.get)">
+          <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
             @participation.user.firstName
             @participation.user.lastName</a></dt>
           <dd class="email-address">@participation.user.email</dd>
@@ -208,7 +208,7 @@ status match {
         </dl>
       </div>
       <div class="span2">
-        <a href="@routes.Participations.updateForm(participation.id.get)">
+        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
             <span class="label @asCssClass(participation.status)">
               @asMessage(participation.status)
             </span>
