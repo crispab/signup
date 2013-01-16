@@ -50,14 +50,14 @@ object Event {
     DB.withConnection {
       val today = new DateMidnight().toDate
       implicit connection =>
-        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.start_time DESC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.start_time ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
     }
   }
 
   def findAllEventsByGroup(group: Group): Seq[Event] = {
     DB.withConnection {
       implicit connection =>
-        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time DESC").on('groupId -> group.id.get).as(Event.parser *)
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time ASC").on('groupId -> group.id.get).as(Event.parser *)
     }
   }
 
