@@ -103,7 +103,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
       mapping(
         "id" -> ignored(NotAssigned:Pk[Long]),
         "name" -> nonEmptyText,
-        "description" -> text,
+        "description" -> text(maxLength = 512),
         "start_date" -> date("yyyy-MM-dd"),
         "start_time" -> date("HH:mm"),
         "end_time" -> date("HH:mm"),
