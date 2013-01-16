@@ -10,7 +10,7 @@
   <body style="font-family: arial, verdana, sans-serif; font-size: small; margin: 1em;">
     <h3 style="font-family: expressway, arial, verdana, sans-serif; border-bottom: solid 3px #DB370B; margin-bottom: 0">SignUp</h3>
     <div style="min-height: 10px; background-color: #00759F;"></div>
-    <h2 style="font-family: expressway, arial, verdana, sans-serif;">@event.group.name</h2>
+    <h2 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@routes.Groups.show(event.group.id.get)">@event.group.name</a></h2>
     <p>
       Hej @{user.firstName}!
     </p>
@@ -18,7 +18,7 @@
       Nu är det dags att anmäla sig till nästa event.
     </p>
     <div style="background-color: #EFEAE5; padding: 1em; border-radius: 0.3em;">
-      <h3 style="font-family: expressway, arial, verdana, sans-serif;">@event.name</h3>
+      <h3 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@routes.Events.show(event.id.get)">@event.name</a></h3>
       <p>@Html(event.description)</p>
       <ul>
         <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime) - @DateHelper.asTime(event.endTime)</li>
