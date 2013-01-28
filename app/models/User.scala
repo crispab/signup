@@ -16,7 +16,16 @@ case class User(
                  comment: String = "",
                  permission: Permission = NormalUser,
                  password: String = "*"
-                 )
+                 )  extends Ordered[User] {
+  def compare(that: User) = {
+    val c = this.firstName.compare(that.firstName)
+    if (c != 0) {
+      c
+    } else {
+      this.lastName.compare(that.lastName)
+    }
+  }
+}
 
 object User {
   val parser = {
@@ -60,7 +69,7 @@ object User {
   def findUnregisteredMembers(event: Event): Seq[User] = {
     DB.withConnection {
       implicit connection =>
-        SQL(findUnregisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id).as(parser *)
+        SQL(findUnregisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id).as(parser *).sorted
     }
   }
 

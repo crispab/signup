@@ -1,20 +1,24 @@
 .participation-on {
   background-color: #5BB75B;
   text-transform: none;
+  margin-right: 8px;
 }
 
 .participation-maybe {
   background-color: #FAA732;
   text-transform: none;
+  margin-right: 8px;
 }
 
 .participation-off {
   background-color: #DA4F49;
   text-transform: none;
+  margin-right: 8px;
 }
 
 .participation-unregistered {
   text-transform: none;
+  margin-right: 8px;
 }
 
 dt {

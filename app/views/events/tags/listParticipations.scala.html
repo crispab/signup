@@ -1,0 +1,57 @@
+@(participations: Seq[Participation])
+
+@import util.AuthHelper
+@import util.DateHelper
+@import util.GravatarHelper
+@import util.Section._
+
+
+@asCssClass(status: models.Status.Value) = @{
+  status match {
+    case Status.On => "participation-on"
+    case Status.Maybe => "participation-maybe"
+    case Status.Off => "participation-off"
+    case Status.Unregistered => "participation-unregistered"
+  }
+}
+
+@asMessage(status: models.Status.Value) = @{
+  status match {
+    case Status.On => "Kommer"
+    case Status.Maybe => "Kanske"
+    case Status.Off => "Kommer inte"
+    case Status.Unregistered => "Har inte svarat"
+  }
+}
+
+
+@participations.map { participation =>
+<div class="row">
+  <div class="span5 list-row">
+    <div class="row">
+      <div class="span1">
+        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
+        <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
+          title="Gravatar för @participation.user.email" alt=""/>
+        </a>
+      </div>
+      <div class="span2">
+        <dl class="participation">
+          <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
+            @participation.user.firstName
+            @participation.user.lastName</a></dt>
+          <dd class="email-address">@participation.user.email</dd>
+          <dd>@participation.comment</dd>
+        </dl>
+      </div>
+      <div class="span2">
+        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
+          <span class="label @asCssClass(participation.status)">
+          @asMessage(participation.status)
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+}

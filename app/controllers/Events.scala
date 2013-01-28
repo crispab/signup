@@ -21,7 +21,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
 
   def show(id : Long) = optionalUserAction { implicit user => implicit request =>
     val event = Event.find(id)
-    Ok(views.html.events.show(event, User.findUnregisteredMembers(event), Participation.findRegisteredMembers(event), Participation.findGuests(event)))
+    Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event)))
   }
 
   def asCalendar(id: Long) = optionalUserAction { implicit user => implicit request =>

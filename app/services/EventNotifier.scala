@@ -10,7 +10,7 @@ import com.typesafe.plugin.{MockMailer, CommonsMailer, MailerAPI}
 object EventNotifier {
   private def findReceivers(event: Event): Seq[User] = {
     val unregisteredMembers = User.findUnregisteredMembers(event)
-    val unregisteredGuests = Participation.findGuests(event).filter {participation => participation.status == Unregistered} map {_.user}
+    val unregisteredGuests = Participation.findGuestsByStatus(Unregistered, event) map {_.user}
     unregisteredMembers union unregisteredGuests
   }
 

@@ -5,6 +5,7 @@ import play.api.db.DB
 import anorm._
 import play.api.Play.current
 
+
 object Status extends Enumeration {
   type Status = Value
   val On, Maybe, Off, Unregistered = Value
@@ -17,7 +18,7 @@ case class Participation(id: Pk[Long] = NotAssigned,
                          comment: String = "",
                          user: User,
                          event: Event) extends Ordered[Participation] {
-  def compare(that: Participation) = this.status.compare(that.status)
+  def compare(that: Participation) = this.user.compare(that.user)
 }
 
 object Participation {
@@ -120,45 +121,36 @@ WHERE id = {id}
     }
   }
 
-  def findRegisteredMembers(event: Event): Seq[Participation] = {
+  def findGuestsByStatus(status: Status, event: Event): Seq[Participation] = {
     DB.withConnection {
       implicit connection =>
-        SQL(findRegisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id.get).as(parser *).sorted
+        SQL(findGuestsByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id.get).as(parser *).sorted
     }
   }
 
-  val findRegisteredMembersQueryString =
+  val findGuestsByStatusQueryString =
     """
 SELECT p.*
 FROM participations p
-WHERE p.event={event_id}
-  AND p.userx IN (
-    SELECT m.userx
-    FROM memberships m
-    WHERE m.groupx={group_id}
-  )
-    """
-
-
-  def findGuests(event: Event): Seq[Participation] = {
-    DB.withConnection {
-      implicit connection =>
-        SQL(findGuestsQueryString).on('event_id -> event.id, 'group_id -> event.group.id.get).as(parser *).sorted
-    }
-  }
-
-  val findGuestsQueryString =
-    """
-SELECT p.*
-FROM participations p
-WHERE p.event={event_id}
+WHERE p.event={eventId}
+  AND p.status={status}
   AND p.userx NOT IN (
     SELECT m.userx
     FROM memberships m
-    WHERE m.groupx={group_id}
+    WHERE m.groupx={groupId}
   )
     """
 
+  def findGuests(event: Event): ParticipationLists = {
+    DB.withConnection {
+      implicit connection =>
+        ParticipationLists(event,
+                           on = findGuestsByStatus(On, event),
+                           maybe = findGuestsByStatus(Maybe, event),
+                           off = findGuestsByStatus(Off, event),
+                           unregistered = findGuestsByStatus(Unregistered, event))
+    }
+  }
 
   def findAll(): Seq[Participation] = {
     DB.withConnection {
@@ -167,4 +159,39 @@ WHERE p.event={event_id}
     }
   }
 
+  def findMembersByStatus(status: Status, event: Event): Seq[Participation] = {
+    if (status != Unregistered) {
+      DB.withConnection {
+        implicit connection =>
+          SQL(findMembersByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id).as(parser *).sorted
+      }
+    } else {
+      User.findUnregisteredMembers(event) map { user => Participation(status = Unregistered, user = user, event = event) }
+    }
+  }
+
+  val findMembersByStatusQueryString =
+    """
+SELECT p.*
+FROM participations p
+WHERE p.event={eventId}
+  AND p.status={status}
+  AND p.userx IN (
+    SELECT m.userx
+    FROM memberships m
+    WHERE m.groupx={groupId}
+  )
+    """
+
+
+  def findMembers(event: Event): ParticipationLists = {
+    DB.withConnection {
+      implicit connection =>
+        ParticipationLists(event,
+                           on = findMembersByStatus(On, event),
+                           maybe = findMembersByStatus(Maybe, event),
+                           off = findMembersByStatus(Off, event),
+                           unregistered = findMembersByStatus(Unregistered, event))
+    }
+  }
 }

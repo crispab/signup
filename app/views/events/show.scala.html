@@ -1,4 +1,4 @@
-@(event: models.Event, unregisteredMembers: Seq[models.User], registeredMembers: Seq[models.Participation], guests: Seq[models.Participation])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+@(event: models.Event, members: ParticipationLists, guests: ParticipationLists)(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.AuthHelper
 @import util.DateHelper
@@ -117,66 +117,39 @@ status match {
 
 <div class="row">
   <div class="span5">
+    <span class="label @asCssClass(Status.On)">
+      @{members.on.size + guests.on.size}
+      @asMessage(Status.On).toLowerCase
+    </span>
+
+    <span class="label @asCssClass(Status.Maybe)">
+      @{members.maybe.size + guests.maybe.size}
+      @asMessage(Status.Maybe).toLowerCase
+    </span>
+
+    <span class="label @asCssClass(Status.Off)">
+      @{members.off.size + guests.off.size}
+      @asMessage(Status.Off).toLowerCase
+    </span>
+
+    <span class="label @asCssClass(Status.Unregistered)">
+      @{members.unregistered.size + guests.unregistered.size}
+      @asMessage(Status.Unregistered).toLowerCase
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5">
     <h3>Medlemmar</h3>
   </div>
 </div>
 
-@registeredMembers.map { participation =>
-<div class="row">
-  <div class="span5 list-row">
-    <div class="row">
-      <div class="span1">
-        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-          <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
-               title="Gravatar för @participation.user.email" alt=""/>
-        </a>
-      </div>
-      <div class="span2">
-        <dl class="participation">
-          <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-            @participation.user.firstName
-            @participation.user.lastName</a></dt>
-          <dd class="email-address">@participation.user.email</dd>
-          <dd>@participation.comment</dd>
-        </dl>
-      </div>
-      <div class="span2">
-        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-            <span class="label @asCssClass(participation.status)">
-              @asMessage(participation.status)
-            </span>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-}
+@views.html.events.tags.listParticipations(members.on)
+@views.html.events.tags.listParticipations(members.maybe)
+@views.html.events.tags.listParticipations(members.off)
+@views.html.events.tags.listParticipations(members.unregistered)
 
-@unregisteredMembers.map { user =>
-<div class="row">
-  <div class="span5 list-row">
-    <div class="row">
-      <div class="span1">
-        <a href="@routes.Participations.editForm(event.id.get, user.id.get)">
-          <img class="gravatar" src="@GravatarHelper.url(user.email, size=40)" rel="tooltip" title="Gravatar för @user.email"
-               alt=""/>
-        </a>
-      </div>
-      <div class="span2">
-        <dl class="participation">
-          <dt><a href="@routes.Participations.editForm(event.id.get, user.id.get)">@user.firstName @user.lastName</a>
-          </dt>
-          <dd class="email-address">@user.email</dd>
-        </dl>
-      </div>
-      <div class="span2">
-        <a href="@routes.Participations.editForm(event.id.get, user.id.get)"><span
-                class="label participation-unregistered">Har inte svarat</span></a>
-      </div>
-    </div>
-  </div>
-</div>
-}
 
 <div class="row">
   <div class="span5">
@@ -184,40 +157,16 @@ status match {
   </div>
 </div>
 
+
 @if(guests.isEmpty) {
   <p>Inga extra gäster</p>
+} else {
+  @views.html.events.tags.listParticipations(guests.on)
+  @views.html.events.tags.listParticipations(guests.maybe)
+  @views.html.events.tags.listParticipations(guests.off)
+  @views.html.events.tags.listParticipations(guests.unregistered)
 }
 
-@guests.map { participation =>
-<div class="row">
-  <div class="span5 list-row">
-    <div class="row">
-      <div class="span1">
-        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-          <img class="gravatar" src="@GravatarHelper.url(participation.user.email, size=40)" rel="tooltip"
-               title="Gravatar för @participation.user.email" alt=""/>
-        </a>
-      </div>
-      <div class="span2">
-        <dl class="participation">
-          <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-            @participation.user.firstName
-            @participation.user.lastName</a></dt>
-          <dd class="email-address">@participation.user.email</dd>
-          <dd>@participation.comment</dd>
-        </dl>
-      </div>
-      <div class="span2">
-        <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-            <span class="label @asCssClass(participation.status)">
-              @asMessage(participation.status)
-            </span>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-}
 
 @if(AuthHelper.isAdmin(loggedInUser)) {
   <div class="row">
@@ -226,5 +175,4 @@ status match {
     </div>
   </div>
 }
-<div></div>
 }
