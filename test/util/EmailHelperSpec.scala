@@ -11,7 +11,7 @@ class EmailHelperSpec extends Specification {
   "EmailHelper" should {
 
     "abbreviate when not logged" in {
-      EmailHelper.abbreviated(email, isLoggedIn = false) must beEqualTo("@" + domain)
+      EmailHelper.abbreviated(email, isLoggedIn = false) must beEqualTo("at " + domain)
     }
 
     "full address when logged" in {
