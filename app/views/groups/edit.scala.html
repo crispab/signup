@@ -1,6 +1,6 @@
 @(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
 
-@import util.FormHelper
+@import util.FormHelper._
 @import util.Section._
 
 @field(fieldName: String) = @{ groupForm(fieldName).value.getOrElse("") }
@@ -126,7 +126,7 @@
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@FormHelper.errors(groupForm).mkString(", ")</p>
+          <p>@errors(groupForm).mkString(", ")</p>
         </div>
         }
 

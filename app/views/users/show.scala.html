@@ -1,7 +1,8 @@
 @(user: models.User)(implicit loggedInUser: Option[User])
 
-@import util.AuthHelper
-@import util.GravatarHelper
+@import util.AuthHelper._
+@import util.EmailHelper._
+@import util.GravatarHelper._
 @import util.Section._
 
 @page(user.firstName + " " + user.lastName, section = Users) {
@@ -20,8 +21,7 @@
 </div>
 <div class="row">
   <div class="span5">
-    <img class="gravatar" src="@GravatarHelper.url(user.email)" rel="tooltip"
-         title="Gravatar för @user.email" alt=""/>
+    <img class="gravatar" src="@gravatarUrl(user.email)"/>
     <h2>@user.firstName @user.lastName</h2>
   </div>
 </div>
@@ -35,7 +35,7 @@
       <dd>@user.lastName</dd>
 
       <dt>Epost:</dt>
-      <dd>@user.email</dd>
+      <dd>@abbreviated(user.email, isLoggedIn(loggedInUser))</dd>
 
       <dt>Telefon:</dt>
       <dd>@user.phone</dd>
@@ -46,7 +46,7 @@
   </div>
 </div>
 
-@if(AuthHelper.isAdmin(loggedInUser)) {
+@if(isAdmin(loggedInUser)) {
   <div class="row">
   <div class="span5">
     <p></p>

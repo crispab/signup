@@ -1,6 +1,6 @@
 @(userForm: Form[User], idToUpdate: Option[Long] = None, groupId: Option[Long] = None, eventId: Option[Long] = None)(implicit loggedInUser: Option[User])
 
-@import util.FormHelper
+@import util.FormHelper._
 @import util.Section._
 
 @field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
@@ -111,7 +111,7 @@
           <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">×</a>
             <h4 class="alert-heading">Inmatningsfel</h4>
-            <p>@FormHelper.errors(userForm).mkString(", ")</p>
+            <p>@errors(userForm).mkString(", ")</p>
           </div>
           }
 

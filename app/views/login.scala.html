@@ -1,7 +1,6 @@
 @(loginForm: Form[Option[models.User]])(implicit flash: Flash, lang: Lang)
 
 @import util.Section._
-@import util.FormHelper
 
 @field(fieldName: String) = @{ loginForm(fieldName).value.getOrElse("") }
 

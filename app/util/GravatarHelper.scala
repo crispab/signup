@@ -16,7 +16,7 @@ object GravatarHelper {
     }
   }
 
-  def url(email: String, size: Int = GRAVATAR_DEFAULT_SIZE) = {
+  def gravatarUrl(email: String, size: Int = GRAVATAR_DEFAULT_SIZE) = {
     GRAVATAR_BASE_URL + DigestUtils.md5Hex(email.trim.toLowerCase) + ".jpg" + GRAVATAR_NOT_FOUND_IMAGE_TYPE + sizeParam(size)
   }
 }

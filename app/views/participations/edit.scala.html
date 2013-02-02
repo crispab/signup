@@ -1,8 +1,8 @@
 @(participationForm: Form[Participation], user: User, event: Event, idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
 
-@import util.DateHelper
-@import util.FormHelper
-@import util.GravatarHelper
+@import util.DateHelper._
+@import util.FormHelper._
+@import util.GravatarHelper._
 @import util.Section._
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
@@ -43,7 +43,7 @@
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime)-@DateHelper.asTime(event.endTime)</li>
+        <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
     </div>
@@ -57,7 +57,7 @@
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
-            <img class="gravatar" src="@GravatarHelper.url(user.email)" rel="tooltip" title="Gravatar för @user.email" alt=""/>
+            <img class="gravatar" src="@gravatarUrl(user.email)"/>
             @user.firstName @user.lastName
           </label>
           <div class="controls">
@@ -91,7 +91,7 @@
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@FormHelper.errors(participationForm).mkString(", ")</p>
+          <p>@errors(participationForm).mkString(", ")</p>
         </div>
         }
 

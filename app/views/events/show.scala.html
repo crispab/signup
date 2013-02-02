@@ -1,8 +1,7 @@
 @(event: models.Event, members: ParticipationLists, guests: ParticipationLists)(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
-@import util.AuthHelper
-@import util.DateHelper
-@import util.GravatarHelper
+@import util.AuthHelper._
+@import util.DateHelper._
 @import util.Section._
 
 
@@ -57,11 +56,11 @@ status match {
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime)-@DateHelper.asTime(event.endTime)</li>
+        <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
 
-      @if(AuthHelper.isAdmin(loggedInUser)) {
+      @if(isAdmin(loggedInUser)) {
         <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
         <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
@@ -168,7 +167,7 @@ status match {
 }
 
 
-@if(AuthHelper.isAdmin(loggedInUser)) {
+@if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
         <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>

@@ -1,5 +1,5 @@
 @(event: models.Event, user: models.User, baseURL: String)
-@import util.DateHelper
+@import util.DateHelper._
 <!DOCTYPE html>
 <html lang="sv">
   <head>
@@ -21,7 +21,7 @@
       <h3 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@routes.Events.show(event.id.get)">@event.name</a></h3>
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @DateHelper.asDateTime(event.startTime) - @DateHelper.asTime(event.endTime)</li>
+        <li><strong>Tid:</strong> @asDateTime(event.startTime) - @asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
     </div>

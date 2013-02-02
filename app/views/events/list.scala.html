@@ -1,6 +1,6 @@
 @(events: Seq[models.Event])(implicit loggedInUser: Option[User])
 
-@import util.DateHelper
+@import util.DateHelper._
 @import util.Section._
 
 @page("Event", section = Other) {
@@ -34,12 +34,11 @@
         </dl>
       </div>
       <div class="span2">
-        <strong>@DateHelper.asDate(event.startTime)</strong><br/>
-        @DateHelper.asTime(event.startTime)-@DateHelper.asTime(event.endTime)
+        <strong>@asDate(event.startTime)</strong><br/>
+        @asTime(event.startTime)-@asTime(event.endTime)
       </div>
     </div>
   </div>
 </div>
 }
-<div></div>
 }

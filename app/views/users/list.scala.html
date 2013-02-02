@@ -1,8 +1,9 @@
 @(users: Seq[User])(implicit loggedInUser: Option[User])
 
 @import util.Section._
-@import util.AuthHelper
-@import util.GravatarHelper
+@import util.AuthHelper._
+@import util.EmailHelper._
+@import util.GravatarHelper._
 
 @page("Användare", section = Users) {
 <div class="row">
@@ -28,8 +29,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img class="gravatar" src="@GravatarHelper.url(user.email, size=40)" rel="tooltip"
-               title="Gravatar för @user.email" alt=""/>
+          <img class="gravatar" src="@gravatarUrl(user.email, size=40)"/>
         </a>
       </div>
       <div class="span4">
@@ -37,7 +37,7 @@
           <dt><a href="@routes.Users.show(user.id.get)">
             @user.firstName @user.lastName
           </a></dt>
-          <dd class="email-address">@user.email</dd>
+          <dd class="email-address">@abbreviated(user.email, isLoggedIn(loggedInUser))</dd>
           <dd>@user.comment</dd>
         </dl>
       </div>
@@ -46,7 +46,7 @@
 </div>
 }
 
-@if(AuthHelper.isAdmin(loggedInUser)) {
+@if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
       <a href="@routes.Users.createForm()" class="btn"><i class="icon-plus"></i> Ny användare</a>

@@ -2,11 +2,8 @@
 
 <!DOCTYPE html>
 
-@import helper._
-@import helper.FieldConstructor
-@import util.DateHelper
-@import util.AuthHelper
-@import util.GravatarHelper
+@import util.AuthHelper._
+@import util.GravatarHelper._
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
@@ -50,11 +47,11 @@
           <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
           <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.Users.list()">Användare</a></li>
         </ul>
-        @if(AuthHelper.isLoggedIn(loggedInUser)){
+        @if(isLoggedIn(loggedInUser)){
           <ul class="nav pull-right">
             <li class="dropdown @sectionClass(util.Section.Login.toString)">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img class="login-gravatar" src="@GravatarHelper.url(loggedInUser.get.email, size=16)" rel="tooltip" title="Gravatar för @loggedInUser.get.email" alt=""/>
+                <img class="login-gravatar" src="@gravatarUrl(loggedInUser.get.email, size=16)"/>
                 @loggedInUser.get.firstName @loggedInUser.get.lastName
                 <b class="caret"></b>
               </a>

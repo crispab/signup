@@ -1,7 +1,7 @@
 @(groups: Seq[models.Group])(implicit loggedInUser: Option[User])
 
+@import util.AuthHelper._
 @import util.Section._
-@import util.AuthHelper
 
 @page("Grupper", section = Groups){
 <div class="row">
@@ -38,12 +38,11 @@
 </div>
 }
 
-@if(AuthHelper.isAdmin(loggedInUser)) {
+@if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
       <a href="@routes.Groups.createForm()" class="btn"><i class="icon-plus"></i> Ny grupp</a>
     </div>
   </div>
 }
-<div></div>
 }

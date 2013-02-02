@@ -1,8 +1,9 @@
 @(group: models.Group, events: Seq[models.Event], members: Seq[models.Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User])
 
-@import util.AuthHelper
-@import util.DateHelper
-@import util.GravatarHelper
+@import util.AuthHelper._
+@import util.DateHelper._
+@import util.EmailHelper._
+@import util.GravatarHelper._
 @import util.Section._
 
 @page(group.name, section = Groups) {
@@ -26,7 +27,7 @@
     <div class="well">
       <p>@group.description</p>
 
-      @if(AuthHelper.isAdmin(loggedInUser)) {
+      @if(isAdmin(loggedInUser)) {
         <p></p>
         <a href="@routes.Groups.updateForm(group.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
         <a data-toggle="modal" href="#remove_group_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
@@ -80,15 +81,15 @@
         </dl>
       </div>
       <div class="span2">
-        <strong>@DateHelper.asDate(event.startTime),</strong>
-        @DateHelper.asTime(event.startTime)-@DateHelper.asTime(event.endTime)
+        <strong>@asDate(event.startTime),</strong>
+        @asTime(event.startTime)-@asTime(event.endTime)
       </div>
     </div>
   </div>
 </div>
 }
 
-@if(AuthHelper.isAdmin(loggedInUser)) {
+@if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
       <a href="@routes.Events.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Nytt event</a>
@@ -107,8 +108,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(membership.user.id.get)">
-          <img class="gravatar" src="@GravatarHelper.url(membership.user.email, size=40)" rel="tooltip"
-               title="Gravatar för @membership.user.email" alt="" alt=""/>
+          <img class="gravatar" src="@gravatarUrl(membership.user.email, size=40)"/>
         </a>
       </div>
       <div class="span2">
@@ -116,12 +116,12 @@
           <dt><a href="@routes.Users.show(membership.user.id.get)">
             @membership.user.firstName @membership.user.lastName
           </a></dt>
-          <dd class="email-address">@membership.user.email</dd>
+          <dd class="email-address">@abbreviated(membership.user.email, isLoggedIn(loggedInUser))</dd>
           <dd>@membership.user.comment</dd>
         </dl>
       </div>
 
-      @if(AuthHelper.isAdmin(loggedInUser)) {
+      @if(isAdmin(loggedInUser)) {
         <div class="span2">
           <a data-toggle="modal" href="#remove_member_@membership.id" class="btn pull-right"><i class="icon-trash"></i> Ta
             bort</a>
@@ -155,12 +155,11 @@
 </div>
 }
 
-@if(AuthHelper.isAdmin(loggedInUser)) {
+@if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
       <a href="@routes.Memberships.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny medlem</a>
     </div>
   </div>
 }
-<div></div>
 }
