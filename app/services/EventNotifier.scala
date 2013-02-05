@@ -1,6 +1,6 @@
 package services
 
-import models.{Group, Event, Participation, User}
+import models._
 import play.api.templates.Html
 import play.api.Logger
 import models.Status._
@@ -21,7 +21,7 @@ object EventNotifier {
   }
 
 
-  def createMailer(group: Group): MailerAPI = {
+  private def createMailer(group: Group): MailerAPI = {
     import play.api.Play.current
     val useMock = play.api.Play.configuration.getBoolean("smtp.mock").getOrElse(true)
     if (useMock) {
@@ -32,7 +32,7 @@ object EventNotifier {
     }
   }
 
-  def createSmtpMailer(group: Group): MailerAPI = {
+  private def createSmtpMailer(group: Group): MailerAPI = {
     val smtp_user = {if (group.smtp_user == null || group.smtp_user.length == 0) None else Option(group.smtp_user)}
     val smtp_password = {if (group.smtp_password == null || group.smtp_password.length == 0) None else Option(group.smtp_password)}
     val mailer = new CommonsMailer(smtpHost = group.smtp_host,
@@ -61,8 +61,12 @@ object EventNotifier {
         mailer.sendHtml(emailMessage.toString())
         Logger.info("DONE sending notification email for " + event.name + " to " + receiver)
       } catch {
-        case ex: Exception => Logger.error("FAILED sending notification email for " + event.name + " to " + receiver, ex)
+        case ex: Exception => {
+          Logger.error("FAILED sending notification email for " + event.name + " to " + receiver, ex)
+          LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
+        }
       }
     }
+    LogEntry.create(event, "Skickat påminnelse till " + receivers.size + " medlem(mar)")
   }
 }

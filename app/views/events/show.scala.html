@@ -1,4 +1,4 @@
-@(event: models.Event, members: ParticipationLists, guests: ParticipationLists)(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+@(event: models.Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.AuthHelper._
 @import util.DateHelper._
@@ -137,6 +137,27 @@ status match {
     </span>
   </div>
 </div>
+
+@if(isAdmin(loggedInUser) && !logEntries.isEmpty) {
+  <div class="row">
+    <div class="span5">
+      <h3>Händelser</h3>
+    </div>
+  </div>
+
+  @logEntries.map { logEntry =>
+    <div class="row">
+      <div class="span5 list-row">
+        <div class="row">
+          <div class="span5">
+            <span class="muted">@asDateTime(logEntry.when)</span>
+            @logEntry.message
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}
 
 <div class="row">
   <div class="span5">
