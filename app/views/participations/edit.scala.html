@@ -46,6 +46,9 @@
         <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
+
+      <a href="@routes.Events.asCalendar(event.id.get)" rel="tooltip" title="iCal" class="btn"><i class="icon-calendar"></i></a>
+
     </div>
   </div>
 </div>
