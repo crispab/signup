@@ -6,6 +6,8 @@ import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.Logger
 import util.AuthHelper
+import reflect._
+import scala.Predef.ClassManifest
 
 trait AuthConfigImpl extends AuthConfig {
 
@@ -33,7 +35,8 @@ trait AuthConfigImpl extends AuthConfig {
    * A `ClassManifest` is used to retrieve an id from the Cache API.
    * Use something like this:
    */
-  val idManifest: ClassManifest[Id] = classManifest[Id]
+  //val idManifest: ClassManifest[Id] = classManifest[Id]
+  val idTag: ClassTag[Id] = classTag[Id]
 
   /**
    * The session timeout in seconds
@@ -68,7 +71,7 @@ trait AuthConfigImpl extends AuthConfig {
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
   def authenticationFailed(request: RequestHeader): Result = {
-    Redirect(routes.Application.loginForm).withSession("access_uri" -> request.uri).flashing("error" -> "Nädu, det här får du inte göra utan att logga in som administratör!")
+    Redirect(routes.Application.loginForm).withSession(("access_uri" , request.uri)).flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
   }
 
   /**

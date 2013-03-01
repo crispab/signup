@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import PlayProject._
+import play.Project._
 
 object ApplicationBuild extends Build {
 
@@ -9,8 +9,10 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
-    "jp.t2v" %% "play20.auth" % "0.5",
-    "com.typesafe" %% "play-plugins-mailer" % "2.0.4"
+    "jp.t2v" %% "play21.auth" % "0.7",
+    "com.typesafe" %% "play-plugins-mailer" % "2.1.0",
+    jdbc,
+    anorm
   )
 
   // Only compile the LESS files listed here. Others will be included by the top ones.
@@ -19,7 +21,7 @@ object ApplicationBuild extends Build {
     (base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less")
   )
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+  val main = play.Project(appName, appVersion, appDependencies).settings(
     resolvers += "t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
     lessEntryPoints <<= baseDirectory(customLessEntryPoints)
   )

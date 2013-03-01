@@ -38,6 +38,7 @@ object EventNotifier {
     val mailer = new CommonsMailer(smtpHost = group.smtp_host,
                                    smtpPort = group.smtp_port,
                                    smtpSsl = group.smtp_useSsl,
+                                   smtpTls = group.smtp_useTls,
                                    smtpUser = smtp_user,
                                    smtpPass = smtp_password)
     mailer.setReplyTo(group.smtp_from)
