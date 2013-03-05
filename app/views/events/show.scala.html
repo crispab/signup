@@ -161,18 +161,6 @@ status match {
 
 <div class="row">
   <div class="span5">
-    <h3>Medlemmar</h3>
-  </div>
-</div>
-
-@views.html.events.tags.listParticipations(members.on)
-@views.html.events.tags.listParticipations(members.maybe)
-@views.html.events.tags.listParticipations(members.off)
-@views.html.events.tags.listParticipations(members.unregistered)
-
-
-<div class="row">
-  <div class="span5">
     <h3>Gäster</h3>
   </div>
 </div>
@@ -191,8 +179,20 @@ status match {
 @if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
-        <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
+      <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
     </div>
   </div>
 }
+
+<div class="row">
+  <div class="span5">
+    <h3>Medlemmar</h3>
+  </div>
+</div>
+
+@views.html.events.tags.listParticipations(members.on)
+@views.html.events.tags.listParticipations(members.maybe)
+@views.html.events.tags.listParticipations(members.off)
+@views.html.events.tags.listParticipations(members.unregistered)
+
 }
