@@ -57,6 +57,7 @@ GET     /participations/newGuest    controllers.Participations.createGuestForm(e
 POST    /participations/newGuest    controllers.Participations.createGuest
 POST    /participations             controllers.Participations.create
 POST    /participations/:id         controllers.Participations.update(id: Long)
+POST    /participations/:id/delete  controllers.Participations.delete(id: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

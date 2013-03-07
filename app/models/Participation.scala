@@ -194,4 +194,14 @@ WHERE p.event={eventId}
                            unregistered = findMembersByStatus(Unregistered, event))
     }
   }
+
+
+  def delete(id: Long) {
+    DB.withConnection {
+      implicit connection => {
+        SQL("DELETE FROM participations p WHERE p.id={id}").on('id -> id).executeUpdate()
+      }
+    }
+  }
+
 }

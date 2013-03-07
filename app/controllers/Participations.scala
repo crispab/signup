@@ -69,6 +69,14 @@ object Participations extends Controller with Auth with AuthConfigImpl {
       )
   }
 
+  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+    val participation = Participation.find(id)
+    val event = participation.event
+    Participation.delete(participation.id.get)
+    Redirect(routes.Events.show(event.id.get))
+  }
+
+
   val participationForm:Form[Participation] =
     Form(
       mapping(

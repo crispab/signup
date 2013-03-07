@@ -169,10 +169,10 @@ status match {
 @if(guests.isEmpty) {
   <p>Inga extra gäster</p>
 } else {
-  @views.html.events.tags.listParticipations(guests.on)
-  @views.html.events.tags.listParticipations(guests.maybe)
-  @views.html.events.tags.listParticipations(guests.off)
-  @views.html.events.tags.listParticipations(guests.unregistered)
+  @views.html.events.tags.listParticipations(guests.on, withRemoveButton = true)
+  @views.html.events.tags.listParticipations(guests.maybe, withRemoveButton = true)
+  @views.html.events.tags.listParticipations(guests.off, withRemoveButton = true)
+  @views.html.events.tags.listParticipations(guests.unregistered, withRemoveButton = true)
 }
 
 
