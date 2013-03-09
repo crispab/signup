@@ -62,64 +62,15 @@
         </div>
 
         <fieldset>
-          <legend>Konfigurering av SMTP</legend>
+          <legend>Konfigurering av epost från gruppen</legend>
 
-          <div class='control-group @hasErrors("smtp_from")'>
-            <label class="control-label" for="smtp_from">Avsändare</label>
+          <div class='control-group @hasErrors("mail_from")'>
+            <label class="control-label" for="mail_from">Avsändare</label>
             <div class="controls">
-              <input type="email" class="input-xlarge" id="smtp_from" name="smtp_from" value='@field("smtp_from")' required=""/>
+              <input type="email" class="input-xlarge" id="mail_from" name="mail_from" value='@field("mail_from")' required=""/>
               <span class="show-on-error">Fyll i adressen till den som skall stå som avsändare</span>
             </div>
           </div>
-
-          <div class='control-group @hasErrors("smtp_host")'>
-            <label class="control-label" for="smtp_host">Värd</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="smtp_host" name="smtp_host" value='@field("smtp_host")' required=""/>
-              <span class="show-on-error">Fyll i namnet på värden som kan sända epost</span>
-            </div>
-          </div>
-
-          <div class='control-group @hasErrors("smtp_port")'>
-            <label class="control-label" for="smtp_port">Port</label>
-            <div class="controls">
-              <input type="number" class="input-mini" id="smtp_port" name="smtp_port" value='@field("smtp_port")' required=""/>
-              <span class="show-on-error">Fyll i portnumret för epost-värden</span>
-            </div>
-          </div>
-
-          <div class='control-group @hasErrors("smtp_useSsl")'>
-            <label class="control-label" for="smtp_useSsl">Använd SSL</label>
-            <div class="controls">
-              <input type="checkbox" class="input-xlarge" id="smtp_useSsl" name="smtp_useSsl" value='true' @if(field("smtp_useSsl") == "true") {checked=""}/>
-              <span class="show-on-error">Ange om SSL skall användas</span>
-            </div>
-          </div>
-
-          <div class='control-group @hasErrors("smtp_useTls")'>
-            <label class="control-label" for="smtp_useTls">Använd TLS</label>
-            <div class="controls">
-              <input type="checkbox" class="input-xlarge" id="smtp_useTls" name="smtp_useTls" value='true' @if(field("smtp_useTls") == "true") {checked=""}/>
-              <span class="show-on-error">Ange om TLS skall användas</span>
-            </div>
-          </div>
-
-          <div class='control-group @hasErrors("smtp_user")'>
-            <label class="control-label" for="smtp_user">Användarnamn</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="smtp_user" name="smtp_user" value='@field("smtp_user")'/>
-              <span class="show-on-error">Fyll i användarnamnet</span>
-            </div>
-          </div>
-
-          <div class='control-group @hasErrors("smtp_password")'>
-            <label class="control-label" for="smtp_password">Lösenord</label>
-            <div class="controls">
-              <input type="password" class="input-xlarge" id="smtp_password" name="smtp_password" value='@field("smtp_password")'/>
-              <span class="show-on-error">Fyll i lösenordet</span>
-            </div>
-          </div>
-
         </fieldset>
 
         @if(groupForm.hasErrors || groupForm.hasGlobalErrors) {

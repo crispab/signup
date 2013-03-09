@@ -68,13 +68,7 @@ object Groups extends Controller with Auth with AuthConfigImpl {
       "id" -> ignored(NotAssigned: Pk[Long]),
       "name" -> nonEmptyText,
       "description" -> text,
-      "smtp_host" -> nonEmptyText,
-      "smtp_port" -> number,
-      "smtp_useSsl" -> boolean,
-      "smtp_useTls" -> boolean,
-      "smtp_user" -> text,
-      "smtp_password" -> text,
-      "smtp_from" -> email
+      "mail_from" -> email
     )(Group.apply)(Group.unapply)
   )
 }
