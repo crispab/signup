@@ -2,23 +2,27 @@
   background-color: #5BB75B;
   text-transform: none;
   margin-right: 8px;
+  margin-bottom: 4px;
 }
 
 .participation-maybe {
   background-color: #FAA732;
   text-transform: none;
   margin-right: 8px;
+  margin-bottom: 4px;
 }
 
 .participation-off {
   background-color: #DA4F49;
   text-transform: none;
   margin-right: 8px;
+  margin-bottom: 4px;
 }
 
 .participation-unregistered {
   text-transform: none;
   margin-right: 8px;
+  margin-bottom: 4px;
 }
 
 dt {

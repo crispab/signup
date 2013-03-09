@@ -161,6 +161,31 @@ status match {
 
 <div class="row">
   <div class="span5">
+    <h3>Gäster</h3>
+  </div>
+</div>
+
+
+@if(guests.isEmpty) {
+  <p>Inga extra gäster</p>
+} else {
+  @views.html.events.tags.listParticipations(guests.on, withRemoveButton = true)
+  @views.html.events.tags.listParticipations(guests.maybe, withRemoveButton = true)
+  @views.html.events.tags.listParticipations(guests.off, withRemoveButton = true)
+  @views.html.events.tags.listParticipations(guests.unregistered, withRemoveButton = true)
+}
+
+
+@if(isAdmin(loggedInUser)) {
+  <div class="row">
+    <div class="span5 btn-row">
+      <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
+    </div>
+  </div>
+}
+
+<div class="row">
+  <div class="span5">
     <h3>Medlemmar</h3>
   </div>
 </div>
@@ -170,29 +195,4 @@ status match {
 @views.html.events.tags.listParticipations(members.off)
 @views.html.events.tags.listParticipations(members.unregistered)
 
-
-<div class="row">
-  <div class="span5">
-    <h3>Gäster</h3>
-  </div>
-</div>
-
-
-@if(guests.isEmpty) {
-  <p>Inga extra gäster</p>
-} else {
-  @views.html.events.tags.listParticipations(guests.on)
-  @views.html.events.tags.listParticipations(guests.maybe)
-  @views.html.events.tags.listParticipations(guests.off)
-  @views.html.events.tags.listParticipations(guests.unregistered)
-}
-
-
-@if(isAdmin(loggedInUser)) {
-  <div class="row">
-    <div class="span5 btn-row">
-        <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
-    </div>
-  </div>
-}
 }

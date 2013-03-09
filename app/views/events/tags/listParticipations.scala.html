@@ -1,4 +1,4 @@
-@(participations: Seq[Participation])(implicit loggedInUser: Option[User])
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User])
 
 @import util.AuthHelper._
 @import util.EmailHelper._
@@ -49,6 +49,32 @@
           @asMessage(participation.status)
           </span>
         </a>
+
+        @if(withRemoveButton && isAdmin(loggedInUser)) {
+          <a data-toggle="modal" href="#remove_participant_@participation.id" class="btn pull-right"><i class="icon-trash"></i></a>
+
+          <div id="remove_participant_@participation.id" class="modal smaller-modal hide fade" style="display: none">
+            <div class="modal-header">
+              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <h3>Vill du ta bort gästen?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                  Du håller på att ta bort gästen <strong>@participation.user.firstName @participation.user.lastName</strong>
+                  från eventet <strong>@participation.event.name</strong>.
+              </p>
+              <p>
+                  Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.Participations.delete(participation.id.get)" method="POST">
+                <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+              </form>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>
