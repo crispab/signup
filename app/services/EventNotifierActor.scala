@@ -5,7 +5,7 @@ import models.Event
 
 class EventNotifierActor(event: Event) extends Actor {
 
-  protected def receive = {
+   def receive = {
     case "sendNotifications" => {
       EventNotifier.notifyParticipants(event)
     }
