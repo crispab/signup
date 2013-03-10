@@ -13,8 +13,9 @@ ALTER TABLE groups DROP COLUMN smtp_useSsl;
 ALTER TABLE groups DROP COLUMN smtp_port;
 ALTER TABLE groups DROP COLUMN smtp_host;
 
-ALTER TABLE groups RENAME COLUMN smtp_from TO mail_from;
-
+ALTER TABLE groups ADD COLUMN mail_from VARCHAR(127) DEFAULT '';
+UPDATE groups SET mail_from=smtp_from;
+ALTER TABLE groups DROP COLUMN smtp_from;
 
 # --- !Downs
 
@@ -24,3 +25,7 @@ ALTER TABLE groups ADD COLUMN smtp_useSsl BOOLEAN DEFAULT FALSE;
 ALTER TABLE groups ADD COLUMN smtp_useTls BOOLEAN DEFAULT FALSE;
 ALTER TABLE groups ADD COLUMN smtp_user VARCHAR(127) DEFAULT '';
 ALTER TABLE groups ADD COLUMN smtp_password VARCHAR(127) DEFAULT '';
+
+ALTER TABLE groups ADD COLUMN smtp_from VARCHAR(127) DEFAULT '';
+UPDATE groups SET smtp_from=mail_from;
+ALTER TABLE groups DROP COLUMN mail_from;
