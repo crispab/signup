@@ -10,25 +10,25 @@ This is the fourth version of the SignUp Service.
  - Anorm is used for SQL Database access*
  - Heroku is used for deployment
 
-*) H2 when running locally, Postgres on Heroku
+*) H2 when running locally, PostgreSQL on Heroku
 
 
 ### Play Framework ###
 
- - Play 2.0.4 - http://www.playframework.org/
- - Scala 2.9.1 (part of Play) - http://www.scala-lang.org/
- - Anorm (part of Play) - http://www.playframework.org/documentation/2.0/ScalaAnorm
+ - Play 2.1.0 - http://www.playframework.org/
+ - Scala 2.10.0 (part of Play) - http://www.scala-lang.org/
+ - Anorm (part of Play) - http://www.playframework.com/documentation/2.1.0/ScalaAnorm
 
 ### Presentation ###
 
  - Twitter Bootstrap 2.2.1 - http://twitter.github.com/bootstrap
- - jQuery 1.8.3 (used by Twitter Bootstrap) - http://jquery.com
+ - jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
  - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
  - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
 
 ### Services ###
  - Play2.x module for Authentication and Authorization 0.5 - http://github.com/t2v/play20-auth
- - Emailer Plugin 2.0.4 - http://github.com/typesafehub/play-plugins/tree/master/mailer
+ - Emailer Plugin 2.1.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 
 License, credits and stuff
@@ -126,8 +126,8 @@ To be able to deploy to Heroku you must:
 * Install Heroku toolbelt.
 * Do a 'heroku login'.
 * cd into the root of this application
-* git remote add heroku git@heroku.com:signup4.git
-* git push heroku master
+* git remote add staging git@heroku.com:signup4.git
+* git push staging master
 
 I (Mats) had to do a 'heroku keys:add ~/.ssh/id_rsa.pub' on one of my
 machines as I first got 'Permission denied (publickey).' when trying
