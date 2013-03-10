@@ -6,7 +6,7 @@ import play.api.data.Forms._
 import anorm.{Pk, NotAssigned}
 import models.{Participation, Event, User}
 import play.api.mvc._
-import jp.t2v.lab.play20.auth.Auth
+import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
 
 object Participations extends Controller with Auth with AuthConfigImpl {

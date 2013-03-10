@@ -5,7 +5,7 @@ import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, optional, long
 import models.{Participation, Membership, User}
 import anorm.{Id, Pk, NotAssigned}
 import play.api.data.Form
-import jp.t2v.lab.play20.auth.Auth
+import jp.t2v.lab.play2.auth.Auth
 import models.security.{NormalUser, Permission, Administrator}
 
 object Users extends Controller with Auth with AuthConfigImpl {

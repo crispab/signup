@@ -5,7 +5,7 @@ import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, number, boolea
 import models.{Membership, Event, Group}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
-import jp.t2v.lab.play20.auth.Auth
+import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
 
 object Groups extends Controller with Auth with AuthConfigImpl {

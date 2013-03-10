@@ -27,7 +27,7 @@ This is the fourth version of the SignUp Service.
  - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
 
 ### Services ###
- - Play2.x module for Authentication and Authorization 0.5 - http://github.com/t2v/play20-auth
+ - Play2.x module for Authentication and Authorization 0.9 - http://github.com/t2v/play20-auth
  - Emailer Plugin 2.1.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 

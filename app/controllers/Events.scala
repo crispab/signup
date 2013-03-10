@@ -9,7 +9,7 @@ import anorm.{Pk, NotAssigned}
 import java.util
 import play.api.libs.concurrent.Akka
 import services.EventNotifier
-import jp.t2v.lab.play20.auth.Auth
+import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
 
 object Events extends Controller with Auth with AuthConfigImpl {

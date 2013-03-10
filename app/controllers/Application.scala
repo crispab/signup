@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc._
-import jp.t2v.lab.play20.auth.{Auth, LoginLogout}
+import jp.t2v.lab.play2.auth.{Auth, LoginLogout}
 import play.api.data.Form
 import models.User
 import play.api.data.Forms._
