@@ -9,15 +9,15 @@
   list-style: none;
   background-color: white;
   border-bottom: @hrBorder solid 2px;
-  li {
+  > li {
     display: inline-block;
     .ie7-inline-block();
+    > .divider {
+      padding: 0 5px;
+      color: @textColor;
+    }
   }
-  .divider {
-    padding: 0 5px;
-    color: @textColor;
-  }
-  .active {
+  > .active {
     color: @textColor;
   }
 }

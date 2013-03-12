@@ -95,16 +95,6 @@
 <script src='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.min.js")'></script>
 
 
-<script  type="text/javascript">
-  // Fixes a bug in Twitter Bootstrap 2.2.1 that makes dropdown menus close rather than activating the link
-  $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) {
-    e.stopPropagation();
-  });
-  $(document).on('click','.dropdown-menu a',function(){
-    document.location = $(this).attr('href');
-  });
-</script>
-
 <script type="text/javascript">
   $('.rich-textarea').wysihtml5({
   	"font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
