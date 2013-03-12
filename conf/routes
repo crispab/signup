@@ -42,7 +42,6 @@ POST    /memberships/:id/delete     controllers.Memberships.delete(id: Long)
 GET     /events/new                 controllers.Events.createForm(groupId: Long)
 GET     /events/:id/edit            controllers.Events.updateForm(id: Long)
 POST    /events                     controllers.Events.create
-GET     /events                     controllers.Events.list
 GET     /events/:id                 controllers.Events.show(id: Long)
 POST    /events/:id                 controllers.Events.update(id: Long)
 GET     /events/:id/ical            controllers.Events.asCalendar(id: Long)

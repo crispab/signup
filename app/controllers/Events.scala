@@ -14,11 +14,6 @@ import models.security.Administrator
 
 object Events extends Controller with Auth with AuthConfigImpl {
 
-  def list = optionalUserAction { implicit user => implicit request =>
-    val events = Event.findAll()
-    Ok(views.html.events.list(events))
-  }
-
   def show(id : Long) = optionalUserAction { implicit user => implicit request =>
     val event = Event.find(id)
     Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event)))

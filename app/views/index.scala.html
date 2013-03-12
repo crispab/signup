@@ -3,13 +3,11 @@
 @import util.Section._
 
 @page(title = "SignUp", section = Other) {
+
+  @breadcrumb(Seq(), "")
+
   <div class="row">
     <div class="span5">
-      <ul class="breadcrumb">
-        <li class="active">
-          <a href="@routes.Application.index()">Hem</a>
-        </li>
-      </ul>
       <h2>Välkommen @message till SignUp</h2>
       <p>
         SignUp är en tjänst för grupper som vill ha ordning på sina sammankomster.

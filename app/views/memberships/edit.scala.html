@@ -11,23 +11,13 @@
 
 
 @page("Ny medlem i " + group.name, section = Groups) {
+
+@breadcrumb(Seq("Grupper" -> routes.Groups.list(), group.name -> routes.Groups.show(group.id.get)),
+            "Ny medlem")
+
 <div class="row">
   <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.show(group.id.get)">@group.name</a> <span class="divider">»</span>
-      </li>
-      <li class="active">Ny medlem</li>
-    </ul>
-
     <h2>Ny medlem i @group.name</h2>
-    <p></p>
   </div>
 </div>
 

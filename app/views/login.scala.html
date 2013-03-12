@@ -7,16 +7,8 @@
 @hasErrors(fieldName: String) = @{ if(loginForm.hasErrors || loginForm.hasGlobalErrors) { "error" } }
 
 @page(title = "SignUp", section = Login){
-<div class="row">
-  <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li class="active">Logga in</li>
-    </ul>
-  </div>
-</div>
+
+@breadcrumb(Seq(), "Logga in")
 
 <div class="row">
   <div class="span5">

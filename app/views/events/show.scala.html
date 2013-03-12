@@ -25,27 +25,18 @@ status match {
 
 
 @page(event.name, section = Groups) {
+
+@breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get)),
+            event.name)
+
 <div class="row">
   <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a> <span class="divider">»</span>
-      </li>
-      <li class="active">@event.name</li>
-    </ul>
+    <h2>@event.name</h2>
   </div>
 </div>
 
 <div class="row">
   <div class="span5">
-    <h2>@event.name</h2>
-
     @if(flash.get("success").isDefined) {
       <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>

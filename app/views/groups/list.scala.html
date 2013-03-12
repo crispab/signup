@@ -4,16 +4,9 @@
 @import util.Section._
 
 @page("Grupper", section = Groups){
-<div class="row">
-  <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li class="active">Grupper</li>
-    </ul>
-  </div>
-</div>
+
+@breadcrumb(Seq(), "Grupper")
+
 
 <div class="row">
   <div class="span5">

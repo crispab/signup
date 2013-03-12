@@ -23,23 +23,18 @@
 
 
 @page("Anmälan till " + event.name, section = Groups) {
+
+@breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get), event.name -> routes.Events.show(event.id.get)),
+            "Anmälan")
+
 <div class="row">
   <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Events.list()">Event</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Events.show(event.id.get)">@event.name</a> <span class="divider">»</span>
-      </li>
-      <li class="active">Anmälan</li>
-    </ul>
-
     <h2>Anmälan till @event.name</h2>
+  </div>
+</div>
 
+<div class="row">
+  <div class="span5">
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>

@@ -24,30 +24,15 @@
 }
 
 @page("Redigera event " + field("name"), section = Groups){
-<div class="row">
-  <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.show(group.id.get)">@group.name</a> <span class="divider">»</span>
-      </li>
 
-      @if(creatingNew()) {
-      <li class="active">Nytt</li>
-      } else {
-      <li>
-        <a href="@routes.Events.show(idToUpdate.get) ">@field("name")</a> <span class="divider">»</span>
-      </li>
-      <li class="active">Redigera</li>
-      }
-    </ul>
-  </div>
-</div>
+@if(creatingNew()) {
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list(), group.name -> routes.Groups.show(group.id.get)),
+              "Nytt")
+} else {
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list(), group.name -> routes.Groups.show(group.id.get), field("name") -> routes.Events.show(idToUpdate.get)),
+              "Redigera")
+}
+
 
 <div class="row">
   <div class="span5">

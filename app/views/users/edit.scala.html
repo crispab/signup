@@ -35,34 +35,21 @@
 
 @page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
 
-  <header>
-    <div class="row">
-      <div class="span5">
-        <ul class="breadcrumb">
-          <li>
-            <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-          </li>
-          <li>
-            <a href="@routes.Users.list()">Användare</a> <span class="divider">»</span>
-          </li>
-
-          @if(updating()) {
-          <li>
-            <a href="@routes.Users.show(idToUpdate.get) ">@field("firstName") @field("lastName")</a> <span class="divider">»</span>
-          </li>
-          <li class="active">Redigera</li>
-          } else {
-          <li class="active">Ny</li>
-          }
-        </ul>
-      </div>
-    </div>
-  </header>
+  @if(updating()) {
+    @breadcrumb(Seq("Användare" -> routes.Users.list(), field("firstName") + " " + field("lastName") -> routes.Users.show(idToUpdate.get)),
+      "Redigera")
+  } else {
+    @breadcrumb(Seq("Användare" -> routes.Users.list()), "Ny")
+  }
 
   <div class="row">
     <div class="span5">
       <h2>@if(updating()) {Redigera} else {Ny} Användare</h2>
-      <p></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span5">
       <form class="form-horizontal" action="@theAction()" method="POST">
         <fieldset>
 

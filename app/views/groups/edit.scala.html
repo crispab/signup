@@ -20,29 +20,23 @@
 }
 
 @page("Redigera grupp " + field("name"), section = Groups){
+@if(creatingNew()) {
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list()),
+    "Ny")
+} else {
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list(), field("name") -> routes.Groups.show(idToUpdate.get)),
+    "Redigera")
+}
+
+
 <div class="row">
   <div class="span5">
-    <ul class="breadcrumb">
-      <li>
-        <a href="@routes.Application.index()">Hem</a> <span class="divider">»</span>
-      </li>
-      <li>
-        <a href="@routes.Groups.list()">Grupper</a> <span class="divider">»</span>
-      </li>
+    <h2>@if(creatingNew()) {Nytt} else {Redigera} Grupp</h2>
+  </div>
+</div>
 
-      @if(creatingNew()) {
-      <li class="active">Ny grupp</li>
-      } else {
-      <li>
-        <a href="@routes.Groups.show(idToUpdate.get) ">@field("name")</a> <span class="divider">»</span>
-      </li>
-      <li class="active">Redigera</li>
-      }
-    </ul>
-    <h2>@if(creatingNew()) {Ny} else {Redigera} Grupp</h2>
-
-    <p></p>
-
+<div class="row">
+  <div class="span5">
     <form class="form-horizontal" action="@theAction()" method="POST">
       <fieldset>
         <div class='control-group @hasErrors("name")'>

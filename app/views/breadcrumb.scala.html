@@ -1,0 +1,22 @@
+@(pathElements: Seq[(String, Call)], active: String)
+
+<div class="row">
+  <div class="span5">
+    <ul class="breadcrumb">
+      <li><a href="@routes.Application.index()">Hem</a>
+
+      @pathElements.map { pathElement =>
+        <span class="divider">»</span></li>
+        <li><a href="@pathElement._2">@pathElement._1</a>
+      }
+
+      @if(!active.isEmpty) {
+        <span class="divider">»</span></li>
+        <li class="active">@active
+      }
+      </li>
+    </ul>
+  </div>
+</div>
+
+
