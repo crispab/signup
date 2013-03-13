@@ -57,9 +57,8 @@ trait AuthConfigImpl extends AuthConfig {
    */
   def loginSucceeded(request: RequestHeader): Result = {
     val uri = request.session.get("access_uri").getOrElse(routes.Application.index.url.toString)
-    request.session - "access_uri"
     Logger.debug("Login succeeded. Redirecting to uri " + uri)
-    Redirect(uri)
+    Redirect(uri).withSession(request.session - "access_uri")
   }
 
   /**
