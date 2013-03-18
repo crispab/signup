@@ -128,7 +128,7 @@ body {
   margin-top: 100px;
   min-height: 53px;
   background-color: #EFEAE5;
-  background: url(http://www.crisp.se/wp-content/themes/crisp/images/taggkant-full.png) repeat-x bottom left;
+  background: url(/assets/images/taggkant-full.png) repeat-x bottom left;
 }
 
 .footer-bottom {
