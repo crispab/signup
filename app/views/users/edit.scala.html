@@ -7,6 +7,8 @@
 
 @hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "error" } }
 
+@userIsAdmin() = @{field("administrator") == "true"}
+
 @updating() = @{
   idToUpdate.isDefined
 }
@@ -91,6 +93,22 @@
             <div class="controls">
               <textarea class="input-xlarge" id="comment" name="comment" rows="3">@field("comment")</textarea>
               <span class="show-on-error">Det här var en skum kommentar</span>
+            </div>
+          </div>
+
+          <div class='control-group @hasErrors("administrator")'>
+            <label class="control-label" for="administrator">Administratör</label>
+            <div class="controls">
+              <input type="checkbox" class="input-xlarge" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}
+                     onclick='pwdField=document.getElementById("password"); pwdField.disabled=!this.checked; pwdField.required=this.checked' />
+            </div>
+          </div>
+
+          <div class='control-group @hasErrors("password")'>
+            <label class="control-label" for="password">Lösenord</label>
+            <div class="controls">
+              <input type="password" class="input-xlarge" id="password" name="password" value='@field("password")' @if(userIsAdmin()){required=""} else {disabled=""}/>
+              <span class="show-on-error">Du måste ange ett lösenord</span>
             </div>
           </div>
 

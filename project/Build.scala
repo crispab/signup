@@ -24,6 +24,7 @@ object ApplicationBuild extends Build {
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
     resolvers += "t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
-    lessEntryPoints <<= baseDirectory(customLessEntryPoints)
+    lessEntryPoints <<= baseDirectory(customLessEntryPoints),
+    scalacOptions += "-feature"
   )
 }

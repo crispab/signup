@@ -6,6 +6,7 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 import security.{Permission, NormalUser}
+import util.AuthHelper
 
 case class User(
                  id: Pk[Long] = NotAssigned,
@@ -28,6 +29,10 @@ case class User(
 }
 
 object User {
+  import scala.language.postfixOps
+
+  val NOT_CHANGED_PASSWORD = "Y2j1EsDUvc6V" // just a random string
+
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("first_name") ~
@@ -122,12 +127,18 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
   def create(user: User): Long = {
     DB.withConnection {
       implicit connection =>
+        val password = user.password match {
+          case User.NOT_CHANGED_PASSWORD => "*"
+          case _ => AuthHelper.calculateHash(user.password)
+        }
         SQL(insertQueryString).on(
           'firstName -> user.firstName,
           'lastName -> user.lastName,
           'email -> user.email.toLowerCase,
           'phone -> user.phone,
-          'comment -> user.comment
+          'comment -> user.comment,
+          'permission -> user.permission.toString,
+          'pwd -> password
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -142,39 +153,82 @@ INSERT INTO users (
       last_name,
       email,
       phone,
-      comment
+      comment,
+      permission,
+      pwd
     )
     values (
       {firstName},
       {lastName},
       {email},
       {phone},
-      {comment}
+      {comment},
+      {permission},
+      {pwd}
     )
     """
 
   def update(id: Long, user: User) {
+    if(user.password == NOT_CHANGED_PASSWORD) {
+      updateWithoutPassword(id, user)
+    } else {
+      updateWithPassword(id, user)
+    }
+  }
+
+  private def updateWithoutPassword(id: Long, user: User) {
     DB.withConnection {
       implicit connection =>
-        SQL(updateQueryString).on(
+        SQL(updateWithoutPasswordQueryString).on(
           'id -> id,
           'firstName -> user.firstName,
           'lastName -> user.lastName,
           'email -> user.email.toLowerCase,
           'phone -> user.phone,
-          'comment -> user.comment
+          'comment -> user.comment,
+          'permission -> user.permission.toString
         ).executeUpdate()
     }
   }
 
-  val updateQueryString =
+  val updateWithoutPasswordQueryString =
     """
 UPDATE users
 SET first_name = {firstName},
     last_name = {lastName},
     email = {email},
     phone = {phone},
-    comment = {comment}
+    comment = {comment},
+    permission = {permission}
+WHERE id = {id}
+    """
+
+  private def updateWithPassword(id: Long, user: User) {
+    DB.withConnection {
+      implicit connection =>
+        SQL(updateWithPasswordQueryString).on(
+          'id -> id,
+          'firstName -> user.firstName,
+          'lastName -> user.lastName,
+          'email -> user.email.toLowerCase,
+          'phone -> user.phone,
+          'comment -> user.comment,
+          'permission -> user.permission.toString,
+          'pwd -> AuthHelper.calculateHash(user.password)
+        ).executeUpdate()
+    }
+  }
+
+  val updateWithPasswordQueryString =
+    """
+UPDATE users
+SET first_name = {firstName},
+    last_name = {lastName},
+    email = {email},
+    phone = {phone},
+    comment = {comment},
+    permission = {permission},
+    pwd = {pwd}
 WHERE id = {id}
     """
 

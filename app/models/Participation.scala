@@ -22,7 +22,7 @@ case class Participation(id: Pk[Long] = NotAssigned,
 }
 
 object Participation {
-
+  import scala.language.postfixOps
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("status") ~

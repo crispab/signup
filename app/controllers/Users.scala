@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc._
-import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, optional, longNumber}
+import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, optional, longNumber, email, boolean}
 import models.{Participation, Membership, User}
 import anorm.{Id, Pk, NotAssigned}
 import play.api.data.Form
@@ -77,7 +77,8 @@ object Users extends Controller with Auth with AuthConfigImpl {
 
   def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-      userUpdateForm.bindFromRequest.fold(
+    val whatever = userUpdateForm.bindFromRequest
+    whatever.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
         user => {
           User.update(id, user)
@@ -99,9 +100,10 @@ object Users extends Controller with Auth with AuthConfigImpl {
       "email" -> play.api.data.Forms.email.verifying("Epostadressen används av någon annan", User.findByEmail(_).isEmpty),
       "phone" -> text,
       "comment" -> text,
-      "permission" -> ignored(NormalUser: Permission),
-      "password" -> ignored("*")
-    )(User.apply)(User.unapply)
+      "administrator" -> boolean,
+      "password" -> optional(text)
+    )(toUser)(fromUser)
+      .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
   )
 
   val primaryKey = optional(longNumber).transform(
@@ -114,6 +116,7 @@ object Users extends Controller with Auth with AuthConfigImpl {
     (pkLong: Pk[Long]) =>
       pkLong.toOption)
 
+
   val userUpdateForm: Form[User] = Form(
     mapping(
       "id" -> primaryKey,
@@ -122,10 +125,31 @@ object Users extends Controller with Auth with AuthConfigImpl {
       "email" -> play.api.data.Forms.email,
       "phone" -> text,
       "comment" -> text,
-      "permission" -> ignored(NormalUser: Permission),
-      "password" -> ignored("*")
-    )(User.apply)(User.unapply).verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
+      "administrator" -> boolean,
+      "password" -> optional(text)
+    )(toUser)(fromUser)
+      .verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
+      .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
   )
 
+  def toUser(id: Pk[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: Option[String]): User = {
+    val permission = isAdministrator match {
+      case true => Administrator
+      case _ => NormalUser
+    }
+    val passwordToSet = permission match {
+      case Administrator => password.getOrElse("").trim
+      case _ => User.NOT_CHANGED_PASSWORD
+    }
+    User(id=id, firstName=firstName, lastName=lastName, email=email, phone=phone, comment=comment, permission=permission, password=passwordToSet)
+  }
+
+  def fromUser(user: models.User) = {
+    val passwordToShow: Option[String]  = user.permission match {
+      case Administrator => Option(User.NOT_CHANGED_PASSWORD)
+      case _ => None
+    }
+    Option(user.id, user.firstName, user.lastName, user.email, user.phone, user.comment, user.permission==Administrator, passwordToShow)
+  }
 }
 

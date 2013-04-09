@@ -14,6 +14,7 @@ case class Group(
                   )
 
 object Group {
+  import scala.language.postfixOps
   val parser = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~

@@ -10,6 +10,7 @@ case class Membership(id: Pk[Long] = NotAssigned,
                       user: User)
 
 object Membership {
+  import scala.language.postfixOps
 
   def create(membership: Membership): Long = {
     create(membership.group.id.get, membership.user.id.get)

@@ -18,6 +18,7 @@ case class Event(
                   )
 
 object Event {
+  import scala.language.postfixOps
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("name") ~
