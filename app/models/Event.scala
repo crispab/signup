@@ -41,14 +41,14 @@ object Event {
   }
 
   def findAll(): Seq[Event] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM events ORDER BY start_time DESC").as(Event.parser *)
     }
   }
 
   def findFutureEventsByGroup(group: Group): Seq[Event] = {
-    DB.withConnection {
+    DB.withTransaction {
       val today = new DateMidnight().toDate
       implicit connection =>
         SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.start_time ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
@@ -56,21 +56,21 @@ object Event {
   }
 
   def findAllEventsByGroup(group: Group): Seq[Event] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time ASC").on('groupId -> group.id.get).as(Event.parser *)
     }
   }
 
   def find(id: Long): Event = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM events e WHERE e.id={id}").on('id -> id).as(Event.parser single)
     }
   }
 
   def create(event: Event): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'name -> event.name,
@@ -107,7 +107,7 @@ INSERT INTO events (
     """
 
   def update(id: Long, event: Event) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,
@@ -135,9 +135,10 @@ WHERE id = {id}
     """
 
   def delete(id: Long) {
-    DB.withConnection {
+    DB.withTransaction() {
       implicit connection =>
         SQL("DELETE FROM participations p WHERE p.event={id}").on('id -> id).executeUpdate()
+        SQL("DELETE FROM log_entries l WHERE l.event={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM events e WHERE e.id={id}").on('id -> id).executeUpdate()
     }
   }

@@ -41,7 +41,7 @@ object Participation {
   }
 
   def create(participation: Participation): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'status -> participation.status.toString,
@@ -56,7 +56,7 @@ object Participation {
   }
 
   def createGuest(eventId: Long, userId: Long): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'status -> Status.Unregistered.toString,
@@ -88,7 +88,7 @@ INSERT INTO participations (
 
 
   def update(id: Long, participation: Participation) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,
@@ -108,21 +108,21 @@ WHERE id = {id}
 
 
   def find(id: Long): Participation = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(Participation.parser single)
     }
   }
 
   def findByEventAndUser(eventId: Long, userId: Long): Option[Participation] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM participations WHERE event={eventId} AND userx={userId}").on('eventId -> eventId, 'userId -> userId).as(Participation.parser singleOpt)
     }
   }
 
   def findGuestsByStatus(status: Status, event: Event): Seq[Participation] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(findGuestsByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id.get).as(parser *).sorted
     }
@@ -142,7 +142,7 @@ WHERE p.event={eventId}
     """
 
   def findGuests(event: Event): ParticipationLists = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         ParticipationLists(event,
                            on = findGuestsByStatus(On, event),
@@ -153,7 +153,7 @@ WHERE p.event={eventId}
   }
 
   def findAll(): Seq[Participation] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM participations").as(parser *)
     }
@@ -161,7 +161,7 @@ WHERE p.event={eventId}
 
   def findMembersByStatus(status: Status, event: Event): Seq[Participation] = {
     if (status != Unregistered) {
-      DB.withConnection {
+      DB.withTransaction {
         implicit connection =>
           SQL(findMembersByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id).as(parser *).sorted
       }
@@ -185,7 +185,7 @@ WHERE p.event={eventId}
 
 
   def findMembers(event: Event): ParticipationLists = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         ParticipationLists(event,
                            on = findMembersByStatus(On, event),
@@ -197,7 +197,7 @@ WHERE p.event={eventId}
 
 
   def delete(id: Long) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection => {
         SQL("DELETE FROM participations p WHERE p.id={id}").on('id -> id).executeUpdate()
       }

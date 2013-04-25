@@ -57,7 +57,7 @@ object User {
   }
 
   def find(id: Long): User = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("select * from users where id={id}").on('id -> id).as(User.parser single)
     }
@@ -65,14 +65,14 @@ object User {
 
 
   def findByEmail(email: String): Option[User] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("select * from users where lower(email)={email}").on('email -> email.toLowerCase).as(User.parser singleOpt)
     }
   }
 
   def findUnregisteredMembers(event: Event): Seq[User] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(findUnregisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id).as(parser *).sorted
     }
@@ -89,7 +89,7 @@ ORDER BY u.first_name, u.last_name
     """
 
   def findNonMembers(groupId: Long): Seq[User] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(findNonMembersQueryString).on('group_id -> groupId).as(parser *)
     }
@@ -103,7 +103,7 @@ WHERE u.id NOT IN (SELECT m.userx FROM memberships m WHERE m.groupx = {group_id}
     """
 
   def findNonGuests(eventId: Long): Seq[User] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(findNonGuestsQueryString).on('eventId -> eventId).as(parser *)
     }
@@ -118,14 +118,14 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
     """
 
   def findAll(): Seq[User] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("select * from users u ORDER BY u.first_name, u.last_name").as(User.parser *)
     }
   }
 
   def create(user: User): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         val password = user.password match {
           case User.NOT_CHANGED_PASSWORD => "*"
@@ -177,7 +177,7 @@ INSERT INTO users (
   }
 
   private def updateWithoutPassword(id: Long, user: User) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(updateWithoutPasswordQueryString).on(
           'id -> id,
@@ -204,7 +204,7 @@ WHERE id = {id}
     """
 
   private def updateWithPassword(id: Long, user: User) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(updateWithPasswordQueryString).on(
           'id -> id,
@@ -233,7 +233,7 @@ WHERE id = {id}
     """
 
   def delete(id: Long) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection => {
         SQL("DELETE FROM participations p WHERE p.userx={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM users u WHERE u.id={id}").on('id -> id).executeUpdate()

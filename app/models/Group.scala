@@ -31,14 +31,14 @@ object Group {
   }
 
   def findAll(): Seq[Group] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM groups ORDER BY name ASC").as(Group.parser *)
     }
   }
 
   def find(id: Long): Group = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM groups g WHERE g.id={id}").on('id -> id).as(Group.parser single)
     }
@@ -46,7 +46,7 @@ object Group {
 
 
   def create(group: Group): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'name -> group.name,
@@ -75,7 +75,7 @@ INSERT INTO groups (
 
 
   def update(id: Long, group: Group) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,

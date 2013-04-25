@@ -17,7 +17,7 @@ object Membership {
   }
 
   def create(groupId: Long, userId: Long): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'group -> groupId,
@@ -54,28 +54,28 @@ INSERT INTO memberships (
   }
 
   def find(id: Long): Membership = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM memberships WHERE id={id}").on('id -> id).as(Membership.parser single)
     }
   }
 
   def findAll(): Seq[Membership] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM memberships").as(parser *)
     }
   }
 
   def findMembers(group: Group): Seq[Membership] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT m.* FROM memberships m, users u WHERE m.userx=u.id AND m.groupx={groupId} ORDER BY u.first_name, u.last_name").on('groupId -> group.id.get).as(parser *)
     }
   }
 
   def delete(id: Long) {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection => {
         SQL("DELETE FROM memberships m WHERE m.id={id}").on('id -> id).executeUpdate()
       }

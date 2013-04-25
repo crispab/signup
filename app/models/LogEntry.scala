@@ -32,14 +32,14 @@ object LogEntry {
   }
 
   def findByEvent(event: Event): Seq[LogEntry] = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM log_entries l WHERE l.event={eventId} ORDER BY l.id DESC").on('eventId -> event.id).as(LogEntry.parser *)
     }
   }
 
   def create(logEntry: LogEntry): Long = {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'event -> logEntry.event.id,
