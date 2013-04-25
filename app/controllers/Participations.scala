@@ -81,8 +81,8 @@ object Participations extends Controller with Auth with AuthConfigImpl {
     Form(
       mapping(
         "id" -> ignored(NotAssigned:Pk[Long]),
-        "status" -> nonEmptyText,
-        "comment" -> text,
+        "status" -> nonEmptyText(maxLength = 20),
+        "comment" -> text(maxLength = 127),
         "userId" -> longNumber,
         "eventId" -> longNumber
       )(toParticipation)(fromParticipation)

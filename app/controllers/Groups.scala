@@ -66,8 +66,8 @@ object Groups extends Controller with Auth with AuthConfigImpl {
   val groupForm: Form[Group] = Form(
     mapping(
       "id" -> ignored(NotAssigned: Pk[Long]),
-      "name" -> nonEmptyText,
-      "description" -> text,
+      "name" -> nonEmptyText(maxLength = 127),
+      "description" -> text(maxLength = 127),
       "mail_from" -> email
     )(Group.apply)(Group.unapply)
   )

@@ -95,13 +95,13 @@ object Users extends Controller with Auth with AuthConfigImpl {
   val userCreateForm: Form[User] = Form(
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
-      "firstName" -> nonEmptyText,
-      "lastName" -> nonEmptyText,
+      "firstName" -> nonEmptyText(maxLength = 127),
+      "lastName" -> nonEmptyText(maxLength = 127),
       "email" -> play.api.data.Forms.email.verifying("Epostadressen används av någon annan", User.findByEmail(_).isEmpty),
-      "phone" -> text,
-      "comment" -> text,
+      "phone" -> text(maxLength = 127),
+      "comment" -> text(maxLength = 127),
       "administrator" -> boolean,
-      "password" -> optional(text)
+      "password" -> optional(text(maxLength = 127))
     )(toUser)(fromUser)
       .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
   )
@@ -120,13 +120,13 @@ object Users extends Controller with Auth with AuthConfigImpl {
   val userUpdateForm: Form[User] = Form(
     mapping(
       "id" -> primaryKey,
-      "firstName" -> nonEmptyText,
-      "lastName" -> nonEmptyText,
+      "firstName" -> nonEmptyText(maxLength = 127),
+      "lastName" -> nonEmptyText(maxLength = 127),
       "email" -> play.api.data.Forms.email,
-      "phone" -> text,
-      "comment" -> text,
+      "phone" -> text(maxLength = 127),
+      "comment" -> text(maxLength = 127),
       "administrator" -> boolean,
-      "password" -> optional(text)
+      "password" -> optional(text(maxLength = 127))
     )(toUser)(fromUser)
       .verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
       .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
