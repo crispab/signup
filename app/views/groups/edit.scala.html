@@ -42,7 +42,7 @@
         <div class='control-group @hasErrors("name")'>
           <label class="control-label" for="name">Namn</label>
           <div class="controls">
-            <input type="text" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
+            <input type="text" maxlength="127" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
             <span class="show-on-error">Fyll i ett namn på gruppen</span>
           </div>
         </div>
@@ -50,7 +50,7 @@
         <div class='control-group  @hasErrors("description")'>
           <label class="control-label" for="description">Beskrivning</label>
           <div class="controls">
-            <textarea class="input-xlarge" id="description" name="description" rows="3">@field("description")</textarea>
+            <textarea maxlength="127" class="input-xlarge" id="description" name="description" rows="3">@field("description")</textarea>
             <span class="show-on-error">Det här var en underlig beskrivning</span>
           </div>
         </div>
@@ -61,7 +61,7 @@
           <div class='control-group @hasErrors("mail_from")'>
             <label class="control-label" for="mail_from">Avsändare</label>
             <div class="controls">
-              <input type="email" class="input-xlarge" id="mail_from" name="mail_from" value='@field("mail_from")' required=""/>
+              <input type="email" maxlength="127" class="input-xlarge" id="mail_from" name="mail_from" value='@field("mail_from")' required=""/>
               <span class="show-on-error">Fyll i adressen till den som skall stå som avsändare</span>
             </div>
           </div>

@@ -48,7 +48,7 @@
           <label class="control-label" for="name">Namn</label>
 
           <div class="controls">
-            <input type="text" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
+            <input type="text" maxlength="127" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
             <span class="show-on-error">Fyll i ett namn på eventet</span>
           </div>
         </div>
@@ -66,7 +66,7 @@
           <label class="control-label" for="venue">Plats</label>
 
           <div class="controls">
-            <input type="text" class="input-xlarge" id="venue" name="venue" value='@field("venue")'/>
+            <input type="text" maxlength="127" class="input-xlarge" id="venue" name="venue" value='@field("venue")'/>
             <span class="show-on-error">Fyll i en plats där eventet äger rum</span>
           </div>
         </div>

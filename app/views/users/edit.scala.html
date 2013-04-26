@@ -58,7 +58,7 @@
           <div class='control-group @hasErrors("firstName")'>
             <label class="control-label" for="firstName">Förnamn</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")' required="" />
+              <input type="text" maxlength="127" class="input-xlarge" id="firstName" name="firstName" value='@field("firstName")' required="" />
               <span class="show-on-error">Fyll i ett förnamn</span>
             </div>
           </div>
@@ -66,7 +66,7 @@
           <div class='control-group @hasErrors("lastName")'>
             <label class="control-label" for="lastName">Efternamn</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")' required="" />
+              <input type="text" maxlength="127" class="input-xlarge" id="lastName" name="lastName" value='@field("lastName")' required="" />
               <span class="show-on-error">Fyll i ett efternamn</span>
             </div>
           </div>
@@ -75,7 +75,7 @@
           <div class='control-group @hasErrors("email")'>
             <label class="control-label" for="email">Epost</label>
             <div class="controls">
-              <input type="email" class="input-xlarge" id="email" name="email" value='@field("email")' required="" />
+              <input type="email" maxlength="127" class="input-xlarge" id="email" name="email" value='@field("email")' required="" />
               <span class="show-on-error">Fyll i en korrekt epostadress</span>
             </div>
           </div>
@@ -83,7 +83,7 @@
           <div class='control-group @hasErrors("phone")'>
             <label class="control-label" for="phone">Telefon</label>
             <div class="controls">
-              <input type="tel" class="input-xlarge" id="phone" name="phone" value='@field("phone")' />
+              <input type="tel" maxlength="127" class="input-xlarge" id="phone" name="phone" value='@field("phone")' />
               <span class="show-on-error">Ogiltigt telefonnummer</span>
             </div>
           </div>
@@ -91,7 +91,7 @@
           <div class='control-group @hasErrors("comment")'>
             <label class="control-label" for="comment">Kommentar</label>
             <div class="controls">
-              <textarea class="input-xlarge" id="comment" name="comment" rows="3">@field("comment")</textarea>
+              <textarea maxlength="127" class="input-xlarge" id="comment" name="comment" rows="3">@field("comment")</textarea>
               <span class="show-on-error">Det här var en skum kommentar</span>
             </div>
           </div>
@@ -107,7 +107,7 @@
           <div class='control-group @hasErrors("password")'>
             <label class="control-label" for="password">Lösenord</label>
             <div class="controls">
-              <input type="password" class="input-xlarge" id="password" name="password" value='@field("password")' @if(userIsAdmin()){required=""} else {disabled=""}/>
+              <input type="password" maxlength="127" class="input-xlarge" id="password" name="password" value='@field("password")' @if(userIsAdmin()){required=""} else {disabled=""}/>
               <span class="show-on-error">Du måste ange ett lösenord</span>
             </div>
           </div>
