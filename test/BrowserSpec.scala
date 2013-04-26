@@ -1,22 +1,20 @@
 
 import org.specs2.mutable._
-/*
+
+import play.api.libs.ws.WS
 import play.api.test._
 import play.api.test.Helpers._
-*/
+
 class BrowserSpec extends Specification {
-  // todo: repair this test case, it just hangs
-/*
   "Application" should {
 
-    "work from within a browser" in {
-      running(TestServer(3333), HTMLUNIT) { browser =>
-        browser.goTo("http://localhost:3333/")
-        browser.pageSource must contain("SignUp")
-        browser.goTo("http://localhost:3333/users/-1")
-        browser.pageSource must contain("Fredrik")
-      }
+    "run in a server" in new WithServer {
+
+      val response = await(WS.url("http://localhost:" + port).get)
+      response.status must equalTo(OK)
+      response.body must contain("SignUp")
+
+      await(WS.url("http://localhost:" + port + "/users/-1").get).body must contain("Fredrik")
     }
   }
-*/
 }
