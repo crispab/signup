@@ -8,7 +8,7 @@ import play.api.mvc._
 import anorm.{Pk, NotAssigned}
 import java.util
 import play.api.libs.concurrent.Akka
-import services.EventNotifier
+import services.EventReminder
 import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
 
@@ -16,7 +16,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
 
   def show(id : Long) = optionalUserAction { implicit user => implicit request =>
     val event = Event.find(id)
-    Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event)))
+    Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
   }
 
   def asCalendar(id: Long) = optionalUserAction { implicit user => implicit request =>
@@ -37,7 +37,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
 
     import play.api.Play.current
     Akka.future {
-      EventNotifier.notifyParticipants(event)
+      EventReminder.remindParticipants(event)
     }
 
     Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
@@ -58,7 +58,8 @@ object Events extends Controller with Auth with AuthConfigImpl {
           BadRequest(views.html.events.edit(formWithErrors, group))
         },
         event => {
-          Event.create(event)
+          val eventId = Event.create(event)
+          Reminder.createRemindersForEvent(eventId)
           Redirect(routes.Groups.show(event.group.id.get))
         }
       )

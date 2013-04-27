@@ -7,7 +7,7 @@ import models.Status._
 import com.typesafe.plugin._
 
 
-object EventNotifier {
+object EventReminder {
 
   private def findReceivers(event: Event): Seq[User] = {
     val unregisteredMembers = User.findUnregisteredMembers(event)
@@ -22,7 +22,8 @@ object EventNotifier {
   }
 
 
-  def notifyParticipants(event: Event) {
+  def remindParticipants(event: Event) {
+    Logger.debug("Sending reminders for: " + event.name)
     val receivers = findReceivers(event)
     Logger.debug("Found receivers: " + receivers)
     receivers map { receiver =>

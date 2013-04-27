@@ -139,6 +139,7 @@ WHERE id = {id}
       implicit connection =>
         SQL("DELETE FROM participations p WHERE p.event={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM log_entries l WHERE l.event={id}").on('id -> id).executeUpdate()
+        SQL("DELETE FROM reminders r WHERE r.event={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM events e WHERE e.id={id}").on('id -> id).executeUpdate()
     }
   }

@@ -1,4 +1,4 @@
-@(event: models.Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+@(event: models.Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.AuthHelper._
 @import util.DateHelper._
@@ -128,6 +128,26 @@ status match {
     </span>
   </div>
 </div>
+
+@if(!reminders.isEmpty) {
+  <div class="row">
+    <div class="span5">
+      <h3>Påminnelser</h3>
+    </div>
+  </div>
+
+  @reminders.map { reminder =>
+    <div class="row">
+      <div class="span5 list-row">
+        <div class="row">
+          <div class="span5">
+              @reminder.daysBefore dag(ar) innan
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}
 
 @if(!logEntries.isEmpty) {
   <div class="row">
