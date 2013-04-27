@@ -129,7 +129,7 @@ status match {
   </div>
 </div>
 
-@if(!reminders.isEmpty) {
+@if(isAdmin(loggedInUser) && !reminders.isEmpty) {
   <div class="row">
     <div class="span5">
       <h3>Påminnelser</h3>
