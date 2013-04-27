@@ -37,6 +37,14 @@ status match {
 
 <div class="row">
   <div class="span5">
+
+    @if(event.endTime.before(new java.util.Date())) {
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Det här eventet har redan inträffat!
+      </div>
+    }
+
     @if(flash.get("success").isDefined) {
       <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
