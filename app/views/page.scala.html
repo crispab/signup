@@ -15,6 +15,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
+  @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader())
   <link rel="stylesheet" href='@routes.Assets.at("stylesheets/bootstrap/bootstrap.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("stylesheets/bootstrap/responsive.css")'>
   <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css")'>
@@ -105,6 +106,6 @@
   	"image": false //Button to insert an image. Default true
   });
 </script>
-
+@Html(com.newrelic.api.agent.NewRelic.getBrowserTimingFooter())
 </body>
 </html>
