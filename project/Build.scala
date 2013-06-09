@@ -13,7 +13,6 @@ object ApplicationBuild extends Build {
     "jp.t2v" %% "play2.auth.test" % "0.9" % "test",
     "com.typesafe" %% "play-plugins-mailer" % "2.1.0",
     "com.newrelic.agent.java" % "newrelic-api" % "2.19.+",
-    "com.newrelic.agent.java" % "newrelic-agent" % "2.19.+" % "runtime",
     jdbc,
     anorm
   )
