@@ -10,7 +10,8 @@ case class Group(
                   id: Pk[Long] = NotAssigned,
                   name: String,
                   description: String = "",
-                  mail_from: String = ""
+                  mailFrom: String = "",
+                  mailSubjectPrefix: String = ""
                   )
 
 object Group {
@@ -19,13 +20,15 @@ object Group {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
     get[String]("description") ~
-    get[String]("mail_from") map {
-    case id ~ name ~ description ~ mail_from =>
+    get[String]("mail_from") ~
+    get[String]("mail_subject_prefix") map {
+    case id ~ name ~ description ~ mail_from ~ mail_subject_prefix =>
       Group(
         id = id,
         name = name,
         description = description,
-        mail_from = mail_from
+        mailFrom = mail_from,
+        mailSubjectPrefix = mail_subject_prefix
       )
     }
   }
@@ -51,7 +54,8 @@ object Group {
         SQL(insertQueryString).on(
           'name -> group.name,
           'description -> group.description,
-          'mail_from -> group.mail_from
+          'mail_from -> group.mailFrom,
+          'mail_subject_prefix -> group.mailSubjectPrefix
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -64,12 +68,14 @@ object Group {
 INSERT INTO groups (
       name,
       description,
-      mail_from
+      mail_from,
+      |mail_subject_prefix
     )
     values (
       {name},
       {description},
-      {mail_from}
+      {mail_from},
+      {mail_subject_prefix}
     )
     """
 
@@ -81,7 +87,8 @@ INSERT INTO groups (
           'id -> id,
           'name -> group.name,
           'description -> group.description,
-          'mail_from -> group.mail_from
+          'mail_from -> group.mailFrom,
+          'mail_subject_prefix -> group.mailSubjectPrefix
         ).executeUpdate()
     }
   }
@@ -91,7 +98,8 @@ INSERT INTO groups (
 UPDATE groups
 SET name = {name},
     description = {description},
-    mail_from = {mail_from}
+    mail_from = {mail_from},
+    mail_subject_prefix = {mail_subject_prefix}
 WHERE id = {id}
     """
 }

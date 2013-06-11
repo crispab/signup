@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc._
-import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, number, boolean, email}
+import play.api.data.Forms._
 import models.{Membership, Event, Group}
 import anorm.{Pk, NotAssigned}
 import play.api.data.Form
@@ -68,7 +68,8 @@ object Groups extends Controller with Auth with AuthConfigImpl {
       "id" -> ignored(NotAssigned: Pk[Long]),
       "name" -> nonEmptyText(maxLength = 127),
       "description" -> text(maxLength = 127),
-      "mail_from" -> email
+      "mail_from" -> email,
+      "mail_subject_prefix" -> text(maxLength = 127)
     )(Group.apply)(Group.unapply)
   )
 }

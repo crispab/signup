@@ -65,6 +65,14 @@
               <span class="show-on-error">Fyll i adressen till den som skall stå som avsändare</span>
             </div>
           </div>
+
+          <div class='control-group @hasErrors("mail_subject_prefix")'>
+            <label class="control-label" for="mail_subject_prefix">Rubrikprefix</label>
+            <div class="controls">
+              <input type="text" maxlength="127" class="input-xlarge" id="mail_subject_prefix" name="mail_subject_prefix" value='@field("mail_subject_prefix")' required=""/>
+              <span class="show-on-error">Fyll i vad mailrubriker skall börja med</span>
+            </div>
+          </div>
         </fieldset>
 
         @if(groupForm.hasErrors || groupForm.hasGlobalErrors) {
