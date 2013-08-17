@@ -22,7 +22,7 @@ The agent requires Java 1.5+.
 Installation
 ------------
 Complete installation instructions and troubleshooting tips are available 
-at: http://support.newrelic.com/kb/java/new-relic-for-java
+at: https://newrelic.com/docs/java/new-relic-for-java
 
 Configuration options are available at: http://support.newrelic.com/kb/java/java-agent-configuration
 

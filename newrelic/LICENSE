@@ -25,6 +25,11 @@ This product includes 'LogBack', which is released under the following license(s
 
 ----------------------------------------------------------------
 
+This product includes 'SLF4J', which is released under the following license(s):
+    The MIT License (MIT) <http://opensource.org/licenses/MIT>
+
+----------------------------------------------------------------
+
 This product includes 'SnakeYAML', which is released under the following license(s):
     Apache License 2.0 <http://www.apache.org/licenses/LICENSE-2.0>
 

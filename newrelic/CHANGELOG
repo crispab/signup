@@ -1,6 +1,144 @@
 CHANGELOG
 =========
 
+v2.21.3
+-------
+
+* Fix: Agent did not run with J2SE 5.0 (aka JDK 1.5)
+
+  Release 2.21.0 - 2.21.2 did not run correctly on J2SE 5.0. On startup,
+  the agent reports:
+
+    Unable to start New Relic agent: java.lang.UnsupportedClassVersionError:
+    Bad version number in .class file 
+
+  If you are running J2SE 5.0, please update to agent version 2.21.3.
+
+
+v2.21.2
+-------
+
+* Fix: Longer application startup time
+
+  Release 2.21.0 introduced an issue that could cause application startup
+  to be slower than in previously releases. This fix returns application
+  startup time to normal.
+
+* Fix: File location changes
+
+  Release 2.21.0 introduced a change to file locations within the
+  newrelic zip file. This fix reverts the locations to what they were
+  previously.
+
+
+v2.21.1
+-------
+
+* Fix: In 2.21.0, calls to NewRelic class can cause NoClassDefFoundError
+
+  In 2.21.0, if your application calls the NewRelic class and does
+  not include the newrelic-api.jar, the application would throw a
+  NoClassDefFoundError. With this fix, the separate newrelic-api.jar is
+  not required. However, it is recommended that your application include
+  the newrelic-api.jar so that calls to the NewRelic API resolve with or
+  without the agent installed.
+
+
+v2.21.0
+-------
+
+* X-Ray sessions
+
+  Adds support for X-Ray sessions.  An X-Ray session collects
+  Transaction Traces and a thread profile for a Key Transaction.
+
+* Fix: In 2.20.0 an @Trace annotation ignored the transaction for Apdex 
+
+  An @Trace annotation on a method called in a web transaction had
+  the side-effect of ignoring the transaction for calculating the Apdex score.
+
+* Fix: HTTP status code for Errors 
+    
+  If the HTTP status code for a web transaction was less than 400, the HTTP
+  status code reported in the error was 500.  The actual status code for the
+  web request is now reported.
+    
+* Fix: Spring exception handling
+    
+  The Exception argument in the Spring DispatcherServlet processHandlerException method
+  was reported as an Error with an HTTP status code of 500.  The actual status code
+  in the HTTP response is now reported.
+    
+* Fix: Reading Post Parameters for Resin 3
+
+  Prior to this fix, post parameters in Resin 3 were always read using the 
+  default properties even if the application tried to read the post parameters 
+  using non-default properties or by just grabbing the request input stream.
+
+* Fix: JVM Tab Metrics Not Showing up for Tomcat Applications
+
+  Prior to this fix, if the service name in service.xml was not Catalina, then
+  metrics would not appear under the JVM tab. Additionally, if you are using an 
+  embedded Tomcat 5/6, metrics should now appear under the JVM tab.
+
+* Fix: Improved compatibility with Java 1.5
+
+  In the custom xml validator, there were references to String.isEmpty() which
+  was not available until Java 1.6.  Those have been removed.
+
+* Fix: Reducing DNS problems by not automatically adding '.' to the domain name
+
+  By default the '.' is included. But if changed, then the '.' won't be added.
+
+* Fix: JVM tab metrics showing for all Applications In JVM
+
+  Metrics under the Thread, Session, and Transaction tabs used to only appear
+  under the main application. The data will now be shown for all applications
+  running in the specific JVM.
+
+* Fix: Using a Proxy now works with SSL Enabled 
+
+  In prior releases proxy authentication would fail when SSL was enabled.
+  We now do proxy authentication using the java.net.Authenticator.
+  
+* Fix: Akka error reporting
+
+  If an actor throws an exception or the message times out, an error is reported.
+  Previously, no error was reported.
+  
+
+v2.20.0
+-------
+* Glassfish 2.1 JVM Tab
+
+  The JVM tab will now show thread, session, and transaction metrics for 
+  Glassfish 2.1.
+  
+* Fix: Solr Cache Metrics 
+
+  The solr cache metrics do not appear with versions 2.18 and 2.19
+  of the agent. This has been fixed and all solr metrics should now appear.
+  
+* Fix: NullPointerException in New Relic Logs When NewRelic API called 
+
+  In certain circumstances, a call to a method on the NewRelic class can
+  generate a NullPointerException in the agent logs. It does not cause a
+  NullPointerException in your application.
+  
+* Fix: Support Custom Extension XML File for WebSphere with JRE
+
+  Prior to this fix, an attempt to use a custom extension XML file with a IBM JRE
+  would lead to a ClassNotFoundException.
+
+v2.19.1
+-------
+
+* Fix for 2.19.0 known issue:  Play now captures GET and POST
+  parameters correctly if `capture_params` is enabled.
+
+* Disabled overly ambitious instrumentation used to time template rendering for Play 2.
+  Resulted in unintended classes being instrumented.
+
 v2.19.0
 -------
 
@@ -10,7 +148,7 @@ v2.19.0
   instrumentation to Netty server, Akka actor calls, Scala Promises and Futures,
   and the WS API calls.
 
-  Known limitation: POST Parameters are not captured for Netty requests
+  Known issue: Request parameters are not captured properly
   even if `capture_params` is enabled.
 
 * Support added for Jetty 9 (tested on 9.0.0 through Jetty 9.0.3).
