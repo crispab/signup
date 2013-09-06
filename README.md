@@ -31,6 +31,12 @@ This is the fourth version of the SignUp Service.
  - Emailer Plugin 2.1.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 
+### Run-time environment ###
+ - Heroku (general app server environment) - http://heroku.com
+ - SendGrid (bulk email) - http://sendgrid.com
+ - New Relic (app monitoring) - http://sendgrid.com
+
+
 License, credits and stuff
 --------------------------
 
