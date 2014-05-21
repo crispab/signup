@@ -69,7 +69,7 @@ INSERT INTO groups (
       name,
       description,
       mail_from,
-      |mail_subject_prefix
+      mail_subject_prefix
     )
     values (
       {name},
