@@ -236,6 +236,7 @@ WHERE id = {id}
     DB.withTransaction {
       implicit connection => {
         SQL("DELETE FROM participations p WHERE p.userx={id}").on('id -> id).executeUpdate()
+        SQL("DELETE FROM memberships m WHERE m.userx={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM users u WHERE u.id={id}").on('id -> id).executeUpdate()
       }
     }

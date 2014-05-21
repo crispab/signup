@@ -102,4 +102,17 @@ SET name = {name},
     mail_subject_prefix = {mail_subject_prefix}
 WHERE id = {id}
     """
+
+
+  def delete(id: Long) {
+    DB.withTransaction {
+      implicit connection => {
+        SQL("DELETE FROM memberships m WHERE m.groupx={id}").on('id -> id).executeUpdate()
+        SQL("DELETE FROM participations p WHERE p.event IN (SELECT id FROM events WHERE groupx={id})").on('id -> id).executeUpdate()
+        SQL("DELETE FROM events e WHERE e.groupx={id}").on('id -> id).executeUpdate()
+        SQL("DELETE FROM groups g WHERE g.id={id}").on('id -> id).executeUpdate()
+      }
+    }
+  }
+
 }

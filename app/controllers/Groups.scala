@@ -60,7 +60,9 @@ object Groups extends Controller with Auth with AuthConfigImpl {
 
   def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     implicit val loggedInUser = Option(user)
-    NotImplemented
+    Group.delete(id)
+    Redirect(routes.Groups.list())
+
   }
 
   val groupForm: Form[Group] = Form(
