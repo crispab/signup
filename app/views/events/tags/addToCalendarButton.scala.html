@@ -1,0 +1,36 @@
+@(event: Event)
+
+@import util.AuthHelper._
+@import util.EmailHelper._
+@import util.GravatarHelper._
+@import util.Section._
+
+<script src='@routes.Assets.at("addthisevent/js/atemay.js")'></script>
+
+<script type="text/javascript">
+  addthisevent.settings ( {
+    license : "aao8iuet5zp9iqw5sm9z",
+    mouse : false,
+    css : false,
+    outlook : { show : true, text : "Outlook / iCal" },
+    ical : { show : false, text : "Kalendern i datorn" },
+    google : { show : true, text : "Google-kalender" },
+    yahoo : { show : true, text : "Yahoo-kalender" },
+    hotmail : { show : true, text : "Hotmail-kalender" }
+} ) ;
+</script>
+
+<a href="@routes.Events.show(event.id.get)" title="Lägg till i kalender" class="addthisevent">
+  <i class="icon-calendar icon-white"></i> Lägg till i kalender
+  <span class="_url">@routes.Events.show(event.id.get)</span>
+  <span class="_start">@util.DateHelper.asDate(event.startTime) @util.DateHelper.asTime(event.startTime)</span>
+  <span class="_end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
+  <span class="_zonecode">38</span>
+  <span class="_summary">@event.name</span>
+  <span class="_description">@event.description</span>
+  <span class="_location">@event.venue</span>
+  <span class="_organizer">@event.group.name</span>
+  <span class="_organizer_email">@event.group.mailFrom</span>
+  <span class="_all_day_event">false</span>
+  <span class="_date_format">@util.DateHelper.DATE</span>
+</a>
