@@ -2,7 +2,7 @@
 .addthisevent-drop {
   display: inline-block;
   position: relative;
-  z-index: 999998;
+  z-index: 1038;
   font-family: arial, helvetica, sans-serif;
   font-weight: normal;
   color: white !important;
@@ -33,7 +33,7 @@
 .addthisevent_dropdown {
   width: 200px;
   position: absolute;
-  z-index: 99999;
+  z-index: 1039;
   padding: 6px 0 0 0;
   background: #fff;
   text-align: left;
