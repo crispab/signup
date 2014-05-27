@@ -142,3 +142,8 @@ body {
   padding-left: 4px;
   padding-right: 4px;
 }
+
+.timestamp {
+  color: white;
+  font-size: 8px;
+}

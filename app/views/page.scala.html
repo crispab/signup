@@ -1,9 +1,11 @@
 @(title: String, section: util.Section.Section)(body: Html)(implicit loggedInUser: Option[User])
+@import util.DateHelper
 
 <!DOCTYPE html>
 
 @import util.AuthHelper._
 @import util.GravatarHelper._
+@import util.DateHelper._
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
@@ -85,6 +87,11 @@
         <div class="created-by">
           Skapad av <a href="http://www.crisp.se"><img src='@routes.Assets.at("images/crisp-logo-white-transp-tiny.png")'></a>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span5">
+        <div class="timestamp pull-right">@{asDateTime(new java.util.Date())}</div>
       </div>
     </div>
   </div>
