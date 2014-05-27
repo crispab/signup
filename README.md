@@ -15,7 +15,7 @@ This is the fourth version of the SignUp Service.
 
 ### Play Framework ###
 
- - Play 2.1.0 - http://www.playframework.org/
+ - Play 2.1.3 - http://www.playframework.org/
  - Scala 2.10.0 (part of Play) - http://www.scala-lang.org/
  - Anorm (part of Play) - http://www.playframework.com/documentation/2.1.0/ScalaAnorm
 
@@ -25,6 +25,7 @@ This is the fourth version of the SignUp Service.
  - jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
  - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
  - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
+ - AddThisEvent v1.5.1 - http://addthisevent.com
 
 ### Services ###
  - Play2.x module for Authentication and Authorization 0.9 - http://github.com/t2v/play20-auth
@@ -34,7 +35,7 @@ This is the fourth version of the SignUp Service.
 ### Run-time environment ###
  - Heroku (general app server environment) - http://heroku.com
  - SendGrid (bulk email) - http://sendgrid.com
- - New Relic (app monitoring) - http://sendgrid.com
+ - New Relic (app monitoring) - http://http://newrelic.com
 
 
 License, credits and stuff
@@ -67,7 +68,7 @@ Setting Up Development Environment
 In order to set up the development environment you need to:
 
  - Clone this project from GitHub
- - Install Play 2.0
+ - Install Play 2.1.x
  - Install Heroku Toolkit - https://toolbelt.heroku.com/ (Optional, only needed to deploy to Heroku)
  - ```play eclipsify``` or ```play idea```
 
