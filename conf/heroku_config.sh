@@ -1,3 +1,4 @@
+#!/bin/sh
 heroku config:set \
     DATABASE_DRIVER=org.postgresql.Driver \
     SMTP_MOCK=false \
@@ -10,4 +11,5 @@ heroku config:set \
     PASSWORD_SALT=salt \
     NEW_RELIC_LOG=stdout \
     TZ="Europe/Stockholm" \
+    ADDTHISEVENT_LICENSE="" \
     $*
