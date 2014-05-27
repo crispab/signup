@@ -25,8 +25,10 @@
       <dt>Efternamn:</dt>
       <dd>@user.lastName</dd>
 
-      <dt>Epost:</dt>
-      <dd>@abbreviated(user.email, isLoggedIn(loggedInUser))</dd>
+      @if(isLoggedIn(loggedInUser)) {
+        <dt>Epost:</dt>
+        <dd>@user.email</dd>
+      }
 
       <dt>Telefon:</dt>
       <dd>@user.phone</dd>

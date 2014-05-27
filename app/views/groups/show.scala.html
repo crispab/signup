@@ -110,7 +110,9 @@
           <dt><a href="@routes.Users.show(membership.user.id.get)">
             @membership.user.firstName @membership.user.lastName
           </a></dt>
-          <dd class="email-address">@abbreviated(membership.user.email, isLoggedIn(loggedInUser))</dd>
+          @if(isLoggedIn(loggedInUser)) {
+            <dd class="email-address">@membership.user.email</dd>
+          }
           <dd>@membership.user.comment</dd>
         </dl>
       </div>

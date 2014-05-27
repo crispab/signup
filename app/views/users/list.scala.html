@@ -29,7 +29,9 @@
           <dt><a href="@routes.Users.show(user.id.get)">
             @user.firstName @user.lastName
           </a></dt>
-          <dd class="email-address">@abbreviated(user.email, isLoggedIn(loggedInUser))</dd>
+          @if(isLoggedIn(loggedInUser)) {
+            <dd class="email-address">@user.email</dd>
+          }
           <dd>@user.comment</dd>
         </dl>
       </div>

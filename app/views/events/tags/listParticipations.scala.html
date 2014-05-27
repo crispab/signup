@@ -39,7 +39,9 @@
           <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
             @participation.user.firstName
             @participation.user.lastName</a></dt>
-          <dd class="email-address">@abbreviated(participation.user.email, isLoggedIn(loggedInUser))</dd>
+          @if(isLoggedIn(loggedInUser)) {
+            <dd class="email-address">@participation.user.email</dd>
+          }
           <dd>@participation.comment</dd>
         </dl>
       </div>
