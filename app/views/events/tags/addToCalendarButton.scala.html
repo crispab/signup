@@ -1,5 +1,6 @@
 @(event: Event)
 
+@import util.HtmlHelper._
 @import play.api.Play.current
 
 <script src='@routes.Assets.at("addthisevent/js/atemay.js")'></script>
@@ -24,7 +25,7 @@
   <span class="_end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
   <span class="_zonecode">38</span>
   <span class="_summary">@event.name</span>
-  <span class="_description">@event.description</span>
+  <span class="_description">@stripFromHtml(event.description)</span>
   <span class="_location">@event.venue</span>
   <span class="_organizer">@event.group.name</span>
   <span class="_organizer_email">@event.group.mailFrom</span>
