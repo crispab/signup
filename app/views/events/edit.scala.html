@@ -71,21 +71,25 @@
           </div>
         </div>
 
-        <div class='form-inline control-group @hasErrors("start_date") @hasErrors("start_time") @hasErrors("end_time")'>
+        <div class='control-group @hasErrors("start_date")'>
           <label class="control-label" for="start_date">Dag </label>
 
-          <input type="date" class="input-small" id="start_date" name="start_date"
-                 value='@field("start_date")' min="@today()" required=""/>
+          <input type="date" class="input-medium" id="start_date" name="start_date"
+          value='@field("start_date")' min="@today()" required=""/>
 
+          <div class="show-on-error">Ogiltigt datum eller klockslag</div>
+        </div>
+
+        <div class='form-inline control-group @hasErrors("start_time") @hasErrors("end_time")'>
           <label class="control-label" for="start_time"> från kl</label>
 
-          <input type="time" class="input-mini" id="start_time" name="start_time" value='@field("start_time")'
-                 required=""/>
+          <input type="time" class="input-small" id="start_time" name="start_time" value='@field("start_time")'
+          required=""/>
 
           <label class="control-label" for="end_time"> till kl</label>
 
-          <input type="time" class="input-mini" id="end_time" name="end_time" value='@field("end_time")'
-                 required=""/>
+          <input type="time" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
+          required=""/>
           <div class="show-on-error">Ogiltigt datum eller klockslag</div>
         </div>
 
