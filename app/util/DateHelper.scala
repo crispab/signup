@@ -35,7 +35,7 @@ object DateHelper {
   }
 
   def daysBetween(date1: Date, date2: Date) = {
-    Days.daysBetween(new DateMidnight(date1), new DateMidnight(date2)).getDays
+    Math.abs(Days.daysBetween(new DateMidnight(date1), new DateMidnight(date2)).getDays)
   }
 
 }
