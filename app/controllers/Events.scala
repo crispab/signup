@@ -106,6 +106,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
         "same_day" -> boolean,
         "last_signup_date" -> optional(date("yyyy-MM-dd"))
       )(toEvent)(fromEvent)
+        .verifying("Sluttid måste vara efter starttid", event => event.startTime.before(event.endTime))
         .verifying("Sista anmälningsdag måste vara före själva eventet",
                    event => event.lastSignUpDate==event.startTime || event.lastSignUpDate.before(event.startTime))
     )
