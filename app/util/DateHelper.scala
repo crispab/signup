@@ -2,6 +2,9 @@ package util
 
 import java.util.{TimeZone, Date}
 import java.text.SimpleDateFormat
+import org.joda.time.Days
+import org.joda.time.DateMidnight
+
 
 object DateHelper {
 
@@ -26,4 +29,13 @@ object DateHelper {
     utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     utcFormat.format(date)
   }
+
+  def sameDay(date1: Date, date2: Date) = {
+    asDate(date1).equals(asDate(date2))
+  }
+
+  def daysBetween(date1: Date, date2: Date) = {
+    Days.daysBetween(new DateMidnight(date1), new DateMidnight(date2)).getDays
+  }
+
 }

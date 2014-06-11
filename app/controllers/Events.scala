@@ -1,5 +1,6 @@
 package controllers
 
+import util.DateHelper._
 import models._
 import java.text.SimpleDateFormat
 import play.api.data.Form
@@ -11,6 +12,7 @@ import play.api.libs.concurrent.Akka
 import services.EventReminder
 import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
+import java.util.Date
 
 object Events extends Controller with Auth with AuthConfigImpl {
 
@@ -54,7 +56,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
         },
         event => {
           val eventId = Event.create(event)
-          Reminder.createRemindersForEvent(eventId)
+          Reminder.createRemindersForEvent(eventId, event)
           Redirect(routes.Groups.show(event.group.id.get))
         }
       )
@@ -76,6 +78,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
         },
         event => {
           Event.update(id, event)
+          Reminder.createRemindersForEvent(id, event)
           Redirect(routes.Events.show(id))
         }
       )
@@ -99,12 +102,19 @@ object Events extends Controller with Auth with AuthConfigImpl {
         "start_time" -> date("HH:mm"),
         "end_time" -> date("HH:mm"),
         "venue" -> text(maxLength = 127),
-        "groupId" -> longNumber
+        "groupId" -> longNumber,
+        "same_day" -> boolean,
+        "last_signup_date" -> optional(date("yyyy-MM-dd"))
       )(toEvent)(fromEvent)
     )
 
   def fromEvent(event: Event) = {
-    Option((event.id, event.name, event.description, event.startTime, event.startTime, event.endTime, event.venue, event.group.id.get))
+    val isSameDay = sameDay(event.startTime, event.lastSignUpDate)
+    val lastSignUpDay = isSameDay match {
+      case true => None
+      case _ => Option(event.lastSignUpDate)
+    }
+    Option((event.id, event.name, event.description, event.startTime, event.startTime, event.endTime, event.venue, event.group.id.get, isSameDay, lastSignUpDay))
   }
 
   def toEvent(
@@ -115,17 +125,26 @@ object Events extends Controller with Auth with AuthConfigImpl {
     start_time: util.Date,
     end_time: util.Date,
     venue: String,
-    groupId: Long): Event = {
+    groupId: Long,
+    sameDay: Boolean,
+    last_signup_date: Option[util.Date]): Event = {
 
     val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
     val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
     val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
+
+    val lastSignUpDate = sameDay match {
+      case true => start_date
+      case _ => last_signup_date.getOrElse(start_date)
+    }
+
     Event(
       id = id,
       name = name,
       description = description,
       startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + start_time_str),
       endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
+      lastSignUpDate = lastSignUpDate,
       venue = venue,
       group = Group.find(groupId)
     )

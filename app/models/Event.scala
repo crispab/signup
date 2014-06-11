@@ -14,6 +14,7 @@ case class Event(
                   description: String = "",
                   startTime: util.Date,
                   endTime: util.Date,
+                  lastSignUpDate: util.Date,
                   venue: String = ""
                   )
 
@@ -25,15 +26,17 @@ object Event {
       get[String]("description") ~
       get[util.Date]("start_time") ~
       get[util.Date]("end_time") ~
+      get[util.Date]("last_signup_date") ~
       get[String]("venue") ~
       get[Long]("groupx") map {
-      case id ~ name ~ description ~ start_time ~ end_time ~ venue ~ groupx =>
+      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ groupx =>
         Event(
           id = id,
           name = name,
           description = description,
           startTime = start_time,
           endTime = end_time,
+          lastSignUpDate = last_signup_date,
           venue = venue,
           group = Group.find(groupx)
         )
@@ -77,6 +80,7 @@ object Event {
           'description -> event.description,
           'start_time -> event.startTime,
           'end_time -> event.endTime,
+          'last_signup_date -> event.lastSignUpDate,
           'venue -> event.venue,
           'groupx -> event.group.id
         ).executeInsert()
@@ -93,6 +97,7 @@ INSERT INTO events (
       description,
       start_time,
       end_time,
+      last_signup_date,
       venue,
       groupx
     )
@@ -101,6 +106,7 @@ INSERT INTO events (
       {description},
       {start_time},
       {end_time},
+      {last_signup_date},
       {venue},
       {groupx}
     )
@@ -115,6 +121,7 @@ INSERT INTO events (
           'description -> event.description,
           'start_time -> event.startTime,
           'end_time -> event.endTime,
+          'last_signup_date -> event.lastSignUpDate,
           'venue -> event.venue,
           'groupx -> event.group.id
         ).executeUpdate()
@@ -129,6 +136,7 @@ SET name = {name},
     description = {description},
     start_time = {start_time},
     end_time = {end_time},
+    last_signup_date = {last_signup_date},
     venue = {venue},
     groupx = {groupx}
 WHERE id = {id}

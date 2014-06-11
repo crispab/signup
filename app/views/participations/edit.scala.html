@@ -47,6 +47,9 @@
         <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
+      @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+        <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+      }
 
       @views.html.events.tags.addToCalendarButton(event)
 

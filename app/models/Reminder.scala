@@ -5,6 +5,7 @@ import play.api.db.DB
 import anorm._
 import play.api.Play.current
 import java.util.Date
+import util.DateHelper._
 
 
 case class Reminder(id: Pk[Long] = NotAssigned,
@@ -39,18 +40,22 @@ object Reminder {
     }
   }
 
-  def createRemindersForEvent(eventId: Long) {
+  def createRemindersForEvent(eventId: Long, event: Event) {
     DB.withTransaction {
       implicit connection =>
 
+        SQL("DELETE FROM reminders r WHERE r.event={eventId}").on('eventId -> eventId).executeUpdate()
+
+        val daysForLastSignUp = daysBetween(event.startTime, event.lastSignUpDate)
+
         import play.api.Play.current
-        val firstReminderDays = play.api.Play.configuration.getLong("event.reminder.first.days").getOrElse(7)
+        val firstReminderDays = play.api.Play.configuration.getLong("event.reminder.first.days").getOrElse(7L) + daysForLastSignUp
         SQL(insertQueryString).on(
           'days_before -> firstReminderDays,
           'event -> eventId
         ).executeInsert()
 
-        val secondReminderDays = play.api.Play.configuration.getLong("event.reminder.second.days").getOrElse(1)
+        val secondReminderDays = play.api.Play.configuration.getLong("event.reminder.second.days").getOrElse(1L) + daysForLastSignUp
         SQL(insertQueryString).on(
           'days_before -> secondReminderDays,
           'event -> eventId

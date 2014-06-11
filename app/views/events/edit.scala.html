@@ -5,6 +5,9 @@
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
+@lastSignupIsSameDay() = @{field("same_day") == "true"}
+
+
 @hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "error" } }
 
 @creatingNew() = @{
@@ -45,7 +48,7 @@
     <form class="form" action="@theAction()" method="POST">
       <fieldset>
         <div class='control-group @hasErrors("name")'>
-          <label class="control-label" for="name">Namn</label>
+          <label class="control-label" for="name">Namn:</label>
 
           <div class="controls">
             <input type="text" maxlength="127" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
@@ -54,7 +57,7 @@
         </div>
 
         <div class='control-group  @hasErrors("description")'>
-          <label class="control-label" for="description">Beskrivning</label>
+          <label class="control-label" for="description">Beskrivning:</label>
 
           <div class="controls">
             <textarea class="span5 rich-textarea" id="description" name="description" rows="7" maxlength="512">@field("description")</textarea>
@@ -63,7 +66,7 @@
         </div>
 
         <div class='control-group  @hasErrors("venue")'>
-          <label class="control-label" for="venue">Plats</label>
+          <label class="control-label" for="venue">Plats:</label>
 
           <div class="controls">
             <input type="text" maxlength="127" class="input-xlarge" id="venue" name="venue" value='@field("venue")'/>
@@ -72,7 +75,7 @@
         </div>
 
         <div class='control-group @hasErrors("start_date")'>
-          <label class="control-label" for="start_date">Dag </label>
+          <label class="control-label" for="start_date">Dag: </label>
 
           <input type="date" class="input-medium" id="start_date" name="start_date"
           value='@field("start_date")' min="@today()" required=""/>
@@ -91,6 +94,21 @@
           <input type="time" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
           required=""/>
           <div class="show-on-error">Ogiltigt datum eller klockslag</div>
+        </div>
+
+        <div class="space-berfore">
+        Sista anmälning:
+        </div>
+        <div class='form-inline control-group @hasErrors("last_signup_date")'>
+          <input type="checkbox" class="input-xlarge" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
+            onclick='signupDate=document.getElementById("last_signup_date"); signupDate.disabled=this.checked; signupDate.required=!this.checked' />
+          <label class="control-label" for="same_day">samma dag</label>
+
+          <label class="control-label" for="last_signup_date">, eller </label>
+          <input type="date" class="input-medium" id="last_signup_date" name="last_signup_date"
+                 value='@field("last_signup_date")' min="@today()" @if(!lastSignupIsSameDay()){required=""} else {disabled=""}/>
+
+          <div class="show-on-error">Sista anmälningsdag får inte vara efter eventet</div>
         </div>
 
         <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>

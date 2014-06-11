@@ -59,6 +59,10 @@ status match {
         <li><strong>Plats:</strong> @event.venue</li>
       </ul>
 
+      @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+        <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+      }
+
       @if(isAdmin(loggedInUser)) {
         <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
         <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
