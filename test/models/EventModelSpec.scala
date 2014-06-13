@@ -15,7 +15,8 @@ class EventModelSpec extends Specification {
         val group = new Group(name = "Crisp RD", description = "Cool gang of hackers")
         Group.create(group)
         val crisp = Group.findAll().head
-        val event = new Event(name = "Julafton", group = crisp, startTime = new util.Date(), endTime = new util.Date())
+        val now = new util.Date()
+        val event = new Event(name = "Julafton", group = crisp, startTime = now, endTime = now, lastSignUpDate = now)
         Event.create(event) must beGreaterThanOrEqualTo(1L)
         Event.findAll().exists(_.name == "Julafton") must beTrue
       }
@@ -26,7 +27,8 @@ class EventModelSpec extends Specification {
         val group = new Group(name = "Crisp RD", description = "Cool gang of hackers")
         Group.create(group)
         val crisp = Group.findAll().head
-        val event = new Event(name = "Julafton", group = crisp, startTime = new util.Date(), endTime = new util.Date())
+        val now = new util.Date()
+        val event = new Event(name = "Julafton", group = crisp, startTime = now, endTime = now, lastSignUpDate = now)
         val id = Event.create(event)
         id must beGreaterThanOrEqualTo(1L)
         Event.findAll().exists(_.name == "Julafton") must beTrue
