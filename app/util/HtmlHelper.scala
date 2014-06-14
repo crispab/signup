@@ -5,6 +5,7 @@ object HtmlHelper {
 
   def stripFromHtml(htmlString: String): String = {
     htmlString.replaceAll("\\n", " ")
+              .replaceAll("&nbsp;", " ")
               .replaceAll("<[Ll][Ii]>", " * ")
               .replaceAll("\\s+", " ")
               .replaceAll("<[Bb][Rr]>", "\n")

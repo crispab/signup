@@ -25,5 +25,9 @@ class HtmlHelperSpec extends Specification {
     "remove newlines from HTML" in {
       HtmlHelper.stripFromHtml("<ul>\n\n<li>\nHej\n\n\nhopp!</li>\n<li>Grön...\n\n</li></ul>") must beEqualTo(" * Hej hopp!\n * Grön... \n")
     }
+
+    "remove &nbsp; from HTML" in {
+      HtmlHelper.stripFromHtml("<ul><li>Hej&nbsp;&nbsp;hopp!</li><li>Grön...</li></ul>") must beEqualTo(" * Hej hopp!\n * Grön...\n")
+    }
   }
 }
