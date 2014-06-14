@@ -25,7 +25,14 @@
   <span class="_end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
   <span class="_zonecode">38</span>
   <span class="_summary">@event.name</span>
-  <span class="_description">@stripFromHtml(event.description)</span>
+  <span class="_description">@{
+    val DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API = 1000
+    val description = stripFromHtml(event.description)
+    if(description.length > DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API)
+      description.substring(0, DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API) + "..."
+    else
+      description
+  }</span>
   <span class="_location">@event.venue</span>
   <span class="_organizer">@event.group.name</span>
   <span class="_organizer_email">@event.group.mailFrom</span>
