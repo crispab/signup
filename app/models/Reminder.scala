@@ -1,27 +1,29 @@
 package models
 
 import anorm.SqlParser._
+import org.joda.time.LocalDate
 import play.api.db.DB
 import anorm._
-import play.api.Play.current
 import java.util.Date
 import util.DateHelper._
+import play.api.Play.current
+
 
 
 case class Reminder(id: Pk[Long] = NotAssigned,
-                         daysBefore: Long,
+                         date: Date,
                          event: Event)
 
 object Reminder {
   import scala.language.postfixOps
   val parser = {
     get[Pk[Long]]("id") ~
-    get[Long]("days_before") ~
+    get[Date]("datex") ~
     get[Long]("event") map {
-      case id ~ days_before ~ event =>
+      case id ~ datex ~ event =>
         Reminder(
           id = id,
-          daysBefore = days_before,
+          date = datex,
           event = Event.find(event)
         )
     }
@@ -31,7 +33,7 @@ object Reminder {
     DB.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
-          'days_before -> reminder.daysBefore,
+          'datex -> reminder.date,
           'event -> reminder.event.id
         ).executeInsert()
     } match {
@@ -40,24 +42,31 @@ object Reminder {
     }
   }
 
+  def firstReminderDays = play.api.Play.configuration.getInt("event.reminder.first.days").getOrElse(7)
+
+  def lastReminderDays(event: Event) = {
+    if(sameDay(event.startTime, event.lastSignUpDate))
+      1
+    else
+      0
+  }
+
+
   def createRemindersForEvent(eventId: Long, event: Event) {
     DB.withTransaction {
       implicit connection =>
 
         SQL("DELETE FROM reminders r WHERE r.event={eventId}").on('eventId -> eventId).executeUpdate()
 
-        val daysForLastSignUp = daysBetween(event.startTime, event.lastSignUpDate)
-
-        import play.api.Play.current
-        val firstReminderDays = play.api.Play.configuration.getLong("event.reminder.first.days").getOrElse(7L) + daysForLastSignUp
+        val firstReminderDate = new LocalDate(event.lastSignUpDate).minusDays(firstReminderDays)
         SQL(insertQueryString).on(
-          'days_before -> firstReminderDays,
+          'datex -> firstReminderDate.toDate,
           'event -> eventId
         ).executeInsert()
 
-        val secondReminderDays = play.api.Play.configuration.getLong("event.reminder.second.days").getOrElse(1L) + daysForLastSignUp
+        val lastReminderDate = new LocalDate(event.lastSignUpDate).minusDays(lastReminderDays(event))
         SQL(insertQueryString).on(
-          'days_before -> secondReminderDays,
+          'datex -> lastReminderDate.toDate,
           'event -> eventId
         ).executeInsert()
     }
@@ -66,11 +75,11 @@ object Reminder {
   val insertQueryString =
     """
 INSERT INTO reminders (
-      days_before,
+      datex,
       event
     )
     VALUES (
-      {days_before},
+      {datex},
       {event}
     )
     """
@@ -78,7 +87,7 @@ INSERT INTO reminders (
   def findByEvent(event: Event) = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT * FROM reminders WHERE event={event} ORDER BY days_before DESC").on('event -> event.id).as(parser *)
+        SQL("SELECT * FROM reminders WHERE event={event} ORDER BY datex").on('event -> event.id).as(parser *)
     }
   }
 
@@ -92,10 +101,8 @@ INSERT INTO reminders (
   val dueRemindersQueryString =
   """
 SELECT r.*
-FROM events e, reminders r
-WHERE r.event = e.id
-  AND e.start_time > {currentTime}
-  AND cast({currentTime} as date) >= cast(e.start_time as date) - r.days_before
+FROM reminders r
+WHERE cast({currentTime} as date) >= r.datex
   """
 
   def delete(id: Long) {

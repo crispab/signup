@@ -143,7 +143,7 @@ status match {
   </div>
 </div>
 
-@if(isAdmin(loggedInUser) && !reminders.isEmpty) {
+@if(isAdmin(loggedInUser) && reminders.nonEmpty) {
   <div class="row">
     <div class="span5">
       <h3>Påminnelser</h3>
@@ -155,7 +155,7 @@ status match {
       <div class="span5 list-row">
         <div class="row">
           <div class="span5">
-              @reminder.daysBefore dag(ar) innan
+              @asDate(reminder.date)
           </div>
         </div>
       </div>
@@ -163,7 +163,7 @@ status match {
   }
 }
 
-@if(!logEntries.isEmpty) {
+@if(logEntries.nonEmpty) {
   <div class="row">
     <div class="span5">
       <h3>Händelser</h3>
