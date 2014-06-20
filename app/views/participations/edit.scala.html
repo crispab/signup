@@ -83,6 +83,14 @@
           </div>
         </div>
 
+        @if(event.allowExtraFriends) {
+          <div class='form-inline control-group @hasErrors("number_of_participants")'>
+            <label class="control-label" for="number_of_participants">Antal deltagare</label>
+            <input type="number" class="input-mini" id="number_of_participants" name="number_of_participants" value="1" min="1" max="10"/>
+          </div>
+        } else {
+          <input type="hidden" id="number_of_participants" name="number_of_participants" value="1"/>
+        }
 
         <div class='control-group  @hasErrors("comment")'>
           <label class="control-label" for="comment">Kommentar</label>
