@@ -1,22 +1,27 @@
 package services
 
-import akka.actor.Actor
-import play.api.Logger
-import models.{Event, Reminder}
 import java.util.Date
+
+import akka.actor.Actor
+import models.{Event, Reminder}
+import play.api.Logger
 
 class EventReminderActor extends Actor {
 
   def receive = {
-    case EventReminderActor.CHECK_EVENTS => {
-      Logger.debug("Oh! It's time to check events!")
+    case EventReminderActor.CHECK_EVENTS => checkEvents()
+  }
 
-      val reminders = Reminder.findDueReminders(new Date())
-      val events = (reminders map {_.event}).distinct
+  def checkEvents() {
+    Logger.debug("Oh! It's time to check events!")
 
-      sendRemindersForEvents(events)
-      cleanUpReminders(reminders)
-    }
+    val reminders = Reminder.findDueReminders(new Date())
+    val events = (reminders map {
+      _.event
+    }).distinct
+
+    sendRemindersForEvents(events)
+    cleanUpReminders(reminders)
   }
 
   def sendRemindersForEvents(events: Seq[Event]) {

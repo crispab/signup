@@ -1,11 +1,11 @@
 package controllers
 
-import play.api.mvc._
 import jp.t2v.lab.play2.auth.{Auth, LoginLogout}
-import play.api.data.Form
 import models.User
-import play.api.data.Forms._
 import play.api.Logger
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.mvc._
 import util.AuthHelper
 
 object Application extends Controller with LoginLogout with Auth with AuthConfigImpl with Https {

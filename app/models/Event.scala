@@ -1,11 +1,12 @@
 package models
 
-import anorm.SqlParser._
-import play.api.db.DB
-import anorm._
-import play.api.Play.current
 import java.util
+
+import anorm.SqlParser._
+import anorm._
 import org.joda.time.DateMidnight
+import play.api.Play.current
+import play.api.db.DB
 
 case class Event(
                   id: Pk[Long] = NotAssigned,

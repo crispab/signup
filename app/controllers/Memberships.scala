@@ -1,12 +1,12 @@
 package controllers
 
-import play.api.mvc._
-import play.api.data.Forms.{mapping, ignored, longNumber}
-import models._
-import anorm.{Pk, NotAssigned}
-import play.api.data.Form
+import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.Auth
+import models._
 import models.security.Administrator
+import play.api.data.Form
+import play.api.data.Forms.{ignored, longNumber, mapping}
+import play.api.mvc._
 
 object Memberships extends Controller with Auth with AuthConfigImpl {
 

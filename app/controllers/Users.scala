@@ -1,12 +1,12 @@
 package controllers
 
-import play.api.mvc._
-import play.api.data.Forms.{mapping, ignored, nonEmptyText, text, optional, longNumber, email, boolean}
-import models.{Participation, Membership, User}
-import anorm.{Id, Pk, NotAssigned}
-import play.api.data.Form
+import anorm.{Id, NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.Auth
-import models.security.{NormalUser, Permission, Administrator}
+import models.security.{Administrator, NormalUser}
+import models.{Membership, Participation, User}
+import play.api.data.Form
+import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
+import play.api.mvc._
 
 object Users extends Controller with Auth with AuthConfigImpl {
 

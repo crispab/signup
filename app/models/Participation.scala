@@ -1,9 +1,9 @@
 package models
 
 import anorm.SqlParser._
-import play.api.db.DB
 import anorm._
 import play.api.Play.current
+import play.api.db.DB
 
 
 object Status extends Enumeration {
@@ -11,7 +11,7 @@ object Status extends Enumeration {
   val On, Maybe, Off, Unregistered = Value
 }
 
-import Status._
+import models.Status._
 
 case class Participation(id: Pk[Long] = NotAssigned,
                          status: Status = On,

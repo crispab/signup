@@ -2,12 +2,12 @@ package controllers
 
 import jp.t2v.lab.play2.auth.AuthConfig
 import models.security.Permission
-import play.api.mvc._
-import play.api.mvc.Results._
 import play.api.Logger
+import play.api.mvc.Results._
+import play.api.mvc._
 import util.AuthHelper
-import reflect._
-import scala.Predef.ClassManifest
+
+import scala.reflect._
 
 trait AuthConfigImpl extends AuthConfig {
 
@@ -56,7 +56,7 @@ trait AuthConfigImpl extends AuthConfig {
    * Where to redirect the user after a successful login.
    */
   def loginSucceeded(request: RequestHeader): Result = {
-    val uri = request.session.get("access_uri").getOrElse(routes.Application.index.url.toString)
+    val uri = request.session.get("access_uri").getOrElse(routes.Application.index().url.toString)
     Logger.debug("Login succeeded. Redirecting to uri " + uri)
     Redirect(uri).withSession(request.session - "access_uri")
   }
@@ -70,7 +70,7 @@ trait AuthConfigImpl extends AuthConfig {
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
   def authenticationFailed(request: RequestHeader): Result = {
-    Redirect(routes.Application.loginForm).withSession(("access_uri" , request.uri)).flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
+    Redirect(routes.Application.loginForm()).withSession(("access_uri" , request.uri)).flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
   }
 
   /**

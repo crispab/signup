@@ -1,9 +1,9 @@
 package util
 
-import java.util.{TimeZone, Date}
 import java.text.SimpleDateFormat
-import org.joda.time.Days
-import org.joda.time.DateMidnight
+import java.util.{Date, TimeZone}
+
+import org.joda.time.{DateMidnight, Days}
 
 
 object DateHelper {

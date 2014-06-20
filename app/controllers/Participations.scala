@@ -1,13 +1,12 @@
 package controllers
 
-import scala.Long
-import play.api.data.Form
-import play.api.data.Forms._
-import anorm.{Pk, NotAssigned}
-import models.{Participation, Event, User}
-import play.api.mvc._
+import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
+import models.{Event, Participation, User}
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.mvc._
 
 object Participations extends Controller with Auth with AuthConfigImpl {
 

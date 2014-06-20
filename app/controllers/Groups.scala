@@ -1,12 +1,12 @@
 package controllers
 
-import play.api.mvc._
-import play.api.data.Forms._
-import models.{Membership, Event, Group}
-import anorm.{Pk, NotAssigned}
-import play.api.data.Form
+import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
+import models.{Event, Group, Membership}
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.mvc._
 
 object Groups extends Controller with Auth with AuthConfigImpl {
 

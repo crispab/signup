@@ -1,8 +1,9 @@
 package util
 
-import models.User
-import models.security.{Permission, Administrator}
 import java.security.MessageDigest
+
+import models.User
+import models.security.{Administrator, Permission}
 
 object AuthHelper {
   def isAdmin(user: Option[User]):Boolean = {

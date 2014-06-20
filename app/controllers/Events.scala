@@ -1,17 +1,18 @@
 package controllers
 
-import util.DateHelper._
-import models._
 import java.text.SimpleDateFormat
+
+import anorm.{NotAssigned, Pk}
+import models._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
-import anorm.{Pk, NotAssigned}
+import util.DateHelper._
 import java.util
-import play.api.libs.concurrent.Akka
-import services.EventReminder
 import jp.t2v.lab.play2.auth.Auth
 import models.security.Administrator
+import play.api.libs.concurrent.Akka
+import services.EventReminder
 
 object Events extends Controller with Auth with AuthConfigImpl {
 

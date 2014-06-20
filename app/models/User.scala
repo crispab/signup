@@ -1,11 +1,10 @@
 package models
 
-import play.api.db._
-import play.api.Play.current
-
-import anorm._
 import anorm.SqlParser._
-import security.{Permission, NormalUser}
+import anorm._
+import models.security.{NormalUser, Permission}
+import play.api.Play.current
+import play.api.db._
 import util.AuthHelper
 
 case class User(

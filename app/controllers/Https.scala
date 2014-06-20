@@ -1,8 +1,8 @@
 package controllers
 
 import jp.t2v.lab.play2.auth.Auth
-import play.api.mvc._
 import play.api.mvc.Results._
+import play.api.mvc._
 
 
 trait Https {

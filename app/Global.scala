@@ -1,10 +1,8 @@
-import akka.actor.Props
 import java.util.TimeZone
-import play.api.GlobalSettings
+
+import akka.actor.Props
+import play.api.{GlobalSettings, Logger}
 import play.api.libs.concurrent.Akka
-import play.api.Logger
-import scala.concurrent.duration.{FiniteDuration, Duration}
-import scala.concurrent.ExecutionContext
 import services.EventReminderActor
 
 object Global extends GlobalSettings {
@@ -12,15 +10,16 @@ object Global extends GlobalSettings {
   override def onStart(app: play.api.Application) {
     Logger.debug("onStart called")
 
-    setTimeZoneToCET
-    startCheckingForRemindersToSend
+    setTimeZoneToCET()
+    startCheckingForRemindersToSend()
   }
 
 
   def startCheckingForRemindersToSend() {
 
     import play.api.Play.current
-    import ExecutionContext.Implicits._
+
+    import scala.concurrent.ExecutionContext.Implicits._
     val eventReminderActor = Akka.system.actorOf(Props[EventReminderActor], name = "EventReminder")
 
     import scala.concurrent.duration._
