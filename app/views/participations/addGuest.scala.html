@@ -34,7 +34,7 @@
               <option>Ingen vald</option>
               @nonGuests.map { user =>
               <option value='@user.id.get'
-                      @if(user.id.get.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, isLoggedIn(loggedInUser)) )</option>
+                      @if(user.id.get.toString.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, isLoggedIn(loggedInUser)) )</option>
               }
             </select>
             <span class="show-on-error">Välj en användare som medlem</span>
