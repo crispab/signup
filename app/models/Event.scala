@@ -15,7 +15,8 @@ case class Event(
                   startTime: util.Date,
                   endTime: util.Date,
                   lastSignUpDate: util.Date,
-                  venue: String = ""
+                  venue: String = "",
+                  allowExtraFriends: Boolean = false
                   )
 
 object Event {
@@ -28,8 +29,9 @@ object Event {
       get[util.Date]("end_time") ~
       get[util.Date]("last_signup_date") ~
       get[String]("venue") ~
+      get[Boolean]("allow_extra_friends") ~
       get[Long]("groupx") map {
-      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ groupx =>
+      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx =>
         Event(
           id = id,
           name = name,
@@ -38,6 +40,7 @@ object Event {
           endTime = end_time,
           lastSignUpDate = last_signup_date,
           venue = venue,
+          allowExtraFriends = allow_extra_friends,
           group = Group.find(groupx)
         )
     }
@@ -82,6 +85,7 @@ object Event {
           'end_time -> event.endTime,
           'last_signup_date -> event.lastSignUpDate,
           'venue -> event.venue,
+          'allow_extra_friends -> event.allowExtraFriends,
           'groupx -> event.group.id
         ).executeInsert()
     } match {
@@ -99,6 +103,7 @@ INSERT INTO events (
       end_time,
       last_signup_date,
       venue,
+      allow_extra_friends,
       groupx
     )
     values (
@@ -108,6 +113,7 @@ INSERT INTO events (
       {end_time},
       {last_signup_date},
       {venue},
+      {allow_extra_friends},
       {groupx}
     )
     """
@@ -123,6 +129,7 @@ INSERT INTO events (
           'end_time -> event.endTime,
           'last_signup_date -> event.lastSignUpDate,
           'venue -> event.venue,
+          'allow_extra_friends -> event.allowExtraFriends,
           'groupx -> event.group.id
         ).executeUpdate()
     }
@@ -138,6 +145,7 @@ SET name = {name},
     end_time = {end_time},
     last_signup_date = {last_signup_date},
     venue = {venue},
+    allow_extra_friends = {allow_extra_friends},
     groupx = {groupx}
 WHERE id = {id}
     """
