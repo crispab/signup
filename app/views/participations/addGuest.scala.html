@@ -44,6 +44,7 @@
         <input type="hidden" id="eventId" name="eventId" value="@event.id.get"/>
         <input type="hidden" id="status" name="status" value="@Status.Unregistered.toString"/>
         <input type="hidden" id="comment" name="comment" value=""/>
+        <input type="hidden" id="number_of_participants" name="number_of_participants" value="1"/>
 
         @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
         <div class="alert alert-error">

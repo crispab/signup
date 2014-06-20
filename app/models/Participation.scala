@@ -15,6 +15,7 @@ import Status._
 
 case class Participation(id: Pk[Long] = NotAssigned,
                          status: Status = On,
+                         numberOfParticipants: Int = 1,
                          comment: String = "",
                          user: User,
                          event: Event) extends Ordered[Participation] {
@@ -26,13 +27,15 @@ object Participation {
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("status") ~
+      get[Int]("number_of_participants") ~
       get[String]("comment") ~
       get[Long]("userx") ~
       get[Long]("event") map {
-      case id ~ status ~ comment ~ userx ~ event =>
+      case id ~ status ~ number_of_participants ~ comment ~ userx ~ event =>
         Participation(
           id = id,
           status = Status.withName(status),
+          numberOfParticipants = number_of_participants,
           comment = comment,
           user = User.find(userx),
           event = Event.find(event)
@@ -45,6 +48,7 @@ object Participation {
       implicit connection =>
         SQL(insertQueryString).on(
           'status -> participation.status.toString,
+          'number_of_participants -> participation.numberOfParticipants,
           'comment -> participation.comment,
           'user -> participation.user.id,
           'event -> participation.event.id
@@ -60,6 +64,7 @@ object Participation {
       implicit connection =>
         SQL(insertQueryString).on(
           'status -> Status.Unregistered.toString,
+          'number_of_participants -> 1,
           'comment -> "",
           'user -> userId,
           'event -> eventId
@@ -74,12 +79,14 @@ object Participation {
     """
 INSERT INTO participations (
       status,
+      number_of_participants,
       comment,
       userx,
       event
     )
     VALUES (
       {status},
+      {number_of_participants},
       {comment},
       {user},
       {event}
@@ -93,6 +100,7 @@ INSERT INTO participations (
         SQL(updateQueryString).on(
           'id -> id,
           'status -> participation.status.toString,
+          'number_of_participants -> participation.numberOfParticipants,
           'comment -> participation.comment
         ).executeUpdate()
     }
@@ -102,6 +110,7 @@ INSERT INTO participations (
     """
 UPDATE participations
 SET status = {status},
+    number_of_participants  = {number_of_participants},
     comment  = {comment}
 WHERE id = {id}
     """

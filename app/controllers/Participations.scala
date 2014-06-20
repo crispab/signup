@@ -82,6 +82,7 @@ object Participations extends Controller with Auth with AuthConfigImpl {
       mapping(
         "id" -> ignored(NotAssigned:Pk[Long]),
         "status" -> nonEmptyText(maxLength = 20),
+        "number_of_participants" -> number(min = 1),
         "comment" -> text(maxLength = 127),
         "userId" -> longNumber,
         "eventId" -> longNumber
@@ -91,6 +92,7 @@ object Participations extends Controller with Auth with AuthConfigImpl {
   def toParticipation(
     id: Pk[Long],
     status: String,
+    numberOfParticipants: Int,
     comment: String,
     userId: Long,
     eventId: Long): Participation = {
@@ -98,6 +100,7 @@ object Participations extends Controller with Auth with AuthConfigImpl {
     Participation(
       id = id,
       status = models.Status.withName(status),
+      numberOfParticipants = numberOfParticipants,
       comment = comment,
       user = User.find(userId),
       event = Event.find(eventId)
@@ -105,7 +108,7 @@ object Participations extends Controller with Auth with AuthConfigImpl {
   }
 
   def fromParticipation(participation: Participation) = {
-    Option((participation.id, participation.status.toString, participation.comment, participation.user.id.get, participation.event.id.get))
+    Option((participation.id, participation.status.toString, participation.numberOfParticipants, participation.comment, participation.user.id.get, participation.event.id.get))
   }
 }
 

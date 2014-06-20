@@ -122,22 +122,22 @@ status match {
 <div class="row">
   <div class="span5">
     <span class="label @asCssClass(Status.On)">
-      @{members.on.size + guests.on.size}
+      @{members.numberOn + guests.numberOn}
       @asMessage(Status.On).toLowerCase
     </span>
 
     <span class="label @asCssClass(Status.Maybe)">
-      @{members.maybe.size + guests.maybe.size}
+      @{members.numberMaybe + guests.numberMaybe}
       @asMessage(Status.Maybe).toLowerCase
     </span>
 
     <span class="label @asCssClass(Status.Off)">
-      @{members.off.size + guests.off.size}
+      @{members.numberOff + guests.numberOff}
       @asMessage(Status.Off).toLowerCase
     </span>
 
     <span class="label @asCssClass(Status.Unregistered)">
-      @{members.unregistered.size + guests.unregistered.size}
+      @{members.numberUnregistered + guests.numberUnregistered}
       @asMessage(Status.Unregistered).toLowerCase
     </span>
   </div>
