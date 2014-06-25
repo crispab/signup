@@ -65,7 +65,7 @@ object Event {
   def findAllEventsByGroup(group: Group): Seq[Event] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time ASC").on('groupId -> group.id.get).as(Event.parser *)
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time DESC").on('groupId -> group.id.get).as(Event.parser *)
     }
   }
 
