@@ -58,7 +58,7 @@ object Event {
     DB.withTransaction {
       val today = new DateMidnight().toDate
       implicit connection =>
-        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.start_time ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.last_signup_date ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
     }
   }
 
