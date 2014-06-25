@@ -2,7 +2,6 @@
 
 @import util.AuthHelper._
 @import util.DateHelper._
-@import util.EmailHelper._
 @import util.GravatarHelper._
 @import util.Section._
 
@@ -67,16 +66,16 @@
   <div class="span5 list-row">
     <div class="row">
       <div class="span3">
-        <dl class="participation">
-          <dt><a href="@routes.Events.show(event.id.get)">
-            @event.name
-          </a></dt>
-          <dd>@Html(event.description)</dd>
-        </dl>
+        <div class="item-list">
+          <p class="small-space-berfore"><strong><a href="@routes.Events.show(event.id.get)">@event.name</a></strong></p>
+          <p class="small-space-berfore">@Html(event.description)</p>
+        </div>
       </div>
       <div class="span2">
-        <strong>@asDate(event.startTime),</strong>
-        @asTime(event.startTime)-@asTime(event.endTime)
+        <p class="small-space-berfore"><strong>@asDate(event.startTime),</strong>@asTime(event.startTime)-@asTime(event.endTime)</p>
+        @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+          <p class="small-space-berfore">Sista anmälningsdag: <br/> @asDate(event.lastSignUpDate)</p>
+        }
       </div>
     </div>
   </div>

@@ -34,6 +34,10 @@ dd {
   margin-left: 0;
 }
 
+.item-list {
+  margin-left: 10px;
+}
+
 dl.participation {
   margin-top: 0;
   margin-bottom: 0;
@@ -150,4 +154,8 @@ body {
 
 .space-berfore {
   margin-top: 20px;
+}
+
+.small-space-berfore {
+  margin-top: 10px;
 }
