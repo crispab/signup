@@ -53,8 +53,7 @@ GET     /events/:id/email           controllers.Events.asEmail(id: Long, userId:
 GET     /participations/edit        controllers.Participations.editForm(eventId: Long, userId: Long)
 GET     /participations/newGuest    controllers.Participations.createGuestForm(eventId: Long)
 POST    /participations/newGuest    controllers.Participations.createGuest
-POST    /participations             controllers.Participations.create
-POST    /participations/:id         controllers.Participations.update(id: Long)
+POST    /participations             controllers.Participations.createOrUpdate
 POST    /participations/:id/delete  controllers.Participations.delete(id: Long)
 
 

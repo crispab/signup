@@ -1,4 +1,4 @@
-@(participationForm: Form[Participation], user: User, event: Event, idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User])
 
 @import util.DateHelper._
 @import util.FormHelper._
@@ -8,18 +8,6 @@
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
-
-@creatingNew() = @{
-  idToUpdate.isEmpty
-}
-
-@theAction() = @{
-  if(creatingNew()) {
-    routes.Participations.create()
-  } else {
-    routes.Participations.update(idToUpdate.get)
-  }
-}
 
 
 @page("Anmälan till " + event.name, section = Groups) {
@@ -60,7 +48,7 @@
 
 <div class="row">
   <div class="span5">
-    <form action="@theAction()" method="POST">
+    <form action="@routes.Participations.createOrUpdate()" method="POST">
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
@@ -69,7 +57,7 @@
           </label>
           <div class="controls">
             <label class="radio inline">
-              <input type="radio" name="status" id="on" value="On" @if(creatingNew() || field("status") == Status.On.toString  || field("status") == Status.Unregistered.toString) {checked=""}/>
+              <input type="radio" name="status" id="on" value="On" @if(field("status") == Status.On.toString  || field("status") == Status.Unregistered.toString) {checked=""}/>
               <span class="label participation-on">Kommer</span>
             </label>
             <label class="radio inline">
@@ -86,7 +74,7 @@
         @if(event.allowExtraFriends) {
           <div class='form-inline control-group @hasErrors("number_of_participants")'>
             <label class="control-label" for="number_of_participants">Antal deltagare</label>
-            <input type="number" class="input-mini" id="number_of_participants" name="number_of_participants" @if(creatingNew()) {value="1"} else {value='@field("number_of_participants")'} min="1" />
+            <input type="number" class="input-mini" id="number_of_participants" name="number_of_participants" value='@field("number_of_participants")' min="1" />
           </div>
         } else {
           <input type="hidden" id="number_of_participants" name="number_of_participants" value="1"/>
@@ -99,8 +87,8 @@
           </div>
         </div>
 
-        <input type="hidden" id="userId" name="userId" value="@user.id.get"/>
-        <input type="hidden" id="eventId" name="eventId" value="@event.id.get"/>
+        <input type="hidden" id="userId" name="userId" value='@field("userId")'/>
+        <input type="hidden" id="eventId" name="eventId" value='@field("eventId")'/>
 
         @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
         <div class="alert alert-error">

@@ -11,26 +11,30 @@ import play.api.mvc._
 object Participations extends Controller with Auth with AuthConfigImpl {
 
   def editForm(eventId: Long, userId: Long) = optionalUserAction { implicit user => implicit request =>
-    val participation = Participation.findByEventAndUser(eventId, userId)
-    if(participation.isDefined) {
-      Ok(views.html.participations.edit(participationForm.fill(participation.get), User.find(userId), Event.find(eventId), Option(participation.get.id.get)))
-    } else {
-      Ok(views.html.participations.edit(participationForm, User.find(userId), Event.find(eventId)))
-    }
+    implicit val loggedInUser = Option(user)
+    val event = Event.find(eventId)
+    val userToAttend = User.find(userId)
+    val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(user = userToAttend, event = event))
+    Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
   }
 
-  def create = optionalUserAction { implicit user => implicit request =>
-      participationForm.bindFromRequest.fold(
-        formWithErrors => {
-          val event = Event.find(formWithErrors("eventId").value.get.toLong)
-          val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
-          BadRequest(views.html.participations.edit(formWithErrors, userToAttend, event))
-        },
-        participation => {
+  def createOrUpdate = optionalUserAction { implicit user => implicit request =>
+    participationForm.bindFromRequest.fold(
+      formWithErrors => {
+        val event = Event.find(formWithErrors("eventId").value.get.toLong)
+        val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
+        BadRequest(views.html.participations.edit(formWithErrors, userToAttend, event))
+      },
+      participation => {
+        val existingParticipation = Participation.findByEventAndUser(participation.event.id.get, participation.user.id.get)
+        if(existingParticipation.isEmpty) {
           Participation.create(participation)
-          Redirect(routes.Events.show(participation.event.id.get))
+        } else {
+          Participation.update(existingParticipation.get.id.get, participation)
         }
-      )
+        Redirect(routes.Events.show(participation.event.id.get))
+      }
+    )
   }
 
   def createGuestForm(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
@@ -53,28 +57,12 @@ object Participations extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-
-  def update(id: Long) = optionalUserAction { implicit user => implicit request =>
-      participationForm.bindFromRequest.fold(
-        formWithErrors => {
-          val event = Event.find(formWithErrors("eventId").value.get.toLong)
-          val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
-          BadRequest(views.html.participations.edit(formWithErrors, userToAttend, event, Option(id)))
-        },
-        participation => {
-          Participation.update(id, participation)
-          Redirect(routes.Events.show(participation.event.id.get))
-        }
-      )
-  }
-
   def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
     val participation = Participation.find(id)
     val event = participation.event
     Participation.delete(participation.id.get)
     Redirect(routes.Events.show(event.id.get))
   }
-
 
   val participationForm:Form[Participation] =
     Form(
