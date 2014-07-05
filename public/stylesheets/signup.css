@@ -159,3 +159,12 @@ body {
 .small-space-berfore {
   margin-top: 10px;
 }
+
+pre {
+  overflow-x: auto;
+}
+
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}

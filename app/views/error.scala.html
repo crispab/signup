@@ -1,0 +1,36 @@
+@(errorMessage: String, details: String)(implicit loggedInUser: Option[User] = None)
+
+@import util.Section._
+
+@page(title = "Fel", section = Other, showLogin = false) {
+
+  @breadcrumb(Seq(), "")
+
+  <div class="row">
+    <div class="span5">
+      <h2>Oj! Nu blev det visst fel.</h2>
+      <p class="alert alert-error">
+        @errorMessage
+      </p>
+      @if(details.length > 0) {
+        <div class="accordion" id="tech-description">
+          <div class="accordion-group">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#tech-description" href="#tech-description-details">
+                Tekniska detaljer
+              </a>
+            </div>
+            <div id="tech-description-details" class="accordion-body collapse">
+                <pre class="accordion-inner"><code>@details</code></pre>
+            </div>
+          </div>
+        </div>
+      }
+      <p>
+        <a href="@routes.Application.index()">Till startsidan</a>
+      </p>
+    </div>
+  </div>
+}
+
+
