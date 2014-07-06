@@ -64,7 +64,7 @@ status match {
       }
 
       @if(isAdmin(loggedInUser)) {
-        <a href="@routes.Events.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
+        <a href="@routes.EventsSecured.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
         <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
         <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
@@ -81,7 +81,7 @@ status match {
             </p>
           </div>
           <div class="modal-footer">
-            <form action="@routes.Events.delete(event.id.get)" method="POST">
+            <form action="@routes.EventsSecured.delete(event.id.get)" method="POST">
               <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
               <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
             </form>
@@ -104,7 +104,7 @@ status match {
             </p>
           </div>
           <div class="modal-footer">
-            <form action="@routes.Events.notifyParticipants(event.id.get)" method="POST">
+            <form action="@routes.EventsSecured.notifyParticipants(event.id.get)" method="POST">
               <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
               <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn de som inte svarat</button>
             </form>
@@ -204,7 +204,7 @@ status match {
 @if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
-      <a href="@routes.Participations.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
+      <a href="@routes.ParticipationsSecured.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
     </div>
   </div>
 }

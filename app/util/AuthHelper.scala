@@ -6,6 +6,13 @@ import models.User
 import models.security.{Administrator, Permission}
 
 object AuthHelper {
+
+  def hasPermission(permission: Permission)(loggedInUser: User): Boolean = authorize(loggedInUser, permission)
+
+  def hasPermissionOrSelf(permission: Permission, userId: Long)(loggedInUser: User): Boolean = authorize(loggedInUser, permission) || (userId == loggedInUser.id.get)
+
+  def hasPermissionOrSelf(permission: Permission, userId: Option[Long])(loggedInUser: User): Boolean = authorize(loggedInUser, permission) || (userId.isDefined && (userId.get == loggedInUser.id.get))
+
   def isAdmin(user: Option[User]):Boolean = {
     if (user.isDefined) {
       authorize(user.get, Administrator)
@@ -19,7 +26,10 @@ object AuthHelper {
   }
 
   def authorize(user: User, permission: Permission): Boolean = {
-    user.permission == permission
+    user.permission match {
+      case Administrator => true
+      case _ => user.permission == permission
+    }
   }
 
   def checkPassword(user : Option[User], enteredPassword: String): Option[User] = {

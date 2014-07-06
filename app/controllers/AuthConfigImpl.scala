@@ -1,11 +1,9 @@
 package controllers
 
 import jp.t2v.lab.play2.auth.AuthConfig
-import models.security.Permission
 import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
-import util.AuthHelper
 
 import scala.reflect._
 
@@ -20,16 +18,6 @@ trait AuthConfigImpl extends AuthConfig {
    * A type that represents a user in your application.
    */
   type User = models.User
-
-  /**
-   * A type that is defined by every action for authorization.
-   * This sample uses the following trait:
-   *
-   * sealed trait Permission
-   * case object Administrator extends Permission
-   * case object NormalUser extends Permission
-   */
-  type Authority = Permission
 
   /**
    * A `ClassManifest` is used to retrieve an id from the Cache API.
@@ -70,7 +58,7 @@ trait AuthConfigImpl extends AuthConfig {
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
   def authenticationFailed(request: RequestHeader): Result = {
-    Redirect(routes.Application.loginForm()).withSession(("access_uri" , request.uri)).flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
+    Redirect(routes.Application.loginForm()).withSession("access_uri" -> request.uri).flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
   }
 
   /**
@@ -79,11 +67,19 @@ trait AuthConfigImpl extends AuthConfig {
   def authorizationFailed(request: RequestHeader): Result = Forbidden("Nädu, det här får du inte göra utan att logga in som administratör!")
 
   /**
+   * A type that is defined by every action for authorization.
+   * This sample uses the following trait:
+   *
+   * sealed trait Permission
+   * case object Administrator extends Permission
+   * case object NormalUser extends Permission
+   */
+  type Authority = User => Boolean
+
+  /**
    * A function that determines what `Authority` a user has.
    * You should alter this procedure to suit your application.
    */
-  def authorize(user: User, authority: Authority): Boolean = {
-    AuthHelper.authorize(user, authority)
-  }
+  def authorize(user: User, authorityFunction: Authority): Boolean = authorityFunction(user)
 }
 

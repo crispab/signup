@@ -1,24 +1,25 @@
 package controllers
 
 import anorm.{NotAssigned, Pk}
-import jp.t2v.lab.play2.auth.Auth
+import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import models.{Event, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import util.AuthHelper._
 
-object Participations extends Controller with Auth with AuthConfigImpl {
+object Participations extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def editForm(eventId: Long, userId: Long) = optionalUserAction { implicit user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def editForm(eventId: Long, userId: Long) = StackAction { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(eventId)
     val userToAttend = User.find(userId)
     val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(user = userToAttend, event = event))
     Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
   }
 
-  def createOrUpdate = optionalUserAction { implicit user => implicit request =>
+  def createOrUpdate = StackAction { implicit request =>
     participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = Event.find(formWithErrors("eventId").value.get.toLong)
@@ -27,7 +28,7 @@ object Participations extends Controller with Auth with AuthConfigImpl {
       },
       participation => {
         val existingParticipation = Participation.findByEventAndUser(participation.event.id.get, participation.user.id.get)
-        if(existingParticipation.isEmpty) {
+        if (existingParticipation.isEmpty) {
           Participation.create(participation)
         } else {
           Participation.update(existingParticipation.get.id.get, participation)
@@ -35,33 +36,6 @@ object Participations extends Controller with Auth with AuthConfigImpl {
         Redirect(routes.Events.show(participation.event.id.get))
       }
     )
-  }
-
-  def createGuestForm(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
-    val event = Event.find(eventId)
-    Ok(views.html.participations.addGuest(participationForm, event, User.findNonGuests(event.id.get)))
-  }
-
-  def createGuest = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
-      participationForm.bindFromRequest.fold(
-        formWithErrors => {
-          val event = Event.find(formWithErrors("eventId").value.get.toLong)
-          BadRequest(views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
-        },
-        participation => {
-          Participation.create(participation)
-          Redirect(routes.Events.show(participation.event.id.get))
-        }
-      )
-  }
-
-  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
-    val participation = Participation.find(id)
-    val event = participation.event
-    Participation.delete(participation.id.get)
-    Redirect(routes.Events.show(event.id.get))
   }
 
   val participationForm:Form[Participation] =
@@ -77,12 +51,12 @@ object Participations extends Controller with Auth with AuthConfigImpl {
     )
 
   def toParticipation(
-    id: Pk[Long],
-    status: String,
-    numberOfParticipants: Int,
-    comment: String,
-    userId: Long,
-    eventId: Long): Participation = {
+                       id: Pk[Long],
+                       status: String,
+                       numberOfParticipants: Int,
+                       comment: String,
+                       userId: Long,
+                       eventId: Long): Participation = {
 
     Participation(
       id = id,
@@ -96,6 +70,37 @@ object Participations extends Controller with Auth with AuthConfigImpl {
 
   def fromParticipation(participation: Participation) = {
     Option((participation.id, participation.status.toString, participation.numberOfParticipants, participation.comment, participation.user.id.get, participation.event.id.get))
+  }
+}
+
+
+
+object ParticipationsSecured extends Controller with AuthElement with AuthConfigImpl {
+  def createGuestForm(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    val event = Event.find(eventId)
+    Ok(views.html.participations.addGuest(Participations.participationForm, event, User.findNonGuests(event.id.get)))
+  }
+
+  def createGuest = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    Participations.participationForm.bindFromRequest.fold(
+        formWithErrors => {
+          val event = Event.find(formWithErrors("eventId").value.get.toLong)
+          BadRequest(views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
+        },
+        participation => {
+          Participation.create(participation)
+          Redirect(routes.Events.show(participation.event.id.get))
+        }
+      )
+  }
+
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    val participation = Participation.find(id)
+    val event = participation.event
+    Participation.delete(participation.id.get)
+    Redirect(routes.Events.show(event.id.get))
   }
 }
 

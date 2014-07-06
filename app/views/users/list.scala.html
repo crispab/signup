@@ -2,7 +2,6 @@
 
 @import util.Section._
 @import util.AuthHelper._
-@import util.EmailHelper._
 @import util.GravatarHelper._
 
 @page("Användare", section = Users) {
@@ -43,7 +42,7 @@
 @if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
-      <a href="@routes.Users.createForm()" class="btn"><i class="icon-plus"></i> Ny användare</a>
+      <a href="@routes.UsersSecured.createForm()" class="btn"><i class="icon-plus"></i> Ny användare</a>
     </div>
   </div>
 }

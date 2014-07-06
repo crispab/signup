@@ -1,22 +1,23 @@
 package controllers
 
 import anorm.{NotAssigned, Pk}
-import jp.t2v.lab.play2.auth.Auth
+import jp.t2v.lab.play2.auth.AuthElement
 import models._
 import models.security.Administrator
 import play.api.data.Form
 import play.api.data.Forms.{ignored, longNumber, mapping}
 import play.api.mvc._
+import util.AuthHelper._
 
-object Memberships extends Controller with Auth with AuthConfigImpl {
+object Memberships extends Controller with AuthElement with AuthConfigImpl {
 
-  def createForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.memberships.edit(membershipForm, Group.find(groupId), User.findNonMembers(groupId)))
   }
 
-  def create = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def create = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
       membershipForm.bindFromRequest.fold(
         formWithErrors => {
           val group = Group.find(formWithErrors("groupId").value.get.toLong)
@@ -30,7 +31,7 @@ object Memberships extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     val membership = Membership.find(id)
     Membership.delete(id)
     Redirect(routes.Groups.show(membership.group.id.get))

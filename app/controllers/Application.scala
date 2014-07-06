@@ -1,6 +1,6 @@
 package controllers
 
-import jp.t2v.lab.play2.auth.{Auth, LoginLogout}
+import jp.t2v.lab.play2.auth.{OptionalAuthElement, LoginLogout}
 import models.User
 import play.api.Logger
 import play.api.data.Form
@@ -8,9 +8,9 @@ import play.api.data.Forms._
 import play.api.mvc._
 import util.AuthHelper
 
-object Application extends Controller with LoginLogout with Auth with AuthConfigImpl with Https {
+object Application extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with Https {
 
-  def index = optionalUserAction { implicit user => implicit request =>
+  def index = StackAction { implicit request =>
     Ok(views.html.index())
   }
 

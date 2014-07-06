@@ -24,7 +24,7 @@
 
 <div class="row">
   <div class="span5">
-    <form action="@routes.Participations.createGuest()" method="POST">
+    <form action="@routes.ParticipationsSecured.createGuest()" method="POST">
       <fieldset>
 
         <div class='control-group @hasErrors("userId")'>
@@ -60,7 +60,7 @@
             Lägg till
           </button>
           <button type="button" class="btn" id="create"
-                  onClick='window.location.assign("@routes.Users.createGuestForm(event.id.get)") '>
+                  onClick='window.location.assign("@routes.UsersSecured.createGuestForm(event.id.get)") '>
             <i class="icon-plus"></i>
             Ny användare
           </button>

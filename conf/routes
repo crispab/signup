@@ -9,27 +9,27 @@ POST    /login                      controllers.Application.authenticate
 GET     /logout                     controllers.Application.logout
 
 # Users
-GET     /users/new                  controllers.Users.createForm
-GET     /users/newMember            controllers.Users.createMemberForm(groupId: Long)
-GET     /users/newGuest             controllers.Users.createGuestForm(eventId: Long)
-GET     /users/:id/edit             controllers.Users.updateForm(id: Long)
-POST    /users                      controllers.Users.create
-POST    /users/newMember/:groupId   controllers.Users.createMember(groupId: Long)
-POST    /users/newGuest/:eventId    controllers.Users.createGuest(eventId: Long)
+GET     /users/new                  controllers.UsersSecured.createForm
+GET     /users/newMember            controllers.UsersSecured.createMemberForm(groupId: Long)
+GET     /users/newGuest             controllers.UsersSecured.createGuestForm(eventId: Long)
+GET     /users/:id/edit             controllers.UsersSecured.updateForm(id: Long)
+POST    /users                      controllers.UsersSecured.create
+POST    /users/newMember/:groupId   controllers.UsersSecured.createMember(groupId: Long)
+POST    /users/newGuest/:eventId    controllers.UsersSecured.createGuest(eventId: Long)
+POST    /users/:id                  controllers.UsersSecured.update(id: Long)
+POST    /users/:id/delete           controllers.UsersSecured.delete(id: Long)
 GET     /users                      controllers.Users.list
 GET     /users/:id                  controllers.Users.show(id: Long)
-POST    /users/:id                  controllers.Users.update(id: Long)
-POST    /users/:id/delete           controllers.Users.delete(id: Long)
 
 
 # Groups
-GET     /groups/new                 controllers.Groups.createForm
-GET     /groups/:id/edit            controllers.Groups.updateForm(id: Long)
-POST    /groups                     controllers.Groups.create
+GET     /groups/new                 controllers.GroupsSecured.createForm
+GET     /groups/:id/edit            controllers.GroupsSecured.updateForm(id: Long)
+POST    /groups                     controllers.GroupsSecured.create
+POST    /groups/:id                 controllers.GroupsSecured.update(id: Long)
+POST    /groups/:id/delete          controllers.GroupsSecured.delete(id: Long)
 GET     /groups                     controllers.Groups.list
 GET     /groups/:id                 controllers.Groups.show(id: Long, showAll: Boolean ?= false)
-POST    /groups/:id                 controllers.Groups.update(id: Long)
-POST    /groups/:id/delete          controllers.Groups.delete(id: Long)
 
 
 # Memberships
@@ -39,22 +39,22 @@ POST    /memberships/:id/delete     controllers.Memberships.delete(id: Long)
 
 
 # Events
-GET     /events/new                 controllers.Events.createForm(groupId: Long)
-GET     /events/:id/edit            controllers.Events.updateForm(id: Long)
-POST    /events                     controllers.Events.create
+GET     /events/new                 controllers.EventsSecured.createForm(groupId: Long)
+GET     /events/:id/edit            controllers.EventsSecured.updateForm(id: Long)
+POST    /events                     controllers.EventsSecured.create
+POST    /events/:id                 controllers.EventsSecured.update(id: Long)
+POST    /events/:id/delete          controllers.EventsSecured.delete(id: Long)
+POST    /events/:id/notify          controllers.EventsSecured.notifyParticipants(id: Long)
 GET     /events/:id                 controllers.Events.show(id: Long)
-POST    /events/:id                 controllers.Events.update(id: Long)
-POST    /events/:id/delete          controllers.Events.delete(id: Long)
-POST    /events/:id/notify          controllers.Events.notifyParticipants(id: Long)
 GET     /events/:id/email           controllers.Events.asEmail(id: Long, userId: Long)
 
 
 # Participations
+GET     /participations/newGuest    controllers.ParticipationsSecured.createGuestForm(eventId: Long)
+POST    /participations/newGuest    controllers.ParticipationsSecured.createGuest
+POST    /participations/:id/delete  controllers.ParticipationsSecured.delete(id: Long)
 GET     /participations/edit        controllers.Participations.editForm(eventId: Long, userId: Long)
-GET     /participations/newGuest    controllers.Participations.createGuestForm(eventId: Long)
-POST    /participations/newGuest    controllers.Participations.createGuest
 POST    /participations             controllers.Participations.createOrUpdate
-POST    /participations/:id/delete  controllers.Participations.delete(id: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

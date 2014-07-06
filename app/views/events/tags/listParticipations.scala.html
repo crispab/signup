@@ -1,9 +1,7 @@
 @(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User])
 
 @import util.AuthHelper._
-@import util.EmailHelper._
 @import util.GravatarHelper._
-@import util.Section._
 
 
 @asCssClass(status: models.Status.Value) = @{
@@ -70,7 +68,7 @@
               </p>
             </div>
             <div class="modal-footer">
-              <form action="@routes.Participations.delete(participation.id.get)" method="POST">
+              <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
                 <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
                 <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
               </form>

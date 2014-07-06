@@ -16,9 +16,9 @@
 
 @theAction() = @{
   if(creatingNew()) {
-    routes.Events.create()
+    routes.EventsSecured.create()
   } else {
-    routes.Events.update(idToUpdate.get)
+    routes.EventsSecured.update(idToUpdate.get)
   }
 }
 

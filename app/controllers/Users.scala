@@ -1,49 +1,53 @@
 package controllers
 
 import anorm.{Id, NotAssigned, Pk}
-import jp.t2v.lab.play2.auth.Auth
+import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.{Administrator, NormalUser}
 import models.{Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
 import play.api.mvc._
+import util.AuthHelper._
 
-object Users extends Controller with Auth with AuthConfigImpl {
+object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def list = optionalUserAction { implicit user => implicit request =>
+  def list = StackAction { implicit request =>
     val usersToList = User.findAll()
     Ok(views.html.users.list(usersToList))
   }
 
-  def show(id : Long) = optionalUserAction { implicit user => implicit request =>
+  def show(id: Long) = StackAction { implicit request =>
     val userToShow = User.find(id)
     Ok(views.html.users.show(userToShow))
   }
+}
 
-  def createForm = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
+
+  def createForm = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.users.edit(userCreateForm))
   }
 
-  def createMemberForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def createMemberForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.users.edit(userCreateForm, groupId = Option(groupId)))
   }
 
-  def createGuestForm(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def createGuestForm(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.users.edit(userCreateForm, eventId = Option(eventId)))
   }
 
 
-  def updateForm(id: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
-  def create = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def create = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
@@ -53,8 +57,8 @@ object Users extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def createMember(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def createMember(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
@@ -64,8 +68,8 @@ object Users extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def createGuest(eventId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def createGuest(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
@@ -75,8 +79,8 @@ object Users extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     val whatever = userUpdateForm.bindFromRequest
     whatever.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
@@ -87,7 +91,7 @@ object Users extends Controller with Auth with AuthConfigImpl {
       )
   }
 
-  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     User.delete(id)
     Redirect(routes.Users.list())
   }

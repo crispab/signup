@@ -13,9 +13,9 @@
 
 @theAction() = @{
   if(creatingNew()) {
-    routes.Groups.create()
+    routes.GroupsSecured.create()
   } else {
-    routes.Groups.update(idToUpdate.get)
+    routes.GroupsSecured.update(idToUpdate.get)
   }
 }
 

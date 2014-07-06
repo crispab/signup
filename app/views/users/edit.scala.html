@@ -24,13 +24,13 @@
 
 @theAction() = @{
   if(updating()) {
-    routes.Users.update(idToUpdate.get)
+    routes.UsersSecured.update(idToUpdate.get)
   } else if(creatingMember()) {
-    routes.Users.createMember(groupId.get)
+    routes.UsersSecured.createMember(groupId.get)
   } else if(creatingGuest()) {
-    routes.Users.createGuest(eventId.get)
+    routes.UsersSecured.createGuest(eventId.get)
   } else {
-    routes.Users.create()
+    routes.UsersSecured.create()
   }
 }
 

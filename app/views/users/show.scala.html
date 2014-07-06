@@ -1,7 +1,6 @@
 @(user: models.User)(implicit loggedInUser: Option[User])
 
 @import util.AuthHelper._
-@import util.EmailHelper._
 @import util.GravatarHelper._
 @import util.Section._
 
@@ -43,7 +42,7 @@
   <div class="row">
   <div class="span5">
     <p></p>
-    <a href="@routes.Users.updateForm(user.id.get)" class="btn btn-primary"><i class="icon-pencil icon-white"></i>
+    <a href="@routes.UsersSecured.updateForm(user.id.get)" class="btn btn-primary"><i class="icon-pencil icon-white"></i>
       Redigera</a>
     <a data-toggle="modal" href="#remove_user_@user.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
@@ -61,7 +60,7 @@
         </p>
       </div>
       <div class="modal-footer">
-        <form action="@routes.Users.delete(user.id.get)" method="POST">
+        <form action="@routes.UsersSecured.delete(user.id.get)" method="POST">
           <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
           <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
         </form>

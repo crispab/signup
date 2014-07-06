@@ -2,6 +2,7 @@ package controllers
 
 import java.text.SimpleDateFormat
 
+import _root_.util.AuthHelper._
 import anorm.{NotAssigned, Pk}
 import models._
 import play.api.data.Form
@@ -9,14 +10,14 @@ import play.api.data.Forms._
 import play.api.mvc._
 import util.DateHelper._
 import java.util
-import jp.t2v.lab.play2.auth.Auth
+import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import play.api.libs.concurrent.Akka
 import services.EventReminder
 
-object Events extends Controller with Auth with AuthConfigImpl {
+object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def show(id : Long) = optionalUserAction { implicit user => implicit request =>
+  def show(id : Long) = StackAction { implicit request =>
     val event = Event.find(id)
     Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
   }
@@ -28,8 +29,11 @@ object Events extends Controller with Auth with AuthConfigImpl {
     val baseUrl = play.api.Play.configuration.getString("email.notification.base.url").getOrElse("")
     Ok(views.html.events.email(event, user, baseUrl))
   }
+}
 
-  def notifyParticipants(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
+
+  def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     val event = Event.find(id)
 
     import play.api.Play.current
@@ -40,14 +44,14 @@ object Events extends Controller with Auth with AuthConfigImpl {
     Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
   }
 
-  def createForm(groupId: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     val group = Group.find(groupId)
     Ok(views.html.events.edit(eventForm, group))
   }
 
-  def create = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def create = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val groupId = formWithErrors("groupId").value.get.toLong
@@ -63,14 +67,14 @@ object Events extends Controller with Auth with AuthConfigImpl {
   }
 
 
-  def updateForm(id: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
     Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
   }
 
-  def update(id: Long) = authorizedAction(Administrator) { user => implicit request =>
-    implicit val loggedInUser = Option(user)
+  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(id)
@@ -85,7 +89,7 @@ object Events extends Controller with Auth with AuthConfigImpl {
   }
 
 
-  def delete(id: Long) = authorizedAction(Administrator) { user => implicit request =>
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     val event = Event.find(id)
     val groupId = event.group.id.get
     Event.delete(id)
