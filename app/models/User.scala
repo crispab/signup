@@ -90,7 +90,7 @@ ORDER BY u.first_name, u.last_name
   def findNonMembers(groupId: Long): Seq[User] = {
     DB.withTransaction {
       implicit connection =>
-        SQL(findNonMembersQueryString).on('group_id -> groupId).as(parser *)
+        SQL(findNonMembersQueryString).on('group_id -> groupId).as(parser *).sorted
     }
   }
 
@@ -104,7 +104,7 @@ WHERE u.id NOT IN (SELECT m.userx FROM memberships m WHERE m.groupx = {group_id}
   def findNonGuests(eventId: Long): Seq[User] = {
     DB.withTransaction {
       implicit connection =>
-        SQL(findNonGuestsQueryString).on('eventId -> eventId).as(parser *)
+        SQL(findNonGuestsQueryString).on('eventId -> eventId).as(parser *).sorted
     }
   }
 
@@ -119,7 +119,7 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
   def findAll(): Seq[User] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("select * from users u ORDER BY u.first_name, u.last_name").as(User.parser *)
+        SQL("select * from users u ORDER BY u.first_name, u.last_name").as(User.parser *).sorted
     }
   }
 
