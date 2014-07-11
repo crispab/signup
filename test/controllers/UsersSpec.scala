@@ -22,7 +22,7 @@ class UsersSpec extends Specification {
           "administrator" -> "true",
           "password" -> "123pass456"
         )
-        val user: User = Users.userUpdateForm.bind(testData).get
+        val user: User = UsersSecured.userUpdateForm.bind(testData).get
         user.firstName must equalTo("Jan")
         user.permission must equalTo(Administrator)
       }
@@ -40,7 +40,7 @@ class UsersSpec extends Specification {
           "administrator" -> "false",
           "password" -> ""
         )
-        val user: User = Users.userUpdateForm.bind(testData).get
+        val user: User = UsersSecured.userUpdateForm.bind(testData).get
         user.firstName must equalTo("Mats")
         user.permission must equalTo(NormalUser)
       }
