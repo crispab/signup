@@ -9,9 +9,9 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
-    "jp.t2v" %% "play2.auth" % "0.9",
-    "jp.t2v" %% "play2.auth.test" % "0.9" % "test",
-    "com.typesafe" %% "play-plugins-mailer" % "2.1.0",
+    "jp.t2v" %% "play2-auth" % "0.11.+",
+    "jp.t2v" %% "play2-auth-test" % "0.11.+" % "test",
+    "com.typesafe" %% "play-plugins-mailer" % "2.2.+",
     "com.newrelic.agent.java" % "newrelic-api" % "2.19.+",
     "commons-lang" % "commons-lang" % "2.6",
     jdbc,

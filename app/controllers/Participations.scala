@@ -12,7 +12,6 @@ import util.AuthHelper._
 object Participations extends Controller with OptionalAuthElement with AuthConfigImpl {
 
   def editForm(eventId: Long, userId: Long) = StackAction { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(eventId)
     val userToAttend = User.find(userId)
     val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(user = userToAttend, event = event))

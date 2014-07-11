@@ -29,10 +29,10 @@ object EventReminder {
     receivers map { receiver =>
       import play.api.Play.current
       val mailer = use[MailerPlugin].email
-      mailer.addRecipient(receiver.email)
+      mailer.setRecipient(receiver.email)
       mailer.setSubject(event.group.mailSubjectPrefix + ": " + event.name)
       mailer.setReplyTo(event.group.mailFrom)
-      mailer.addFrom(event.group.mailFrom)
+      mailer.setFrom(event.group.mailFrom)
 
       val emailMessage = createEmailMessage(event, receiver)
       try {

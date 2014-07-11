@@ -37,7 +37,9 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     val event = Event.find(id)
 
     import play.api.Play.current
-    Akka.future {
+    import play.api.libs.concurrent.Execution.Implicits._
+    import scala.concurrent.duration._
+    Akka.system.scheduler.scheduleOnce(1.second) {
       EventReminder.remindParticipants(event)
     }
 

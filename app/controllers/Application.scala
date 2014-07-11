@@ -8,6 +8,9 @@ import play.api.data.Forms._
 import play.api.mvc._
 import util.AuthHelper
 
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
+
 object Application extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with Https {
 
   def index = StackAction { implicit request =>
@@ -23,9 +26,9 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
     }
   }
 
-  def authenticate = Action { implicit request =>
+  def authenticate = Action.async { implicit request =>
     loginDataForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.login(formWithErrors)),
+      formWithErrors => Future.successful(BadRequest(views.html.login(formWithErrors))),
       user => gotoLoginSucceeded(user.get.id.get)
     )
   }
@@ -42,7 +45,6 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
     AuthHelper.checkPassword(user, password)
   }
 
-
   def fromUser(user: Option[models.User]): Option[(String, String)] = {
     if(user.isDefined) {
       Option((user.get.email, ""))
@@ -53,7 +55,9 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
 
   case class LoginDataForm(email : String, password : String)
 
-  def logout = Action { implicit request =>
-    gotoLogoutSucceeded
+  def logout = Action.async { implicit request =>
+    gotoLogoutSucceeded.map(_.flashing(
+      "success" -> "Du har loggats ut!"
+    ))
   }
 }

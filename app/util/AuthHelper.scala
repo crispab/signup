@@ -5,13 +5,19 @@ import java.security.MessageDigest
 import models.User
 import models.security.{Administrator, Permission}
 
+import scala.concurrent.{ExecutionContext, Future}
+
 object AuthHelper {
 
-  def hasPermission(permission: Permission)(loggedInUser: User): Boolean = authorize(loggedInUser, permission)
+  import ExecutionContext.Implicits.global
+  def hasPermission(permission: Permission)(loggedInUser: User): Future[Boolean]
+    = Future(authorize(loggedInUser, permission))
 
-  def hasPermissionOrSelf(permission: Permission, userId: Long)(loggedInUser: User): Boolean = authorize(loggedInUser, permission) || (userId == loggedInUser.id.get)
+  def hasPermissionOrSelf(permission: Permission, userId: Long)(loggedInUser: User): Future[Boolean]
+    = Future(authorize(loggedInUser, permission) || (userId == loggedInUser.id.get))
 
-  def hasPermissionOrSelf(permission: Permission, userId: Option[Long])(loggedInUser: User): Boolean = authorize(loggedInUser, permission) || (userId.isDefined && (userId.get == loggedInUser.id.get))
+  def hasPermissionOrSelf(permission: Permission, userId: Option[Long])(loggedInUser: User): Future[Boolean]
+    = Future(authorize(loggedInUser, permission) || (userId.isDefined && (userId.get == loggedInUser.id.get)))
 
   def isAdmin(user: Option[User]):Boolean = {
     if (user.isDefined) {

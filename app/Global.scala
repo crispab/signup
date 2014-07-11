@@ -1,13 +1,14 @@
 import java.util.TimeZone
 
 import akka.actor.Props
-import anorm.SqlMappingError
 import org.apache.commons.lang.exception.ExceptionUtils
-import play.api.mvc.{Result, RequestHeader}
-import play.api.mvc.Results._
-import play.api.{GlobalSettings, Logger}
 import play.api.libs.concurrent.Akka
 import services.EventReminderActor
+import play.api._
+import play.api.mvc._
+import play.api.mvc.Results._
+import scala.concurrent.Future
+
 
 object Global extends GlobalSettings {
 
@@ -53,21 +54,21 @@ object Global extends GlobalSettings {
   override def onError(request: RequestHeader, ex: Throwable) = {
     val cause = ExceptionUtils.getCause(ex)
     val stackTrace = ExceptionUtils.getStackTrace(cause)
-    InternalServerError(
+    Future.successful(InternalServerError(
       views.html.error("Sidan du försökte gå till kan inte visas.", cause.getLocalizedMessage + "\n" + stackTrace)
-    )
+    ))
   }
 
-  override def onHandlerNotFound(request: RequestHeader): Result = {
-    NotFound(
+  override def onHandlerNotFound(request: RequestHeader) = {
+    Future.successful(NotFound(
       views.html.error("Sidan du försökte gå till finns inte.", request.uri)
-    )
+    ))
   }
 
   override def onBadRequest(request: RequestHeader, error: String) = {
-    BadRequest(
+    Future.successful(BadRequest(
       views.html.error("Sidan du försökte gå till kan inte visas.", error)
-    )
+    ))
   }
 
 }

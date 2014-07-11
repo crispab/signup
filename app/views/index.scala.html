@@ -1,4 +1,4 @@
-@(message: String = "")(implicit loggedInUser: Option[User])
+@(message: String = "")(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.Section._
 
@@ -8,6 +8,14 @@
 
   <div class="row">
     <div class="span5">
+
+      @if(flash.get("success").isDefined) {
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            @flash.get("success")
+        </div>
+      }
+
       <h2>Välkommen @message till SignUp</h2>
       <p>
         SignUp är en tjänst för grupper som vill ha ordning på sina sammankomster.

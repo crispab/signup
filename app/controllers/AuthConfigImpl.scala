@@ -5,6 +5,7 @@ import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
 
+import scala.concurrent.{Future, ExecutionContext}
 import scala.reflect._
 
 trait AuthConfigImpl extends AuthConfig {
@@ -26,6 +27,7 @@ trait AuthConfigImpl extends AuthConfig {
   //val idManifest: ClassManifest[Id] = classManifest[Id]
   val idTag: ClassTag[Id] = classTag[Id]
 
+
   /**
    * The session timeout in seconds
    */
@@ -35,36 +37,44 @@ trait AuthConfigImpl extends AuthConfig {
    * A function that returns a `User` object from an `Id`.
    * You can alter the procedure to suit your application.
    */
-  def resolveUser(id: Id): Option[User] = {
-    Option(models.User.find(id))
+  def resolveUser(id: Id)(implicit ctx: ExecutionContext): Future[Option[User]] =  {
+    Future(Option(models.User.find(id)))
   }
 
 
   /**
    * Where to redirect the user after a successful login.
    */
-  def loginSucceeded(request: RequestHeader): Result = {
+  def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
     val uri = request.session.get("access_uri").getOrElse(routes.Application.index().url.toString)
     Logger.debug("Login succeeded. Redirecting to uri " + uri)
-    Redirect(uri).withSession(request.session - "access_uri")
+    Future.successful(Redirect(uri).withSession(request.session - "access_uri"))
   }
 
   /**
    * Where to redirect the user after logging out
    */
-  def logoutSucceeded(request: RequestHeader): Result = Redirect(routes.Application.index())
+  def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+    Future.successful(Redirect(routes.Application.index()))
+  }
 
   /**
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
-  def authenticationFailed(request: RequestHeader): Result = {
-    Redirect(routes.Application.loginForm()).withSession("access_uri" -> request.uri).flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
+  def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+    Future.successful(
+      Redirect(routes.Application.loginForm())
+      .withSession("access_uri" -> request.uri)
+      .flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
+    )
   }
 
   /**
    * If authorization failed (usually incorrect password) redirect the user as follows:
    */
-  def authorizationFailed(request: RequestHeader): Result = Forbidden("Nädu, det här får du inte göra utan att logga in som administratör!")
+  def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+    Future.successful(Forbidden("Nädu, det här får du inte göra utan att logga in som administratör!"))
+  }
 
   /**
    * A type that is defined by every action for authorization.
@@ -74,12 +84,13 @@ trait AuthConfigImpl extends AuthConfig {
    * case object Administrator extends Permission
    * case object NormalUser extends Permission
    */
-  type Authority = User => Boolean
+  type Authority = User => Future[Boolean]
+
 
   /**
    * A function that determines what `Authority` a user has.
    * You should alter this procedure to suit your application.
    */
-  def authorize(user: User, authorityFunction: Authority): Boolean = authorityFunction(user)
+  def authorize(user: User, authorityFunction: Authority)(implicit ctx: ExecutionContext): Future[Boolean] = authorityFunction(user)
 }
 
