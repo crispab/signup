@@ -6,36 +6,37 @@ General
 
 This is the fourth version of the SignUp Service.
 
- - It is written in Scala and based on the Play Framework.
- - Anorm is used for SQL Database access*
- - Heroku is used for deployment
+- It is written in Scala and based on the Play Framework.
+- Anorm is used for SQL Database access*
+- Heroku is used for deployment
 
 *) H2 when running locally, PostgreSQL on Heroku
 
 
 ### Play Framework ###
 
- - Play 2.1.3 - http://www.playframework.org/
- - Scala 2.10.0 (part of Play) - http://www.scala-lang.org/
- - Anorm (part of Play) - http://www.playframework.com/documentation/2.1.0/ScalaAnorm
+- Play 2.2.2 - http://www.playframework.org/
+- Scala 2.10.4 (part of Play) - http://www.scala-lang.org/
+- Anorm (part of Play) - http://www.playframework.com/documentation/2.2.x/ScalaAnorm
 
 ### Presentation ###
 
- - Twitter Bootstrap 2.2.1 - http://twitter.github.com/bootstrap
- - jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
- - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
- - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
- - AddThisEvent v1.5.1 - http://addthisevent.com
+- Twitter Bootstrap 2.2.1 - http://twitter.github.com/bootstrap
+- jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
+- bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
+- wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
+- AddThisEvent v1.5.1 - http://addthisevent.com
 
 ### Services ###
- - Play2.x module for Authentication and Authorization 0.9 - http://github.com/t2v/play20-auth
- - Emailer Plugin 2.1.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
+- Play2.x module for Authentication and Authorization 0.11 - http://github.com/t2v/play20-auth
+- Emailer Plugin 2.2.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 
 ### Run-time environment ###
- - Heroku (general app server environment) - http://heroku.com
- - SendGrid (bulk email) - http://sendgrid.com
- - New Relic (app monitoring) - http://http://newrelic.com
+- Heroku (general app server environment) - http://heroku.com
+    * Heroku PostgreSQL add-on (SQL database)
+    * Heroku SendGrid add-on (bulk email) - http://sendgrid.com
+    * Heroku New Relic add-on (app monitoring) - http://http://newrelic.com
 
 
 License, credits and stuff
@@ -67,10 +68,10 @@ Setting Up Development Environment
 
 In order to set up the development environment you need to:
 
- - Clone this project from GitHub
- - Install Play 2.1.x
- - Install Heroku Toolkit - https://toolbelt.heroku.com/ (Optional, only needed to deploy to Heroku)
- - ```play eclipsify``` or ```play idea```
+- Clone this project from GitHub
+- Install Play 2.2.x
+- Install Heroku Toolkit - https://toolbelt.heroku.com/ (Optional, only needed to deploy to Heroku)
+- ```play eclipsify``` or ```play idea```
 
 ### "Persistent Database" - Postgres ###
 
@@ -83,14 +84,14 @@ For these reasons, a local installation of Postgres is good.
 
 To install Postgres on MacOS X:
 
- - Download Postgres from [postgres.org](http://www.postgresql.org/)
- - Install a standard Postgres (You may have to restart your Mac as the installation fiddles with shared memory)
- - Set the password for the DATABASE (super)user postgres when prompted
- - Finish the installation
- - On MacOS X: A UNIX user is created: 'PostgreSQL'
-   This user seem to get some password that you cannot find out.
-   Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
- - Do some stuff from the command prompt to create a database and a database user
+- Download Postgres from [postgres.org](http://www.postgresql.org/)
+- Install a standard Postgres (You may have to restart your Mac as the installation fiddles with shared memory)
+- Set the password for the DATABASE (super)user postgres when prompted
+- Finish the installation
+- On MacOS X: A UNIX user is created: 'PostgreSQL'
+  This user seem to get some password that you cannot find out.
+  Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
+- Do some stuff from the command prompt to create a database and a database user
 
 ```
 $ su - PostgreSQL
@@ -130,11 +131,11 @@ It runs at [http://signup4.herokuapp.com](http://signup4.herokuapp.com)
 
 To be able to deploy to Heroku you must:
 
-* Install Heroku toolbelt.
-* Do a 'heroku login'.
-* cd into the root of this application
-* git remote add staging git@heroku.com:signup4.git
-* git push staging master
+- Install Heroku toolbelt.
+- Do a 'heroku login'.
+- cd into the root of this application
+- git remote add staging git@heroku.com:signup4.git
+- git push staging master
 
 I (Mats) had to do a 'heroku keys:add ~/.ssh/id_rsa.pub' on one of my
 machines as I first got 'Permission denied (publickey).' when trying
