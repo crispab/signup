@@ -11,5 +11,6 @@ heroku config:set \
     PASSWORD_SALT=salt \
     NEW_RELIC_LOG=stdout \
     TZ="Europe/Stockholm" \
+    LC_ALL="sv_SE.UTF-8" \
     ADDTHISEVENT_LICENSE="" \
     $*
