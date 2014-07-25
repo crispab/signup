@@ -2,7 +2,6 @@
 
 @import util.DateHelper._
 @import util.FormHelper._
-@import util.GravatarHelper._
 @import util.Section._
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
@@ -52,7 +51,7 @@
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
-            <img class="gravatar" src="@user.imageUrl(80)"/>
+            <img class="thumb" src="@user.imageUrl(80)"/>
             @user.firstName @user.lastName
           </label>
           <div class="controls">
