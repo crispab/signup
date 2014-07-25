@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 
 @import util.AuthHelper._
-@import util.GravatarHelper._
 @import util.DateHelper._
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
@@ -56,7 +55,7 @@
             <ul class="nav pull-right">
               <li class="dropdown @sectionClass(util.Section.Login.toString)">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img class="login-gravatar" src="@loggedInUser.get.imageUrl(16)"/>
+                  <img class="login-thumb" src="@loggedInUser.get.imageUrl(16)"/>
                   @loggedInUser.get.firstName @loggedInUser.get.lastName
                   <b class="caret"></b>
                 </a>

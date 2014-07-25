@@ -2,7 +2,6 @@
 
 @import util.Section._
 @import util.AuthHelper._
-@import util.GravatarHelper._
 
 @page("Användare", section = Users) {
 
@@ -20,7 +19,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img class="gravatar" src="@user.imageUrl(40)"/>
+          <img class="thumb" src="@user.imageUrl(40)"/>
         </a>
       </div>
       <div class="span4">

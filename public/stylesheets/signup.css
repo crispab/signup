@@ -53,12 +53,12 @@ dl.participation {
   width: 370px;
 }
 
-.gravatar {
+.thumb {
   padding: 4px;
   vertical-align: top;
 }
 
-.login-gravatar {
+.login-thumb {
   vertical-align: middle;
   margin:0;
   padding:0

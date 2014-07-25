@@ -1,7 +1,6 @@
 @(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User])
 
 @import util.AuthHelper._
-@import util.GravatarHelper._
 
 
 @asCssClass(status: models.Status.Value) = @{
@@ -29,7 +28,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-        <img class="gravatar" src="@participation.user.imageUrl(40)"/>
+        <img class="thumb" src="@participation.user.imageUrl(40)"/>
         </a>
       </div>
       <div class="span2">

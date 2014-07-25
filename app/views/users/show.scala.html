@@ -1,7 +1,6 @@
 @(user: models.User)(implicit loggedInUser: Option[User])
 
 @import util.AuthHelper._
-@import util.GravatarHelper._
 @import util.Section._
 
 @page(user.firstName + " " + user.lastName, section = Users) {
@@ -11,7 +10,7 @@
 
 <div class="row">
   <div class="span5">
-    <img class="gravatar" src="@user.imageUrl(80)"/>
+    <img class="thumb" src="@user.imageUrl(80)"/>
     <h2>@user.firstName @user.lastName</h2>
   </div>
 </div>

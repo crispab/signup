@@ -2,7 +2,6 @@
 
 @import util.AuthHelper._
 @import util.DateHelper._
-@import util.GravatarHelper._
 @import util.Section._
 
 @page(group.name, section = Groups) {
@@ -101,7 +100,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(membership.user.id.get)">
-          <img class="gravatar" src="@membership.user.imageUrl(40)"/>
+          <img class="thumb" src="@membership.user.imageUrl(40)"/>
         </a>
       </div>
       <div class="span2">
