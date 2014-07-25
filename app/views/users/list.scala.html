@@ -20,7 +20,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img class="gravatar" src="@gravatarUrl(user.email, size=40)"/>
+          <img class="gravatar" src="@user.imageUrl(40)"/>
         </a>
       </div>
       <div class="span4">

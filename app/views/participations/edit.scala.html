@@ -52,7 +52,7 @@
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
-            <img class="gravatar" src="@gravatarUrl(user.email)"/>
+            <img class="gravatar" src="@user.imageUrl(80)"/>
             @user.firstName @user.lastName
           </label>
           <div class="controls">

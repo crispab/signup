@@ -8,6 +8,7 @@ import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
 import play.api.mvc._
 import util.AuthHelper._
+import util.GravatarHelper
 
 object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
@@ -145,7 +146,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       case Administrator => password.getOrElse("").trim
       case _ => User.NOT_CHANGED_PASSWORD
     }
-    User(id=id, firstName=firstName, lastName=lastName, email=email, phone=phone, comment=comment, permission=permission, password=passwordToSet)
+    User(id=id, firstName=firstName, lastName=lastName, email=email, phone=phone, comment=comment, permission=permission, password=passwordToSet, imageUrl = GravatarHelper.gravatarParametrizedUrl(email))
   }
 
   def fromUser(user: models.User) = {

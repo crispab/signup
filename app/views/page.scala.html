@@ -56,7 +56,7 @@
             <ul class="nav pull-right">
               <li class="dropdown @sectionClass(util.Section.Login.toString)">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img class="login-gravatar" src="@gravatarUrl(loggedInUser.get.email, size = 16)"/>
+                  <img class="login-gravatar" src="@loggedInUser.get.imageUrl(16)"/>
                   @loggedInUser.get.firstName @loggedInUser.get.lastName
                   <b class="caret"></b>
                 </a>

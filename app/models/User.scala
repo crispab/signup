@@ -15,7 +15,8 @@ case class User(
                  phone: String = "",
                  comment: String = "",
                  permission: Permission = NormalUser,
-                 password: String = "*"
+                 password: String = "*",
+                 imageUrl: String
                  )  extends Ordered[User] {
   def compare(that: User) = {
     val c = this.firstName.compare(that.firstName)
@@ -24,6 +25,10 @@ case class User(
     } else {
       this.lastName.compare(that.lastName)
     }
+  }
+
+  def imageUrl(size: Int = 80): String = {
+    imageUrl.replaceAll("\\{size\\}", size.toString)
   }
 }
 
@@ -40,8 +45,9 @@ object User {
       get[String]("phone") ~
       get[String]("comment") ~
       get[String]("permission") ~
-      get[String]("pwd") map {
-      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd =>
+      get[String]("pwd")  ~
+      get[String]("image_url") map {
+      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd ~ image_url =>
         User(
           id = id,
           firstName = firstName,
@@ -50,7 +56,8 @@ object User {
           phone = phone,
           comment = comment,
           permission = Permission.withName(permission),
-          password = pwd
+          password = pwd,
+          imageUrl = image_url
         )
     }
   }
@@ -137,7 +144,8 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
           'phone -> user.phone,
           'comment -> user.comment,
           'permission -> user.permission.toString,
-          'pwd -> password
+          'pwd -> password,
+          'imageUrl -> user.imageUrl
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -154,7 +162,8 @@ INSERT INTO users (
       phone,
       comment,
       permission,
-      pwd
+      pwd,
+      image_url
     )
     values (
       {firstName},
@@ -163,7 +172,8 @@ INSERT INTO users (
       {phone},
       {comment},
       {permission},
-      {pwd}
+      {pwd},
+      {imageUrl}
     )
     """
 
@@ -185,7 +195,8 @@ INSERT INTO users (
           'email -> user.email.toLowerCase,
           'phone -> user.phone,
           'comment -> user.comment,
-          'permission -> user.permission.toString
+          'permission -> user.permission.toString,
+          'imageUrl -> user.imageUrl
         ).executeUpdate()
     }
   }
@@ -198,7 +209,8 @@ SET first_name = {firstName},
     email = {email},
     phone = {phone},
     comment = {comment},
-    permission = {permission}
+    permission = {permission},
+    image_url = {imageUrl},
 WHERE id = {id}
     """
 
@@ -213,7 +225,8 @@ WHERE id = {id}
           'phone -> user.phone,
           'comment -> user.comment,
           'permission -> user.permission.toString,
-          'pwd -> AuthHelper.calculateHash(user.password)
+          'pwd -> AuthHelper.calculateHash(user.password),
+          'imageUrl -> user.imageUrl
         ).executeUpdate()
     }
   }
@@ -227,7 +240,8 @@ SET first_name = {firstName},
     phone = {phone},
     comment = {comment},
     permission = {permission},
-    pwd = {pwd}
+    pwd = {pwd},
+    image_url = {imageUrl}
 WHERE id = {id}
     """
 
