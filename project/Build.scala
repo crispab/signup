@@ -14,18 +14,19 @@ object ApplicationBuild extends Build {
     "com.typesafe" %% "play-plugins-mailer" % "2.2.+",
     "com.newrelic.agent.java" % "newrelic-api" % "2.19.+",
     "commons-lang" % "commons-lang" % "2.6",
+    "com.cloudinary" %% "cloudinary-scala-play" % "0.9.3-SNAPSHOT",
     jdbc,
     anorm
   )
 
   // Only compile the LESS files listed here. Others will be included by the top ones.
-  def customLessEntryPoints(base: File): PathFinder = (
-    (base / "app" / "assets" / "stylesheets" / "bootstrap" * "bootstrap.less") +++
-    (base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less")
-  )
+  def customLessEntryPoints(base: File): PathFinder
+    = (base / "app" / "assets" / "stylesheets" / "bootstrap" * "bootstrap.less") +++
+      (base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less")
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    resolvers += "t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
+    resolvers ++= Seq("t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
+                      "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"),
     lessEntryPoints <<= baseDirectory(customLessEntryPoints),
     scalacOptions += "-feature"
   )

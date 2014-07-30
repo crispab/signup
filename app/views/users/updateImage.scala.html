@@ -1,0 +1,60 @@
+@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User])
+
+@import util.Section._
+@import util.GravatarHelper
+
+@page("Byt bild för " + user.firstName + " " + user.lastName, section = Users) {
+
+@breadcrumb(Seq("Användare" -> routes.Users.list(),
+                user.firstName + " " + user.lastName -> routes.Users.show(user.id.get)),
+                "Byt bild")
+
+<div class="row">
+  <div class="span5">
+    <h2>Byt bild</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5 well well-small">
+    <img class="upload-thumb" src="@GravatarHelper.gravatarUrl(user.email, 80)"/>
+    <h3>Standardbild</h3>
+    <p>Om du har registrerat dig på <a href="http://gravatar.com">gravatar.com</a> och kopplat en bild till din epostadress visas den bilden. </p>
+    <p>Annars visas en anonym bild.</p>
+    <form action="@routes.UsersSecured.resetImage(user.id.get)" method="POST">
+      <button type="submit" class="btn btn-primary">Använd</button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5 well well-small">
+    <img class="upload-thumb" src='@routes.Assets.at("images/Images_icon.png")'/>
+    <h3>Egen bild</h3>
+    <p>Välj en bild på datorn och använd den.</p>
+    <form action="@routes.UsersSecured.uploadImage(user.id.get)" method="POST" enctype="multipart/form-data">
+      <div class='control-group'>
+        <label class="control-label" for="image">Bild:</label>
+        <div class="controls">
+          <input type="file" accept="image/*" id="image" name="image" >
+        </div>
+      </div>
+      @if(errorMessage.isDefined) {
+        <div class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          @errorMessage.get
+        </div>
+      }
+      <button type="submit" class="btn btn-primary">Använd</button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span5">
+    <p>
+      <a href="@routes.Users.show(user.id.get)" class="btn"><i class="icon-ban-circle"></i> Avbryt</a>
+    </p>
+  </div>
+</div>
+}

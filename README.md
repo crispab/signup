@@ -21,14 +21,14 @@ This is the fourth version of the SignUp Service.
 
 ### Presentation ###
 
-- Twitter Bootstrap 2.2.1 - http://twitter.github.com/bootstrap
+- Twitter Bootstrap 2.2.1 - http://bootstrapdocs.com/v2.2.1/docs/
 - jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
 - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
 - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
 - AddThisEvent v1.5.1 - http://addthisevent.com
 
 ### Services ###
-- Play2.x module for Authentication and Authorization 0.11 - http://github.com/t2v/play20-auth
+- Play2.x module for Authentication and Authorization 0.11 - https://github.com/t2v/play2-auth/blob/release0.11.0/README.md
 - Emailer Plugin 2.2.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 
@@ -36,7 +36,7 @@ This is the fourth version of the SignUp Service.
 - Heroku (general app server environment) - http://heroku.com
     * Heroku PostgreSQL add-on (SQL database)
     * Heroku SendGrid add-on (bulk email) - http://sendgrid.com
-    * Heroku New Relic add-on (app monitoring) - http://http://newrelic.com
+    * Heroku New Relic add-on (app monitoring) - http://newrelic.com
 
 
 License, credits and stuff
@@ -47,7 +47,9 @@ are Copyright 2012 Twitter, Inc and licensed under the Apache
 License v2.0.
 Modifications have been made by us to create a project specific look & feel.
 
-The rest of the code is Copyright 2012 by Mats Strandberg and Jan Grape and
+Some clipart comes from http://clipart.org and is Public Domain, see http://openclipart.org/share 
+
+The rest of the code is Copyright 2012, 2013, 2014 by Mats Strandberg and Jan Grape and
 licensed under the Apache License v2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at

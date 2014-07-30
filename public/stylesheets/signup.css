@@ -58,6 +58,17 @@ dl.participation {
   vertical-align: top;
 }
 
+.upload-thumb {
+  padding: 4px;
+  vertical-align: top;
+  float: right;
+}
+
+.big-thumb {
+  padding: 4px 4px 0 4px;
+  vertical-align: bottom;
+}
+
 .login-thumb {
   vertical-align: middle;
   margin:0;

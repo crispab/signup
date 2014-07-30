@@ -1,2 +1,4 @@
 1500:com.typesafe.plugin.CommonsMailerPlugin
 
+10000:cloudinary.plugin.CloudinaryPlugin
+

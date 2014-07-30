@@ -13,4 +13,8 @@ heroku config:set \
     TZ="Europe/Stockholm" \
     LC_ALL="sv_SE.UTF-8" \
     ADDTHISEVENT_LICENSE="" \
+    CLOUDINARY_CLOUD_NAME="" \
+    CLOUDINARY_API_KEY="" \
+    CLOUDINARY_API_SECRET="" \
+    CLOUDINARY_FOLDER=signup \
     $*

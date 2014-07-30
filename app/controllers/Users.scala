@@ -1,6 +1,8 @@
 package controllers
 
 import anorm.{Id, NotAssigned, Pk}
+import cloudinary.model.CloudinaryResource
+import com.cloudinary.parameters.UploadParameters
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.{Administrator, NormalUser}
 import models.{Membership, Participation, User}
@@ -8,7 +10,9 @@ import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
 import play.api.mvc._
 import util.AuthHelper._
-import util.GravatarHelper
+import util.{CloudinaryHelper, GravatarHelper}
+
+import scala.concurrent.{Future, ExecutionContext}
 
 object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
@@ -82,8 +86,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
 
   def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
-    val whatever = userUpdateForm.bindFromRequest
-    whatever.fold(
+    userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
         user => {
           User.update(id, user)
@@ -92,10 +95,55 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
+  def updateImageForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    val userToUpdate = User.find(id)
+    Ok(views.html.users.updateImage(userToUpdate))
+  }
+
+  def resetImage(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    val userToUpdate = User.find(id)
+
+    User.updateImageUrl(id, GravatarHelper.gravatarParametrizedUrl(userToUpdate.email))
+
+    Redirect(routes.Users.show(id))
+  }
+
+  def uploadImage(id: Long) = AsyncStack(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    val userToUpdate = User.find(id)
+
+    import ExecutionContext.Implicits.global
+
+    val body = request.body.asMultipartFormData
+    val resourceFile = body.get.file("image")
+    if (resourceFile.isEmpty) {
+      Future(BadRequest(views.html.users.updateImage(userToUpdate, Option("Du måste välja en bild från datorn"))))
+    } else {
+      CloudinaryResource.upload(resourceFile.get.ref.file, UploadParameters()
+                                                            .publicId(CloudinaryHelper.publicId(userToUpdate))
+                                                            .folder(CloudinaryHelper.CLOUDINARY_FOLDER)
+                                                            .format("png")
+                                                            .overwrite(value = true)).map {
+        cr =>
+          val uploadUrl = cr.data.get.secure_url
+          val imageUrl = CloudinaryHelper.parametrizedUrl(uploadUrl)
+          User.updateImageUrl(id, imageUrl)
+          Redirect(routes.Users.show(id))
+      } recover {
+        case ex: Exception =>
+          val msg = ex.getMessage
+          BadRequest(views.html.users.updateImage(userToUpdate, Option("Något gick snett vid inläsningen. Prova en annan bild.")))
+      }
+    }
+  }
+
   def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     User.delete(id)
     Redirect(routes.Users.list())
   }
+
 
   val userCreateForm: Form[User] = Form(
     mapping(
@@ -146,7 +194,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       case Administrator => password.getOrElse("").trim
       case _ => User.NOT_CHANGED_PASSWORD
     }
-    User(id=id, firstName=firstName, lastName=lastName, email=email, phone=phone, comment=comment, permission=permission, password=passwordToSet, imageUrl = GravatarHelper.gravatarParametrizedUrl(email))
+    User(id=id, firstName=firstName.trim, lastName=lastName.trim, email=email.trim, phone=phone.trim, comment=comment.trim, permission=permission, password=passwordToSet, imageUrl = GravatarHelper.gravatarParametrizedUrl(email))
   }
 
   def fromUser(user: models.User) = {

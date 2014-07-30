@@ -13,6 +13,9 @@ GET     /users/new                  controllers.UsersSecured.createForm
 GET     /users/newMember            controllers.UsersSecured.createMemberForm(groupId: Long)
 GET     /users/newGuest             controllers.UsersSecured.createGuestForm(eventId: Long)
 GET     /users/:id/edit             controllers.UsersSecured.updateForm(id: Long)
+GET     /users/:id/updateImage      controllers.UsersSecured.updateImageForm(id: Long)
+POST    /users/:id/resetImage       controllers.UsersSecured.resetImage(id: Long)
+POST    /users/:id/uploadImage      controllers.UsersSecured.uploadImage(id: Long)
 POST    /users                      controllers.UsersSecured.create
 POST    /users/newMember/:groupId   controllers.UsersSecured.createMember(groupId: Long)
 POST    /users/newGuest/:eventId    controllers.UsersSecured.createGuest(eventId: Long)

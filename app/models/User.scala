@@ -33,6 +33,7 @@ case class User(
 }
 
 object User {
+
   import scala.language.postfixOps
 
   val NOT_CHANGED_PASSWORD = "Y2j1EsDUvc6V" // just a random string
@@ -210,7 +211,7 @@ SET first_name = {firstName},
     phone = {phone},
     comment = {comment},
     permission = {permission},
-    image_url = {imageUrl},
+    image_url = {imageUrl}
 WHERE id = {id}
     """
 
@@ -244,6 +245,16 @@ SET first_name = {firstName},
     image_url = {imageUrl}
 WHERE id = {id}
     """
+
+  def updateImageUrl(id: Long, imageUrl: String) = {
+    DB.withTransaction {
+      implicit connection =>
+        SQL("UPDATE users SET image_url = {imageUrl} WHERE id = {id}").on(
+          'id -> id,
+          'imageUrl -> imageUrl
+        ).executeUpdate()
+    }
+  }
 
   def delete(id: Long) {
     DB.withTransaction {
