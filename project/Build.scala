@@ -15,6 +15,7 @@ object ApplicationBuild extends Build {
     "com.newrelic.agent.java" % "newrelic-api" % "2.19.+",
     "commons-lang" % "commons-lang" % "2.6",
     "com.cloudinary" %% "cloudinary-scala-play" % "0.9.3-SNAPSHOT",
+    "com.newrelic.agent.java" % "newrelic-agent" % "3.8.2",
     jdbc,
     anorm
   )
