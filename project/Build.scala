@@ -12,10 +12,10 @@ object ApplicationBuild extends Build {
     "jp.t2v" %% "play2-auth" % "0.11.+",
     "jp.t2v" %% "play2-auth-test" % "0.11.+" % "test",
     "com.typesafe" %% "play-plugins-mailer" % "2.2.+",
-    "com.newrelic.agent.java" % "newrelic-api" % "2.19.+",
     "commons-lang" % "commons-lang" % "2.6",
     "com.cloudinary" %% "cloudinary-scala-play" % "0.9.3-SNAPSHOT",
     "com.newrelic.agent.java" % "newrelic-agent" % "3.8.2",
+    "com.newrelic.agent.java" % "newrelic-api" % "3.8.2",
     jdbc,
     anorm
   )
