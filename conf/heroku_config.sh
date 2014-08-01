@@ -17,5 +17,5 @@ heroku config:set \
     CLOUDINARY_API_KEY="" \
     CLOUDINARY_API_SECRET="" \
     CLOUDINARY_FOLDER=signup \
-    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dnewrelic.bootstrap_classpath=true -Dnewrelic.environment=production -javaagent:target/universal/stage/lib/com.newrelic.agent.java.newrelic-agent-3.8.2.jar" \
+    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dnewrelic.bootstrap_classpath=true -Dnewrelic.environment=production -javaagent:target/universal/stage/lib/com.newrelic.agent.java.newrelic-agent-3.9.0.jar" \
     $*

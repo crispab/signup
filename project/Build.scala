@@ -14,8 +14,8 @@ object ApplicationBuild extends Build {
     "com.typesafe" %% "play-plugins-mailer" % "2.2.+",
     "commons-lang" % "commons-lang" % "2.6",
     "com.cloudinary" %% "cloudinary-scala-play" % "0.9.3-SNAPSHOT",
-    "com.newrelic.agent.java" % "newrelic-agent" % "3.8.2",
-    "com.newrelic.agent.java" % "newrelic-api" % "3.8.2",
+    "com.newrelic.agent.java" % "newrelic-agent" % "3.9.0",
+    "com.newrelic.agent.java" % "newrelic-api" % "3.9.0",
     jdbc,
     anorm
   )
