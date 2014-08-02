@@ -164,7 +164,7 @@ WHERE p.event={eventId}
   def findAll(): Seq[Participation] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT * FROM participations").as(parser *)
+        SQL("SELECT * FROM participations").as(parser *).sorted
     }
   }
 

@@ -7,9 +7,13 @@ import play.api.db.DB
 
 case class Membership(id: Pk[Long] = NotAssigned,
                       group: Group,
-                      user: User)
+                      user: User) extends Ordered[Membership] {
+  def compare(that: Membership) = {
+    this.user.compare(that.user)
+  }
+}
 
-object Membership {
+  object Membership {
   import scala.language.postfixOps
 
   def create(membership: Membership): Long = {
@@ -63,14 +67,14 @@ INSERT INTO memberships (
   def findAll(): Seq[Membership] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT * FROM memberships").as(parser *)
+        SQL("SELECT * FROM memberships").as(parser *).sorted
     }
   }
 
   def findMembers(group: Group): Seq[Membership] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT m.* FROM memberships m, users u WHERE m.userx=u.id AND m.groupx={groupId} ORDER BY u.first_name, u.last_name").on('groupId -> group.id.get).as(parser *)
+        SQL("SELECT m.* FROM memberships m, users u WHERE m.userx=u.id AND m.groupx={groupId}").on('groupId -> group.id.get).as(parser *).sorted
     }
   }
 
