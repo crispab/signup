@@ -69,7 +69,6 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     heading.getCell(3).setCellStyle(headingStyle)
     heading.getCell(4).setCellStyle(headingStyle)
     heading.getCell(5).setCellStyle(headingStyle)
-    heading
   }
 
   private def allInvited(event: Event) = {
