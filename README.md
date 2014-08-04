@@ -27,16 +27,21 @@ This is the fourth version of the SignUp Service.
 - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
 - AddThisEvent v1.5.1 - http://addthisevent.com
 
-### Services ###
+### Play plugins ###
+
 - Play2.x module for Authentication and Authorization 0.11 - https://github.com/t2v/play2-auth/blob/release0.11.0/README.md
 - Emailer Plugin 2.2.0 - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
-
 ### Run-time environment ###
+
 - Heroku (general app server environment) - http://heroku.com
-    * Heroku PostgreSQL add-on (SQL database)
-    * Heroku SendGrid add-on (bulk email) - http://sendgrid.com
-    * Heroku New Relic add-on (app monitoring) - http://newrelic.com
+    * PostgreSQL Heroku add-on (SQL database)
+    * PG Backup Heroku add-on (database backup)
+    * SendGrid Heroku add-on (bulk email) - http://sendgrid.com
+    * Cloudinary Heroku add-on (profile image storage) - http://cloudinary.com
+    * NewRelic Heroku add-on (app monitoring) - http://newrelic.com
+    * Papertrail Heroku add-on (log monitoring) - http://papertrailapp.com
+- Gravatar.com (default profile image)
 
 
 License, credits and stuff
