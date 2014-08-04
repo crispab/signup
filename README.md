@@ -16,7 +16,7 @@ This is the fourth version of the SignUp Service.
 ### Play Framework ###
 
 - Play 2.2.2 - http://www.playframework.org/
-- Scala 2.10.4 (part of Play) - http://www.scala-lang.org/
+- Scala 2.10.3 (part of Play) - http://www.scala-lang.org/
 - Anorm (part of Play) - http://www.playframework.com/documentation/2.2.x/ScalaAnorm
 
 ### Presentation ###
@@ -25,7 +25,8 @@ This is the fourth version of the SignUp Service.
 - jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
 - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
 - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
-- AddThisEvent v1.5.1 - http://addthisevent.com
+- AddThisEvent 1.5.1 - http://addthisevent.com
+- Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play plugins ###
 

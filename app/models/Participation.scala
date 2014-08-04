@@ -20,6 +20,14 @@ case class Participation(id: Pk[Long] = NotAssigned,
                          user: User,
                          event: Event) extends Ordered[Participation] {
   def compare(that: Participation) = this.user.compare(that.user)
+
+  def participantsComing = {
+    status match {
+      case Status.On => numberOfParticipants
+      case Status.Maybe => numberOfParticipants
+      case _ => 0
+    }
+  }
 }
 
 object Participation {

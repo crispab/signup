@@ -2,26 +2,8 @@
 
 @import util.AuthHelper._
 @import util.DateHelper._
+@import util.StatusHelper._
 @import util.Section._
-
-
-@asCssClass(status: models.Status.Value) = @{
-status match {
-    case Status.On => "participation-on"
-    case Status.Maybe => "participation-maybe"
-    case Status.Off => "participation-off"
-    case Status.Unregistered => "participation-unregistered"
-  }
-}
-
-@asMessage(status: models.Status.Value) = @{
-status match {
-    case Status.On => "Kommer"
-    case Status.Maybe => "Kanske"
-    case Status.Off => "Kommer inte"
-    case Status.Unregistered => "Har inte svarat"
-  }
-}
 
 
 @page(event.name, section = Groups) {
@@ -140,6 +122,9 @@ status match {
       @{members.numberUnregistered + guests.numberUnregistered}
       @asMessage(Status.Unregistered).toLowerCase
     </span>
+
+    <p><a href="@routes.Events.asExcel(event.id.get)" class="btn"><img src="@routes.Assets.at("images/icon-spreadsheet.png")"/> Som Excel</a></p>
+
   </div>
 </div>
 
