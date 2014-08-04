@@ -76,13 +76,13 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     val memberParticipations = Participation.findMembers(event)
     val guestParticipations = Participation.findGuests(event)
     (memberParticipations.on
-      union memberParticipations.maybe
-      union memberParticipations.off
-      union memberParticipations.unregistered
       union guestParticipations.on
+      union memberParticipations.maybe
       union guestParticipations.maybe
-      union guestParticipations.unregistered
-      union guestParticipations.off)
+      union memberParticipations.off
+      union guestParticipations.off
+      union memberParticipations.unregistered
+      union guestParticipations.unregistered)
   }
 
   private def populateWithInvitedStatus(sheet: XSSFSheet, allInvited: Seq[Participation]) {
