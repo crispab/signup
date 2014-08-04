@@ -16,6 +16,8 @@ object ApplicationBuild extends Build {
     "com.cloudinary" %% "cloudinary-scala-play" % "0.9.3-SNAPSHOT",
     "com.newrelic.agent.java" % "newrelic-agent" % "3.8.2",
     "com.newrelic.agent.java" % "newrelic-api" % "3.8.2",
+    "org.apache.poi" % "poi" % "3.10-FINAL",
+    "org.apache.poi" % "poi-ooxml" % "3.10-FINAL",
     jdbc,
     anorm
   )
@@ -27,6 +29,7 @@ object ApplicationBuild extends Build {
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
     resolvers ++= Seq("t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
+                      "sonatype releases" at "https://oss.sonatype.org/content/repositories/releases",
                       "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"),
     lessEntryPoints <<= baseDirectory(customLessEntryPoints),
     scalacOptions += "-feature"
