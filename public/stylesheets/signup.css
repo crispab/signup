@@ -186,3 +186,13 @@ pre code {
   word-wrap: normal;
   white-space: pre;
 }
+
+.input-group {
+  background: white;
+  border: #b4b4b4;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  padding: 9px;
+  margin-bottom: 20px;
+}
