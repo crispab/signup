@@ -21,21 +21,21 @@
   <div class="span5">
     <dl class="dl-horizontal">
       <dt>Förnamn:</dt>
-      <dd>@user.firstName</dd>
+      <dd>@user.firstName&nbsp;</dd>
 
       <dt>Efternamn:</dt>
-      <dd>@user.lastName</dd>
+      <dd>@user.lastName&nbsp;</dd>
 
       @if(isLoggedIn(loggedInUser)) {
         <dt>Epost:</dt>
-        <dd>@user.email</dd>
+        <dd>@user.email&nbsp;</dd>
       }
 
       <dt>Telefon:</dt>
-      <dd>@user.phone</dd>
+      <dd>@user.phone&nbsp;</dd>
 
       <dt>Kommentar:</dt>
-      <dd>@user.comment</dd>
+      <dd>@user.comment&nbsp;</dd>
     </dl>
   </div>
 </div>
