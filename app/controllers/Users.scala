@@ -89,7 +89,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
         user => {
-          User.update(id, user)
+          User.updateProperties(id, user)
           Redirect(routes.Users.show(id))
         }
       )

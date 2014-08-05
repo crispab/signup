@@ -178,15 +178,15 @@ INSERT INTO users (
     )
     """
 
-  def update(id: Long, user: User) {
+  def updateProperties(id: Long, user: User) {
     if(user.password == NOT_CHANGED_PASSWORD) {
-      updateWithoutPassword(id, user)
+      updatePropertiesWithoutPassword(id, user)
     } else {
-      updateWithPassword(id, user)
+      updatePropertiesWithPassword(id, user)
     }
   }
 
-  private def updateWithoutPassword(id: Long, user: User) {
+  private def updatePropertiesWithoutPassword(id: Long, user: User) {
     DB.withTransaction {
       implicit connection =>
         SQL(updateWithoutPasswordQueryString).on(
@@ -196,8 +196,7 @@ INSERT INTO users (
           'email -> user.email.toLowerCase,
           'phone -> user.phone,
           'comment -> user.comment,
-          'permission -> user.permission.toString,
-          'imageUrl -> user.imageUrl
+          'permission -> user.permission.toString
         ).executeUpdate()
     }
   }
@@ -210,12 +209,11 @@ SET first_name = {firstName},
     email = {email},
     phone = {phone},
     comment = {comment},
-    permission = {permission},
-    image_url = {imageUrl}
+    permission = {permission}
 WHERE id = {id}
     """
 
-  private def updateWithPassword(id: Long, user: User) {
+  private def updatePropertiesWithPassword(id: Long, user: User) {
     DB.withTransaction {
       implicit connection =>
         SQL(updateWithPasswordQueryString).on(
@@ -226,8 +224,7 @@ WHERE id = {id}
           'phone -> user.phone,
           'comment -> user.comment,
           'permission -> user.permission.toString,
-          'pwd -> AuthHelper.calculateHash(user.password),
-          'imageUrl -> user.imageUrl
+          'pwd -> AuthHelper.calculateHash(user.password)
         ).executeUpdate()
     }
   }
@@ -241,8 +238,7 @@ SET first_name = {firstName},
     phone = {phone},
     comment = {comment},
     permission = {permission},
-    pwd = {pwd},
-    image_url = {imageUrl}
+    pwd = {pwd}
 WHERE id = {id}
     """
 
