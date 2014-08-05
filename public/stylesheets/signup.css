@@ -54,25 +54,32 @@ dl.participation {
 }
 
 .thumb {
-  padding: 4px;
+  padding: 1px;
+  margin: 3px;
   vertical-align: top;
+  background: white;
 }
 
 .upload-thumb {
-  padding: 4px;
+  padding: 1px;
+  margin: 3px;
   vertical-align: top;
   float: right;
+  background: white;
 }
 
 .big-thumb {
-  padding: 4px 4px 0 4px;
+  padding: 1px;
+  margin: 3px 3px 0 3px;
   vertical-align: bottom;
+  background: white;
 }
 
 .login-thumb {
+  padding: 0;
+  margin: 0;
   vertical-align: middle;
-  margin:0;
-  padding:0
+  background: white;
 }
 
 .show-on-error {
