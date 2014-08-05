@@ -31,10 +31,10 @@
   <div class="span5 input-group">
     <img class="upload-thumb" src='@routes.Assets.at("images/Images_icon.png")'/>
     <h3>Egen bild</h3>
-    <p>Välj en bild på datorn och använd den.</p>
+    <p>Välj en bild på datorn och använd den som profilbild.</p>
+    <p>Bilden kommer automatiskt att zoomas in på ansiktet, beskäras och skalas om.</p>
     <form action="@routes.UsersSecured.uploadImage(user.id.get)" method="POST" enctype="multipart/form-data">
       <div class='control-group'>
-        <label class="control-label" for="image">Bild:</label>
         <div class="controls">
           <input type="file" accept="image/*" id="image" name="image" >
         </div>
