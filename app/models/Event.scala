@@ -4,7 +4,7 @@ import java.util
 
 import anorm.SqlParser._
 import anorm._
-import org.joda.time.DateMidnight
+import org.joda.time.DateTime
 import play.api.Play.current
 import play.api.db.DB
 
@@ -56,7 +56,7 @@ object Event {
 
   def findFutureEventsByGroup(group: Group): Seq[Event] = {
     DB.withTransaction {
-      val today = new DateMidnight().toDate
+      val today = new DateTime().withTimeAtStartOfDay().toDate
       implicit connection =>
         SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.last_signup_date ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
     }

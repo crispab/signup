@@ -3,7 +3,7 @@ package util
 import java.text.SimpleDateFormat
 import java.util.{Date, TimeZone}
 
-import org.joda.time.{DateMidnight, Days}
+import org.joda.time.{DateTime, Days}
 
 
 object DateHelper {
@@ -33,9 +33,4 @@ object DateHelper {
   def sameDay(date1: Date, date2: Date) = {
     asDate(date1).equals(asDate(date2))
   }
-
-  def daysBetween(date1: Date, date2: Date) = {
-    Math.abs(Days.daysBetween(new DateMidnight(date1), new DateMidnight(date2)).getDays)
-  }
-
 }
