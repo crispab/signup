@@ -1,6 +1,7 @@
 @(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User])
 
 @import util.AuthHelper._
+@import util.DateHelper._
 
 
 @asCssClass(status: models.Status.Value) = @{
@@ -48,6 +49,9 @@
           @asMessage(participation.status)
           </span>
         </a>
+        @if(participation.isLateSignUp) {
+          <img src="@routes.Assets.at("images/icon-warning.png")" title="Sen anmälan: @asDate(participation.signUpTime.get)" alt="Sen anmälan" style="cursor:help"/>
+        }
 
         @if(withRemoveButton && isAdmin(loggedInUser)) {
           <a data-toggle="modal" href="#remove_participant_@participation.id" class="btn pull-right"><i class="icon-trash"></i></a>

@@ -4,6 +4,7 @@ import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import models.{Event, Participation, User}
+import models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
@@ -14,7 +15,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
   def editForm(eventId: Long, userId: Long) = StackAction { implicit request =>
     val event = Event.find(eventId)
     val userToAttend = User.find(userId)
-    val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(user = userToAttend, event = event))
+    val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = On, user = userToAttend, event = event))
     Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
   }
 

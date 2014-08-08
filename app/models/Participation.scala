@@ -1,7 +1,10 @@
 package models
 
+import java.util.Date
+
 import anorm.SqlParser._
 import anorm._
+import org.joda.time.DateTime
 import play.api.Play.current
 import play.api.db.DB
 
@@ -18,7 +21,9 @@ case class Participation(id: Pk[Long] = NotAssigned,
                          numberOfParticipants: Int = 1,
                          comment: String = "",
                          user: User,
-                         event: Event) extends Ordered[Participation] {
+                         event: Event,
+                         signUpTime: Option[Date]) extends Ordered[Participation] {
+
   def compare(that: Participation) = this.user.compare(that.user)
 
   def participantsComing = {
@@ -28,9 +33,35 @@ case class Participation(id: Pk[Long] = NotAssigned,
       case _ => 0
     }
   }
+
+  def isLateSignUp = {
+    if(status != On || signUpTime.isEmpty) {
+      false
+    } else {
+      val lastSignUpDate = new DateTime(event.lastSignUpDate).withTimeAtStartOfDay()
+      val signUpDate = new DateTime(signUpTime.get).withTimeAtStartOfDay()
+      signUpDate.isAfter(lastSignUpDate)
+    }
+  }
 }
 
 object Participation {
+
+  def apply(id: Pk[Long],
+           status: Status,
+           numberOfParticipants: Int,
+           comment: String,
+           user: User,
+           event: Event): Participation = {
+    if (status == On)
+      new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = Option(new Date()))
+    else
+      new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = None)
+  }
+
+  def apply(status: Status, user: User, event: Event): Participation = apply(id = NotAssigned, status, numberOfParticipants = 1, comment = "", user, event)
+
+
   import scala.language.postfixOps
   val parser = {
     get[Pk[Long]]("id") ~
@@ -38,15 +69,17 @@ object Participation {
       get[Int]("number_of_participants") ~
       get[String]("comment") ~
       get[Long]("userx") ~
-      get[Long]("event") map {
-      case id ~ status ~ number_of_participants ~ comment ~ userx ~ event =>
+      get[Long]("event") ~
+      get[Option[Date]]("signup_time") map {
+      case id ~ status ~ number_of_participants ~ comment ~ userx ~ event ~ signup_time =>
         Participation(
           id = id,
           status = Status.withName(status),
           numberOfParticipants = number_of_participants,
           comment = comment,
           user = User.find(userx),
-          event = Event.find(event)
+          event = Event.find(event),
+          signUpTime = signup_time
         )
     }
   }
@@ -59,7 +92,8 @@ object Participation {
           'number_of_participants -> participation.numberOfParticipants,
           'comment -> participation.comment,
           'user -> participation.user.id,
-          'event -> participation.event.id
+          'event -> participation.event.id,
+          'signup_time -> participation.signUpTime
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -75,7 +109,8 @@ object Participation {
           'number_of_participants -> 1,
           'comment -> "",
           'user -> userId,
-          'event -> eventId
+          'event -> eventId,
+          'signup_time -> None
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -90,36 +125,53 @@ INSERT INTO participations (
       number_of_participants,
       comment,
       userx,
-      event
+      event,
+      signup_time
     )
     VALUES (
       {status},
       {number_of_participants},
       {comment},
       {user},
-      {event}
+      {event},
+      {signup_time}
     )
     """
 
 
-  def update(id: Long, participation: Participation) {
+  def update(id: Long, newParticipation: Participation) {
+    val oldParticipation = find(id)
+    val signUpTime = calculateNewSignUpTime(oldParticipation, newParticipation)
     DB.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,
-          'status -> participation.status.toString,
-          'number_of_participants -> participation.numberOfParticipants,
-          'comment -> participation.comment
+          'status -> newParticipation.status.toString,
+          'number_of_participants -> newParticipation.numberOfParticipants,
+          'comment -> newParticipation.comment,
+          'signup_time -> signUpTime
         ).executeUpdate()
     }
+  }
+
+  def changedToOn(oldStatus: Status, newStatus: Status): Boolean = {
+    (newStatus == On) && (oldStatus != On)
+  }
+
+  def calculateNewSignUpTime(oldParticipation: Participation, newParticipation: Participation) = {
+    if(changedToOn(oldParticipation.status, newParticipation.status))
+      newParticipation.signUpTime
+    else
+      oldParticipation.signUpTime
   }
 
   val updateQueryString =
     """
 UPDATE participations
 SET status = {status},
-    number_of_participants  = {number_of_participants},
-    comment  = {comment}
+    number_of_participants = {number_of_participants},
+    comment = {comment},
+    signup_time = {signup_time}
 WHERE id = {id}
     """
 
