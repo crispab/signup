@@ -18,7 +18,14 @@ case class Event(
                   lastSignUpDate: util.Date,
                   venue: String = "",
                   allowExtraFriends: Boolean = false
-                  )
+                  ) {
+
+  def lastSignupDatePassed() = {
+    val today = new DateTime().withTimeAtStartOfDay
+    val lastSignUpDay = new DateTime(lastSignUpDate).withTimeAtStartOfDay
+    today.isAfter(lastSignUpDay)
+  }
+}
 
 object Event {
   import scala.language.postfixOps
