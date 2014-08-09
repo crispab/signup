@@ -50,7 +50,10 @@
           </span>
         </a>
         @if(participation.isLateSignUp) {
-          <img src="@routes.Assets.at("images/icon-warning.png")" title="Sen anmälan: @asDate(participation.signUpTime.get)" alt="Sen anmälan" style="cursor:help"/>
+          <a id="warning_@{participation.id.get}" href="#" rel="popover" data-placement="right" data-content="Anmälde sig @asDate(participation.signUpTime.get), vilket är efter sista anmälningsdag." data-original-title="Sen anmälan">
+            <img src="@routes.Assets.at("images/icon-warning.png")" alt="Sen anmälan"/>
+          </a>
+          <script type="text/javascript">$('#warning_@{participation.id.get}').popover()</script>
         }
 
         @if(withRemoveButton && isAdmin(loggedInUser)) {
