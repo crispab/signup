@@ -43,6 +43,10 @@ case class Participation(id: Pk[Long] = NotAssigned,
       signUpDate.isAfter(lastSignUpDate)
     }
   }
+
+  def isGuest = {
+
+  }
 }
 
 object Participation {

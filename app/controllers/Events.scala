@@ -29,12 +29,18 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
   }
 
   def asExcel(id: Long) = StackAction { implicit request =>
-    val event = Event.find(id)
 
     val workbook = new XSSFWorkbook()
     val sheet = workbook.createSheet("Anmälningar")
     createHeading(workbook, sheet)
-    populateWithInvitedStatus(sheet, allInvited(event))
+
+    val event = Event.find(id)
+    val guests = allGuests(event)
+    populateWithInvitedStatus(sheet, guests, areGuests = true)
+
+    val members = allMembers(event)
+    populateWithInvitedStatus(sheet, members, startRow = guests.size + 1)
+
     autosizeAllColumns(sheet)
 
     import ExecutionContext.Implicits.global
@@ -56,7 +62,9 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     heading.createCell(2).setCellValue("Epost")
     heading.createCell(3).setCellValue("Status")
     heading.createCell(4).setCellValue("Antal")
-    heading.createCell(5).setCellValue("Kommentar")
+    heading.createCell(5).setCellValue("Gäst?")
+    heading.createCell(6).setCellValue("Sen anmälan?")
+    heading.createCell(7).setCellValue("Kommentar")
 
     val headingFont = workbook.createFont()
     headingFont.setBold(true)
@@ -69,31 +77,50 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     heading.getCell(3).setCellStyle(headingStyle)
     heading.getCell(4).setCellStyle(headingStyle)
     heading.getCell(5).setCellStyle(headingStyle)
+    heading.getCell(6).setCellStyle(headingStyle)
+    heading.getCell(7).setCellStyle(headingStyle)
   }
 
-  private def allInvited(event: Event) = {
-    val memberParticipations = Participation.findMembers(event)
+  private def allGuests(event: Event) = {
     val guestParticipations = Participation.findGuests(event)
-    (memberParticipations.on
-      union guestParticipations.on
-      union memberParticipations.maybe
+    (guestParticipations.on
       union guestParticipations.maybe
-      union memberParticipations.off
       union guestParticipations.off
-      union memberParticipations.unregistered
       union guestParticipations.unregistered)
   }
 
-  private def populateWithInvitedStatus(sheet: XSSFSheet, allInvited: Seq[Participation]) {
-    var rowNumber = 1
-    for (participation <- allInvited) {
+  private def allMembers(event: Event) = {
+    val memberParticipations = Participation.findMembers(event)
+    (memberParticipations.on
+      union memberParticipations.maybe
+      union memberParticipations.off
+      union memberParticipations.unregistered)
+  }
+
+  private def populateWithInvitedStatus(sheet: XSSFSheet, invited: Seq[Participation], startRow: Int = 1, areGuests: Boolean = false) {
+    var rowNumber = startRow
+
+    val workbook = sheet.getWorkbook
+    val createHelper = workbook.getCreationHelper
+    val dateStyle = workbook.createCellStyle()
+    dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy"))
+
+    for (participation <- invited) {
       val row = sheet.createRow(rowNumber)
       row.createCell(0).setCellValue(participation.user.firstName)
       row.createCell(1).setCellValue(participation.user.lastName)
       row.createCell(2).setCellValue(participation.user.email)
       row.createCell(3).setCellValue(asMessage(participation.status))
       row.createCell(4).setCellValue(participation.participantsComing)
-      row.createCell(5).setCellValue(participation.comment)
+      if(areGuests){
+        row.createCell(5).setCellValue("Gäst")
+      }
+      if(participation.isLateSignUp){
+        val cell = row.createCell(6)
+        cell.setCellStyle(dateStyle)
+        cell.setCellValue(participation.signUpTime.get)
+      }
+      row.createCell(7).setCellValue(participation.comment)
       rowNumber += 1
     }
   }
@@ -105,6 +132,8 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     sheet.autoSizeColumn(3)
     sheet.autoSizeColumn(4)
     sheet.autoSizeColumn(5)
+    sheet.autoSizeColumn(6)
+    sheet.autoSizeColumn(7)
   }
 
 
