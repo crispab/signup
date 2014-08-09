@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 import anorm.{NotAssigned, Pk}
 import models._
-import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFColor, XSSFWorkbook}
+import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
