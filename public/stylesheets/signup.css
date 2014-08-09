@@ -196,3 +196,7 @@ pre code {
   padding: 9px;
   margin-bottom: 20px;
 }
+
+.warning-icon {
+  vertical-align: baseline;
+}

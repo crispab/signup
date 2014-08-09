@@ -20,11 +20,21 @@
 <div class="row">
   <div class="span5">
 
-    @if(event.endTime.before(new java.util.Date())) {
-      <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        Det här eventet har redan inträffat!
-      </div>
+    @event match {
+      case event if(event.endTime.before(new java.util.Date())) => {
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          Det här eventet har redan inträffat!
+        </div>
+      }
+      case event if(event.lastSignUpDate.before(new java.util.Date())) => {
+        <div class="alert alert-info">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
+          Sista anmälningsdatum har passerats.
+        </div>
+      }
+      case _ => {}
     }
 
     @if(flash.get("success").isDefined) {
