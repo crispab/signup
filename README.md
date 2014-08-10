@@ -36,12 +36,12 @@ This is the fourth version of the SignUp Service.
 ### Run-time environment ###
 
 - Heroku (general app server environment) - http://heroku.com
-    * PostgreSQL Heroku add-on (SQL database)
-    * PG Backup Heroku add-on (database backup)
-    * SendGrid Heroku add-on (bulk email) - http://sendgrid.com
-    * Cloudinary Heroku add-on (profile image storage) - http://cloudinary.com
-    * NewRelic Heroku add-on (app monitoring) - http://newrelic.com
-    * Papertrail Heroku add-on (log monitoring) - http://papertrailapp.com
+    * PostgreSQL add-on (SQL database)
+    * PG Backup add-on (database backup)
+    * SendGrid add-on (bulk email) - http://sendgrid.com
+    * Cloudinary add-on (profile image storage) - http://cloudinary.com
+    * NewRelic add-on (app monitoring) - http://newrelic.com
+    * Papertrail add-on (log monitoring) - http://papertrailapp.com
 - Gravatar.com (default profile image)
 
 
@@ -53,7 +53,7 @@ are Copyright 2012 Twitter, Inc and licensed under the Apache
 License v2.0.
 Modifications have been made by us to create a project specific look & feel.
 
-Some clipart comes from http://clipart.org and is Public Domain, see http://openclipart.org/share 
+Some clipart comes from http://openclipart.org and is Public Domain, see http://openclipart.org/share 
 
 The rest of the code is Copyright 2012, 2013, 2014 by Mats Strandberg and Jan Grape and
 licensed under the Apache License v2.0 (the "License");
