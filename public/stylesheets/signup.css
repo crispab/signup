@@ -57,7 +57,24 @@ dl.participation {
   padding: 1px;
   margin: 3px;
   vertical-align: top;
-  background: white;
+}
+
+.thumb-background16 {
+  width: 16px;
+  height: 16px;
+  background: white center no-repeat url(../images/user16.png);
+}
+
+.thumb-background40 {
+  width: 40px;
+  height: 40px;
+  background: white center no-repeat url(../images/user40.png);
+}
+
+.thumb-background80 {
+  width: 80px;
+  height: 80px;
+  background: white center no-repeat url(../images/user80.png);
 }
 
 .upload-thumb {
@@ -65,14 +82,12 @@ dl.participation {
   margin: 3px;
   vertical-align: top;
   float: right;
-  background: white;
 }
 
 .big-thumb {
   padding: 1px;
   margin: 3px 3px 0 3px;
   vertical-align: bottom;
-  background: white;
 }
 
 .login-thumb {

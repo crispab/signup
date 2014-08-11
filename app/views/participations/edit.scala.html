@@ -62,7 +62,7 @@
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
-            <img class="thumb" src="@user.imageUrl(80)"/>
+            <img class="thumb thumb-background80" src="@user.imageUrl(80)" onerror="imgError(this);"/>
             @user.firstName @user.lastName
           </label>
           <div class="controls">

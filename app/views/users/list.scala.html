@@ -19,7 +19,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(user.id.get)">
-          <img class="thumb" src="@user.imageUrl(40)"/>
+          <img class="thumb thumb-background40" src="@user.imageUrl(40)" onerror="imgError(this);"/>
         </a>
       </div>
       <div class="span4">

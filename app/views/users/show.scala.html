@@ -10,7 +10,7 @@
 
 <div class="row">
   <div class="span5">
-    <img class="big-thumb" src="@user.imageUrl(80)"/>
+    <img class="big-thumb thumb-background80" src="@user.imageUrl(80)" onerror="imgError(this);"/>
     @if(isAdmin(loggedInUser)) {
       <a href="@routes.UsersSecured.updateImageForm(user.id.get)" class="btn"><i class="icon-picture"></i> Byt bild</a>
     }
