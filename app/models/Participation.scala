@@ -154,12 +154,8 @@ INSERT INTO participations (
     }
   }
 
-  def changedToOn(oldStatus: Status, newStatus: Status): Boolean = {
-    (newStatus == On) && (oldStatus != On)
-  }
-
   def calculateNewSignUpTime(oldParticipation: Participation, newParticipation: Participation) = {
-    if(changedToOn(oldParticipation.status, newParticipation.status))
+    if(newParticipation.status != oldParticipation.status)
       newParticipation.signUpTime
     else
       oldParticipation.signUpTime
