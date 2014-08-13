@@ -7,4 +7,4 @@ ALTER TABLE participations ADD COLUMN signup_time TIMESTAMP;
 
 # --- !Downs
 
-ALTER TABLE users DROP COLUMN signup_time;
+ALTER TABLE participations DROP COLUMN signup_time;
