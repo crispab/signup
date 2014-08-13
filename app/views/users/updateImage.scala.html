@@ -1,7 +1,7 @@
 @(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User])
 
 @import util.Section._
-@import util.GravatarHelper
+@import services.GravatarUrl
 
 @page("Byt bild för " + user.firstName + " " + user.lastName, section = Users) {
 
@@ -17,7 +17,7 @@
 
 <div class="row">
   <div class="span5 input-group">
-    <img class="upload-thumb thumb-background80" src="@GravatarHelper.gravatarUrl(user.email, 80)" onerror='imgError(this);'/>
+    <img class="upload-thumb thumb-background80" src="@GravatarUrl.url(user, 80)" onerror='imgError(this);'/>
     <h3>Standardbild</h3>
     <p>Om du har registrerat dig på <a href="http://gravatar.com">gravatar.com</a> och kopplat en bild till din epostadress visas den bilden. </p>
     <p>Annars visas en anonym bild.</p>

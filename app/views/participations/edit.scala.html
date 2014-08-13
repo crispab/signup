@@ -3,6 +3,7 @@
 @import util.DateHelper._
 @import util.FormHelper._
 @import util.Section._
+@import services.ImageUrl
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
@@ -62,7 +63,7 @@
       <fieldset>
         <div class='control-group  @hasErrors("status")'>
           <label class="control-label big-name">
-            <img class="thumb thumb-background80" src="@user.imageUrl(80)" onerror="imgError(this);"/>
+            <img class="thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
             @user.firstName @user.lastName
           </label>
           <div class="controls">

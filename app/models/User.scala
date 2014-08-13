@@ -8,16 +8,17 @@ import play.api.db._
 import util.AuthHelper
 
 case class User(
-                 id: Pk[Long] = NotAssigned,
-                 firstName: String,
-                 lastName: String,
-                 email: String,
-                 phone: String = "",
-                 comment: String = "",
-                 permission: Permission = NormalUser,
-                 password: String = "*",
-                 imageUrl: String
-                 )  extends Ordered[User] {
+   id: Pk[Long] = NotAssigned,
+   firstName: String,
+   lastName: String,
+   email: String,
+   phone: String = "",
+   comment: String = "",
+   permission: Permission = NormalUser,
+   password: String = "*",
+   imageProvider: String,
+   imageVersion: Option[String] = None) extends Ordered[User] {
+
   def compare(that: User) = {
     val c = this.firstName.compare(that.firstName)
     if (c != 0) {
@@ -25,10 +26,6 @@ case class User(
     } else {
       this.lastName.compare(that.lastName)
     }
-  }
-
-  def imageUrl(size: Int = 80): String = {
-    imageUrl.replaceAll("\\{size\\}", size.toString)
   }
 }
 
@@ -46,9 +43,10 @@ object User {
       get[String]("phone") ~
       get[String]("comment") ~
       get[String]("permission") ~
-      get[String]("pwd")  ~
-      get[String]("image_url") map {
-      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd ~ image_url =>
+      get[String]("pwd") ~
+      get[String]("image_provider") ~
+      get[Option[String]]("image_version") map {
+      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd ~ image_provider ~ image_version =>
         User(
           id = id,
           firstName = firstName,
@@ -58,7 +56,8 @@ object User {
           comment = comment,
           permission = Permission.withName(permission),
           password = pwd,
-          imageUrl = image_url
+          imageProvider = image_provider,
+          imageVersion = image_version
         )
     }
   }
@@ -146,7 +145,8 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
           'comment -> user.comment,
           'permission -> user.permission.toString,
           'pwd -> password,
-          'imageUrl -> user.imageUrl
+          'imageProvider -> user.imageProvider,
+          'imageVersion -> user.imageVersion
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -164,7 +164,8 @@ INSERT INTO users (
       comment,
       permission,
       pwd,
-      image_url
+      image_provider,
+      image_version
     )
     values (
       {firstName},
@@ -174,7 +175,8 @@ INSERT INTO users (
       {comment},
       {permission},
       {pwd},
-      {imageUrl}
+      {imageProvider},
+      {imageVersion}
     )
     """
 
@@ -242,12 +244,13 @@ SET first_name = {firstName},
 WHERE id = {id}
     """
 
-  def updateImageUrl(id: Long, imageUrl: String) = {
+  def updateInfo(id: Long, imageProvider: String, imageVersion: Option[String] = None) = {
     DB.withTransaction {
       implicit connection =>
-        SQL("UPDATE users SET image_url = {imageUrl} WHERE id = {id}").on(
+        SQL("UPDATE users SET image_provider = {imageProvider}, image_version = {imageVersion} WHERE id = {id}").on(
           'id -> id,
-          'imageUrl -> imageUrl
+          'imageProvider -> imageProvider,
+          'imageVersion -> imageVersion
         ).executeUpdate()
     }
   }

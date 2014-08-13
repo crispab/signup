@@ -3,6 +3,7 @@
 @import util.AuthHelper._
 @import util.DateHelper._
 @import util.Section._
+@import services.ImageUrl
 
 @page(group.name, section = Groups) {
 
@@ -100,7 +101,7 @@
     <div class="row">
       <div class="span1">
         <a href="@routes.Users.show(membership.user.id.get)">
-          <img class="thumb thumb-background40" src="@membership.user.imageUrl(40)" onerror="imgError(this);"/>
+          <img class="thumb thumb-background40" src="@ImageUrl(membership.user)" onerror="imgError(this);"/>
         </a>
       </div>
       <div class="span2">

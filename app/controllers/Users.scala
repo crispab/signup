@@ -9,8 +9,8 @@ import models.{Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
 import play.api.mvc._
+import services.{GravatarUrl, CloudinaryUrl}
 import util.AuthHelper._
-import util.{CloudinaryHelper, GravatarHelper}
 
 import scala.concurrent.{Future, ExecutionContext}
 
@@ -105,7 +105,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
 
-    User.updateImageUrl(id, GravatarHelper.gravatarParametrizedUrl(userToUpdate.email))
+    User.updateInfo(id, GravatarUrl.identifier)
 
     Redirect(routes.Users.show(id))
   }
@@ -122,14 +122,12 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       Future(BadRequest(views.html.users.updateImage(userToUpdate, Option("Du måste välja en bild från datorn"))))
     } else {
       CloudinaryResource.upload(resourceFile.get.ref.file, UploadParameters()
-                                                            .publicId(CloudinaryHelper.publicId(userToUpdate))
-                                                            .folder(CloudinaryHelper.CLOUDINARY_FOLDER)
+                                                            .publicId(CloudinaryUrl.publicId(userToUpdate))
                                                             .format("png")
                                                             .overwrite(value = true)).map {
         cr =>
-          val uploadUrl = cr.data.get.secure_url
-          val imageUrl = CloudinaryHelper.parametrizedUrl(uploadUrl)
-          User.updateImageUrl(id, imageUrl)
+          val cloudinaryFileVersion = cr.data.get.version
+          User.updateInfo(id, CloudinaryUrl.identifier, Some(cloudinaryFileVersion))
           Redirect(routes.Users.show(id))
       } recover {
         case ex: Exception =>
@@ -194,7 +192,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       case Administrator => password.getOrElse("").trim
       case _ => User.NOT_CHANGED_PASSWORD
     }
-    User(id=id, firstName=firstName.trim, lastName=lastName.trim, email=email.trim, phone=phone.trim, comment=comment.trim, permission=permission, password=passwordToSet, imageUrl = GravatarHelper.gravatarParametrizedUrl(email))
+    User(id=id, firstName=firstName.trim, lastName=lastName.trim, email=email.trim, phone=phone.trim, comment=comment.trim, permission=permission, password=passwordToSet, imageProvider = GravatarUrl.identifier)
   }
 
   def fromUser(user: models.User) = {

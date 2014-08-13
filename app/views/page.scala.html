@@ -1,10 +1,10 @@
 @(title: String, section: util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User])
-@import util.DateHelper
 
 <!DOCTYPE html>
 
 @import util.AuthHelper._
 @import util.DateHelper._
+@import services.ImageUrl
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
@@ -58,7 +58,7 @@
             <ul class="nav pull-right">
               <li class="dropdown @sectionClass(util.Section.Login.toString)">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img class="login-thumb thumb-background16" src="@loggedInUser.get.imageUrl(16)" onerror="imgError(this);"/>
+                  <img class="login-thumb thumb-background16" src="@ImageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
                   @loggedInUser.get.firstName @loggedInUser.get.lastName
                   <b class="caret"></b>
                 </a>
