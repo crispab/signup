@@ -12,7 +12,10 @@ object EventReminder {
   private def findReceivers(event: Event): Seq[User] = {
     val unregisteredMembers = User.findUnregisteredMembers(event)
     val unregisteredGuests = Participation.findGuestsByStatus(Unregistered, event) map {_.user}
-    unregisteredMembers union unregisteredGuests
+    val maybeMembers = Participation.findMembersByStatus(Maybe, event) map {_.user}
+    val maybeGuests = Participation.findGuestsByStatus(Maybe, event) map {_.user}
+
+    unregisteredMembers union unregisteredGuests union maybeMembers union maybeGuests
   }
 
   private def createEmailMessage(event: Event, user: User) : Html = {
