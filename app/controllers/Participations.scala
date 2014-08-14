@@ -90,7 +90,7 @@ object ParticipationsSecured extends Controller with AuthElement with AuthConfig
           BadRequest(views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
         },
         participation => {
-          Participation.create(participation)
+          Participation.createGuest(participation.event.id.get, participation.user.id.get)
           Redirect(routes.Events.show(participation.event.id.get))
         }
       )

@@ -53,10 +53,8 @@ object Participation {
            comment: String,
            user: User,
            event: Event): Participation = {
-    if (status == On)
-      new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = Option(new Date()))
-    else
-      new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = None)
+
+    new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = Some(new Date()))
   }
 
   def apply(status: Status, user: User, event: Event): Participation = apply(id = NotAssigned, status, numberOfParticipants = 1, comment = "", user, event)
@@ -231,7 +229,7 @@ WHERE p.event={eventId}
           SQL(findMembersByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id).as(parser *).sorted
       }
     } else {
-      User.findUnregisteredMembers(event) map { user => Participation(status = Unregistered, user = user, event = event) }
+      User.findUnregisteredMembers(event) map { user => Participation(status = Unregistered, user = user, event = event, signUpTime = None) }
     }
   }
 

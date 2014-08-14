@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 
 import anorm.{NotAssigned, Pk}
 import models._
+import models.Status._
 import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -62,9 +63,10 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     heading.createCell(2).setCellValue("Epost")
     heading.createCell(3).setCellValue("Status")
     heading.createCell(4).setCellValue("Antal")
-    heading.createCell(5).setCellValue("Gäst?")
-    heading.createCell(6).setCellValue("Sen anmälan?")
-    heading.createCell(7).setCellValue("Kommentar")
+    heading.createCell(5).setCellValue("Datum")
+    heading.createCell(6).setCellValue("Gäst?")
+    heading.createCell(7).setCellValue("Sen?")
+    heading.createCell(8).setCellValue("Kommentar")
 
     val headingFont = workbook.createFont()
     headingFont.setBold(true)
@@ -79,6 +81,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     heading.getCell(5).setCellStyle(headingStyle)
     heading.getCell(6).setCellStyle(headingStyle)
     heading.getCell(7).setCellStyle(headingStyle)
+    heading.getCell(8).setCellStyle(headingStyle)
   }
 
   private def allGuests(event: Event) = {
@@ -103,7 +106,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     val workbook = sheet.getWorkbook
     val createHelper = workbook.getCreationHelper
     val dateStyle = workbook.createCellStyle()
-    dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy"))
+    dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-mm-dd hh:mm;@"))
 
     for (participation <- invited) {
       val row = sheet.createRow(rowNumber)
@@ -112,15 +115,18 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
       row.createCell(2).setCellValue(participation.user.email)
       row.createCell(3).setCellValue(asMessage(participation.status))
       row.createCell(4).setCellValue(participation.participantsComing)
-      if(areGuests){
-        row.createCell(5).setCellValue("Gäst")
-      }
-      if(participation.isLateSignUp){
-        val cell = row.createCell(6)
+      if(participation.status != Unregistered && participation.signUpTime.isDefined) {
+        val cell = row.createCell(5)
         cell.setCellStyle(dateStyle)
         cell.setCellValue(participation.signUpTime.get)
       }
-      row.createCell(7).setCellValue(participation.comment)
+      if(areGuests){
+        row.createCell(6).setCellValue("Gäst")
+      }
+      if(participation.isLateSignUp){
+        row.createCell(7).setCellValue("Sen")
+      }
+      row.createCell(8).setCellValue(participation.comment)
       rowNumber += 1
     }
   }
@@ -134,6 +140,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     sheet.autoSizeColumn(5)
     sheet.autoSizeColumn(6)
     sheet.autoSizeColumn(7)
+    sheet.autoSizeColumn(8)
   }
 
 
