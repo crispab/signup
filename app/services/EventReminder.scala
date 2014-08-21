@@ -20,7 +20,7 @@ object EventReminder {
 
   private def createEmailMessage(event: Event, user: User) : Html = {
     import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("email.notification.base.url").getOrElse("")
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     views.html.events.email(event, user, baseUrl)
   }
 

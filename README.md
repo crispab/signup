@@ -133,19 +133,4 @@ If you have a local Postgres (installed as described above) you may start SignUp
 Deploy
 ------
 
-Deployment is done to Heroku.
-
-It runs at [http://signup4.herokuapp.com](http://signup4.herokuapp.com)
-
-To be able to deploy to Heroku you must:
-
-- Install Heroku toolbelt.
-- Do a 'heroku login'.
-- cd into the root of this application
-- git remote add staging git@heroku.com:signup4.git
-- git push staging master
-
-I (Mats) had to do a 'heroku keys:add ~/.ssh/id_rsa.pub' on one of my
-machines as I first got 'Permission denied (publickey).' when trying
-to 'git push heroku master'
-
+Read [Setting up Heroku](SettingUpHeroku.md) to learn how to deploy a SignUp instance on Heroku.

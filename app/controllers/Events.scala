@@ -149,7 +149,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     val event = Event.find(eventId)
     val user = User.find(userId)
     import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("email.notification.base.url").getOrElse("")
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     Ok(views.html.events.email(event, user, baseUrl))
   }
 }
