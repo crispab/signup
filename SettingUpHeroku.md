@@ -86,25 +86,6 @@ $ heroku addons:add papertrail
 The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid 
 plan for each add-on.
 
-Configure environment variables for your Heroku application
-------
-
-SignUp's default configuration is for a development environment, but it can be overridden by setting environment
-variables in the execution environment.
-
-Edit and run the script [conf/heroku_config.sh](conf/heroku_config.sh) on your local machine with values from your 
-Heroku application and add-ons.
-
-| Environment variable | Description |
-| --------------------:| ----------- |
-| APPLICATION_BASE_URL | The public URL to the application on Heroku. This one is used when generating URLs in mail reminders. |
-| SMTP_MOCK | Should be `false` in production. When set to `true` (default in the development environment), reminder mails are _not_ sent out publicly. Instead a fake (mock) mail service is used. | 
-| PASSWORD_SALT | A password salt helps encrypt the user's passwords more safely in the database. Set it to a random string of characters. | 
-| ADDTHISEVENT_LICENSE | You can do without a license key for this library, but the menu presented to add calendar events to your on-line calendar will contain a message from the provider. | 
-| CLOUDINARY_CLOUD_NAME | Get this from your Cloudinary add-on | 
-| CLOUDINARY_API_KEY | see above | 
-| CLOUDINARY_API_SECRET | see above | 
-
 Connect your local Git repository to Heroku's Git repository
 ------
 
@@ -137,6 +118,25 @@ Use the Git URL printed above to create a remote called "heroku" in your local G
 ```
 $ git remote add heroku git@heroku.com:signup-<your name>.git
 ```
+
+Configure environment variables for your Heroku application
+------
+
+SignUp's default configuration is for a development environment, but it can be overridden by setting environment
+variables in the execution environment.
+
+Edit and run the script [conf/heroku_config.sh](conf/heroku_config.sh) on your local machine with values from your 
+Heroku application and add-ons.
+
+| Environment variable | Description |
+| --------------------:| ----------- |
+| APPLICATION_BASE_URL | The public web URL to the application on Heroku. It's used when generating URLs in mail reminders. Get the value from the `heroku apps:info` command above. |
+| SMTP_MOCK | Should be `false` in production. When set to `true` (default in the development environment), reminder mails are _not_ sent out publicly. Instead a fake (mock) mail service is used. | 
+| PASSWORD_SALT | A password salt helps encrypt the user's passwords more safely in the database. Set it to a random string of characters. | 
+| ADDTHISEVENT_LICENSE | You can do without a license key for this library, but the menu presented to add calendar events to your on-line calendar will contain a message from the provider. | 
+| CLOUDINARY_CLOUD_NAME | Get this from your Cloudinary add-on | 
+| CLOUDINARY_API_KEY | see above | 
+| CLOUDINARY_API_SECRET | see above | 
 
 Push the source code to Heroku and whitness the automatic deploy
 ------
