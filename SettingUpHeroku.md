@@ -11,7 +11,7 @@ but since Heroku was used from start it's a lot easier to deploy in this environ
 Get access to the source code
 ------
 
-Deployment on Heroku is done by submitting (cheking in) source code to Heroku's Git repository. The source is 
+Deployment on Heroku is done by submitting (pushing) source code to Heroku's Git repository. The source is 
 automatically picked up, compiled and deployed on the Heroku servers.
 
 The source code is managed by the version control system Git. If you don't have Git on your local computer already, 
@@ -53,7 +53,7 @@ $ cd signup
 ``` 
 
 Login to Heroku from the command line client (you only have to do this once) and create an application instance on
-Heroku. Choose an application name like "signup-<your name>".
+Heroku. Choose an application name like "signup-\<your name>".
 
 ```
 $ heroku login
@@ -83,6 +83,9 @@ $ heroku addons:add newrelic:stark
 $ heroku addons:add papertrail
 ```
 
+The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid 
+plan for each add-on.
+
 Configure environment variables for your Heroku application
 ------
 
@@ -95,7 +98,7 @@ Heroku application and add-ons.
 Connect your local Git repository to Heroku's Git repository
 ------
 
-Your local Git repository (the one you got when retrieving the source code) needs to know about the repository on Heroku
+Your local Git repository (the one created for you when you cloned the source code) needs to know about the repository on Heroku
 so you can push the source code to Heroku for build and deploy.
 
 First, find out the Git URL to your application's repository on Heroku:
