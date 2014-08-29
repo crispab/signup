@@ -97,13 +97,13 @@ Heroku application and add-ons.
 
 | Environment variable | Description |
 | --------------------:| ----------- |
-| APPLICATION_BASE_URL="http://<your application>.herokuapp.com" | The public URL to the application on Heroku. This one is used when generating URLs in mail reminders. |
-| SMTP_MOCK=false | When set to `true` (default in the development environment), reminder mails are _not_ sent out publicly. Instead a fake (mock) mail service is used. | 
-| PASSWORD_SALT="<your password salt>" | A password salt helps encrypt the user's passwords more safely in the database. Set it to a random string of characters. | 
-| ADDTHISEVENT_LICENSE="<your addthisevent.com license>" | You can do without a license key for this library, but the menu presented to add calendar events to your on-line calendar will contain a message from the provider. | 
-| CLOUDINARY_CLOUD_NAME="<your cloud name>" | Get this from your Cloudinary add-on | 
-| CLOUDINARY_API_KEY="<your api key>" | see above | 
-| CLOUDINARY_API_SECRET="<your api secret>" | see above | 
+| APPLICATION_BASE_URL | The public URL to the application on Heroku. This one is used when generating URLs in mail reminders. |
+| SMTP_MOCK | Should be `false` in production. When set to `true` (default in the development environment), reminder mails are _not_ sent out publicly. Instead a fake (mock) mail service is used. | 
+| PASSWORD_SALT="<your password salt\>" | A password salt helps encrypt the user's passwords more safely in the database. Set it to a random string of characters. | 
+| ADDTHISEVENT_LICENSE | You can do without a license key for this library, but the menu presented to add calendar events to your on-line calendar will contain a message from the provider. | 
+| CLOUDINARY_CLOUD_NAME | Get this from your Cloudinary add-on | 
+| CLOUDINARY_API_KEY | see above | 
+| CLOUDINARY_API_SECRET | see above | 
 
 Connect your local Git repository to Heroku's Git repository
 ------
