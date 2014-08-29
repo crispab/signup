@@ -7,10 +7,8 @@ General
 This is the fourth version of the SignUp Service.
 
 - It is written in Scala and based on the Play Framework.
-- Anorm is used for SQL Database access*
+- Anorm is used for SQL Database access
 - Heroku is used for deployment
-
-*) H2 when running locally, PostgreSQL on Heroku
 
 
 ### Play Framework ###
@@ -78,17 +76,15 @@ In order to set up the development environment you need to:
 
 - Clone this project from GitHub
 - Install Play 2.2.x
-- Install Heroku Toolkit - https://toolbelt.heroku.com/ (Optional, only needed to deploy to Heroku)
-- ```play eclipsify``` or ```play idea```
+- `play eclipsify` or `play idea`
 
 ### "Persistent Database" - Postgres ###
 
-When running SignUp as described above, the H2 database is used.
-The H2 database is running in-memory, in-process. This is handy,
-because of the simple setup, but each time you stop Play your database
-will be gone. It would be nice to have a persistent database,
-e.g. a disk based database. When running on Heroku, Postgres will be used.
-For these reasons, a local installation of Postgres is good.
+When running SignUp a Postgres database is used. In earlier versions of SignUp the H2 databas engine was used during
+development, but this was abandoned since writing the database evolution scrips that supported two dialects
+of SQL was too cumbersome.
+
+Since Postgres is used when SignUp is deployed on Heroku, running Postgres locally for development is the best option.
 
 To install Postgres on MacOS X:
 
@@ -112,10 +108,6 @@ signup=# create user signup4 password 's7p2+';
 signup=# grant all privileges on database signup to signup4;
 ```
 
-Now you can start SignUp with Postgres using
-
-./playrunpostgres.sh
-
 Run SignUp
 ----------
 
@@ -123,14 +115,11 @@ Once you have the development environment set up you should be able to do
 
 ```play run```
 
-And the direct your browser to
+And then point your browser to
 [http://localhost:9000](http://localhost:9000)
 
-If you have a local Postgres (installed as described above) you may start SignUp using
 
-./playrunpostgres.sh
-
-Deploy
+Deploy in production
 ------
 
 Read [Setting up Heroku](SettingUpHeroku.md) to learn how to deploy a SignUp instance on Heroku.
