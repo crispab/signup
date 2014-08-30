@@ -19,9 +19,8 @@ download and install it from http://git-scm.com/downloads
 
 Get a copy of the source code for SignUp by typing on your command line:
 
-```
-$ git clone https://github.com/crispab/signup.git
-```
+    $ git clone https://github.com/crispab/signup.git
+
 
 This will give you the latest version of the source code. 
 
@@ -48,17 +47,13 @@ should now have a new command "heroku" available.
 
 Change directory to the top level directory of the SignUp source code you retrieved earlier.
 
-```
-$ cd signup
-``` 
+    $ cd signup
 
 Login to Heroku from the command line client (you only have to do this once) and create an application instance on
 Heroku. Choose an application name like "signup-\<your name>".
 
-```
-$ heroku login
-$ heroku apps:create signup-<your name> --region eu
-```
+    $ heroku login
+    $ heroku apps:create signup-<your name> --region eu
 
 Get add-ons for your new Heroku application
 ------
@@ -74,14 +69,12 @@ SignUp requires a number of Heroku add-ons to run, and some are just nice to hav
 
 Get the add-ons via the command line interface:
 
-```
-$ heroku addons:add heroku-postgresql
-$ heroku addons:add pgbackups:auto-month
-$ heroku addons:add sendgrid
-$ heroku addons:add cloudinary
-$ heroku addons:add newrelic:stark
-$ heroku addons:add papertrail
-```
+    $ heroku addons:add heroku-postgresql
+    $ heroku addons:add pgbackups:auto-month
+    $ heroku addons:add sendgrid
+    $ heroku addons:add cloudinary
+    $ heroku addons:add newrelic:stark
+    $ heroku addons:add papertrail
 
 The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid 
 plan for each add-on.
@@ -94,30 +87,26 @@ so you can push the source code to Heroku for build and deploy.
 
 First, find out the Git URL to your application's repository on Heroku:
 
-```
-$ heroku apps:info
-=== signup-<your name>
-Addons:        cloudinary:starter
-               heroku-postgresql:hobby-dev
-               newrelic:stark
-               papertrail:choklad
-               pgbackups:auto-month
-               sendgrid:starter
-
-Git URL:       git@heroku.com:signup-<your name>.git
-Owner Email:   yourmail@yourdomain.com
-Region:        eu
-Repo Size:     7M
-Slug Size:     194M
-Stack:         cedar
-Web URL:       http://signup-<your name>.herokuapp.com/
-```
+    $ heroku apps:info
+    === signup-<your name>
+    Addons:        cloudinary:starter
+                   heroku-postgresql:hobby-dev
+                   newrelic:stark
+                   papertrail:choklad
+                   pgbackups:auto-month
+                   sendgrid:starter
+                   
+    Git URL:       git@heroku.com:signup-<your name>.git
+    Owner Email:   yourmail@yourdomain.com
+    Region:        eu
+    Repo Size:     7M
+    Slug Size:     194M
+    Stack:         cedar
+    Web URL:       http://signup-<your name>.herokuapp.com/
 
 Use the Git URL printed above to create a remote called "heroku" in your local Git repository:
 
-```
-$ git remote add heroku git@heroku.com:signup-<your name>.git
-```
+    $ git remote add heroku git@heroku.com:signup-<your name>.git
 
 Configure environment variables for your Heroku application
 ------
@@ -140,15 +129,11 @@ Push the source code to Heroku and whitness the automatic deploy
 
 Push the source code (master branch) to Heroku for build and deploy:
 
-```
-$ git push heroku master
-```
+    $ git push heroku master
 
 If you get an error message about "Permission denied (publickey)" you might first have to do:
 
-```
-$ heroku keys:add ~/.ssh/id_rsa.pub
-```
+    $ heroku keys:add ~/.ssh/id_rsa.pub
 
 The above tells Heroku that it's OK for your Git client to push changes to your application's Git repository on Heroku.
 
@@ -156,13 +141,12 @@ The above tells Heroku that it's OK for your Git client to push changes to your 
 Check that the application is running
 ------
 
-Point your browser to ```http://signup-<your name>.herokuapp.com/``` and wait for the index page to load. Right after a 
+Point your browser to `http://signup-<your name>.herokuapp.com/` and wait for the index page to load. Right after a 
 deploy it may take some time for the Heroku servers to respond.
 
 If you get nothing or an error page, access the logs via the Papertrail plugin on the Heroku Dashboard and find out what
 went wrong: Open the application page in the Herou dashboard and click on the "Papertrail add-on".
 
 Alternatively, check the logs from your local machine using the Heroku toolbelt:
-```
-$ heroku logs
-```
+
+    $ heroku logs

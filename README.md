@@ -97,23 +97,22 @@ To install Postgres on MacOS X:
   Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
 - Do some stuff from the command prompt to create a database and a database user
 
-```
-$ su - PostgreSQL
-Password: <Enter the password of your UNIX user 'PostgreSQL'>
-$ createdb signup
-Password: <Enter the password of your DATABASE user 'postgres'>
-$ psql -s signup
-Password: <Enter the password of your DATABASE user 'postgres'>
-signup=# create user signup4 password 's7p2+';
-signup=# grant all privileges on database signup to signup4;
-```
+
+    $ su - PostgreSQL
+    Password: <Enter the password of your UNIX user 'PostgreSQL'>
+    $ createdb signup
+    Password: <Enter the password of your DATABASE user 'postgres'>
+    $ psql -s signup
+    Password: <Enter the password of your DATABASE user 'postgres'>
+    signup=# create user signup4 password 's7p2+';
+    signup=# grant all privileges on database signup to signup4;
 
 Run SignUp
 ----------
 
 Once you have the development environment set up you should be able to do
 
-```play run```
+    $ play run
 
 And then point your browser to
 [http://localhost:9000](http://localhost:9000)
