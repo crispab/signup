@@ -92,9 +92,7 @@ To install Postgres on MacOS X:
 - Install a standard Postgres (You may have to restart your Mac as the installation fiddles with shared memory)
 - Set the password for the DATABASE (super)user postgres when prompted
 - Finish the installation
-- On MacOS X: A UNIX user is created: 'PostgreSQL'
-  This user seem to get some password that you cannot find out.
-  Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
+- On MacOS X: A UNIX user is created: 'PostgreSQL' This user seem to get some password that you cannot find out. Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
 - Do some stuff from the command prompt to create a database and a database user
 
 
@@ -106,6 +104,7 @@ To install Postgres on MacOS X:
     Password: <Enter the password of your DATABASE user 'postgres'>
     signup=# create user signup4 password 's7p2+';
     signup=# grant all privileges on database signup to signup4;
+
 
 Run SignUp
 ----------
