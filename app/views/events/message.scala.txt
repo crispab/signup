@@ -1,0 +1,27 @@
+@(event: models.Event, baseURL: String)
+  {
+     "attachments" : [
+        {
+           "fallback" : "Dags att anmäla sig till eventet <@baseURL@routes.Events.show(event.id.get)|@event.group.mailSubjectPrefix: @event.name>!",
+           "pretext" : "Dags att anmäla sig till eventet <@baseURL@routes.Events.show(event.id.get)|@event.group.mailSubjectPrefix: @event.name>!",
+           "color" : "#EE3C0C",
+           "fields" : [
+              {
+                 "title" : "@event.group.mailSubjectPrefix: @event.name",
+                 "value" : "@util.HtmlHelper.escapeNewlines(util.HtmlHelper.stripFromHtml(event.description))",
+                 "short" : false
+              },
+              {
+                 "title" : "Tid",
+                 "value" : "@util.DateHelper.asDateTime(event.startTime)-@util.DateHelper.asTime(event.endTime)",
+                 "short" : false
+              },
+              {
+                 "title" : "Plats",
+                 "value" : "@event.venue",
+                 "short" : false
+              }
+           ]
+        }
+     ]
+  }

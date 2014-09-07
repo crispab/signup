@@ -123,6 +123,7 @@ Heroku application and add-ons.
 | ADDTHISEVENT_LICENSE | You can do without a license key for this library, but the menu presented to add calendar events to your on-line calendar will contain a message from the provider. | 
 | CLOUDINARY_FOLDER    | The folder in the Cloudinary media library where production user profile images should be stored. It will be automatically created on Cloudinary. | 
 | PASSWORD_SALT | A password salt helps encrypt the user's passwords more safely in the database. Set it to a random string of characters. | 
+| SLACK_CHANNEL_URL | If you use http://slack.com for group chat and want notifications on a chat channel, create an incoming WebHooks integration on slack.com and set this variable to your unique WebHooks URL. If you don't use Slack, don't set this variable at all. | 
 
 Push the source code to Heroku and whitness the automatic deploy
 ------

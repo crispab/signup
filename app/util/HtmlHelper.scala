@@ -14,4 +14,6 @@ object HtmlHelper {
               .replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "")
   }
 
+  def escapeNewlines(string: String) = string.replaceAll("\\n", "\\\\n")
+
 }

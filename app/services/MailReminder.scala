@@ -7,7 +7,7 @@ import play.api.Logger
 import play.api.templates.Html
 
 
-object EventReminder {
+object MailReminder {
 
   private def findReceivers(event: Event): Seq[User] = {
     val unregisteredMembers = User.findUnregisteredMembers(event)

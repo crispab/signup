@@ -51,6 +51,7 @@ POST    /events/:id/notify          controllers.EventsSecured.notifyParticipants
 GET     /events/:id                 controllers.Events.show(id: Long)
 GET     /events/:id/excel           controllers.Events.asExcel(id: Long)
 GET     /events/:id/email           controllers.Events.asEmail(id: Long, userId: Long)
+GET     /events/:id/slack           controllers.Events.asSlackMessage(id: Long)
 
 
 # Participations

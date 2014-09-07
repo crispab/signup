@@ -9,15 +9,17 @@ import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
+import play.api.libs.json._
+import play.api.libs.ws.WS
 import play.api.mvc._
-import util.AuthHelper._
-import util.DateHelper._
-import util.StatusHelper._
+import _root_.util.AuthHelper._
+import _root_.util.DateHelper._
+import _root_.util.StatusHelper._
 import java.util
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import play.api.libs.concurrent.Akka
-import services.EventReminder
+import services.{SlackReminder, MailReminder}
 
 
 import scala.concurrent.ExecutionContext
@@ -152,6 +154,19 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     Ok(views.html.events.email(event, user, baseUrl))
   }
+
+
+  def asSlackMessage(id: Long) = Action { implicit request =>
+    val event = Event.find(id)
+
+    import play.api.Play.current
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val message: JsValue = Json.parse(views.txt.events.message(event, baseUrl).toString())
+
+    Ok(message)
+  }
+
+
 }
 
 object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
@@ -163,7 +178,8 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     import play.api.libs.concurrent.Execution.Implicits._
     import scala.concurrent.duration._
     Akka.system.scheduler.scheduleOnce(1.second) {
-      EventReminder.remindParticipants(event)
+      MailReminder.remindParticipants(event)
+      SlackReminder.sendSlackChatMessage(event)
     }
 
     Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")

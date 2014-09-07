@@ -4,6 +4,7 @@ heroku config:set \
     ADDTHISEVENT_LICENSE="<your addthisevent.com license>" \
     CLOUDINARY_FOLDER="<your folder name>" \
     PASSWORD_SALT="<your password salt>" \
+    SLACK_CHANNEL_URL="<if you use chat via slack.com and want notifications there, otherwise remove this line>" \
     SMTP_MOCK=false \
     SMTP_HOST=smtp.sendgrid.net \
     SMTP_PORT=587 \
