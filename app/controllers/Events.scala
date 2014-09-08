@@ -10,7 +10,6 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json._
-import play.api.libs.ws.WS
 import play.api.mvc._
 import _root_.util.AuthHelper._
 import _root_.util.DateHelper._
