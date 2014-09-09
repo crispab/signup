@@ -108,14 +108,33 @@ Use the Git URL printed above to create a remote called "heroku" in your local G
 
     $ git remote add heroku git@heroku.com:signup-<your name>.git
 
+Optional: Enable Google login
+------
+
+It's possible to allow users to login via Google (OAuth2) instead of providing email and SignUp password. This only 
+works for users who are already created in SignUp and have their Google (GMail or Google Apps) email address in their
+user profile.
+
+To enable this you have to create an API project in the Google Developers Console. Go to 
+https://console.developers.google.com and choose to create a new project. Name it something useful like "signup-login".
+This step may take a moment.
+
+Once the project is created you'll be presented the project's dashboard. Choose `APIs & auth -> Create new Client ID -> Web application`.
+Remove anything under "Authorized Javascipt Origins" and store the path 
+"http://signup-<your name>.herokuapp.com/google/callback" in "Authorized Redirect URI". Choose `Create Client ID`.
+
+If you want to you can configure the Consent Screen to suit your needs.
+
+Finally, go to `APIs & auth -> APIs` and enable the Google+ API.
+
+
 Configure environment variables for your Heroku application
 ------
 
 SignUp's default configuration is for a development environment, but it can be overridden by setting environment
 variables in the execution environment.
 
-Edit and run the script [conf/heroku_config.sh](conf/heroku_config.sh) on your local machine with values from your 
-Heroku application and add-ons.
+Edit and run the script [conf/heroku_config.sh](conf/heroku_config.sh) on your local machine with your values.
 
 | Environment variable | Description |
 | --------------------:| ----------- |
@@ -124,6 +143,9 @@ Heroku application and add-ons.
 | CLOUDINARY_FOLDER    | The folder in the Cloudinary media library where production user profile images should be stored. It will be automatically created on Cloudinary. | 
 | PASSWORD_SALT | A password salt helps encrypt the user's passwords more safely in the database. Set it to a random string of characters. | 
 | SLACK_CHANNEL_URL | If you use http://slack.com for group chat and want notifications on a chat channel, create an incoming WebHooks integration on slack.com and set this variable to your unique WebHooks URL. If you don't use Slack, don't set this variable at all. | 
+| GOOGLE_CLIENT_ID | To enable Google login - get from Google Developers Console, https://console.developers.google.com | 
+| GOOGLE_CLIENT_SECRET | To enable Google login - get from Google Developers Console, https://console.developers.google.com | 
+
 
 Push the source code to Heroku and whitness the automatic deploy
 ------

@@ -8,7 +8,7 @@ GET         /login                            controllers.Application.loginForm
 POST        /login                            controllers.Application.authenticate
 GET         /logout                           controllers.Application.logout
 GET         /google/authenticate              controllers.GoogleAuth.authenticate
-GET         /google/callback                  controllers.GoogleAuth.callback(error: Option[String], state: String, code: Option[String])
+GET         /google/callback                  controllers.GoogleAuth.callback(error: Option[String] ?= None, state: Option[String] ?= None, code: Option[String] ?= None)
 
 
 # Users

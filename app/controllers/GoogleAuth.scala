@@ -9,12 +9,8 @@ import play.api.libs.ws.WS
 import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, Future}
 
-
-// TODO: Gör alla @crisp.se till Admininstrtor i produktionsdatabasen
-
-// TODO lägg till env var i herokuconf.sh + heroku.md
 
 object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
 
@@ -30,25 +26,27 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
   def authenticate = Action { implicit request =>
     val randomString = DigestUtils.md5Hex(Math.random().toString)
 
+    val callbackUrl = routes.GoogleAuth.callback().absoluteURL()
     import com.netaporter.uri.dsl._
-    val requestAuthenticationTokenURL = GOOGLE_AUTHENTICATION_URL.addParams(
+    val requestAuthenticationTokenUrl = GOOGLE_AUTHENTICATION_URL.addParams(
       "response_type" -> "code" ::
       "client_id" -> GOOGLE_CLIENT_ID.get ::
-      "redirect_uri" -> "http://localhost:9000/google/callback" ::
+      "redirect_uri" -> callbackUrl ::
       "state" -> randomString ::
       "scope" -> "openid email" :: Nil
     )
 
-    Redirect(requestAuthenticationTokenURL)
+    Redirect(requestAuthenticationTokenUrl)
   }
 
-  def callback(error: Option[String], state: String, code: Option[String]) = Action.async { implicit request =>
+  def callback(error: Option[String] = None, state: Option[String] = None, code: Option[String] = None) = Action.async { implicit request =>
     if(code.isDefined) {
+      val callbackUrl = routes.GoogleAuth.callback().absoluteURL()
       val callToGoogle = WS.url(GOOGLE_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(
         "code" -> Seq(code.get),
         "client_id" -> Seq(GOOGLE_CLIENT_ID.get),
         "client_secret" -> Seq(GOOGLE_CLIENT_SECRET.get),
-        "redirect_uri" -> Seq("http://localhost:9000/google/callback"),
+        "redirect_uri" -> Seq(callbackUrl),
         "grant_type" -> Seq("authorization_code")
       )).map { response =>
         val idTokenJwt = (response.json \ "id_token").as[String]
@@ -57,21 +55,19 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
         email
       }
 
-      // TODO: try - catch
       import scala.concurrent.duration._
       import scala.language.postfixOps
       val email = Await.result(callToGoogle, 60 seconds)
       val user = User.findByEmail(email)
-      if(user.isDefined) {
+      if (user.isDefined) {
         gotoLoginSucceeded(user.get.id.get)
       } else {
         val errorMessage = "Det finns ingen användare med epostadressen " + email
         Future.successful(
-          Redirect(routes.Application.loginForm()).flashing(("error" , errorMessage))
+          Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
         )
       }
-    }
-    else {
+    } else {
       val errorMessage = "Det gick inte att logga in via Google: " + error.getOrElse("okänt fel")
       Future.successful(
         Redirect(routes.Application.loginForm()).flashing(("error" , errorMessage))
