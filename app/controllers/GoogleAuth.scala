@@ -33,6 +33,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
       "client_id" -> GOOGLE_CLIENT_ID.get ::
       "redirect_uri" -> callbackUrl ::
       "state" -> randomString ::
+      "prompt" -> "select_account" ::
       "scope" -> "openid email" :: Nil
     )
 
