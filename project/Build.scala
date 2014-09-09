@@ -18,6 +18,8 @@ object ApplicationBuild extends Build {
     "com.newrelic.agent.java" % "newrelic-api" % "3.8.2",
     "org.apache.poi" % "poi" % "3.10-FINAL",
     "org.apache.poi" % "poi-ooxml" % "3.10-FINAL",
+    "com.netaporter" %% "scala-uri" % "0.4.2",
+    "com.nimbusds" % "nimbus-jose-jwt" % "3.1.2",
     jdbc,
     anorm
   )

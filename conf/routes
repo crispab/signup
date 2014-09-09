@@ -3,64 +3,67 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-GET     /login                      controllers.Application.loginForm
-POST    /login                      controllers.Application.authenticate
-GET     /logout                     controllers.Application.logout
+GET         /                                 controllers.Application.index
+GET         /login                            controllers.Application.loginForm
+POST        /login                            controllers.Application.authenticate
+GET         /logout                           controllers.Application.logout
+GET         /google/authenticate              controllers.GoogleAuth.authenticate
+GET         /google/callback                  controllers.GoogleAuth.callback(error: Option[String], state: String, code: Option[String])
+
 
 # Users
-GET     /users/new                  controllers.UsersSecured.createForm
-GET     /users/newMember            controllers.UsersSecured.createMemberForm(groupId: Long)
-GET     /users/newGuest             controllers.UsersSecured.createGuestForm(eventId: Long)
-GET     /users/:id/edit             controllers.UsersSecured.updateForm(id: Long)
-GET     /users/:id/updateImage      controllers.UsersSecured.updateImageForm(id: Long)
-POST    /users/:id/resetImage       controllers.UsersSecured.resetImage(id: Long)
-POST    /users/:id/uploadImage      controllers.UsersSecured.uploadImage(id: Long)
-POST    /users                      controllers.UsersSecured.create
-POST    /users/newMember/:groupId   controllers.UsersSecured.createMember(groupId: Long)
-POST    /users/newGuest/:eventId    controllers.UsersSecured.createGuest(eventId: Long)
-POST    /users/:id                  controllers.UsersSecured.update(id: Long)
-POST    /users/:id/delete           controllers.UsersSecured.delete(id: Long)
-GET     /users                      controllers.Users.list
-GET     /users/:id                  controllers.Users.show(id: Long)
+GET         /users/new                        controllers.UsersSecured.createForm
+GET         /users/newMember                  controllers.UsersSecured.createMemberForm(groupId: Long)
+GET         /users/newGuest                   controllers.UsersSecured.createGuestForm(eventId: Long)
+GET         /users/:id/edit                   controllers.UsersSecured.updateForm(id: Long)
+GET         /users/:id/updateImage            controllers.UsersSecured.updateImageForm(id: Long)
+POST        /users/:id/resetImage             controllers.UsersSecured.resetImage(id: Long)
+POST        /users/:id/uploadImage            controllers.UsersSecured.uploadImage(id: Long)
+POST        /users                            controllers.UsersSecured.create
+POST        /users/newMember/:groupId         controllers.UsersSecured.createMember(groupId: Long)
+POST        /users/newGuest/:eventId          controllers.UsersSecured.createGuest(eventId: Long)
+POST        /users/:id                        controllers.UsersSecured.update(id: Long)
+POST        /users/:id/delete                 controllers.UsersSecured.delete(id: Long)
+GET         /users                            controllers.Users.list
+GET         /users/:id                        controllers.Users.show(id: Long)
 
 
 # Groups
-GET     /groups/new                 controllers.GroupsSecured.createForm
-GET     /groups/:id/edit            controllers.GroupsSecured.updateForm(id: Long)
-POST    /groups                     controllers.GroupsSecured.create
-POST    /groups/:id                 controllers.GroupsSecured.update(id: Long)
-POST    /groups/:id/delete          controllers.GroupsSecured.delete(id: Long)
-GET     /groups                     controllers.Groups.list
-GET     /groups/:id                 controllers.Groups.show(id: Long, showAll: Boolean ?= false)
+GET         /groups/new                       controllers.GroupsSecured.createForm
+GET         /groups/:id/edit                  controllers.GroupsSecured.updateForm(id: Long)
+POST        /groups                           controllers.GroupsSecured.create
+POST        /groups/:id                       controllers.GroupsSecured.update(id: Long)
+POST        /groups/:id/delete                controllers.GroupsSecured.delete(id: Long)
+GET         /groups                           controllers.Groups.list
+GET         /groups/:id                       controllers.Groups.show(id: Long, showAll: Boolean ?= false)
 
 
 # Memberships
-GET     /memberships/new            controllers.Memberships.createForm(groupId: Long)
-POST    /memberships                controllers.Memberships.create
-POST    /memberships/:id/delete     controllers.Memberships.delete(id: Long)
+GET         /memberships/new                  controllers.Memberships.createForm(groupId: Long)
+POST        /memberships                      controllers.Memberships.create
+POST        /memberships/:id/delete           controllers.Memberships.delete(id: Long)
 
 
 # Events
-GET     /events/new                 controllers.EventsSecured.createForm(groupId: Long)
-GET     /events/:id/edit            controllers.EventsSecured.updateForm(id: Long)
-POST    /events                     controllers.EventsSecured.create
-POST    /events/:id                 controllers.EventsSecured.update(id: Long)
-POST    /events/:id/delete          controllers.EventsSecured.delete(id: Long)
-POST    /events/:id/notify          controllers.EventsSecured.notifyParticipants(id: Long)
-GET     /events/:id                 controllers.Events.show(id: Long)
-GET     /events/:id/excel           controllers.Events.asExcel(id: Long)
-GET     /events/:id/email           controllers.Events.asEmail(id: Long, userId: Long)
-GET     /events/:id/slack           controllers.Events.asSlackMessage(id: Long)
+GET         /events/new                       controllers.EventsSecured.createForm(groupId: Long)
+GET         /events/:id/edit                  controllers.EventsSecured.updateForm(id: Long)
+POST        /events                           controllers.EventsSecured.create
+POST        /events/:id                       controllers.EventsSecured.update(id: Long)
+POST        /events/:id/delete                controllers.EventsSecured.delete(id: Long)
+POST        /events/:id/notify                controllers.EventsSecured.notifyParticipants(id: Long)
+GET         /events/:id                       controllers.Events.show(id: Long)
+GET         /events/:id/excel                 controllers.Events.asExcel(id: Long)
+GET         /events/:id/email                 controllers.Events.asEmail(id: Long, userId: Long)
+GET         /events/:id/slack                 controllers.Events.asSlackMessage(id: Long)
 
 
 # Participations
-GET     /participations/newGuest    controllers.ParticipationsSecured.createGuestForm(eventId: Long)
-POST    /participations/newGuest    controllers.ParticipationsSecured.createGuest
-POST    /participations/:id/delete  controllers.ParticipationsSecured.delete(id: Long)
-GET     /participations/edit        controllers.Participations.editForm(eventId: Long, userId: Long)
-POST    /participations             controllers.Participations.createOrUpdate
+GET         /participations/newGuest          controllers.ParticipationsSecured.createGuestForm(eventId: Long)
+POST        /participations/newGuest          controllers.ParticipationsSecured.createGuest
+POST        /participations/:id/delete        controllers.ParticipationsSecured.delete(id: Long)
+GET         /participations/edit              controllers.Participations.editForm(eventId: Long, userId: Long)
+POST        /participations                   controllers.Participations.createOrUpdate
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET         /assets/*file                     controllers.Assets.at(path="/public", file)

@@ -52,6 +52,16 @@
         </div>
       </div>
     </form>
+
+    @if(GoogleAuth.isConfigured) {
+      <hr/>
+      <p class="text-center">
+        <a href="@routes.GoogleAuth.authenticate()" class="btn">
+          <img src='@routes.Assets.at("images/google-logo.png")'/> Logga in med Google
+        </a>
+      </p>
+    }
+
   </div>
 </div>
 }(loggedInUser = None)
