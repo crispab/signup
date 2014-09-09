@@ -5,8 +5,8 @@ heroku config:set \
     CLOUDINARY_FOLDER="<your folder name>" \
     PASSWORD_SALT="<your password salt>" \
     SLACK_CHANNEL_URL="<if you use chat via slack.com and want notifications there, otherwise remove this line>" \
-    GOOGLE_CLIENT_ID = "<to enable Google login - get from Google Dev Console>" \
-    GOOGLE_CLIENT_SECRET = "<to enable Google login - get from Google Dev Console>" \
+    GOOGLE_CLIENT_ID="<to enable Google login - get from Google Dev Console>" \
+    GOOGLE_CLIENT_SECRET="<to enable Google login - get from Google Dev Console>" \
     SMTP_MOCK=false \
     SMTP_HOST=smtp.sendgrid.net \
     SMTP_PORT=587 \
