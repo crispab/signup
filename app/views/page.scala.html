@@ -51,7 +51,9 @@
 
         <ul class="nav">
           <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
-          <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.Users.list()">Användare</a></li>
+          @if(isAdmin(loggedInUser)) {
+            <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.UsersSecured.list()">Användare</a></li>
+          }
         </ul>
         @if(showLogin) {
           @if(isLoggedIn(loggedInUser)) {

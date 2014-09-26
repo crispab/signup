@@ -1,6 +1,7 @@
 @(message: String = "")(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.Section._
+@import util.AuthHelper._
 
 @page(title = "SignUp", section = Other) {
 
@@ -31,9 +32,11 @@
       <p>
         <a href="@routes.Groups.list()">Grupper</a>
       </p>
-      <p>
-        <a href="@routes.Users.list()">Användare</a>
-      </p>
+      @if(isAdmin(loggedInUser)) {
+        <p>
+          <a href="@routes.UsersSecured.list()">Användare</a>
+        </p>
+      }
     </div>
   </div>
 }

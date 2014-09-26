@@ -6,8 +6,12 @@
 
 @page(user.firstName + " " + user.lastName, section = Users) {
 
-@breadcrumb(Seq("Användare" -> routes.Users.list()),
-            user.firstName + " " + user.lastName)
+@if(isAdmin(loggedInUser)) {
+  @breadcrumb(Seq("Användare" -> routes.UsersSecured.list()),
+    user.firstName + " " + user.lastName)
+} else {
+  @breadcrumb(Seq(), user.firstName + " " + user.lastName)
+}
 
 <div class="row">
   <div class="span5">

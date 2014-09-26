@@ -38,10 +38,10 @@
 @page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
 
   @if(updating()) {
-    @breadcrumb(Seq("Användare" -> routes.Users.list(), field("firstName") + " " + field("lastName") -> routes.Users.show(idToUpdate.get)),
+    @breadcrumb(Seq("Användare" -> routes.UsersSecured.list(), field("firstName") + " " + field("lastName") -> routes.Users.show(idToUpdate.get)),
       "Redigera")
   } else {
-    @breadcrumb(Seq("Användare" -> routes.Users.list()), "Ny")
+    @breadcrumb(Seq("Användare" -> routes.UsersSecured.list()), "Ny")
   }
 
   <div class="row">

@@ -16,11 +16,6 @@ import scala.concurrent.{Future, ExecutionContext}
 
 object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def list = StackAction { implicit request =>
-    val usersToList = User.findAll()
-    Ok(views.html.users.list(usersToList))
-  }
-
   def show(id: Long) = StackAction { implicit request =>
     val userToShow = User.find(id)
     Ok(views.html.users.show(userToShow))
@@ -28,6 +23,12 @@ object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 }
 
 object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
+
+  def list = StackAction(AuthorityKey -> hasPermission(Administrator)_)  { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    val usersToList = User.findAll()
+    Ok(views.html.users.list(usersToList))
+  }
 
   def createForm = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
@@ -57,7 +58,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
         user => {
           User.create(user)
-          Redirect(routes.Users.list())
+          Redirect(routes.UsersSecured.list())
         }
       )
   }
@@ -139,7 +140,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
 
   def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     User.delete(id)
-    Redirect(routes.Users.list())
+    Redirect(routes.UsersSecured.list())
   }
 
 

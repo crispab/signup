@@ -5,7 +5,7 @@
 
 @page("Byt bild för " + user.firstName + " " + user.lastName, section = Users) {
 
-@breadcrumb(Seq("Användare" -> routes.Users.list(),
+@breadcrumb(Seq("Användare" -> routes.UsersSecured.list(),
                 user.firstName + " " + user.lastName -> routes.Users.show(user.id.get)),
                 "Byt bild")
 
