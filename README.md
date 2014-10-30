@@ -70,6 +70,12 @@ limitations under the License.
 Setting Up Development Environment
 ----------------------------------
 
+### With Vagrant ###
+
+Follow the instructions below (under Basics) if you don't want to use Vagrant. Or just do `vagrant up` and you're good to go.
+
+Read [Using Vagrant](UsingVagrant.md) to learn more about how to use Vagrant and what is installed and configured.
+
 ### Basics ###
 
 In order to set up the development environment you need to:
