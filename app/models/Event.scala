@@ -8,6 +8,13 @@ import org.joda.time.DateTime
 import play.api.Play.current
 import play.api.db.DB
 
+object EventType extends Enumeration {
+  type EventType = Value
+  val NormalEvent, Poll, Cancelled = Value
+}
+
+import models.EventType._
+
 case class Event(
                   id: Pk[Long] = NotAssigned,
                   group: Group,
@@ -17,7 +24,8 @@ case class Event(
                   endTime: util.Date,
                   lastSignUpDate: util.Date,
                   venue: String = "",
-                  allowExtraFriends: Boolean = false
+                  allowExtraFriends: Boolean = false,
+                  eventType: EventType = NormalEvent
                   ) {
 
   def lastSignupDatePassed() = {
@@ -25,6 +33,8 @@ case class Event(
     val lastSignUpDay = new DateTime(lastSignUpDate).withTimeAtStartOfDay
     today.isAfter(lastSignUpDay)
   }
+
+  def isCancelled = eventType == Cancelled
 }
 
 object Event {
@@ -38,8 +48,9 @@ object Event {
       get[util.Date]("last_signup_date") ~
       get[String]("venue") ~
       get[Boolean]("allow_extra_friends") ~
-      get[Long]("groupx") map {
-      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx =>
+      get[Long]("groupx") ~
+      get[String]("event_type") map {
+      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx ~ event_type =>
         Event(
           id = id,
           name = name,
@@ -49,7 +60,8 @@ object Event {
           lastSignUpDate = last_signup_date,
           venue = venue,
           allowExtraFriends = allow_extra_friends,
-          group = Group.find(groupx)
+          group = Group.find(groupx),
+          eventType = EventType.withName(event_type)
         )
     }
   }
@@ -65,7 +77,7 @@ object Event {
     DB.withTransaction {
       val today = new DateTime().withTimeAtStartOfDay().toDate
       implicit connection =>
-        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} ORDER BY e.last_signup_date ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
+        SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} AND e.event_type != 'Cancelled' ORDER BY e.last_signup_date ASC").on('groupId -> group.id.get, 'today -> today).as(Event.parser *)
     }
   }
 
@@ -94,7 +106,8 @@ object Event {
           'last_signup_date -> event.lastSignUpDate,
           'venue -> event.venue,
           'allow_extra_friends -> event.allowExtraFriends,
-          'groupx -> event.group.id
+          'groupx -> event.group.id,
+          'event_type -> event.eventType.toString
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -112,7 +125,8 @@ INSERT INTO events (
       last_signup_date,
       venue,
       allow_extra_friends,
-      groupx
+      groupx,
+      event_type
     )
     values (
       {name},
@@ -122,7 +136,8 @@ INSERT INTO events (
       {last_signup_date},
       {venue},
       {allow_extra_friends},
-      {groupx}
+      {groupx},
+      {event_type}
     )
     """
 
@@ -138,7 +153,8 @@ INSERT INTO events (
           'last_signup_date -> event.lastSignUpDate,
           'venue -> event.venue,
           'allow_extra_friends -> event.allowExtraFriends,
-          'groupx -> event.group.id
+          'groupx -> event.group.id,
+          'event_type -> event.eventType.toString
         ).executeUpdate()
     }
   }
@@ -154,9 +170,20 @@ SET name = {name},
     last_signup_date = {last_signup_date},
     venue = {venue},
     allow_extra_friends = {allow_extra_friends},
-    groupx = {groupx}
+    groupx = {groupx},
+    event_type = {event_type}
 WHERE id = {id}
     """
+
+
+  def cancel(id: Long) {
+    DB.withTransaction {
+      implicit connection =>
+        SQL("UPDATE events SET event_type = 'Cancelled' WHERE id = {id}").on('id -> id).executeUpdate()
+        SQL("DELETE FROM reminders r WHERE r.event={id}").on('id -> id).executeUpdate()
+    }
+  }
+
 
   def delete(id: Long) {
     DB.withTransaction() {

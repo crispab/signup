@@ -34,6 +34,12 @@
           Sista anmälningsdatum har passerats.
         </div>
       }
+      case event if(event.isCancelled) => {
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          Eventet är inställt.
+        </div>
+      }
       case _ => {}
     }
 
@@ -41,6 +47,13 @@
       <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
         @flash.get("success")
+      </div>
+    }
+
+    @if(flash.get("error").isDefined) {
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        @flash.get("error")
       </div>
     }
 
@@ -55,14 +68,51 @@
         <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
       }
 
+      @views.html.events.tags.addToCalendarButton(event)
+
       @if(isAdmin(loggedInUser)) {
-        <a href="@routes.EventsSecured.updateForm(event.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
-        <a data-toggle="modal" href="#remove_event_@event.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+        <div class="btn-group pull-right">
+          <button class="btn">Åtgärder</button>
+          <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            @if(!event.isCancelled) {
+              <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><i class="icon-pencil"></i> Redigera</a></li>
+              <li><a data-toggle="modal" href="#notify_participants_@event.id"><i class="icon-envelope"></i>
+                Påminn de som inte svarat</a></li>
+              <li><a data-toggle="modal" href="#cancel_event_@event.id"><i class="icon-off"></i> Ställ in</a></li>
+              <li class="divider"></li>
+            }
+            <li><a data-toggle="modal" href="#remove_event_@event.id"><i class="icon-trash"></i> Ta bort</a></li>
+          </ul>
+        </div>
+
+        <div id="cancel_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
+          <div class="modal-header">
+            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Vill du ställa in eventet?</h3>
+          </div>
+          <div class="modal-body">
+            <p>
+              Du håller på att ställa in eventet <strong>@event.name</strong> och meddela alla deltagare.
+            </p>
+            <p>
+              Vill du fortsätta?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><i class="icon-off icon-white"></i> Ställ in</button>
+            </form>
+          </div>
+        </div>
 
         <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
             <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du ta bort event?</h3>
+            <h3>Vill du ta bort eventet?</h3>
           </div>
           <div class="modal-body">
             <p>
@@ -79,8 +129,6 @@
             </form>
           </div>
         </div>
-
-        <a data-toggle="modal" href="#notify_participants_@event.id" class="btn"><i class="icon-envelope"></i> Påminn de som inte svarat</a>
 
         <div id="notify_participants_@event.id" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
@@ -103,10 +151,6 @@
           </div>
         </div>
       }
-      <p></p>
-
-      @views.html.events.tags.addToCalendarButton(event)
-
     </div>
   </div>
 </div>

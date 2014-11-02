@@ -27,7 +27,7 @@ class EventReminderActor extends Actor {
   def sendRemindersForEvents(events: Seq[Event]) {
     events map { event =>
       MailReminder.remindParticipants(event)
-      SlackReminder.sendSlackChatMessage(event)
+      SlackReminder.remindListeners(event)
     }
   }
 

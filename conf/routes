@@ -49,6 +49,7 @@ GET         /events/new                       controllers.EventsSecured.createFo
 GET         /events/:id/edit                  controllers.EventsSecured.updateForm(id: Long)
 POST        /events                           controllers.EventsSecured.create
 POST        /events/:id                       controllers.EventsSecured.update(id: Long)
+POST        /events/:id/cancel                controllers.EventsSecured.cancel(id: Long)
 POST        /events/:id/delete                controllers.EventsSecured.delete(id: Long)
 POST        /events/:id/notify                controllers.EventsSecured.notifyParticipants(id: Long)
 GET         /events/:id                       controllers.Events.show(id: Long)

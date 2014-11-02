@@ -9,7 +9,7 @@ import play.api.templates.Html
 
 object MailReminder {
 
-  private def findReceivers(event: Event): Seq[User] = {
+  private def findReceiversToRemind(event: Event): Seq[User] = {
     val unregisteredMembers = User.findUnregisteredMembers(event)
     val unregisteredGuests = Participation.findGuestsByStatus(Unregistered, event) map {_.user}
     val maybeMembers = Participation.findMembersByStatus(Maybe, event) map {_.user}
@@ -18,7 +18,7 @@ object MailReminder {
     unregisteredMembers union unregisteredGuests union maybeMembers union maybeGuests
   }
 
-  private def createEmailMessage(event: Event, user: User) : Html = {
+  private def createReminderEmailMessage(event: Event, user: User) : Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     views.html.events.email(event, user, baseUrl)
@@ -27,7 +27,7 @@ object MailReminder {
 
   def remindParticipants(event: Event) {
     Logger.debug("Sending reminders for: " + event.name)
-    val receivers = findReceivers(event)
+    val receivers = findReceiversToRemind(event)
     Logger.debug("Found receivers: " + receivers)
     receivers map { receiver =>
       import play.api.Play.current
@@ -37,7 +37,7 @@ object MailReminder {
       mailer.setReplyTo(event.group.mailFrom)
       mailer.setFrom(event.group.mailFrom)
 
-      val emailMessage = createEmailMessage(event, receiver)
+      val emailMessage = createReminderEmailMessage(event, receiver)
       try {
         Logger.debug("Sending notification email for " + event.name + " to " + receiver)
         mailer.sendHtml(emailMessage.toString())
@@ -51,4 +51,10 @@ object MailReminder {
     }
     LogEntry.create(event, "Skickat påminnelse till " + receivers.size + " medlem(mar)")
   }
+
+  def sendCancellationMessage(event: Event) = {
+    // TODO: Implement this
+    throw new NotImplementedError()
+  }
+
 }

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import anorm.{NotAssigned, Pk}
 import models._
 import models.Status._
+import models.EventType._
 import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -172,16 +173,18 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
   def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     val event = Event.find(id)
-
-    import play.api.Play.current
-    import play.api.libs.concurrent.Execution.Implicits._
-    import scala.concurrent.duration._
-    Akka.system.scheduler.scheduleOnce(1.second) {
-      MailReminder.remindParticipants(event)
-      SlackReminder.sendSlackChatMessage(event)
+    if(event.eventType != Cancelled) {
+      import play.api.Play.current
+      import play.api.libs.concurrent.Execution.Implicits._
+      import scala.concurrent.duration._
+      Akka.system.scheduler.scheduleOnce(1.second) {
+        MailReminder.remindParticipants(event)
+        SlackReminder.remindListeners(event)
+      }
+      Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
+    } else {
+      Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att skicka påminnelser.")
     }
-
-    Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
   }
 
   def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
@@ -210,11 +213,17 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
-    Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
+    if(event.eventType != Cancelled) {
+      Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
+    } else {
+      Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att redigera. Skapa ett nytt istället.")
+    }
   }
 
   def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
+    val event = Event.find(id)
+    if(event.eventType != Cancelled) {
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(id)
@@ -226,6 +235,25 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
           Redirect(routes.Events.show(id))
         }
       )
+    } else {
+      Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att redigera. Skapa ett nytt istället.")
+    }
+  }
+
+
+  def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    val event = Event.find(id)
+    Event.cancel(id)
+
+    import play.api.Play.current
+    import play.api.libs.concurrent.Execution.Implicits._
+    import scala.concurrent.duration._
+    Akka.system.scheduler.scheduleOnce(1.second) {
+      MailReminder.sendCancellationMessage(event)
+      SlackReminder.sendCancellationMessage(event)
+    }
+
+    Redirect(routes.Events.show(id))
   }
 
 
