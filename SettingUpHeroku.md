@@ -121,7 +121,7 @@ This step may take a moment.
 
 Once the project is created you'll be presented the project's dashboard. Choose `APIs & auth -> Create new Client ID -> Web application`.
 Remove anything under "Authorized Javascipt Origins" and store the path 
-"http://signup-<your name>.herokuapp.com/google/callback" in "Authorized Redirect URI". Choose `Create Client ID`.
+"http://signup-\<your name>.herokuapp.com/google/callback" in "Authorized Redirect URI". Choose `Create Client ID`.
 
 If you want to you can configure the Consent Screen to suit your needs.
 
