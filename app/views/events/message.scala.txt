@@ -1,14 +1,15 @@
 @(event: models.Event, baseURL: String)
+@import org.json.JSONObject._
   {
      "attachments" : [
         {
-           "fallback" : "Dags att anmäla sig till eventet <@baseURL@routes.Events.show(event.id.get)|@event.group.mailSubjectPrefix: @event.name>!",
-           "pretext" : "Dags att anmäla sig till eventet <@baseURL@routes.Events.show(event.id.get)|@event.group.mailSubjectPrefix: @event.name>!",
+           "fallback" : @quote("Dags att anmäla sig till eventet <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Dags att anmäla sig till eventet <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
            "color" : "#EE3C0C",
            "fields" : [
               {
-                 "title" : "@event.group.mailSubjectPrefix: @event.name",
-                 "value" : "@util.HtmlHelper.escapeNewlines(util.HtmlHelper.stripFromHtml(event.description))",
+                 "title" : @quote(event.group.mailSubjectPrefix + ": " + event.name),
+                 "value" : @quote(util.HtmlHelper.stripFromHtml(event.description)),
                  "short" : false
               },
               {
@@ -18,7 +19,7 @@
               },
               {
                  "title" : "Plats",
-                 "value" : "@event.venue",
+                 "value" : @quote(event.venue),
                  "short" : false
               }
            ]
