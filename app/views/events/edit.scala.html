@@ -5,7 +5,7 @@
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
-@lastSignupIsSameDay() = @{field("same_day") == "true"}
+@lastSignupIsSameDay() = @{field("same_day") == "true" || creatingNew}
 
 
 @hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "error" } }
