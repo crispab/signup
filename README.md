@@ -67,60 +67,46 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-Setting Up Development Environment
+Setting up a development environment
 ----------------------------------
 
-### With Vagrant ###
+In the SignUp development environment Vagrant is used to create a local deployment environment in a virtual machine 
+(VirtualBox) with a Java run-time, Play Framework (including Scala) and a PostgreSQL database pre-installed.
 
-Follow the instructions below (under Basics) if you don't want to use Vagrant. Or just do `vagrant up` and you're good to go.
+The source code tree is shared between your host computer (where you do your editing) and the virtual machine 
+(where Play is run).
 
-Read [Using Vagrant](UsingVagrant.md) to learn more about how to use Vagrant and what is installed and configured.
+### Get the source code ###
 
-### Basics ###
+The source code is stored on GitHub and managed by the version control system Git. Follow the instructions on 
+https://help.github.com/articles/set-up-git/ to get going with Git and GitHub.
 
-In order to set up the development environment you need to:
+Get a copy of the source code for SignUp by typing on your command line:
 
-- Clone this project from GitHub
-- Install Play 2.2.x
-- `play eclipsify` or `play idea`
+    $ git clone https://github.com/crispab/signup.git
 
-### "Persistent Database" - Postgres ###
+This will give you the latest version of the source code. 
 
-When running SignUp a Postgres database is used. In earlier versions of SignUp the H2 databas engine was used during
-development, but this was abandoned since writing the database evolution scrips that supported two dialects
-of SQL was too cumbersome.
 
-Since Postgres is used when SignUp is deployed on Heroku, running Postgres locally for development is the best option.
+### Set up Vagrant ###
 
-To install Postgres on MacOS X:
+If you already have Vagrant on your local system, you just need to:
 
-- Download Postgres from [postgres.org](http://www.postgresql.org/)
-- Install a standard Postgres (You may have to restart your Mac as the installation fiddles with shared memory)
-- Set the password for the DATABASE (super)user postgres when prompted
-- Finish the installation
-- On MacOS X: A UNIX user is created: 'PostgreSQL' This user seem to get some password that you cannot find out. Reset the password of the UNIX user 'PostgreSQL' to something you know, and something safe, as this is a real MacOS X user.
-- Do some stuff from the command prompt to create a database and a database user
+    $ cd signup
+    $ vagrant up
+    
+To install and configure Vagrant, follow the instructions in [Using Vagrant](UsingVagrant.md).
 
-```
-    $ su - PostgreSQL
-    Password: <Enter the password of your UNIX user 'PostgreSQL'>
-    $ createdb signup
-    Password: <Enter the password of your DATABASE user 'postgres'>
-    $ psql -s signup
-    Password: <Enter the password of your DATABASE user 'postgres'>
-    signup=# create user signup4 password 's7p2+';
-    signup=# grant all privileges on database signup to signup4;
-```
+### Run SignUp ###
 
-Run SignUp
-----------
+Once you have the development environment set up you should be able to launch 
+SignUp from inside the virtual machine:
 
-Once you have the development environment set up you should be able to do
+    $ vagrant ssh
+    vagrant@vagrant-ubuntu-trusty-64:~$ cd /vagrant
+    vagrant@vagrant-ubuntu-trusty-64:~$ play run
 
-    $ play run
-
-And then point your browser to
-[http://localhost:9000](http://localhost:9000)
+And then point your browser on your local computer to [http://localhost:9000](http://localhost:9000)
 
 
 Deploy in production
