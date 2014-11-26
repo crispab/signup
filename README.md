@@ -113,6 +113,3 @@ Deploy in production
 ------
 
 Read [Setting up Heroku](SettingUpHeroku.md) to learn how to deploy a SignUp instance on Heroku.
-
-x
-
