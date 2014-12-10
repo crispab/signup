@@ -11,12 +11,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   config.vm.box = "ubuntu/trusty64"
 
+  # Set the Timezone to something useful
+  config.vm.provision :shell, :inline => "echo \"Europe/Stockholm\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata", run: "always"
+
   config.vm.provision :shell, path: "provisioning/InstallPostgresql.sh"
   config.vm.provision :shell, path: "provisioning/InstallJava.sh"
   config.vm.provision :shell, path: "provisioning/InstallPlay.sh"
 
   config.vm.network "forwarded_port", guest: 9000, host: 9000
-  config.vm.network "forwarded_port", guest: 5432, host: 5432
+  config.vm.network "forwarded_port", guest: 9999, host: 9999
+  config.vm.network "forwarded_port", guest: 5432, host: 15432
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
