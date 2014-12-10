@@ -1,0 +1,18 @@
+@(event: models.Event, baseURL: String)
+@import org.json.JSONObject._
+  {
+     "attachments" : [
+        {
+           "fallback" : @quote("Inställt event: <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Inställt event: <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "color" : "#EE3C0C",
+           "fields" : [
+              {
+                 "title" : "Tid",
+                 "value" : "@util.DateHelper.asDateTime(event.startTime)-@util.DateHelper.asTime(event.endTime)",
+                 "short" : false
+              }
+           ]
+        }
+     ]
+  }

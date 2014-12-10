@@ -1,0 +1,35 @@
+@(event: models.Event, baseURL: String)
+@import org.json.JSONObject._
+  {
+     "attachments" : [
+        {
+           "fallback" : @quote("Dags att anmäla sig till eventet <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Dags att anmäla sig till eventet <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "color" : "#EE3C0C",
+           "fields" : [
+              {
+                 "title" : @quote(event.group.mailSubjectPrefix + ": " + event.name),
+                 "value" : @quote(util.HtmlHelper.stripFromHtml(event.description)),
+                 "short" : false
+              },
+              {
+                 "title" : "Tid",
+                 "value" : "@util.DateHelper.asDateTime(event.startTime)-@util.DateHelper.asTime(event.endTime)",
+                 "short" : false
+              },
+              {
+                 "title" : "Plats",
+                 "value" : @quote(event.venue),
+                 "short" : false
+              }
+              @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+                ,{
+                   "title" : "Sista anmälningsdag",
+                   "value" : @util.DateHelper.asDate(event.lastSignUpDate),
+                   "short" : false
+                }
+              }
+           ]
+        }
+     ]
+  }
