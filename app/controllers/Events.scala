@@ -5,16 +5,15 @@ import java.text.SimpleDateFormat
 import anorm.{NotAssigned, Pk}
 import models._
 import models.Status._
-import models.EventType._
+import play.api.libs.json.{Json, JsValue}
+import util.AuthHelper._
+import util.DateHelper._
+import util.StatusHelper._
 import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
-import play.api.libs.json._
 import play.api.mvc._
-import _root_.util.AuthHelper._
-import _root_.util.DateHelper._
-import _root_.util.StatusHelper._
 import java.util
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
@@ -28,7 +27,11 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
   def show(id: Long) = StackAction { implicit request =>
     val event = Event.find(id)
-    Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
+    if(event.isCancelled) {
+      Ok(views.html.events.showcancelled(event))
+    } else {
+      Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
+    }
   }
 
   def asExcel(id: Long) = StackAction { implicit request =>
@@ -147,21 +150,40 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 
 
-  def asEmail(eventId: Long, userId: Long) = Action {
+  def asEmailNotification(eventId: Long, userId: Long) = Action {
     val event = Event.find(eventId)
     val user = User.find(userId)
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    Ok(views.html.events.email(event, user, baseUrl))
+    Ok(views.html.events.emailnotificationmessage(event, user, baseUrl))
   }
 
 
-  def asSlackMessage(id: Long) = Action { implicit request =>
+  def asEmailCancellation(eventId: Long, userId: Long) = Action {
+    val event = Event.find(eventId)
+    val user = User.find(userId)
+    import play.api.Play.current
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    Ok(views.html.events.emailcancellationmessage(event, user, baseUrl))
+  }
+
+
+  def asSlackNotification(id: Long) = Action { implicit request =>
     val event = Event.find(id)
 
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    val message: JsValue = Json.parse(views.txt.events.message(event, baseUrl).toString())
+    val message: JsValue = Json.parse(views.txt.events.slacknotificationmessage(event, baseUrl).toString())
+
+    Ok(message)
+  }
+
+  def asSlackCancellation(id: Long) = Action { implicit request =>
+    val event = Event.find(id)
+
+    import play.api.Play.current
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val message: JsValue = Json.parse(views.txt.events.slackcancellationmessage(event, baseUrl).toString())
 
     Ok(message)
   }
@@ -173,13 +195,13 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
   def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     val event = Event.find(id)
-    if(event.eventType != Cancelled) {
+    if(!event.isCancelled) {
       import play.api.Play.current
       import play.api.libs.concurrent.Execution.Implicits._
       import scala.concurrent.duration._
       Akka.system.scheduler.scheduleOnce(1.second) {
-        MailReminder.remindParticipants(event)
-        SlackReminder.remindListeners(event)
+        MailReminder.sendReminderMessage(event)
+        SlackReminder.sendReminderMessage(event)
       }
       Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
     } else {
@@ -213,7 +235,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
-    if(event.eventType != Cancelled) {
+    if(!event.isCancelled) {
       Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
     } else {
       Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att redigera. Skapa ett nytt istället.")
@@ -223,7 +245,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
-    if(event.eventType != Cancelled) {
+    if(!event.isCancelled) {
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val event = Event.find(id)

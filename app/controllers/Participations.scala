@@ -14,9 +14,13 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
 
   def editForm(eventId: Long, userId: Long) = StackAction { implicit request =>
     val event = Event.find(eventId)
-    val userToAttend = User.find(userId)
-    val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = On, user = userToAttend, event = event))
-    Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
+    if(!event.isCancelled) {
+      val userToAttend = User.find(userId)
+      val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = On, user = userToAttend, event = event))
+      Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
+    } else {
+      Redirect(routes.Events.show(eventId)).flashing("error" -> "Eventet är inställt. Det går inte att anmäla sig.")
+    }
   }
 
   def createOrUpdate = StackAction { implicit request =>
@@ -48,6 +52,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
         "userId" -> longNumber,
         "eventId" -> longNumber
       )(toParticipation)(fromParticipation)
+        .verifying("Eventet är inställt. Det går inte att anmäla sig.", participation => !participation.event.isCancelled)
     )
 
   def toParticipation(

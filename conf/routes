@@ -54,8 +54,10 @@ POST        /events/:id/delete                controllers.EventsSecured.delete(i
 POST        /events/:id/notify                controllers.EventsSecured.notifyParticipants(id: Long)
 GET         /events/:id                       controllers.Events.show(id: Long)
 GET         /events/:id/excel                 controllers.Events.asExcel(id: Long)
-GET         /events/:id/email                 controllers.Events.asEmail(id: Long, userId: Long)
-GET         /events/:id/slack                 controllers.Events.asSlackMessage(id: Long)
+GET         /events/:id/notify/email          controllers.Events.asEmailNotification(id: Long, userId: Long)
+GET         /events/:id/cancel/email          controllers.Events.asEmailCancellation(id: Long, userId: Long)
+GET         /events/:id/notify/slack          controllers.Events.asSlackNotification(id: Long)
+GET         /events/:id/cancel/slack          controllers.Events.asSlackCancellation(id: Long)
 
 
 # Participations

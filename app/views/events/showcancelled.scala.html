@@ -1,8 +1,7 @@
-@(event: models.Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+@(event: models.Event)(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.AuthHelper._
 @import util.DateHelper._
-@import util.StatusHelper._
 @import util.Section._
 
 
@@ -20,28 +19,9 @@
 <div class="row">
   <div class="span5">
 
-    @event match {
-      case event if(event.endTime.before(new java.util.Date())) => {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          Det här eventet har redan inträffat!
-        </div>
-      }
-      case event if(event.lastSignupDatePassed) => {
-        <div class="alert alert-info">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
-          Sista anmälningsdatum har passerats.
-        </div>
-      }
-      case event if(event.isCancelled) => {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          Eventet är inställt.
-        </div>
-      }
-      case _ => {}
-    }
+    <div class="alert alert-danger">
+      Eventet är inställt.
+    </div>
 
     @if(flash.get("success").isDefined) {
       <div class="alert alert-success">
@@ -68,47 +48,16 @@
         <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
       }
 
-      @if(!event.isCancelled) {
-        views.html.events.tags.addToCalendarButton(event)
-      }
 
       @if(isAdmin(loggedInUser)) {
-        <div class="btn-group pull-right">
+        <div class="btn-group">
           <button class="btn">Åtgärder</button>
           <button class="btn dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            @if(!event.isCancelled) {
-              <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><i class="icon-pencil"></i> Redigera</a></li>
-              <li><a data-toggle="modal" href="#notify_participants_@event.id"><i class="icon-envelope"></i>
-                Påminn de som inte svarat</a></li>
-              <li><a data-toggle="modal" href="#cancel_event_@event.id"><i class="icon-off"></i> Ställ in</a></li>
-              <li class="divider"></li>
-            }
             <li><a data-toggle="modal" href="#remove_event_@event.id"><i class="icon-trash"></i> Ta bort</a></li>
           </ul>
-        </div>
-
-        <div id="cancel_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
-          <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du ställa in eventet?</h3>
-          </div>
-          <div class="modal-body">
-            <p>
-              Du håller på att ställa in eventet <strong>@event.name</strong> och meddela alla deltagare.
-            </p>
-            <p>
-              Vill du fortsätta?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-off icon-white"></i> Ställ in</button>
-            </form>
-          </div>
         </div>
 
         <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
@@ -131,137 +80,8 @@
             </form>
           </div>
         </div>
-
-        <div id="notify_participants_@event.id" class="modal smaller-modal hide fade" style="display: none">
-          <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du e-posta de som ännu inte svarat?</h3>
-          </div>
-          <div class="modal-body">
-            <p>
-              Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till eventet <strong>@event.name</strong> som ännu inte svarat.
-            </p>
-            <p>
-              Vill du fortsätta?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <form action="@routes.EventsSecured.notifyParticipants(event.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn de som inte svarat</button>
-            </form>
-          </div>
-        </div>
       }
     </div>
   </div>
 </div>
-
-
-  <!-- TODO: Skip more or less the rest if cancelled -->
-
-  <div class="row">
-  <div class="span5">
-    <span class="label @asCssClass(Status.On)">
-      @{members.numberOn + guests.numberOn}
-      @asMessage(Status.On).toLowerCase
-    </span>
-
-    <span class="label @asCssClass(Status.Maybe)">
-      @{members.numberMaybe + guests.numberMaybe}
-      @asMessage(Status.Maybe).toLowerCase
-    </span>
-
-    <span class="label @asCssClass(Status.Off)">
-      @{members.numberOff + guests.numberOff}
-      @asMessage(Status.Off).toLowerCase
-    </span>
-
-    <span class="label @asCssClass(Status.Unregistered)">
-      @{members.numberUnregistered + guests.numberUnregistered}
-      @asMessage(Status.Unregistered).toLowerCase
-    </span>
-
-    <p><a href="@routes.Events.asExcel(event.id.get)" class="btn"><img src="@routes.Assets.at("images/icon-spreadsheet.png")"/> Som Excel</a></p>
-
-  </div>
-</div>
-
-@if(isAdmin(loggedInUser) && reminders.nonEmpty) {
-  <div class="row">
-    <div class="span5">
-      <h3>Påminnelser</h3>
-    </div>
-  </div>
-
-  @reminders.map { reminder =>
-    <div class="row">
-      <div class="span5 list-row">
-        <div class="row">
-          <div class="span5">
-              Påminnelse kommer automatiskt att skickas @asDate(reminder.date)
-          </div>
-        </div>
-      </div>
-    </div>
-  }
-}
-
-@if(logEntries.nonEmpty) {
-  <div class="row">
-    <div class="span5">
-      <h3>Händelser</h3>
-    </div>
-  </div>
-
-  @logEntries.map { logEntry =>
-    <div class="row">
-      <div class="span5 list-row">
-        <div class="row">
-          <div class="span5">
-            <span class="muted">@asDateTime(logEntry.when)</span>
-            @logEntry.message
-          </div>
-        </div>
-      </div>
-    </div>
-  }
-}
-
-<div class="row">
-  <div class="span5">
-    <h3>Gäster</h3>
-  </div>
-</div>
-
-
-@if(guests.isEmpty) {
-  <p>Inga extra gäster</p>
-} else {
-  @views.html.events.tags.listParticipations(guests.on, withRemoveButton = true)
-  @views.html.events.tags.listParticipations(guests.maybe, withRemoveButton = true)
-  @views.html.events.tags.listParticipations(guests.off, withRemoveButton = true)
-  @views.html.events.tags.listParticipations(guests.unregistered, withRemoveButton = true)
-}
-
-
-@if(isAdmin(loggedInUser)) {
-  <div class="row">
-    <div class="span5 btn-row">
-      <a href="@routes.ParticipationsSecured.createGuestForm(event.id.get)" class="btn"><i class="icon-plus"></i> Ny gäst</a>
-    </div>
-  </div>
-}
-
-<div class="row">
-  <div class="span5">
-    <h3>Medlemmar</h3>
-  </div>
-</div>
-
-@views.html.events.tags.listParticipations(members.on)
-@views.html.events.tags.listParticipations(members.maybe)
-@views.html.events.tags.listParticipations(members.off)
-@views.html.events.tags.listParticipations(members.unregistered)
-
 }

@@ -9,6 +9,31 @@ import play.api.templates.Html
 
 object MailReminder {
 
+  def sendMessage(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html) {
+    Logger.debug("Sending messages for: " + event.name)
+    receivers map { receiver =>
+      import play.api.Play.current
+      val mailer = use[MailerPlugin].email
+      mailer.setRecipient(receiver.email)
+      mailer.setSubject(event.group.mailSubjectPrefix + ": " + event.name)
+      mailer.setReplyTo(event.group.mailFrom)
+      mailer.setFrom(event.group.mailFrom)
+
+      val emailMessage = createMessage(event, receiver)
+      try {
+        Logger.debug("Sending email for " + event.name + " to " + receiver)
+        mailer.sendHtml(emailMessage.toString())
+        Logger.info("DONE sending email for " + event.name + " to " + receiver)
+      } catch {
+        case ex: Exception => {
+          Logger.error("FAILED sending email for " + event.name + " to " + receiver, ex)
+          LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
+        }
+      }
+    }
+    LogEntry.create(event, "Skickat påminnelse till " + receivers.size + " medlem(mar)")
+  }
+
   private def findReceiversToRemind(event: Event): Seq[User] = {
     val unregisteredMembers = User.findUnregisteredMembers(event)
     val unregisteredGuests = Participation.findGuestsByStatus(Unregistered, event) map {_.user}
@@ -18,43 +43,32 @@ object MailReminder {
     unregisteredMembers union unregisteredGuests union maybeMembers union maybeGuests
   }
 
-  private def createReminderEmailMessage(event: Event, user: User) : Html = {
+  private def createReminderMessage(event: Event, user: User) : Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    views.html.events.email(event, user, baseUrl)
+    views.html.events.emailnotificationmessage(event, user, baseUrl)
   }
 
 
-  def remindParticipants(event: Event) {
-    Logger.debug("Sending reminders for: " + event.name)
-    val receivers = findReceiversToRemind(event)
-    Logger.debug("Found receivers: " + receivers)
-    receivers map { receiver =>
-      import play.api.Play.current
-      val mailer = use[MailerPlugin].email
-      mailer.setRecipient(receiver.email)
-      mailer.setSubject(event.group.mailSubjectPrefix + ": " + event.name)
-      mailer.setReplyTo(event.group.mailFrom)
-      mailer.setFrom(event.group.mailFrom)
+  def sendReminderMessage(event: Event): Unit = {
+    sendMessage(event, findReceiversToRemind(event), createReminderMessage)
+  }
 
-      val emailMessage = createReminderEmailMessage(event, receiver)
-      try {
-        Logger.debug("Sending notification email for " + event.name + " to " + receiver)
-        mailer.sendHtml(emailMessage.toString())
-        Logger.info("DONE sending notification email for " + event.name + " to " + receiver)
-      } catch {
-        case ex: Exception => {
-          Logger.error("FAILED sending notification email for " + event.name + " to " + receiver, ex)
-          LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
-        }
-      }
-    }
-    LogEntry.create(event, "Skickat påminnelse till " + receivers.size + " medlem(mar)")
+  private def findReceiversToCancel(event: Event): Seq[User] = {
+    val guestLists = Participation.findGuests(event)
+    val guests = (guestLists.on map {_.user}) union (guestLists.maybe map {_.user}) union (guestLists.off map {_.user}) union (guestLists.unregistered map {_.user})
+    val members = Membership.findMembers(event.group) map {_.user}
+    members union guests
+  }
+
+  private def createCancellationMessage(event: Event, user: User) : Html = {
+    import play.api.Play.current
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    views.html.events.emailcancellationmessage(event, user, baseUrl)
   }
 
   def sendCancellationMessage(event: Event) = {
-    // TODO: Implement this
-    throw new NotImplementedError()
+    sendMessage(event, findReceiversToCancel(event), createCancellationMessage)
   }
 
 }

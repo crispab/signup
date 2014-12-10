@@ -34,12 +34,6 @@
           Sista anmälningsdatum har passerats.
         </div>
       }
-      case event if(event.isCancelled) => {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          Eventet är inställt.
-        </div>
-      }
       case _ => {}
     }
 
@@ -71,19 +65,17 @@
       @views.html.events.tags.addToCalendarButton(event)
 
       @if(isAdmin(loggedInUser)) {
-        <div class="btn-group pull-right">
+        <div class="btn-group">
           <button class="btn">Åtgärder</button>
           <button class="btn dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            @if(!event.isCancelled) {
-              <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><i class="icon-pencil"></i> Redigera</a></li>
-              <li><a data-toggle="modal" href="#notify_participants_@event.id"><i class="icon-envelope"></i>
-                Påminn de som inte svarat</a></li>
-              <li><a data-toggle="modal" href="#cancel_event_@event.id"><i class="icon-off"></i> Ställ in</a></li>
-              <li class="divider"></li>
-            }
+            <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><i class="icon-pencil"></i> Redigera</a></li>
+            <li><a data-toggle="modal" href="#notify_participants_@event.id"><i class="icon-envelope"></i>
+              Påminn de som inte svarat</a></li>
+            <li><a data-toggle="modal" href="#cancel_event_@event.id"><i class="icon-off"></i> Ställ in</a></li>
+            <li class="divider"></li>
             <li><a data-toggle="modal" href="#remove_event_@event.id"><i class="icon-trash"></i> Ta bort</a></li>
           </ul>
         </div>
@@ -155,7 +147,7 @@
   </div>
 </div>
 
-<div class="row">
+  <div class="row">
   <div class="span5">
     <span class="label @asCssClass(Status.On)">
       @{members.numberOn + guests.numberOn}
