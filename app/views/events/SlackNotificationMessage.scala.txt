@@ -22,10 +22,10 @@
                  "value" : @quote(event.venue),
                  "short" : false
               }
-              @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+              @if(!util.DateHelper.sameDay(event.startTime, event.lastSignUpDate)) {
                 ,{
                    "title" : "Sista anmälningsdag",
-                   "value" : @util.DateHelper.asDate(event.lastSignUpDate),
+                   "value" : "@util.DateHelper.asDate(event.lastSignUpDate)",
                    "short" : false
                 }
               }
