@@ -18,7 +18,7 @@ import java.util
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import play.api.libs.concurrent.Akka
-import services.{SlackReminder, MailReminder}
+import services.{NotifyAllParticipants, EventReminderActor, SlackReminder, MailReminder}
 
 
 import scala.concurrent.ExecutionContext
@@ -196,13 +196,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
     val event = Event.find(id)
     if(!event.isCancelled) {
-      import play.api.Play.current
-      import play.api.libs.concurrent.Execution.Implicits._
-      import scala.concurrent.duration._
-      Akka.system.scheduler.scheduleOnce(1.second) {
-        MailReminder.sendReminderMessage(event)
-        SlackReminder.sendReminderMessage(event)
-      }
+      EventReminderActor.instance() ! NotifyAllParticipants(event)
       Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
     } else {
       Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att skicka påminnelser.")

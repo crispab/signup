@@ -2,17 +2,27 @@ package services
 
 import java.util.Date
 
-import akka.actor.Actor
-import models.{Event, Reminder}
+import akka.actor.{Props, Actor}
+import models.{User, Event, Reminder}
+import org.apache.commons.lang.NotImplementedException
 import play.api.Logger
+import play.api.libs.concurrent.Akka
+
+case class CheckEvents()
+case class NotifyParticipant(event: Event, user: User)
+case class NotifyAllParticipants(evet: Event)
 
 class EventReminderActor extends Actor {
 
+  override def preStart() = {Logger.debug("my path is: " + context.self.path)}
+
   def receive = {
-    case EventReminderActor.CHECK_EVENTS => checkEvents()
+    case CheckEvents() => checkEvents()
+    case NotifyParticipant(event, user) => notifyParticipant(event, user)
+    case NotifyAllParticipants(event) => notifyParticipants(event)
   }
 
-  def checkEvents() {
+  private def checkEvents() {
     Logger.debug("Oh! It's time to check events!")
 
     val reminders = Reminder.findDueReminders(new Date())
@@ -20,25 +30,45 @@ class EventReminderActor extends Actor {
       _.event
     }).distinct
 
-    sendRemindersForEvents(events)
+    notifyParticipantsForEach(events)
     cleanUpReminders(reminders)
   }
 
-  def sendRemindersForEvents(events: Seq[Event]) {
+  private def notifyParticipantsForEach(events: Seq[Event]) {
     events map { event =>
-      MailReminder.sendReminderMessage(event)
-      SlackReminder.sendReminderMessage(event)
+      notifyParticipants(event)
     }
   }
 
-  def cleanUpReminders(reminders: Seq[Reminder]) {
+  private def cleanUpReminders(reminders: Seq[Reminder]) {
     reminders map {reminder =>
       Reminder.delete(reminder.id.get)
     }
   }
+
+  private def notifyParticipant(event: Event, user: User) {
+    MailReminder.sendReminderMessage(event, user)
+  }
+
+  private def notifyParticipants(event: Event) {
+    MailReminder.sendReminderMessages(event)
+    SlackReminder.sendReminderMessage(event)
+  }
+
 }
 
 
 object EventReminderActor {
-  val CHECK_EVENTS = "checkEvents"
+
+  val ACTOR_NAME = "EventReminder"
+
+  def create() = {
+    import play.api.Play.current
+    Akka.system.actorOf(Props[EventReminderActor], name = ACTOR_NAME)
+  }
+
+  def instance() = {
+    import play.api.Play.current
+    Akka.system.actorSelection(path = "akka://application/user/" + ACTOR_NAME)
+  }
 }

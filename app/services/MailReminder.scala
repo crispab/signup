@@ -8,30 +8,33 @@ import play.api.templates.Html
 
 
 object MailReminder {
-
-  def sendMessage(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html) {
+  def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html) {
     Logger.debug("Sending messages for: " + event.name)
     receivers map { receiver =>
-      import play.api.Play.current
-      val mailer = use[MailerPlugin].email
-      mailer.setRecipient(receiver.email)
-      mailer.setSubject(event.group.mailSubjectPrefix + ": " + event.name)
-      mailer.setReplyTo(event.group.mailFrom)
-      mailer.setFrom(event.group.mailFrom)
-
-      val emailMessage = createMessage(event, receiver)
-      try {
-        Logger.debug("Sending email for " + event.name + " to " + receiver)
-        mailer.sendHtml(emailMessage.toString())
-        Logger.info("DONE sending email for " + event.name + " to " + receiver)
-      } catch {
-        case ex: Exception => {
-          Logger.error("FAILED sending email for " + event.name + " to " + receiver, ex)
-          LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
-        }
-      }
+      sendMessage(event, receiver, createMessage)
     }
     LogEntry.create(event, "Skickat påminnelse till " + receivers.size + " medlem(mar)")
+  }
+
+  private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html) {
+    import play.api.Play.current
+    val mailer = use[MailerPlugin].email
+    mailer.setRecipient(receiver.email)
+    mailer.setSubject(event.group.mailSubjectPrefix + ": " + event.name)
+    mailer.setReplyTo(event.group.mailFrom)
+    mailer.setFrom(event.group.mailFrom)
+
+    val emailMessage = createMessage(event, receiver)
+    try {
+      Logger.debug("Sending email for " + event.name + " to " + receiver)
+      mailer.sendHtml(emailMessage.toString())
+      Logger.info("DONE sending email for " + event.name + " to " + receiver)
+    } catch {
+      case ex: Exception => {
+        Logger.error("FAILED sending email for " + event.name + " to " + receiver, ex)
+        LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
+      }
+    }
   }
 
   private def findReceiversToRemind(event: Event): Seq[User] = {
@@ -50,8 +53,12 @@ object MailReminder {
   }
 
 
-  def sendReminderMessage(event: Event): Unit = {
-    sendMessage(event, findReceiversToRemind(event), createReminderMessage)
+  def sendReminderMessages(event: Event) {
+    sendMessages(event, findReceiversToRemind(event), createReminderMessage)
+  }
+
+  def sendReminderMessage(event: Event, user: User) {
+    sendMessage(event, user, createReminderMessage)
   }
 
   private def findReceiversToCancel(event: Event): Seq[User] = {
@@ -68,7 +75,6 @@ object MailReminder {
   }
 
   def sendCancellationMessage(event: Event) = {
-    sendMessage(event, findReceiversToCancel(event), createCancellationMessage)
+    sendMessages(event, findReceiversToCancel(event), createCancellationMessage)
   }
-
 }

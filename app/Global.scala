@@ -1,9 +1,8 @@
 import java.util.TimeZone
 
-import akka.actor.Props
 import org.apache.commons.lang.exception.ExceptionUtils
 import play.api.libs.concurrent.Akka
-import services.EventReminderActor
+import services.{CheckEvents, EventReminderActor}
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Results._
@@ -21,14 +20,10 @@ object Global extends GlobalSettings {
 
 
   def startCheckingForRemindersToSend() {
-
     import play.api.Play.current
-
-    import scala.concurrent.ExecutionContext.Implicits._
-    val eventReminderActor = Akka.system.actorOf(Props[EventReminderActor], name = "EventReminder")
-
     import scala.concurrent.duration._
-    Akka.system.scheduler.schedule(firstRun, 24.hours, eventReminderActor, EventReminderActor.CHECK_EVENTS)
+    import scala.concurrent.ExecutionContext.Implicits.global
+    Akka.system.scheduler.schedule(firstRun, 24.hours, EventReminderActor.create(), CheckEvents())
   }
 
   private def firstRun = {
@@ -46,7 +41,7 @@ object Global extends GlobalSettings {
   }
 
   def setTimeZoneToAppDefault() {
-    // not so pretty, but convenient since Heroku servers run in another time zone
+    // not so pretty, but convenient since Heroku servers may run in another time zone
     TimeZone.setDefault(TimeZone.getTimeZone(util.LocaleHelper.TZ_NAME))
   }
 
