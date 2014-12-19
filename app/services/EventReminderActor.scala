@@ -4,7 +4,6 @@ import java.util.Date
 
 import akka.actor.{Props, Actor}
 import models.{User, Event, Reminder}
-import org.apache.commons.lang.NotImplementedException
 import play.api.Logger
 import play.api.libs.concurrent.Akka
 

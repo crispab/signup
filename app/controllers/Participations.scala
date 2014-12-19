@@ -96,7 +96,7 @@ object ParticipationsSecured extends Controller with AuthElement with AuthConfig
         },
         participation => {
           Participation.createGuest(participation.event.id.get, participation.user.id.get)
-          Redirect(routes.Events.show(participation.event.id.get))
+          Redirect(routes.Participations.editForm(participation.event.id.get, participation.user.id.get))
         }
       )
   }

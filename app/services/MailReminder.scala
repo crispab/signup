@@ -59,6 +59,7 @@ object MailReminder {
 
   def sendReminderMessage(event: Event, user: User) {
     sendMessage(event, user, createReminderMessage)
+    LogEntry.create(event, "Skickat påminnelse till " + user.firstName + " " + user.lastName)
   }
 
   private def findReceiversToCancel(event: Event): Seq[User] = {

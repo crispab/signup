@@ -1,5 +1,6 @@
 @(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User])
 
+@import util.AuthHelper._
 @import util.DateHelper._
 @import util.FormHelper._
 @import util.Section._
@@ -20,13 +21,13 @@
     <h2>Anmälan till @event.name</h2>
 
     @event match {
-      case event if(event.endTime.before(new java.util.Date())) => {
+      case ev if(ev.endTime.before(new java.util.Date())) => {
         <div class="alert alert-danger">
           <button type="button" class="close" data-dismiss="alert">×</button>
           Det här eventet har redan inträffat!
         </div>
       }
-      case event if(event.lastSignupDatePassed) => {
+      case ev if(ev.lastSignupDatePassed) => {
         <div class="alert alert-info">
           <button type="button" class="close" data-dismiss="alert">×</button>
           <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
@@ -51,6 +52,31 @@
       }
 
       @views.html.events.tags.addToCalendarButton(event)
+
+      @if(isAdmin(loggedInUser)) {
+        <a data-toggle="modal" href="#notify_participant" class="btn"><i class="icon-envelope"></i> Påminn deltagaren</a>
+
+        <div id="notify_participant" class="modal smaller-modal hide fade" style="display: none">
+          <div class="modal-header">
+            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Vill du e-posta deltagaren?</h3>
+          </div>
+          <div class="modal-body">
+            <p>
+              Du håller på att skicka en påminnelse via e-post till <strong>@user.firstName @user.lastName</strong> om eventet <strong>@event.name</strong>.
+            </p>
+            <p>
+              Vill du fortsätta?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <form action="@routes.UsersSecured.notifyParticipant(user.id.get, event.id.get)" method="POST">
+              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn deltagaren</button>
+            </form>
+          </div>
+        </div>
+      }
 
     </div>
   </div>

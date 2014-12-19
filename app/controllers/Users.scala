@@ -5,11 +5,11 @@ import cloudinary.model.CloudinaryResource
 import com.cloudinary.parameters.UploadParameters
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.{Administrator, NormalUser}
-import models.{Membership, Participation, User}
+import models.{Event, Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
 import play.api.mvc._
-import services.{GravatarUrl, CloudinaryUrl}
+import services.{NotifyParticipant, EventReminderActor, GravatarUrl, CloudinaryUrl}
 import util.AuthHelper._
 
 import scala.concurrent.{Future, ExecutionContext}
@@ -83,6 +83,18 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
           Redirect(routes.Events.show(eventId))
         }
       )
+  }
+
+  def notifyParticipant(id: Long, eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+    implicit val loggedInUser = Option(loggedIn)
+    val user = User.find(id)
+    val event = Event.find(eventId)
+    if(!event.isCancelled) {
+      EventReminderActor.instance() ! NotifyParticipant(event, user)
+      Redirect(routes.Events.show(eventId)).flashing("success" -> ("En påminnelse om eventet kommer att skickas till " + user.firstName + " " + user.lastName))
+    } else {
+      Redirect(routes.Events.show(eventId)).flashing("error" -> "Eventet är inställt. Det går inte att skicka påminnelser.")
+    }
   }
 
   def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>

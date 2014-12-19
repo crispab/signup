@@ -24,6 +24,7 @@ POST        /users/newMember/:groupId         controllers.UsersSecured.createMem
 POST        /users/newGuest/:eventId          controllers.UsersSecured.createGuest(eventId: Long)
 POST        /users/:id                        controllers.UsersSecured.update(id: Long)
 POST        /users/:id/delete                 controllers.UsersSecured.delete(id: Long)
+POST        /users/:id/notify                 controllers.UsersSecured.notifyParticipant(id: Long, eventId: Long)
 GET         /users                            controllers.UsersSecured.list
 GET         /users/:id                        controllers.Users.show(id: Long)
 
