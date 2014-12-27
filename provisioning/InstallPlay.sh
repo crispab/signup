@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PLAY_VERSION=2.2.2
+PLAY_VERSION=2.2.6
 PLAY_ZIP=play-${PLAY_VERSION}.zip
 INSTALL_DIR=/vagrant/opt
 BIN_DIR=/home/vagrant/bin
