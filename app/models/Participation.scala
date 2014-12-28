@@ -16,7 +16,7 @@ object Status extends Enumeration {
 
 import models.Status._
 
-case class Participation(id: Pk[Long] = NotAssigned,
+case class Participation(id: Option[Long] = None,
                          status: Status = On,
                          numberOfParticipants: Int = 1,
                          comment: String = "",
@@ -47,7 +47,7 @@ case class Participation(id: Pk[Long] = NotAssigned,
 
 object Participation {
 
-  def apply(id: Pk[Long],
+  def apply(id: Option[Long],
            status: Status,
            numberOfParticipants: Int,
            comment: String,
@@ -57,12 +57,12 @@ object Participation {
     new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = Some(new Date()))
   }
 
-  def apply(status: Status, user: User, event: Event): Participation = apply(id = NotAssigned, status, numberOfParticipants = 1, comment = "", user, event)
+  def apply(status: Status, user: User, event: Event): Participation = apply(id = None, status, numberOfParticipants = 1, comment = "", user, event)
 
 
   import scala.language.postfixOps
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
       get[String]("status") ~
       get[Int]("number_of_participants") ~
       get[String]("comment") ~

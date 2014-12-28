@@ -1,6 +1,5 @@
 package controllers
 
-import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.AuthElement
 import models._
 import models.security.Administrator
@@ -37,7 +36,7 @@ object Memberships extends Controller with AuthElement with AuthConfigImpl {
     Redirect(routes.Groups.show(membership.group.id.get))
   }
 
-  def toMembership(id: Pk[Long], groupId: Long, userId: Long): Membership = {
+  def toMembership(id: Option[Long], groupId: Long, userId: Long): Membership = {
     Membership(
       id = id,
       group = Group.find(groupId),
@@ -51,7 +50,7 @@ object Memberships extends Controller with AuthElement with AuthConfigImpl {
 
   val membershipForm: Form[Membership] = Form(
     mapping(
-      "id" -> ignored(NotAssigned: Pk[Long]),
+      "id" -> ignored(None: Option[Long]),
       "groupId" -> longNumber,
       "userId" -> longNumber
     )(toMembership)(fromMembership)

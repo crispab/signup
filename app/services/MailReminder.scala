@@ -4,7 +4,7 @@ import com.typesafe.plugin._
 import models.Status._
 import models._
 import play.api.Logger
-import play.api.templates.Html
+import play.twirl.api.Html
 
 
 object MailReminder {

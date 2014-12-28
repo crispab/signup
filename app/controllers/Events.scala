@@ -2,7 +2,6 @@ package controllers
 
 import java.text.SimpleDateFormat
 
-import anorm.{NotAssigned, Pk}
 import models._
 import models.Status._
 import play.api.libs.json.{Json, JsValue}
@@ -283,7 +282,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   val eventForm: Form[Event] =
     Form(
       mapping(
-        "id" -> ignored(NotAssigned:Pk[Long]),
+        "id" -> ignored(None:Option[Long]),
         "name" -> nonEmptyText(maxLength = 127),
         "description" -> text(maxLength = 10240),
         "start_date" -> date("yyyy-MM-dd"),
@@ -310,7 +309,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def toEvent(
-    id: Pk[Long],
+    id: Option[Long],
     name: String,
     description: String,
     start_date: util.Date,

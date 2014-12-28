@@ -1,6 +1,5 @@
 package controllers
 
-import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import models.{Event, Participation, User}
@@ -45,7 +44,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
   val participationForm:Form[Participation] =
     Form(
       mapping(
-        "id" -> ignored(NotAssigned:Pk[Long]),
+        "id" -> ignored(None:Option[Long]),
         "status" -> nonEmptyText(maxLength = 20),
         "number_of_participants" -> number(min = 1),
         "comment" -> text(maxLength = 127),
@@ -56,7 +55,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     )
 
   def toParticipation(
-                       id: Pk[Long],
+                       id: Option[Long],
                        status: String,
                        numberOfParticipants: Int,
                        comment: String,

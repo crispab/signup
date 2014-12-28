@@ -1,6 +1,5 @@
 package controllers
 
-import anorm.{NotAssigned, Pk}
 import jp.t2v.lab.play2.auth.{OptionalAuthElement, AuthElement}
 import models.security.Administrator
 import models.{Event, Group, Membership}
@@ -73,7 +72,7 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
 
   val groupForm: Form[Group] = Form(
     mapping(
-      "id" -> ignored(NotAssigned: Pk[Long]),
+      "id" -> ignored(None: Option[Long]),
       "name" -> nonEmptyText(maxLength = 127),
       "description" -> text(maxLength = 127),
       "mail_from" -> email,

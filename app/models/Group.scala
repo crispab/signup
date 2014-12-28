@@ -7,7 +7,7 @@ import play.api.db.DB
 
 
 case class Group(
-                  id: Pk[Long] = NotAssigned,
+                  id: Option[Long] = None,
                   name: String,
                   description: String = "",
                   mailFrom: String = "",
@@ -17,7 +17,7 @@ case class Group(
 object Group {
   import scala.language.postfixOps
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
     get[String]("name") ~
     get[String]("description") ~
     get[String]("mail_from") ~

@@ -5,7 +5,7 @@ import anorm._
 import play.api.Play.current
 import play.api.db.DB
 
-case class Membership(id: Pk[Long] = NotAssigned,
+case class Membership(id: Option[Long] = None,
                       group: Group,
                       user: User) extends Ordered[Membership] {
   def compare(that: Membership) = {
@@ -45,7 +45,7 @@ INSERT INTO memberships (
     """
 
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
       get[Long]("groupx") ~
       get[Long]("userx") map {
       case id ~ groupx ~ userx =>

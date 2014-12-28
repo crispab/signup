@@ -9,7 +9,7 @@ import play.api.db.DB
 
 
 case class LogEntry(
-  id: Pk[Long] = NotAssigned,
+  id: Option[Long] = None,
   event: Event,
   message: String,
   when: Date = new Date()
@@ -18,7 +18,7 @@ case class LogEntry(
 object LogEntry {
   import scala.language.postfixOps
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
     get[Long]("event") ~
     get[String]("message") ~
     get[Date]("whenx") map {

@@ -45,7 +45,7 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * Where to redirect the user after a successful login.
    */
-  def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+  def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     val uri = request.session.get("access_uri").getOrElse(routes.Application.index().url.toString)
     Logger.debug("Login succeeded. Redirecting to uri " + uri)
     Future.successful(Redirect(uri).withSession(request.session - "access_uri"))
@@ -54,14 +54,14 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * Where to redirect the user after logging out
    */
-  def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+  def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     Future.successful(Redirect(routes.Application.index()))
   }
 
   /**
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
-  def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+  def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     Future.successful(
       Redirect(routes.Application.loginForm())
       .withSession("access_uri" -> request.uri)
@@ -72,7 +72,7 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * If authorization failed (usually incorrect password) redirect the user as follows:
    */
-  def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = {
+  def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     Future.successful(Forbidden("Nädu, det här får du inte göra utan att logga in som administratör!"))
   }
 

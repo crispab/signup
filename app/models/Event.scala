@@ -16,7 +16,7 @@ object EventStatus extends Enumeration {
 import models.EventStatus._
 
 case class Event(
-                  id: Pk[Long] = NotAssigned,
+                  id: Option[Long] = None,
                   group: Group,
                   name: String,
                   description: String = "",
@@ -40,7 +40,7 @@ case class Event(
 object Event {
   import scala.language.postfixOps
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
       get[util.Date]("start_time") ~

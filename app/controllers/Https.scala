@@ -14,10 +14,7 @@ trait Https {
       request.headers.get("x-forwarded-proto") match {
         case Some(protocol) =>
           if ("https" == protocol) {
-            f(request) match {
-              case plainResult: PlainResult => plainResult.withHeaders(("Strict-Transport-Security", "max-age=31536000")) // or "max-age=31536000; includeSubDomains"
-              case result: Result => result
-            }
+            f(request).withHeaders(("Strict-Transport-Security", "max-age=31536000")) // or "max-age=31536000; includeSubDomains"
           } else {
             MovedPermanently("https://" + request.host + request.uri)
           }

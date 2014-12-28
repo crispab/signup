@@ -8,7 +8,7 @@ import play.api.db._
 import util.AuthHelper
 
 case class User(
-   id: Pk[Long] = NotAssigned,
+   id: Option[Long] = None,
    firstName: String,
    lastName: String,
    email: String,
@@ -36,7 +36,7 @@ object User {
   val NOT_CHANGED_PASSWORD = "Y2j1EsDUvc6V" // just a random string
 
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
       get[String]("first_name") ~
       get[String]("last_name") ~
       get[String]("email") ~

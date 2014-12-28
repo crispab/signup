@@ -1,6 +1,5 @@
 package controllers
 
-import anorm.{Id, NotAssigned, Pk}
 import cloudinary.model.CloudinaryResource
 import com.cloudinary.parameters.UploadParameters
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
@@ -158,7 +157,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
 
   val userCreateForm: Form[User] = Form(
     mapping(
-      "id" -> ignored(NotAssigned:Pk[Long]),
+      "id" -> ignored(None:Option[Long]),
       "firstName" -> nonEmptyText(maxLength = 127),
       "lastName" -> nonEmptyText(maxLength = 127),
       "email" -> play.api.data.Forms.email.verifying("Epostadressen används av någon annan", User.findByEmail(_).isEmpty),
@@ -170,20 +169,10 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
   )
 
-  val primaryKey = optional(longNumber).transform(
-    (optionLong: Option[Long]) =>
-      if (optionLong.isDefined) {
-        Id(optionLong.get)
-      } else {
-        NotAssigned:Pk[Long]
-      },
-    (pkLong: Pk[Long]) =>
-      pkLong.toOption)
-
 
   val userUpdateForm: Form[User] = Form(
     mapping(
-      "id" -> primaryKey,
+      "id" -> optional(longNumber),
       "firstName" -> nonEmptyText(maxLength = 127),
       "lastName" -> nonEmptyText(maxLength = 127),
       "email" -> play.api.data.Forms.email,
@@ -196,7 +185,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
   )
 
-  def toUser(id: Pk[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: Option[String]): User = {
+  def toUser(id: Option[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: Option[String]): User = {
     val permission = isAdministrator match {
       case true => Administrator
       case _ => NormalUser

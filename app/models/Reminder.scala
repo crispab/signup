@@ -11,14 +11,14 @@ import util.DateHelper._
 
 
 
-case class Reminder(id: Pk[Long] = NotAssigned,
+case class Reminder(id: Option[Long] = None,
                          date: Date,
                          event: Event)
 
 object Reminder {
   import scala.language.postfixOps
   val parser = {
-    get[Pk[Long]]("id") ~
+    get[Option[Long]]("id") ~
     get[Date]("datex") ~
     get[Long]("event") map {
       case id ~ datex ~ event =>
