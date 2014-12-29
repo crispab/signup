@@ -3,8 +3,6 @@ package util
 import java.text.SimpleDateFormat
 import java.util.{Date, TimeZone}
 
-import org.joda.time.{DateTime, Days}
-
 
 object DateHelper {
 
