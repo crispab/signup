@@ -1,4 +1,4 @@
-package skeleton;
+package signup;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
