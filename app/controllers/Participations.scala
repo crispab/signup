@@ -80,13 +80,13 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
 
 
 object ParticipationsSecured extends Controller with AuthElement with AuthConfigImpl {
-  def createGuestForm(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def createGuestForm(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(eventId)
     Ok(views.html.participations.addGuest(Participations.participationForm, event, User.findNonGuests(event.id.get)))
   }
 
-  def createGuest = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def createGuest = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Participations.participationForm.bindFromRequest.fold(
         formWithErrors => {
@@ -100,7 +100,7 @@ object ParticipationsSecured extends Controller with AuthElement with AuthConfig
       )
   }
 
-  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val participation = Participation.find(id)
     val event = participation.event
     Participation.delete(participation.id.get)

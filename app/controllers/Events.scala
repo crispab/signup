@@ -192,7 +192,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
-  def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     if(!event.isCancelled) {
       EventReminderActor.instance() ! NotifyAllParticipants(event)
@@ -202,13 +202,13 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val group = Group.find(groupId)
     Ok(views.html.events.edit(eventForm, group))
   }
 
-  def create = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def create = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       eventForm.bindFromRequest.fold(
         formWithErrors => {
@@ -225,7 +225,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
     if(!event.isCancelled) {
@@ -235,7 +235,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
     if(!event.isCancelled) {
@@ -256,7 +256,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     Event.cancel(id)
 
@@ -272,7 +272,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     val groupId = event.group.id.get
     Event.delete(id)

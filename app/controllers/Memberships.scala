@@ -10,12 +10,12 @@ import util.AuthHelper._
 
 object Memberships extends Controller with AuthElement with AuthConfigImpl {
 
-  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.memberships.edit(membershipForm, Group.find(groupId), User.findNonMembers(groupId)))
   }
 
-  def create = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def create = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       membershipForm.bindFromRequest.fold(
         formWithErrors => {
@@ -30,7 +30,7 @@ object Memberships extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)_) { implicit request =>
+  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val membership = Membership.find(id)
     Membership.delete(id)
     Redirect(routes.Groups.show(membership.group.id.get))
