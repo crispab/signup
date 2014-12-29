@@ -15,10 +15,9 @@ object SlackReminder {
       try {
         WS.url(slackChannelURL.get).post(message)
       } catch {
-        case ex: Exception => {
+        case ex: Exception =>
           Logger.error("FAILED sending Slack message: " + message, ex)
           LogEntry.create(event, "Misslyckades att skicka chattmeddelande på Slack. " + ex.getClass.getSimpleName + ": " + ex.getMessage)
-        }
       }
       LogEntry.create(event, "Skickat chattmeddelande på Slack")
     }

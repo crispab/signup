@@ -30,10 +30,9 @@ object MailReminder {
       mailer.sendHtml(emailMessage.toString())
       Logger.info("DONE sending email for " + event.name + " to " + receiver)
     } catch {
-      case ex: Exception => {
+      case ex: Exception =>
         Logger.error("FAILED sending email for " + event.name + " to " + receiver, ex)
         LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
-      }
     }
   }
 
