@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   "jp.t2v" %% "play2-auth-test" % "0.13.+" % "test",
   "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.+",
   "commons-lang" % "commons-lang" % "2.6",
-  "com.cloudinary" %% "cloudinary-scala-play" % "0.9.5b-SNAPSHOT",
+  "se.crisp" %% "cloudinary-scala-play" % "0.9.5b-SNAPSHOT",
   "org.json" % "json" % "20140107",
   "com.newrelic.agent.java" % "newrelic-agent" % "3.8.2",
   "com.newrelic.agent.java" % "newrelic-api" % "3.8.2",
