@@ -27,13 +27,13 @@ libraryDependencies ++= Seq(
 )
 
 resolvers ++= Seq(
-  //"t2v.jp repo" at "http://www.t2v.jp/maven-repo/",
   Resolver.sonatypeRepo("releases"),
   Resolver.sonatypeRepo("snapshots")
 )
 
 includeFilter in (Assets, LessKeys.less) := "bootstrap.less"
 
+// TODO: fix LESS compilation
 //lessEntryPoints <<= baseDirectory { base =>
 //  (base / "app" / "assets" / "stylesheets" / "bootstrap" * "bootstrap.less") +++
 //    (base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less") +++
