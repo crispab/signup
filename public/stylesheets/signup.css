@@ -158,7 +158,7 @@ body {
 .footer-mid {
   margin-top: 100px;
   min-height: 53px;
-  background-color: #EFEAE5;
+  background-color: #00759F;
 }
 
 .footer-bottom {
@@ -172,7 +172,7 @@ body {
 }
 
 .timestamp {
-  color: white;
+  color: #008bb2;
   font-size: 8px;
 }
 
