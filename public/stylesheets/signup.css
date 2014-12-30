@@ -151,26 +151,17 @@ body {
 }
 
 .navigation-divider {
-  min-height: 20px;
-  background-color: #00759F;
-
-  background-image: -webkit-linear-gradient(top, #00759F, #0F4C61);
-  background-image: -moz-linear-gradient(top, #00759F, #0F4C61);
-  background-image: -o-linear-gradient(top, #00759F, #0F4C61);
-  background-image: -ms-linear-gradient(top, #00759F, #0F4C61);
-  background-image: linear-gradient(top, #00759F, #0F4C61);
+  min-height: 4px;
+  background-color: #EE3C0C;
 }
 
 .footer-mid {
   margin-top: 100px;
   min-height: 53px;
   background-color: #EFEAE5;
-  background: url(/assets/images/taggkant-full.png) repeat-x bottom left;
 }
 
 .footer-bottom {
-  min-height: 10px;
-  background-color: #00759F;
 }
 
 .created-by {

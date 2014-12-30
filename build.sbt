@@ -21,6 +21,8 @@ libraryDependencies ++= Seq(
   "org.apache.poi" % "poi-ooxml" % "3.10-FINAL",
   "com.netaporter" %% "scala-uri" % "0.4.2",
   "com.nimbusds" % "nimbus-jose-jwt" % "3.1.2",
+  "org.webjars" %% "webjars-play" % "2.3.0-2",
+  "org.webjars" % "bootstrap" % "2.3.1",
   jdbc,
   anorm,
   ws
@@ -31,14 +33,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-includeFilter in (Assets, LessKeys.less) := "bootstrap.less"
-
-// TODO: fix LESS compilation
-//lessEntryPoints <<= baseDirectory { base =>
-//  (base / "app" / "assets" / "stylesheets" / "bootstrap" * "bootstrap.less") +++
-//    (base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less") +++
-//    (base / "app" / "assets" / "stylesheets" * "*.less")
-//}
+includeFilter in (Assets, LessKeys.less) := "*.less"
 
 scalacOptions += "-feature"
 
