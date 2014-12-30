@@ -1,19 +1,59 @@
+@import "lib/bootstrap/less/bootstrap.less";
+
+// Overriding some Bootstrap stuff
+
+@iconSpritePath:          "/webjars/bootstrap/2.3.1/img/glyphicons-halflings.png";
+@iconWhiteSpritePath:     "/webjars/bootstrap/2.3.1/img/glyphicons-halflings-white.png";
+
+.breadcrumb {
+  padding: 8px 15px;
+  margin: 0 0 @baseLineHeight;
+  list-style: none;
+  background-color: white;
+  border-bottom: @hrBorder solid 2px;
+  > li {
+    display: inline-block;
+    .ie7-inline-block();
+    > .divider {
+      padding: 0 5px;
+      color: @textColor;
+    }
+  }
+  > .active {
+    color: @textColor;
+  }
+}
+
+.form-actions {
+  padding: (@baseLineHeight - 1) 20px @baseLineHeight;
+  margin-top: @baseLineHeight;
+  margin-bottom: @baseLineHeight;
+  background-color: @formActionsBackground;
+  .border-radius(@baseBorderRadius);
+  .clearfix(); // Adding clearfix to allow for .pull-right button containers
+}
+
+
+// From here on, SignUp specific stuff
+
+@footerMidColor: @gray;
+
 .participation-on {
-  background-color: #5BB75B;
+  background-color: @btnSuccessBackground;
   text-transform: none;
   margin-right: 8px;
   margin-bottom: 4px;
 }
 
 .participation-maybe {
-  background-color: #FAA732;
+  background-color: @btnWarningBackground;
   text-transform: none;
   margin-right: 8px;
   margin-bottom: 4px;
 }
 
 .participation-off {
-  background-color: #DA4F49;
+  background-color: @btnDangerBackground;
   text-transform: none;
   margin-right: 8px;
   margin-bottom: 4px;
@@ -62,19 +102,19 @@ dl.participation {
 .thumb-background16 {
   width: 16px;
   height: 16px;
-  background: white center no-repeat url(../images/user16.png);
+  background: white center no-repeat url(/assets/images/user16.png);
 }
 
 .thumb-background40 {
   width: 40px;
   height: 40px;
-  background: white center no-repeat url(../images/user40.png);
+  background: white center no-repeat url(/assets/images/user40.png);
 }
 
 .thumb-background80 {
   width: 80px;
   height: 80px;
-  background: white center no-repeat url(../images/user80.png);
+  background: white center no-repeat url(/assets/images/user80.png);
 }
 
 .upload-thumb {
@@ -110,7 +150,7 @@ dl.participation {
   vertical-align: middle;
   padding-left: 5px;
   margin-bottom: 0;
-  color: #b94a48;
+  color: @btnDangerBackground;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -128,10 +168,10 @@ body {
 .list-row {
   border-top-width: 2px;
   border-top-style: solid;
-  border-top-color: #e3deda;
+  border-top-color: darken(@wellBackground, 10%);
   padding: 4px;
   margin-top: 4px;
-  background-color: #EFEAE5;
+  background-color: @wellBackground;
 }
 
 .btn-row {
@@ -140,7 +180,7 @@ body {
 }
 
 .email-address {
-  color: #909090;
+  color: @grayLight;
 }
 
 .big-name {
@@ -152,13 +192,13 @@ body {
 
 .navigation-divider {
   min-height: 4px;
-  background-color: #EE3C0C;
+  background-color: @navbarBorder;
 }
 
 .footer-mid {
   margin-top: 100px;
   min-height: 53px;
-  background-color: #00759F;
+  background-color: @footerMidColor;
 }
 
 .footer-bottom {
@@ -172,7 +212,7 @@ body {
 }
 
 .timestamp {
-  color: #008bb2;
+  color: lighten(@footerMidColor, 5%);
   font-size: 8px;
 }
 
@@ -194,8 +234,8 @@ pre code {
 }
 
 .input-group {
-  background: white;
-  border: #b4b4b4;
+  background: @inputBackground;
+  border: @inputBorder;
   border-width: 1px;
   border-style: solid;
   border-radius: 3px;
