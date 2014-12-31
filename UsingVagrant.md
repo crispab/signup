@@ -18,11 +18,9 @@ The idea is to run your IDE on your host machine, and everything else in a guest
 1. Then you do `vagrant up` and wait while vagrant configure VirtualBox and download, install and configure everything else.
 1. Now you can ssh into the guest machine by doing `vagrant ssh`
 1. Go to the shared project/SignUp directory with `cd /vagrant`
-1. Start the application with `play run` or
-1. Setup the project for IntelliJ development with `play idea`.
+1. Start the application with `activator run`
 
-Note: When doing `play run` I sometimes get `sbt.ResolveException: download failed: com.typesafe.play#play_2.10;2.2.2!play_2.10.jar(src)`.
-Don't know why. I just do `play run` again and it works.
+Note: When doing `activator run` I sometimes get an error the first time. Don't know why. I just do `activator run` again and it works.
 
 To later stop the VirtualBox, you can do either of (from the host machine):
 
@@ -36,7 +34,7 @@ What is installed by Vagrant on the VirtualBox?
 ### Ubuntu ###
 
 - Ubuntu is installed
-- Memory size is configured to 1 GB
+- Memory size is configured to 2 GB
 - Port forward, SignUp application/web port 9000 is forwarded so that your can access SignUp with a browser from the host machine
 - Port forward, PostgreSQL port 5432 is forwarded so that access is possible from the host machine
 
@@ -53,10 +51,10 @@ What is installed by Vagrant on the VirtualBox?
 
 ### Play Framework ###
 
-- The Play framework is installed. Application dependencies are downloaded on demand, for example when doing `play run` or `play idea`.
+- The Play Framework (actually Activator) is installed. Application dependencies are downloaded on demand, for example when doing `activator run`.
 
-The Play install is a little bit special. Libraries downloaded by Play will be needed from the IDE. So Play is installed
-in <SignUp-git-repo-directory>/opt/play-*. As <SignUp-git-repo-directory> on the host machine is the same as /vagrant
+The Play install is a little bit special. Libraries downloaded by Activator will be needed from the IDE. So Activator (with Play) is installed
+in \<SignUp-git-repo-directory\>/opt/activator-*. As \<SignUp-git-repo-directory\> on the host machine is the same as /vagrant
 on the guest machine, the play installation can be shared. The opt directory is in .gitignore so it will not be committed
 to git.
 

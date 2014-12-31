@@ -13,13 +13,14 @@ This is the fourth version of the SignUp Service.
 
 ### Play Framework ###
 
-- Play 2.3.7 - http://www.playframework.org/
-- Scala 2.11.0 (part of Play) - http://www.scala-lang.org/
+- Activator 1.2.12 (that's how you get the Play Framework these days) - http://www.playframework.org/
+- Play 2.3.7 (comes with Activator) - http://www.playframework.org/
+- Scala 2.11.1 (comes with Activator) - http://www.scala-lang.org/
 - Anorm (part of Play) - http://www.playframework.com/documentation/2.3.x/ScalaAnorm
 
 ### Presentation ###
 
-- Twitter Bootstrap 2.3.1 - http://bootstrapdocs.com/v2.2.1/docs/
+- Twitter Bootstrap 2.3.1 - http://bootstrapdocs.com/v2.3.1/docs/
 - jQuery 1.9.0 (used by Twitter Bootstrap) - http://jquery.com
 - bootstrap-wysihtml5 0.0.2 - http://jhollingworth.github.com/bootstrap-wysihtml5
 - wysihtml5 0.3.0 (used by bootstrap-wysihtml5) - http://github.com/xing/wysihtml5
@@ -45,11 +46,6 @@ This is the fourth version of the SignUp Service.
 
 License, credits and stuff
 --------------------------
-
-The Twitter Bootstrap LESS files that are included in the source code
-are Copyright 2012 Twitter, Inc and licensed under the Apache
-License v2.0.
-Modifications have been made by us to create a project specific look & feel.
 
 Some clipart comes from http://openclipart.org and is Public Domain, see http://openclipart.org/share
 
@@ -104,9 +100,9 @@ SignUp from inside the virtual machine:
 
     $ vagrant ssh
     vagrant@vagrant-ubuntu-trusty-64:~$ cd /vagrant
-    vagrant@vagrant-ubuntu-trusty-64:~$ play run
+    vagrant@vagrant-ubuntu-trusty-64:~$ activator run
 
-And then point your browser on your local computer to [http://localhost:9000](http://localhost:9000)
+And then point your browser on your local computer to [http://localhost:19000](http://localhost:19000)
 
 
 Deploy in production
