@@ -1,0 +1,126 @@
+@import "signup.less";
+
+@iconSpritePath: "/webjars/bootstrap/2.3.1/img/glyphicons-halflings-white.png";
+@iconWhiteSpritePath: "/webjars/bootstrap/2.3.1/img/glyphicons-halflings-white.png";
+
+@textColor: #2B2B2B;
+@linkColor: #9D0000;
+@linkColorHover: brighten(@linkColor, 15%);
+@sansFontFamily: arial, helvetica, sans-serif;
+@baseFontSize: 13px;
+@baseLineHeight: 18px;
+@headingsFontFamily: @serifFontFamily;
+@headingsFontWeight: normal;
+@headingsColor: #995E00;
+@btnBackground: #CFC4B7;
+@btnBackgroundHighlight: #A09086;
+@btnBorder: #928B87;
+@btnPrimaryBackground: @navbarBackgroundHighlight;
+@btnPrimaryBackgroundHighlight: @navbarBackground;
+@inputBackground: #f5f3f1;
+@inputBackgroundFocus: @wellBackground;
+@inputBorder: #979490;
+@inputBorderRadius: 3px;
+@formActionsBackground: @wellBackground;
+@wellBackground: @navbarBorder;
+@navbarBackgroundHighlight: #9D0000;
+@navbarBorder: darken(#F8F3EC, 3%);
+@navbarText: white;
+@navbarLinkColor: white;
+@navbarLinkColorHover: @textColor;
+@navbarLinkColorActive: @textColor;
+@navbarLinkBackgroundHover: darken(@navbarBorder, 3%);
+@navbarLinkBackgroundActive: @navbarBorder;
+
+.signup-icon {
+  filter: invert(1);
+  -webkit-filter: invert(1);
+  -moz-filter: invert(1);
+  -o-filter: invert(1);
+  -ms-filter: invert(1);
+}
+
+.btn {
+  display: inline-block;
+  .ie7-inline-block();
+  padding: 4px 12px;
+  margin-bottom: 0; // For input.btn
+  font-size: @baseFontSize;
+  line-height: @baseLineHeight;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  .buttonBackground(@btnBackground, @btnBackgroundHighlight, white);
+  border: 1px solid @btnBorder;
+  *border: 0; // Remove the border to prevent IE7's black border on input:focus
+  border-bottom-color: darken(@btnBorder, 10%);
+  .border-radius(@baseBorderRadius);
+  .ie7-restore-left-whitespace(); // Give IE7 some love
+  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
+
+  // Hover/focus state
+  &:hover,
+  &:focus {
+    color: white;
+    text-decoration: none;
+    background-position: 0 -15px;
+
+    // transition is only when going to hover/focus, otherwise the background
+    // behind the gradient (there for IE<=9 fallback) gets mismatched
+    .transition(background-position .1s linear);
+  }
+
+  // Focus state for keyboard and accessibility
+  &:focus {
+    .tab-focus();
+  }
+
+  // Active state
+  &.active,
+  &:active {
+    background-image: none;
+    outline: 0;
+    .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
+  }
+
+  // Disabled state
+  &.disabled,
+  &[disabled] {
+    cursor: default;
+    background-image: none;
+    .opacity(65);
+    .box-shadow(none);
+  }
+
+}
+
+// Set the backgrounds
+// -------------------------
+.btn-primary {
+  .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+}
+
+// Warning appears are orange
+.btn-warning {
+  .buttonBackground(@btnWarningBackground, @btnWarningBackgroundHighlight);
+}
+
+// Danger and error appear as red
+.btn-danger {
+  .buttonBackground(@btnDangerBackground, @btnDangerBackgroundHighlight);
+}
+
+// Success appears as green
+.btn-success {
+  .buttonBackground(@btnSuccessBackground, @btnSuccessBackgroundHighlight);
+}
+
+// Info appears as a neutral blue
+.btn-info {
+  .buttonBackground(@btnInfoBackground, @btnInfoBackgroundHighlight);
+}
+
+// Inverse appears as dark gray
+.btn-inverse {
+  .buttonBackground(@btnInverseBackground, @btnInverseBackgroundHighlight);
+}
