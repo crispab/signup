@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 @import util.AuthHelper._
-@import util.DateHelper._
+@import util.ThemeHelper._
 @import services.ImageUrl
 
 @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
@@ -18,12 +18,11 @@
   <meta name="author" content="">
   @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader)
 
-  <link rel="stylesheet" href='@routes.Assets.at("stylesheets/crisp-bootstrap.css")'>
-  <!-- link rel="stylesheet" href='@routes.Assets.at("stylesheets/oddfellow-bootstrap.css")' -->
-  <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-responsive.min.css"))'>
+  <link rel="shortcut icon" href='@routes.Assets.at(forTheme("images/[THEME]-favicon.png"))'>
 
+  <link rel="stylesheet" href='@routes.Assets.at(forTheme("stylesheets/[THEME]-bootstrap.css"))'>
+  <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-responsive.min.css"))'>
   <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css")'>
-  <link rel="shortcut icon" href='@routes.Assets.at("images/crisp-favicon.png")'>
 
   <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
   <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
@@ -90,23 +89,17 @@
   @body
 </div>
 
-<div class="footer-mid">
+<div class="footer">
   <div class="container">
     <div class="row">
       <div class="span5">
-        <div class="created-by">
-          Skapad av <a href="http://www.crisp.se"><img src='@routes.Assets.at("images/crisp-logo-white-transp-tiny.png")'></a>
+        <div class="footer-logo">
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="span5">
-        <div class="timestamp pull-right">@{asDateTime(new java.util.Date())}</div>
       </div>
     </div>
   </div>
 </div>
-<div class="footer-bottom"></div>
+
 
 <script src='@routes.Assets.at("javascripts/wysihtml5-0.3.0.min.js")'></script>
 <script src='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.min.js")'></script>
