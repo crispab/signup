@@ -5,6 +5,7 @@ import models.Status._
 import models._
 import play.api.Logger
 import play.twirl.api.Html
+import util.ThemeHelper._
 
 
 object MailReminder {
@@ -48,7 +49,13 @@ object MailReminder {
   private def createReminderMessage(event: Event, user: User) : Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    views.html.events.emailnotificationmessage(event, user, baseUrl)
+
+    // TODO: get rid of this by using SendGrid mail templates instead
+    if(THEME == "b73") {
+      views.html.events.b73.emailnotificationmessage(event, user, baseUrl)
+    } else {
+      views.html.events.crisp.emailnotificationmessage(event, user, baseUrl)
+    }
   }
 
 
@@ -71,7 +78,13 @@ object MailReminder {
   private def createCancellationMessage(event: Event, user: User) : Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    views.html.events.emailcancellationmessage(event, user, baseUrl)
+
+    // TODO: get rid of this by using SendGrid mail templates instead
+    if(THEME == "b73") {
+      views.html.events.b73.emailcancellationmessage(event, user, baseUrl)
+    } else {
+      views.html.events.crisp.emailcancellationmessage(event, user, baseUrl)
+    }
   }
 
   def sendCancellationMessage(event: Event) = {

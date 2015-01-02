@@ -8,6 +8,7 @@ import play.api.libs.json.{Json, JsValue}
 import util.AuthHelper._
 import util.DateHelper._
 import util.StatusHelper._
+import util.ThemeHelper._
 import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -154,7 +155,13 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     val user = User.find(userId)
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    Ok(views.html.events.emailnotificationmessage(event, user, baseUrl))
+
+    // TODO: get rid of this by using SendGrid mail templates instead
+    if(THEME == "b73") {
+      Ok(views.html.events.b73.emailnotificationmessage(event, user, baseUrl))
+    } else {
+      Ok(views.html.events.crisp.emailnotificationmessage(event, user, baseUrl))
+    }
   }
 
 
@@ -163,7 +170,13 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     val user = User.find(userId)
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    Ok(views.html.events.emailcancellationmessage(event, user, baseUrl))
+
+    // TODO: get rid of this by using SendGrid mail templates instead
+    if(THEME == "b73") {
+      Ok(views.html.events.b73.emailcancellationmessage(event, user, baseUrl))
+    } else {
+      Ok(views.html.events.crisp.emailcancellationmessage(event, user, baseUrl))
+    }
   }
 
 
