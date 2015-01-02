@@ -1,5 +1,7 @@
 #!/bin/sh
 heroku config:set \
+    APPLICATION_NAME="<The display name for the application>" \
+    APPLICATION_THEME="crisp" \
     APPLICATION_BASE_URL="http://<your application>.herokuapp.com" \
     ADDTHISEVENT_LICENSE="<your addthisevent.com license>" \
     CLOUDINARY_FOLDER="<your folder name>" \

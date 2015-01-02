@@ -2,8 +2,9 @@
 
 @import util.Section._
 @import util.AuthHelper._
+@import util.ThemeHelper._
 
-@page(title = "SignUp", section = Other) {
+@page(title = APPLICATION_NAME, section = Other) {
 
   @breadcrumb(Seq(), "")
 
@@ -17,9 +18,9 @@
         </div>
       }
 
-      <h2>Välkommen till SignUp</h2>
+      <h2>Välkommen till @APPLICATION_NAME</h2>
       <p>
-        SignUp är en tjänst för grupper som vill ha ordning på sina sammankomster.
+        @APPLICATION_NAME är en tjänst för grupper som vill ha ordning på sina sammankomster.
       </p>
       <p>
         Du kan lägga upp nya sammankomster i gruppens kalender och medlemmarna kan själva
