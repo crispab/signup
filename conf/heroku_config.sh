@@ -12,7 +12,7 @@ heroku config:set \
     SMTP_MOCK=false \
     SMTP_HOST=smtp.sendgrid.net \
     SMTP_PORT=587 \
-    SMTP_SSL=true \
+    SMTP_SSL=false \
     SMTP_TLS=true \
     NEW_RELIC_LOG=stdout \
     TZ="Europe/Stockholm" \
