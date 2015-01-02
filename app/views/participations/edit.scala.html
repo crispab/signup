@@ -24,7 +24,7 @@
       case ev if(ev.endTime.before(new java.util.Date())) => {
         <div class="alert alert-danger">
           <button type="button" class="close" data-dismiss="alert">×</button>
-          Det här eventet har redan inträffat!
+          Den här sammankomsten har redan inträffat!
         </div>
       }
       case ev if(ev.lastSignupDatePassed) => {
@@ -63,7 +63,7 @@
           </div>
           <div class="modal-body">
             <p>
-              Du håller på att skicka en påminnelse via e-post till <strong>@user.firstName @user.lastName</strong> om eventet <strong>@event.name</strong>.
+              Du håller på att skicka en påminnelse via e-post till <strong>@user.firstName @user.lastName</strong> om sammankomsten <strong>@event.name</strong>.
             </p>
             <p>
               Vill du fortsätta?

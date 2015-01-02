@@ -52,7 +52,7 @@
 
 <div class="row">
   <div class="span5">
-    <h3>Event</h3>
+    <h3>Sammankomster</h3>
     @if(showingAll) {
       <a href="@routes.Groups.show(group.id.get)">Visa bara framtida</a>
     } else {
@@ -90,7 +90,7 @@
 @if(isAdmin(loggedInUser)) {
   <div class="row">
     <div class="span5 btn-row">
-      <a href="@routes.EventsSecured.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Nytt event</a>
+      <a href="@routes.EventsSecured.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny sammankomst</a>
     </div>
   </div>
 }

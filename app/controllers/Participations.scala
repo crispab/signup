@@ -18,7 +18,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
       val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = On, user = userToAttend, event = event))
       Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
     } else {
-      Redirect(routes.Events.show(eventId)).flashing("error" -> "Eventet är inställt. Det går inte att anmäla sig.")
+      Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att anmäla sig.")
     }
   }
 
@@ -51,7 +51,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
         "userId" -> longNumber,
         "eventId" -> longNumber
       )(toParticipation)(fromParticipation)
-        .verifying("Eventet är inställt. Det går inte att anmäla sig.", participation => !participation.event.isCancelled)
+        .verifying("Sammankomsten är inställd. Det går inte att anmäla sig.", participation => !participation.event.isCancelled)
     )
 
   def toParticipation(

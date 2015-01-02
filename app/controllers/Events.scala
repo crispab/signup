@@ -209,9 +209,9 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     val event = Event.find(id)
     if(!event.isCancelled) {
       EventReminderActor.instance() ! NotifyAllParticipants(event)
-      Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om eventet kommer att skickas till alla delatagare som inte redan meddelat sig.")
+      Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om sammankomsten kommer att skickas till alla delatagare som inte redan meddelat sig.")
     } else {
-      Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att skicka påminnelser.")
+      Redirect(routes.Events.show(id)).flashing("error" -> "Sammankomsten är inställd. Det går inte att skicka påminnelser.")
     }
   }
 
@@ -244,7 +244,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     if(!event.isCancelled) {
       Ok(views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
     } else {
-      Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att redigera. Skapa ett nytt istället.")
+      Redirect(routes.Events.show(id)).flashing("error" -> "Sammankomsten är inställd. Ded går inte att redigera. Skapa en ny istället.")
     }
   }
 
@@ -264,7 +264,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
         }
       )
     } else {
-      Redirect(routes.Events.show(id)).flashing("error" -> "Eventet är inställt. Det går inte att redigera. Skapa ett nytt istället.")
+      Redirect(routes.Events.show(id)).flashing("error" -> "Sammankomsten är inställd. Den går inte att redigera. Skapa en ny istället.")
     }
   }
 
@@ -308,7 +308,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
         "last_signup_date" -> optional(date("yyyy-MM-dd"))
       )(toEvent)(fromEvent)
         .verifying("Sluttid måste vara efter starttid", event => event.startTime.before(event.endTime))
-        .verifying("Sista anmälningsdag måste vara före själva eventet",
+        .verifying("Sista anmälningsdag måste vara före själva sammankomsten",
                    event => event.lastSignUpDate==event.startTime || event.lastSignUpDate.before(event.startTime))
     )
 

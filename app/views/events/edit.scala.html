@@ -26,11 +26,11 @@
   util.DateHelper.asDate(new java.util.Date())
 }
 
-@page("Redigera event " + field("name"), section = Groups){
+@page("Redigera sammankomst " + field("name"), section = Groups){
 
 @if(creatingNew()) {
   @breadcrumb(Seq("Grupper" -> routes.Groups.list(), group.name -> routes.Groups.show(group.id.get)),
-              "Nytt")
+              "Ny")
 } else {
   @breadcrumb(Seq("Grupper" -> routes.Groups.list(), group.name -> routes.Groups.show(group.id.get), field("name") -> routes.Events.show(idToUpdate.get)),
               "Redigera")
@@ -39,7 +39,7 @@
 
 <div class="row">
   <div class="span5">
-    <h2>@if(creatingNew()) {Nytt} else {Redigera} Event</h2>
+    <h2>@if(creatingNew()) {Ny} else {Redigera} Sammankomst</h2>
   </div>
 </div>
 
@@ -52,7 +52,7 @@
 
           <div class="controls">
             <input type="text" maxlength="127" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
-            <span class="show-on-error">Fyll i ett namn på eventet</span>
+            <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
           </div>
         </div>
 
@@ -70,7 +70,7 @@
 
           <div class="controls">
             <input type="text" maxlength="127" class="input-xlarge" id="venue" name="venue" value='@field("venue")'/>
-            <span class="show-on-error">Fyll i en plats där eventet äger rum</span>
+            <span class="show-on-error">Fyll i en plats där sammankomsten äger rum</span>
           </div>
         </div>
 
@@ -108,7 +108,7 @@
           <input type="date" class="input-medium" id="last_signup_date" name="last_signup_date"
                  value='@field("last_signup_date")' min="@today()" @if(!lastSignupIsSameDay()){required=""} else {disabled=""}/>
 
-          <div class="show-on-error">Sista anmälningsdag får inte vara efter eventet</div>
+          <div class="show-on-error">Sista anmälningsdag får inte vara efter sammankomsten</div>
         </div>
 
         <div class="space-berfore">

@@ -3,8 +3,8 @@
   {
      "attachments" : [
         {
-           "fallback" : @quote("Dags att anmäla sig till eventet <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
-           "pretext" : @quote("Dags att anmäla sig till eventet <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "fallback" : @quote("Dags att anmäla sig till sammankomsten <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Dags att anmäla sig till sammankomsten <" + baseURL + routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
            "color" : "#EE3C0C",
            "fields" : [
               {

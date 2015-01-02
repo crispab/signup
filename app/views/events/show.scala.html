@@ -24,7 +24,7 @@
       case event if(event.endTime.before(new java.util.Date())) => {
         <div class="alert alert-danger">
           <button type="button" class="close" data-dismiss="alert">×</button>
-          Det här eventet har redan inträffat!
+          Denna sammankomst har redan inträffat!
         </div>
       }
       case event if(event.lastSignupDatePassed) => {
@@ -83,11 +83,11 @@
         <div id="cancel_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
             <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du ställa in eventet?</h3>
+            <h3>Vill du ställa in sammankomsten?</h3>
           </div>
           <div class="modal-body">
             <p>
-              Du håller på att ställa in eventet <strong>@event.name</strong> och meddela alla deltagare.
+              Du håller på att ställa in sammankomsten <strong>@event.name</strong> och meddela alla deltagare.
             </p>
             <p>
               Vill du fortsätta?
@@ -104,11 +104,11 @@
         <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
             <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du ta bort eventet?</h3>
+            <h3>Vill du ta bort sammankomsten?</h3>
           </div>
           <div class="modal-body">
             <p>
-              Du håller på att ta bort eventet <strong>@event.name</strong>.
+              Du håller på att ta bort sammankomsten <strong>@event.name</strong>.
             </p>
             <p>
               Vill du fortsätta?
@@ -129,7 +129,7 @@
           </div>
           <div class="modal-body">
             <p>
-              Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till eventet <strong>@event.name</strong> som ännu inte svarat.
+              Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till sammankomsten <strong>@event.name</strong> som ännu inte svarat.
             </p>
             <p>
               Vill du fortsätta?

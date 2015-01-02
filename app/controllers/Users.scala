@@ -90,9 +90,9 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     val event = Event.find(eventId)
     if(!event.isCancelled) {
       EventReminderActor.instance() ! NotifyParticipant(event, user)
-      Redirect(routes.Events.show(eventId)).flashing("success" -> ("En påminnelse om eventet kommer att skickas till " + user.firstName + " " + user.lastName))
+      Redirect(routes.Events.show(eventId)).flashing("success" -> ("En påminnelse om sammankomsten kommer att skickas till " + user.firstName + " " + user.lastName))
     } else {
-      Redirect(routes.Events.show(eventId)).flashing("error" -> "Eventet är inställt. Det går inte att skicka påminnelser.")
+      Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att skicka påminnelser.")
     }
   }
 
