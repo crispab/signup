@@ -3,20 +3,22 @@ package signup;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import cucumber.examples.java.websockets.SharedDriver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
 
-public class Stepdefs {
+public class IndexPageSteps {
 
-    private WebDriver driver;
+    private final WebDriver driver;
+
+    // Instantiated by Cucumber/Dependency Injection/Picocontainer
+    public IndexPageSteps(SharedDriver driver) {
+        this.driver = driver;
+    }
 
     @Given("^I have a web browser running$")
     public void i_have_a_web_browser_running() throws Throwable {
-        driver = new FirefoxDriver();
-        // driver = new SafariDriver();
     }
 
     @When("^I enter the site index page url$")
@@ -33,7 +35,6 @@ public class Stepdefs {
 
     @Given("^I am on the start page$")
     public void i_am_on_the_start_page() throws Throwable {
-        driver = new FirefoxDriver();
         driver.navigate().to("http://localhost:19000");
     }
 
@@ -44,9 +45,8 @@ public class Stepdefs {
 
     @Then("^The Groups page should display$")
     public void the_Groups_page_should_display() throws Throwable {
-        Assert.assertNotNull(
-            driver.findElement(By.xpath("//a[contains(., 'Crisp Rocket Days')]")));
-
+        // Will throw if element can't be found
+        driver.findElement(By.xpath("//a[contains(., 'Crisp Rocket Days')]"));
     }
 
 }
