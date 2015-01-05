@@ -31,6 +31,7 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
  * </p>
  */
 public class SharedDriver extends EventFiringWebDriver {
+//    private static final WebDriver REAL_DRIVER = new PhantomJSDriver();
     private static final WebDriver REAL_DRIVER = new FirefoxDriver();
 
     private static final Thread CLOSE_THREAD = new Thread() {
