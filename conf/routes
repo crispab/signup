@@ -9,6 +9,8 @@ POST        /login                            controllers.Application.authentica
 GET         /logout                           controllers.Application.logout
 GET         /google/authenticate              controllers.GoogleAuth.authenticate
 GET         /google/callback                  controllers.GoogleAuth.callback(error: Option[String] ?= None, state: Option[String] ?= None, code: Option[String] ?= None)
+GET         /facebook/authenticate            controllers.FacebookAuth.authenticate
+GET         /facebook/callback                controllers.FacebookAuth.callback(error: Option[String] ?= None, state: Option[String] ?= None, code: Option[String] ?= None)
 
 
 # Users

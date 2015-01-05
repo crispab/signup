@@ -52,18 +52,29 @@
         </div>
       </div>
     </form>
-
-    @if(GoogleAuth.isConfigured) {
-      <hr/>
-      <p class="text-center">
-        <a href="@routes.GoogleAuth.authenticate()" class="btn">
-          <img src='@routes.Assets.at("images/google-logo.png")'/> Logga in med Google
-        </a>
-      </p>
-    }
-
+    <hr/>
   </div>
 </div>
+
+@if(GoogleAuth.isConfigured) {
+  <div class="row">
+    <div class="span5">
+      <p class="text-center large-space-berfore">
+        <a href="@routes.GoogleAuth.authenticate()" class="btn-google">Logga in med Google</a>
+      </p>
+    </div>
+  </div>
+}
+@if(FacebookAuth.isConfigured) {
+  <div class="row">
+    <div class="span5">
+      <p class="text-center large-space-berfore">
+        <a href="@routes.FacebookAuth.authenticate()" class="btn-facebook">Logga in med Facebook</a>
+      </p>
+    </div>
+  </div>
+}
+
 }(loggedInUser = None)
 
 

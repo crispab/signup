@@ -7,6 +7,7 @@ import org.apache.commons.codec.digest.DigestUtils
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, Controller}
+import util.ThemeHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
@@ -63,7 +64,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
       if (user.isDefined) {
         gotoLoginSucceeded(user.get.id.get)
       } else {
-        val errorMessage = "Det finns ingen användare med epostadressen " + email
+        val errorMessage = "Det finns ingen användare med epostadressen " + email + " i " + APPLICATION_NAME + "."
         Future.successful(
           Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
         )
