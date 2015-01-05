@@ -1,12 +1,13 @@
 @(loginForm: Form[Option[models.User]])(implicit flash: Flash, lang: Lang)
 
 @import util.Section._
+@import util.ThemeHelper._
 
 @field(fieldName: String) = @{ loginForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(loginForm.hasErrors || loginForm.hasGlobalErrors) { "error" } }
 
-@page(title = "SignUp", section = Login){
+@page(title = APPLICATION_NAME, section = Login){
 
 @breadcrumb(Seq(), "Logga in")
 
