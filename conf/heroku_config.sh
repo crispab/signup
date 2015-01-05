@@ -9,6 +9,8 @@ heroku config:set \
     SLACK_CHANNEL_URL="<if you use chat via slack.com and want notifications there, otherwise remove this line>" \
     GOOGLE_CLIENT_ID="<to enable Google login - get from Google Dev Console>" \
     GOOGLE_CLIENT_SECRET="<to enable Google login - get from Google Dev Console>" \
+    FACEBOOK_CLIENT_ID="<to enable Facebook login - get from Facebook's dev site>" \
+    FACEBOOK_CLIENT_SECRET="<to enable Facebook login - get from Facebook's dev site>" \
     SMTP_MOCK=false \
     SMTP_HOST=smtp.sendgrid.net \
     SMTP_PORT=587 \
