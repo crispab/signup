@@ -10,7 +10,6 @@ scalaVersion := "2.11.1"
 libraryDependencies ++= Seq(
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
   "jp.t2v" %% "play2-auth"      % "0.13.+",
-  "jp.t2v" %% "play2-auth-test" % "0.13.+" % "test",
   "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.+",
   "commons-lang" % "commons-lang" % "2.6",
   "se.crisp" %% "cloudinary-scala-play" % "0.9.5b-SNAPSHOT",
@@ -25,7 +24,9 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "2.3.1",
   jdbc,
   anorm,
-  ws
+  ws,
+  "org.scalatestplus" %% "play" % "1.2.0" % "test",
+  "jp.t2v" %% "play2-auth-test" % "0.13.+" % "test"
 )
 
 resolvers ++= Seq(

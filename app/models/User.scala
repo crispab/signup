@@ -5,6 +5,7 @@ import anorm._
 import models.security.{NormalUser, Permission}
 import play.api.Play.current
 import play.api.db._
+import services.GravatarUrl
 import util.AuthHelper
 
 case class User(
@@ -16,7 +17,7 @@ case class User(
    comment: String = "",
    permission: Permission = NormalUser,
    password: String = "*",
-   imageProvider: String,
+   imageProvider: String = "",
    imageVersion: Option[String] = None) extends Ordered[User] {
 
   def compare(that: User) = {
@@ -135,6 +136,7 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
       implicit connection =>
         val password = user.password match {
           case User.NOT_CHANGED_PASSWORD => "*"
+          case "*" => "*"
           case _ => AuthHelper.calculateHash(user.password)
         }
         SQL(insertQueryString).on(
