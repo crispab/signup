@@ -22,12 +22,6 @@ object DateHelper {
 
   def asDateTime(date: Date): String = formatted(date, DATE_TIME)
 
-  def asUtcDateTime(date: Date): String = {
-    val utcFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
-    utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-    utcFormat.format(date)
-  }
-
   def sameDay(date1: Date, date2: Date) = {
     asDate(date1).equals(asDate(date2))
   }
