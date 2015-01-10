@@ -4,13 +4,16 @@ import com.nimbusds.jose.JWSObject
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.Logger
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, Controller}
 import util.ThemeHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
 
 
 object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
@@ -51,14 +54,18 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
         "redirect_uri" -> Seq(callbackUrl),
         "grant_type" -> Seq("authorization_code")
       )).map { response =>
-        val idTokenJwt = (response.json \ "id_token").as[String]
-        val idToken = Json.parse(JWSObject.parse(idTokenJwt).getPayload.toString)
-        val email = (idToken \ "email").as[String]
-        email
+        response.status match {
+          case 200 =>
+            Logger.logger.debug("response from Google: " + response.body)
+            val idTokenJwt = (response.json \ "id_token").as[String]
+            val idToken = Json.parse(JWSObject.parse(idTokenJwt).getPayload.toString)
+            val email = (idToken \ "email").as[String]
+            email
+          case _ =>
+            throw new IllegalStateException("Unexpected response from Google (" + response.status + "): " + response.body)
+        }
       }
 
-      import scala.concurrent.duration._
-      import scala.language.postfixOps
       val email = Await.result(callToGoogle, 60 seconds)
       val user = User.findByEmail(email)
       if (user.isDefined) {

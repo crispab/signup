@@ -3,6 +3,7 @@ package controllers
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.Logger
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, Controller}
 import util.ThemeHelper._
@@ -75,11 +76,17 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
       "grant_type" -> Seq("authorization_code"),
       "scope" -> Seq("email")
     )).map { response =>
-      response.body.split("&|=") match {
-        case Array("access_token", access_token: String, "expires", expires: String) => access_token
-        case Array("access_token", access_token: String) => access_token
+      response.status match {
+        case 200 =>
+          Logger.logger.debug("response from Facebook: " + response.body)
+          response.body.split("&|=") match {
+            case Array("access_token", access_token: String, "expires", expires: String) => access_token
+            case Array("access_token", access_token: String) => access_token
+            case _ =>
+              throw new IllegalStateException("Can't parse Facebook response. Expected an access_token: " + response.body)
+          }
         case _ =>
-          throw new IllegalStateException("Can't parse Facebook response. Expected an access_token: " + response.body)
+          throw new IllegalStateException("Unexpected response from Faceboo (" + response.status + "): " + response.body)
       }
     }
 
@@ -92,7 +99,13 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
       "return_ssl_resources" -> "",
       "access_token" -> access_token
     ).get().map { response =>
-      (response.json \ "email").as[String]
+      response.status match {
+        case 200 =>
+          Logger.logger.debug("response from Facebook: " + response.body)
+          (response.json \ "email").as[String]
+        case _ =>
+          throw new IllegalStateException("Unexpected response from Facebook (" + response.status + "): " + response.body)
+      }
     }
 
     Await.result(callToFacebook, 60 seconds)
