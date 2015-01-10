@@ -4,11 +4,11 @@ import com.nimbusds.jose.JWSObject
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
-import play.api.Logger
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, Controller}
 import util.ThemeHelper._
+import util.WsHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -22,6 +22,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
   private val GOOGLE_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
 
   import play.api.Play.current
+
   private lazy val GOOGLE_CLIENT_ID = play.api.Play.configuration.getString("google.client.id")
   private lazy val GOOGLE_CLIENT_SECRET = play.api.Play.configuration.getString("google.client.secret")
 
@@ -34,18 +35,18 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
     import com.netaporter.uri.dsl._
     val requestAuthenticationTokenUrl = GOOGLE_AUTHENTICATION_URL.addParams(
       "response_type" -> "code" ::
-      "client_id" -> GOOGLE_CLIENT_ID.get ::
-      "redirect_uri" -> callbackUrl ::
-      "state" -> randomString ::
-      "prompt" -> "select_account" ::
-      "scope" -> "openid email" :: Nil
+        "client_id" -> GOOGLE_CLIENT_ID.get ::
+        "redirect_uri" -> callbackUrl ::
+        "state" -> randomString ::
+        "prompt" -> "select_account" ::
+        "scope" -> "openid email" :: Nil
     )
 
     Redirect(requestAuthenticationTokenUrl)
   }
 
   def callback(error: Option[String] = None, state: Option[String] = None, code: Option[String] = None) = Action.async { implicit request =>
-    if(code.isDefined) {
+    if (code.isDefined) {
       val callbackUrl = routes.GoogleAuth.callback().absoluteURL()
       val callToGoogle = WS.url(GOOGLE_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(
         "code" -> Seq(code.get),
@@ -54,15 +55,11 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
         "redirect_uri" -> Seq(callbackUrl),
         "grant_type" -> Seq("authorization_code")
       )).map { response =>
-        response.status match {
-          case 200 =>
-            Logger.logger.debug("response from Google: " + response.body)
-            val idTokenJwt = (response.json \ "id_token").as[String]
-            val idToken = Json.parse(JWSObject.parse(idTokenJwt).getPayload.toString)
-            val email = (idToken \ "email").as[String]
-            email
-          case _ =>
-            throw new IllegalStateException("Unexpected response from Google (" + response.status + "): " + response.body)
+        onOkResponse(response) {
+          val idTokenJwt = (response.json \ "id_token").as[String]
+          val idToken = Json.parse(JWSObject.parse(idTokenJwt).getPayload.toString)
+          val email = (idToken \ "email").as[String]
+          email
         }
       }
 
@@ -79,7 +76,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
     } else {
       val errorMessage = "Det gick inte att logga in via Google: " + error.getOrElse("okänt fel")
       Future.successful(
-        Redirect(routes.Application.loginForm()).flashing(("error" , errorMessage))
+        Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
       )
     }
   }
