@@ -16,7 +16,7 @@ class WsHelperTest extends PlaySpec with MockitoSugar {
       val response = mock[WSResponse]
       when(response.status) thenReturn Status.INTERNAL_SERVER_ERROR
 
-      a [IllegalStateException] must be thrownBy {
+      an [IllegalStateException] must be thrownBy {
         WsHelper.onOkResponse(response) { throw new RuntimeException("We should never get here :-(") }
       }
     }

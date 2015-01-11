@@ -6,11 +6,11 @@ import play.mvc.Http.Status
 
 object WsHelper {
 
-  def onOkResponse(response: WSResponse)(codeBlockThatReturnsString: => String): String = {
+  def onOkResponse[T](response: WSResponse)(codeBlock: => T): T = {
     response.status match {
       case Status.OK =>
         Logger.logger.debug("response: " + response.body)
-        codeBlockThatReturnsString
+        codeBlock
       case _ =>
         throw new IllegalStateException("Unexpected response (" + response.status + "): " + response.body)
     }
