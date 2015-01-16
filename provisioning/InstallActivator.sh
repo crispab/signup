@@ -11,7 +11,7 @@ apt-get install -y unzip
 
 su - vagrant <<EOF
 
-rm -r ${INSTALL_DIR}/play-*
+rm -r ${INSTALL_DIR}
 mkdir ${INSTALL_DIR}
 cd ${INSTALL_DIR}
 
