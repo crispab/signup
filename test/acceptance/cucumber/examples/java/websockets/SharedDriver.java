@@ -1,4 +1,4 @@
-package cucumber.examples.java.websockets;
+package acceptance.cucumber.examples.java.websockets;
 
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
@@ -7,7 +7,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
+//import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 /**

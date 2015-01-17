@@ -26,7 +26,14 @@ libraryDependencies ++= Seq(
   anorm,
   ws,
   "org.scalatestplus" %% "play" % "1.2.0" % "test",
-  "jp.t2v" %% "play2-auth-test" % "0.13.+" % "test"
+  "jp.t2v" %% "play2-auth-test" % "0.13.+" % "test",
+  // Web driver and Cucumber
+  "info.cukes" % "cucumber-java" % "1.2.+" % "test",
+  "info.cukes" % "cucumber-junit" % "1.2.+" % "test",
+  // "junit" % "junit" % "4.11" % "test",
+  "info.cukes" % "cucumber-picocontainer" % "1.2.+" % "test",
+  "org.seleniumhq.selenium" % "selenium-server" % "2.44.+" % "test"
+  //"com.codeborne" % "phantomjsdriver" % "1.2.1" % "test"
 )
 
 resolvers ++= Seq(

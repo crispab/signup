@@ -104,6 +104,11 @@ SignUp from inside the virtual machine:
 
 And then point your browser on your local computer to [http://localhost:19000](http://localhost:19000)
 
+### Acceptance tests ###
+
+UI acceptance tests are implemented through cucumber and webdriver.
+
+
 
 Deploy in production
 ------
