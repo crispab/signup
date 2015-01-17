@@ -9,10 +9,22 @@ dist
 .classpath
 .project
 .settings
-.idea
-*.iml
 out
 run_local.sh
 .DS_Store
 opt
 .vagrant
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IntelliJ files
+.idea
+*.iml
