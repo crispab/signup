@@ -38,6 +38,11 @@ public class IndexPageSteps {
         driver.navigate().to("http://localhost:19000");
     }
 
+    @When("^I click on the home link$")
+    public void i_click_on_the_home_link() throws Throwable {
+        driver.findElement(By.xpath("//a[@href='/']")).click();
+    }
+
     @When("^I click on the Groups menu item$")
     public void i_click_on_the_Groups_menu_item() throws Throwable {
         driver.findElement(By.xpath("//a[@href='/groups']")).click();

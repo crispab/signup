@@ -5,6 +5,11 @@ Feature: Sign Up index page
     When I enter the site index page url
     Then it should display
 
+  Scenario: The home link should work
+    Given I am on the start page
+    When I click on the home link
+    Then it should display
+
   Scenario: The user clicks "Groups" in the menu
     Given I am on the start page
     When I click on the Groups menu item
