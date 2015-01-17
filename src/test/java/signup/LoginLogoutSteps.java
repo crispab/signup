@@ -21,7 +21,7 @@ public class LoginLogoutSteps {
         driver.findElement(By.xpath("//a[@href='/login']")).click();
     }
 
-    @When("^Submit credentials$")
+    @When("^submit credentials$")
     public void submit_credentials() throws Throwable {
         driver.findElement(By.id("email")).sendKeys("admin@crisp.se");
         driver.findElement(By.id("password")).sendKeys("admin");

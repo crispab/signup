@@ -5,7 +5,17 @@ Feature: Sign Up index page
     When I enter the site index page url
     Then it should display
 
-  Scenario: The user clicks "Groups"
+  Scenario: The user clicks "Groups" in the menu
     Given I am on the start page
     When I click on the Groups menu item
-    Then The Groups page should display
+    Then the Groups page should display
+
+  Scenario: The user clicks on a group on the groups page
+    Given I am on the groups page
+    When I click on a group
+    Then the group page should display
+
+  Scenario: The user clicks on a user on the groups page
+    Given I am on a group page
+    When I click on a user
+    Then the user page should display

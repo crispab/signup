@@ -43,10 +43,46 @@ public class IndexPageSteps {
         driver.findElement(By.xpath("//a[@href='/groups']")).click();
     }
 
-    @Then("^The Groups page should display$")
+    @Then("^the Groups page should display$")
     public void the_Groups_page_should_display() throws Throwable {
         // Will throw if element can't be found
         driver.findElement(By.xpath("//a[contains(., 'Crisp Rocket Days')]"));
     }
 
+    @Given("^I am on the groups page$")
+    public void i_am_on_the_groups_page() throws Throwable {
+        driver.navigate().to("http://localhost:19000");
+        driver.findElement(By.xpath("//a[@href='/groups']")).click();
+    }
+
+    @When("^I click on a group$")
+    public void i_click_on_a_group() throws Throwable {
+        driver.findElement(By.xpath("//a[contains(., 'Crisp Rocket Days')]")).click();
+    }
+
+    @Then("^the group page should display$")
+    public void the_group_page_should_display() throws Throwable {
+        Assert.assertEquals(
+                "Crisp Rocket Days",
+                driver.findElement(By.tagName("h2")).getText());
+    }
+
+    @Given("^I am on a group page$")
+    public void i_am_on_a_group_page() throws Throwable {
+        driver.navigate().to("http://localhost:19000");
+        driver.findElement(By.xpath("//a[@href='/groups']")).click();
+        driver.findElement(By.xpath("//a[contains(., 'Crisp Rocket Days')]")).click();
+    }
+
+    @When("^I click on a user$")
+    public void i_click_on_a_user() throws Throwable {
+        driver.findElement(By.xpath("//a[contains(., 'Torbjörn Fälldin')]")).click();
+    }
+
+    @Then("^the user page should display$")
+    public void the_user_page_should_display() throws Throwable {
+        Assert.assertEquals(
+                "Torbjörn Fälldin",
+                driver.findElement(By.tagName("h2")).getText());
+    }
 }
