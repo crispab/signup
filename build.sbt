@@ -8,10 +8,11 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
-  "org.apache.httpcomponents" % "httpclient" % "4.3.2",
-  "org.apache.httpcomponents" % "httpcore" % "4.3.2",
+  "org.apache.httpcomponents" % "httpclient" % "4.3.+",
+  "org.apache.httpcomponents" % "httpcore" % "4.3.+",
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
-  "jp.t2v" %% "play2-auth"      % "0.13.+" exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
+  "jp.t2v" %% "stackable-controller" % "0.4.+",
+  "jp.t2v" %% "play2-auth"      % "0.13.+",
   "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.+",
   "commons-lang" % "commons-lang" % "2.6",
   "se.crisp" %% "cloudinary-scala-play" % "0.9.5b-SNAPSHOT",
@@ -27,15 +28,13 @@ libraryDependencies ++= Seq(
   jdbc,
   anorm,
   ws,
-  "org.scalatestplus" %% "play" % "1.2.0" % "test",
-  "jp.t2v" %% "play2-auth-test" % "0.13.+" % "test",
-  // Web driver and Cucumber
+  "org.scalatestplus" %% "play" % "1.2.+" % "test",
+  "junit" % "junit" % "4.12" % "test",
   "info.cukes" % "cucumber-java" % "1.2.+" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.+" % "test",
-  // "junit" % "junit" % "4.11" % "test",
   "info.cukes" % "cucumber-picocontainer" % "1.2.+" % "test",
   "org.seleniumhq.selenium" % "selenium-server" % "2.44.+" % "test",
-  "com.codeborne" % "phantomjsdriver" % "1.2.1" % "test"
+  "com.codeborne" % "phantomjsdriver" % "1.2.+" % "test"
 )
 
 resolvers ++= Seq(
