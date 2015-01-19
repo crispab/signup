@@ -1,10 +1,14 @@
 package util
 
+import java.util.Date
+
 import org.apache.http.HttpResponse
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.{ClientProtocolException, ResponseHandler}
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
+import org.joda.time.DateTime
+import play.api.Logger
 
 import scala.util.Random
 
@@ -42,6 +46,8 @@ object TestHelper {
         }
       }
       val dbUrl = httpClient.execute(httpGet, responseHandler)
+      Logger.debug("dbUrl = " + dbUrl)
+
       dbUrl + POSTGRESSION_SSL_CONF
     } finally {
       httpClient.close()
@@ -51,4 +57,12 @@ object TestHelper {
   lazy val testId = Random.alphanumeric.take(8).mkString
 
   def withTestId(string: String): String = {testId + string}
+
+  def morningStart: Date = {
+    DateTime.now.plusWeeks(2).withHourOfDay(9).withMinuteOfHour(0).toDate
+  }
+
+  def morningEnd: Date = {
+    DateTime.now.plusWeeks(2).withHourOfDay(11).withMinuteOfHour(0).toDate
+  }
 }

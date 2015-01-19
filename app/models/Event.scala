@@ -25,7 +25,8 @@ case class Event(
                   lastSignUpDate: util.Date,
                   venue: String = "",
                   allowExtraFriends: Boolean = false,
-                  eventStatus: EventStatus = Created
+                  eventStatus: EventStatus = Created,
+                  maxParticipants: Option[Int] = None
                   ) {
 
   def lastSignupDatePassed() = {
@@ -49,8 +50,9 @@ object Event {
       get[String]("venue") ~
       get[Boolean]("allow_extra_friends") ~
       get[Long]("groupx") ~
-      get[String]("event_status") map {
-      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx ~ event_status =>
+      get[String]("event_status") ~
+      get[Option[Int]]("max_participants") map {
+      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx ~ event_status ~ max_participants =>
         Event(
           id = id,
           name = name,
@@ -61,7 +63,8 @@ object Event {
           venue = venue,
           allowExtraFriends = allow_extra_friends,
           group = Group.find(groupx),
-          eventStatus = EventStatus.withName(event_status)
+          eventStatus = EventStatus.withName(event_status),
+          maxParticipants = max_participants
         )
     }
   }
@@ -107,7 +110,8 @@ object Event {
           'venue -> event.venue,
           'allow_extra_friends -> event.allowExtraFriends,
           'groupx -> event.group.id,
-          'event_status -> event.eventStatus.toString
+          'event_status -> event.eventStatus.toString,
+          'max_participants -> event.maxParticipants
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -126,7 +130,8 @@ INSERT INTO events (
       venue,
       allow_extra_friends,
       groupx,
-      event_status
+      event_status,
+      max_participants
     )
     values (
       {name},
@@ -137,7 +142,8 @@ INSERT INTO events (
       {venue},
       {allow_extra_friends},
       {groupx},
-      {event_status}
+      {event_status},
+      {max_participants}
     )
     """
 
@@ -154,7 +160,8 @@ INSERT INTO events (
           'venue -> event.venue,
           'allow_extra_friends -> event.allowExtraFriends,
           'groupx -> event.group.id,
-          'event_status -> event.eventStatus.toString
+          'event_status -> event.eventStatus.toString,
+          'max_participants -> event.maxParticipants
         ).executeUpdate()
     }
   }
@@ -171,7 +178,8 @@ SET name = {name},
     venue = {venue},
     allow_extra_friends = {allow_extra_friends},
     groupx = {groupx},
-    event_status = {event_status}
+    event_status = {event_status},
+    max_participants = {max_participants}
 WHERE id = {id}
     """
 
@@ -194,4 +202,31 @@ WHERE id = {id}
         SQL("DELETE FROM events e WHERE e.id={id}").on('id -> id).executeUpdate()
     }
   }
+
+  def hasSeatsAvailable(id: Long): Boolean = {
+    DB.withTransaction {
+      implicit connection =>
+        SQL(hasSeatsAvailableQueryString).on('eventId -> id).as(scalar[Option[Boolean]].single).get
+    }
+  }
+
+  val hasSeatsAvailableQueryString =
+    """
+SELECT
+    e.max_participants IS NULL OR (e.max_participants > COALESCE((
+        SELECT
+            SUM(p.number_of_participants)
+        FROM
+            participations p
+        WHERE
+            p.event={eventId}
+        AND p.status='On'
+        GROUP BY
+            p.event ), 0)
+    ) AS seats_available
+FROM
+    events e
+WHERE
+    e.id = {eventId}
+    """
 }
