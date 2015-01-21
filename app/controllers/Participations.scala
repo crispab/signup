@@ -15,7 +15,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     val event = Event.find(eventId)
     if(!event.isCancelled) {
       val userToAttend = User.find(userId)
-      val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = On, user = userToAttend, event = event))
+      val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = Unregistered, user = userToAttend, event = event))
       Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att anmäla sig.")

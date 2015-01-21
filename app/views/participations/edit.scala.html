@@ -34,6 +34,12 @@
           Sista anmälningsdatum har passerats.
         </div>
       }
+      case ev if(Event.isFullyBooked(ev)) => {
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
+        </div>
+      }
       case _ => {}
     }
   </div>
@@ -46,6 +52,11 @@
       <ul>
         <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
+        @if(event.maxParticipants.isDefined) {
+          <li><strong>Max antal deltagare:</strong> @event.maxParticipants
+            @if(Event.isFullyBooked(event)) {(fullbokat)}
+          </li>
+        }
       </ul>
       @if(!sameDay(event.startTime, event.lastSignUpDate)) {
         <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
@@ -94,15 +105,15 @@
           </label>
           <div class="controls">
             <label class="radio inline">
-              <input type="radio" name="status" id="on" value="On" @if(field("status") == Status.On.toString  || field("status") == Status.Unregistered.toString) {checked=""}/>
+              <input type="radio" name="status" id="on" value="On" @if((field("status") == Status.On.toString) || ((field("status") == Status.Unregistered.toString) && !Event.isFullyBooked(event))) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
               <span class="label participation-on">Kommer</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""}/>
+              <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""} />
               <span class="label participation-maybe">Kanske</span>
             </label>
             <label class="radio inline">
-              <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""}/>
+              <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""} />
               <span class="label participation-off">Kommer inte</span>
             </label>
           </div>

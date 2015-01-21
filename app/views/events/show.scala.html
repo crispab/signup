@@ -21,17 +21,23 @@
   <div class="span5">
 
     @event match {
-      case event if(event.endTime.before(new java.util.Date())) => {
+      case ev if(ev.endTime.before(new java.util.Date())) => {
         <div class="alert alert-danger">
           <button type="button" class="close" data-dismiss="alert">×</button>
           Denna sammankomst har redan inträffat!
         </div>
       }
-      case event if(event.lastSignupDatePassed) => {
+      case ev if(ev.lastSignupDatePassed) => {
         <div class="alert alert-info">
           <button type="button" class="close" data-dismiss="alert">×</button>
           <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
           Sista anmälningsdatum har passerats.
+        </div>
+      }
+      case ev if(Event.isFullyBooked(ev)) => {
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
         </div>
       }
       case _ => {}
@@ -56,6 +62,11 @@
       <ul>
         <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
         <li><strong>Plats:</strong> @event.venue</li>
+        @if(event.maxParticipants.isDefined) {
+          <li><strong>Max antal deltagare:</strong> @event.maxParticipants
+            @if(Event.isFullyBooked(event)) {(fullbokat)}
+          </li>
+        }
       </ul>
 
       @if(!sameDay(event.startTime, event.lastSignUpDate)) {

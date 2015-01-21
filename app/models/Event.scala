@@ -229,4 +229,7 @@ FROM
 WHERE
     e.id = {eventId}
     """
+
+  def isFullyBooked(event: Event) = !hasSeatsAvailable(event.id.get)
+
 }

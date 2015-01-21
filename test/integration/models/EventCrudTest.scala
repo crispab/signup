@@ -103,6 +103,29 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
       Event.delete(eventId)
     }
 
+    "report NO seats available when more than max including guests" in {
+      val group = Group.findAll().head
+      val noOfMembers = Membership.findMembers(group).size
+
+      noOfMembers must be > 1
+
+      val event = Event(maxParticipants = Option(noOfMembers), group = group, name = withTestId("Julgransplundring"), startTime = morningStart, endTime = morningEnd, lastSignUpDate = morningStart)
+      val eventId = Event.create(event)
+      val newEvent = Event.find(eventId)
+
+      Event.hasSeatsAvailable(eventId) must be (true)
+
+      User.findUnregisteredMembers(newEvent) map { member =>
+        val participation = new Participation(user = member, event = newEvent, signUpTime = Option(new Date()), numberOfParticipants = 2)
+        Participation.create(participation)
+      }
+
+
+      Event.hasSeatsAvailable(eventId) must be (false)
+
+      Event.delete(eventId)
+    }
+
     "report NO seats available when equal to max" in {
       val group = Group.findAll().head
       val noOfMembers = Membership.findMembers(group).size
