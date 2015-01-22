@@ -38,9 +38,6 @@
 
 
 
-  <!-- TODO: add the option to limit the number of participants -->
-
-
 
 <div class="row">
   <div class="span5">
@@ -117,12 +114,43 @@
         </div>
 
         <div class="space-berfore">
-        Extra vänner:
+        Hantering av injudna:
         </div>
-        <div class='form-inline control-group'>
-          <input type="checkbox" class="input-xlarge" id="allow_extra_friends" name="allow_extra_friends" value="true" @if(field("allow_extra_friends") == "true") {checked=""} />
-          <label class="control-label" for="allow_extra_friends">Inbjudna får ta med extra vänner</label>
-        </div>
+
+        <label class="radio">
+          <input type="radio"
+                name="invited"
+                id="invited_only"
+                value="invited_only"
+                @if(field("invited") equals "invited_only") {checked}
+                onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false'>
+          Bara inbjudna får komma
+        </label>
+        <label class="radio">
+          <input type="radio"
+                name="invited"
+                id="allow_extra_friends"
+                value="allow_extra_friends"
+                @if(field("invited") equals "allow_extra_friends") {checked}
+                onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false'>
+          Inbjudna får ta med extra vänner
+        </label>
+        <label class="radio form-inline">
+          <input type="radio"
+                name="invited"
+                id="max_number_of_participants_selected"
+                value="max_number_of_participants_selected"
+                @if(field("invited") equals "max_number_of_participants_selected") {checked}
+                onclick='noField=document.getElementById("max_participants"); noField.disabled=false; noField.required=true'>
+          Max antal deltagare:
+          <input type="number"
+                class="input-mini"
+                id="max_participants"
+                name="max_participants"
+                value='@field("max_participants")'
+                min="1"
+                @if(!field("invited").equals("max_number_of_participants_selected")) {disabled}>
+        </label>
 
         <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
 

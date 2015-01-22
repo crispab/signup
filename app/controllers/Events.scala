@@ -302,10 +302,11 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
         "start_time" -> date("HH:mm"),
         "end_time" -> date("HH:mm"),
         "venue" -> text(maxLength = 127),
-        "allow_extra_friends" -> boolean,
+        "invited" -> nonEmptyText,
         "groupId" -> longNumber,
         "same_day" -> boolean,
-        "last_signup_date" -> optional(date("yyyy-MM-dd"))
+        "last_signup_date" -> optional(date("yyyy-MM-dd")),
+        "max_participants" -> optional(number(min = 1))
       )(toEvent)(fromEvent)
         .verifying("Sluttid måste vara efter starttid", event => event.startTime.before(event.endTime))
         .verifying("Sista anmälningsdag måste vara före själva sammankomsten",
@@ -318,7 +319,16 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
       case true => None
       case _ => Option(event.lastSignUpDate)
     }
-    Option((event.id, event.name, event.description, event.startTime, event.startTime, event.endTime, event.venue, event.allowExtraFriends, event.group.id.get, isSameDay, lastSignUpDay))
+
+    val invited = if(event.allowExtraFriends) {
+      "allow_extra_friends"
+    } else if(event.maxParticipants.isDefined) {
+      "max_number_of_participants_selected"
+    } else {
+      "invited_only"
+    }
+
+    Option((event.id, event.name, event.description, event.startTime, event.startTime, event.endTime, event.venue, invited, event.group.id.get, isSameDay, lastSignUpDay, event.maxParticipants))
   }
 
   def toEvent(
@@ -329,10 +339,11 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     start_time: util.Date,
     end_time: util.Date,
     venue: String,
-    allow_extra_friends: Boolean,
+    invited: String,
     groupId: Long,
     sameDay: Boolean,
-    last_signup_date: Option[util.Date]): Event = {
+    last_signup_date: Option[util.Date],
+    max_participants: Option[Int]): Event = {
 
     val start_date_str = new SimpleDateFormat("yyyy-MM-dd").format(start_date)
     val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
@@ -351,8 +362,9 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
       endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(start_date_str + " " + end_time_str),
       lastSignUpDate = lastSignUpDate,
       venue = venue,
-      allowExtraFriends = allow_extra_friends,
-      group = Group.find(groupId)
+      allowExtraFriends = invited equals "allow_extra_friends",
+      group = Group.find(groupId),
+      maxParticipants = max_participants
     )
   }
 }
