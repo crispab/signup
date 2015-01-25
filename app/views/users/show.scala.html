@@ -25,12 +25,6 @@
 <div class="row">
   <div class="span5">
     <dl class="dl-horizontal">
-      <dt>Förnamn:</dt>
-      <dd>@user.firstName&nbsp;</dd>
-
-      <dt>Efternamn:</dt>
-      <dd>@user.lastName&nbsp;</dd>
-
       @if(isLoggedIn(loggedInUser)) {
         <dt>Epost:</dt>
         <dd>@user.email&nbsp;</dd>
@@ -41,6 +35,11 @@
 
       <dt>Kommentar:</dt>
       <dd>@user.comment&nbsp;</dd>
+
+      @if(user.permission == models.security.Administrator){
+        <dt>Roll:</dt>
+        <dd>Administratör&nbsp;</dd>
+      }
     </dl>
   </div>
 </div>
