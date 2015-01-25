@@ -4,6 +4,7 @@
 @import util.Section._
 @import services.ImageUrl
 @import util.DateHelper._
+@import util.HtmlHelper._
 
 
 @page(user.firstName + " " + user.lastName, section = Users) {
@@ -92,7 +93,7 @@
             <div class="item-list">
               <p><strong>
                 @if(event.isCancelled){Inställt: }
-                <a href="@routes.Events.show(event.id.get)">@event.name</a>
+                <a href="@routes.Participations.editForm(event.id.get,user.id.get)">@event.name</a>
               </strong></p>
               <p><a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a></p>
             </div>
@@ -102,6 +103,12 @@
             @if(!sameDay(event.startTime, event.lastSignUpDate)) {
               <p>Sista anmälningsdag: <br/> @asDate(event.lastSignUpDate)</p>
             }
+            <a href="@routes.Participations.editForm(event.id.get, user.id.get)">
+              <span class="label @asCssClass(Participation.findStatus(user, event))">
+              @asMessage(Participation.findStatus(user, event))
+              </span>
+            </a>
+
           </div>
         </div>
       </div>

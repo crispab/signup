@@ -267,4 +267,17 @@ WHERE p.event={eventId}
     }
   }
 
+
+  def findStatus(user: User, event: Event): Status = {
+    DB.withTransaction {
+      implicit connection =>
+        val statusStr = SQL("""
+          SELECT p.status
+          FROM participations p
+          WHERE p.userx={user} AND p.event={event}
+        """).on('user -> user.id.get, 'event -> event.id.get).as(scalar[String].singleOpt).getOrElse("Unregistered")
+        Status.withName(statusStr)
+    }
+  }
+
 }
