@@ -76,6 +76,23 @@ object Event {
     }
   }
 
+  def findFutureEventsByUser(user: User): Seq[Event] = {
+    DB.withTransaction {
+      val today = new DateTime().withTimeAtStartOfDay().toDate
+      implicit connection =>
+        SQL("""
+          SELECT e.*
+          FROM events e, memberships m
+          WHERE e.groupx = m.groupx AND m.userx = {user} AND e.start_time >= {today} AND e.event_status != 'Cancelled'
+          UNION
+          SELECT e.*
+          FROM events e, participations p
+          WHERE p.event=e.id AND p.userx={user} AND e.start_time >= {today} AND e.event_status != 'Cancelled'
+          ORDER BY last_signup_date ASC
+        """).on('user -> user.id.get, 'today -> today).as(Event.parser *)
+    }
+  }
+
   def findFutureEventsByGroup(group: Group): Seq[Event] = {
     DB.withTransaction {
       val today = new DateTime().withTimeAtStartOfDay().toDate
