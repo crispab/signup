@@ -19,7 +19,7 @@
   <div class="row">
     <div class="span5">
       <img class="big-thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
-      @if(isAdmin(loggedInUser)) {
+      @if(isAdminOrSelf(loggedInUser, user)) {
         <a href="@routes.UsersSecured.updateImageForm(user.id.get)" class="btn"><i class="icon-picture"></i> Byt bild</a>
       }
       <h2>@user.firstName @user.lastName</h2>
@@ -47,34 +47,37 @@
     </div>
   </div>
 
-  @if(isAdmin(loggedInUser)) {
+  @if(isAdminOrSelf(loggedInUser, user)) {
     <div class="row">
       <div class="span5">
         <p></p>
         <a href="@routes.UsersSecured.updateForm(user.id.get)" class="btn btn-primary"><i class="icon-pencil icon-white"></i>
           Redigera</a>
-        <a data-toggle="modal" href="#remove_user_@user.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
 
-        <div id="remove_user_@user.id" class="modal smaller-modal hide fade" style="display: none;">
-          <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Vill du ta bort användaren?</h3>
+        @if(isAdmin(loggedInUser)) {
+          <a data-toggle="modal" href="#remove_user_@user.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+
+          <div id="remove_user_@user.id" class="modal smaller-modal hide fade" style="display : none ;">
+            <div class="modal-header">
+              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <h3>Vill du ta bort användaren?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att ta bort användaren <strong>@user.firstName @user.lastName</strong>.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.UsersSecured.delete(user.id.get)" method="POST">
+                <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
+                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+              </form>
+            </div>
           </div>
-          <div class="modal-body">
-            <p>
-              Du håller på att ta bort användaren <strong>@user.firstName @user.lastName</strong>.
-            </p>
-            <p>
-              Vill du fortsätta?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <form action="@routes.UsersSecured.delete(user.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
-            </form>
-          </div>
-        </div>
+        }
       </div>
     </div>
   }

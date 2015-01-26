@@ -45,7 +45,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
@@ -96,24 +96,42 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def update(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
         user => {
-          User.updateProperties(id, user)
+          if(isAdmin(loggedInUser)) {
+            User.updateProperties(id, user)
+          } else {
+            User.updateProperties(id, preventPermissionToBeChanged(user))
+          }
           Redirect(routes.Users.show(id))
         }
       )
   }
 
-  def updateImageForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  private def preventPermissionToBeChanged(user: User): User = {
+    User(permission = NormalUser,
+      id = user.id,
+      firstName = user.firstName,
+      lastName = user.lastName,
+      email = user.email,
+      phone = user.phone,
+      comment = user.comment,
+      password = user.password,
+      imageProvider = user.imageProvider,
+      imageVersion = user.imageVersion
+    )
+  }
+
+  def updateImageForm(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(views.html.users.updateImage(userToUpdate))
   }
 
-  def resetImage(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def resetImage(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
 
@@ -122,7 +140,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     Redirect(routes.Users.show(id))
   }
 
-  def uploadImage(id: Long) = AsyncStack(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def uploadImage(id: Long) = AsyncStack(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
 
@@ -164,9 +182,9 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       "phone" -> text(maxLength = 127),
       "comment" -> text(maxLength = 127),
       "administrator" -> boolean,
-      "password" -> optional(text(maxLength = 127))
+      "password" -> text(maxLength = 127)
     )(toUser)(fromUser)
-      .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
+      .verifying("Lösenordet måste vara minst 8 tecken", user => user.password.length >= 8)
   )
 
 
@@ -179,30 +197,22 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       "phone" -> text(maxLength = 127),
       "comment" -> text(maxLength = 127),
       "administrator" -> boolean,
-      "password" -> optional(text(maxLength = 127))
+      "password" -> text(maxLength = 127)
     )(toUser)(fromUser)
       .verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
-      .verifying("Administratörer måste ha ett lösenord på minst 8 tecken", user => user.password.length >= 8)
+      .verifying("Lösenordet måste vara minst 8 tecken", user => user.password.length >= 8)
   )
 
-  def toUser(id: Option[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: Option[String]): User = {
+  def toUser(id: Option[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: String): User = {
     val permission = isAdministrator match {
       case true => Administrator
       case _ => NormalUser
     }
-    val passwordToSet = permission match {
-      case Administrator => password.getOrElse("").trim
-      case _ => User.NOT_CHANGED_PASSWORD
-    }
-    User(id=id, firstName=firstName.trim, lastName=lastName.trim, email=email.trim, phone=phone.trim, comment=comment.trim, permission=permission, password=passwordToSet, imageProvider = GravatarUrl.identifier)
+    User(id=id, firstName=firstName.trim, lastName=lastName.trim, email=email.trim, phone=phone.trim, comment=comment.trim, permission=permission, password=password, imageProvider = GravatarUrl.identifier)
   }
 
   def fromUser(user: models.User) = {
-    val passwordToShow: Option[String]  = user.permission match {
-      case Administrator => Option(User.NOT_CHANGED_PASSWORD)
-      case _ => None
-    }
-    Option(user.id, user.firstName, user.lastName, user.email, user.phone, user.comment, user.permission==Administrator, passwordToShow)
+    Option(user.id, user.firstName, user.lastName, user.email, user.phone, user.comment, user.permission==Administrator, User.NOT_CHANGED_PASSWORD)
   }
 }
 

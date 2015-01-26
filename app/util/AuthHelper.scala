@@ -6,6 +6,7 @@ import models.User
 import models.security.{Administrator, Permission}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Random
 
 object AuthHelper {
 
@@ -22,6 +23,14 @@ object AuthHelper {
   def isAdmin(user: Option[User]):Boolean = {
     if (user.isDefined) {
       authorize(user.get, Administrator)
+    } else {
+      false
+    }
+  }
+
+  def isAdminOrSelf(loggedInUser: Option[User], viewedUser: User):Boolean = {
+    if (loggedInUser.isDefined) {
+      authorize(loggedInUser.get, Administrator) || loggedInUser.get.id.get == viewedUser.id.get
     } else {
       false
     }
@@ -50,5 +59,7 @@ object AuthHelper {
 
   import play.api.Play.current
   private def salt = play.api.Play.configuration.getString("password.salt").getOrElse("")
+
+  def randomPassword = Random.alphanumeric.take(12).mkString
 
 }
