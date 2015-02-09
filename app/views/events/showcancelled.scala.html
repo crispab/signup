@@ -11,13 +11,13 @@
             event.name)
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>@event.name</h2>
   </div>
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
 
     <div class="alert alert-danger">
       Sammankomsten är inställt.
@@ -31,7 +31,7 @@
     }
 
     @if(flash.get("error").isDefined) {
-      <div class="alert alert-error">
+      <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
         @flash.get("error")
       </div>
@@ -51,18 +51,18 @@
 
       @if(isAdmin(loggedInUser)) {
         <div class="btn-group">
-          <button class="btn">Åtgärder</button>
+          <button class="btn btn-default">Åtgärder</button>
           <button class="btn dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a data-toggle="modal" href="#remove_event_@event.id"><i class="icon-trash"></i> Ta bort</a></li>
+            <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span> Ta bort</a></li>
           </ul>
         </div>
 
         <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
             <h3>Vill du ta bort sammankomsten?</h3>
           </div>
           <div class="modal-body">
@@ -75,8 +75,8 @@
           </div>
           <div class="modal-footer">
             <form action="@routes.EventsSecured.delete(event.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+              <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash glyphicon-inverse"></span> Ta bort</button>
             </form>
           </div>
         </div>

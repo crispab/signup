@@ -10,24 +10,24 @@
 @breadcrumb(Seq("Grupper" -> routes.Groups.list()), group.name)
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>@group.name</h2>
   </div>
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <div class="well">
       <p>@group.description</p>
 
       @if(isAdmin(loggedInUser)) {
         <p></p>
-        <a href="@routes.GroupsSecured.updateForm(group.id.get)" class="btn"><i class="icon-pencil"></i> Redigera</a>
-        <a data-toggle="modal" href="#remove_group_@group.id" class="btn"><i class="icon-trash"></i> Ta bort</a>
+        <a href="@routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Redigera</a>
+        <a data-toggle="modal" href="#remove_group_@group.id" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Ta bort</a>
 
         <div id="remove_group_@group.id" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
             <h3>Vill du ta bort gruppen?</h3>
           </div>
           <div class="modal-body">
@@ -40,8 +40,8 @@
           </div>
           <div class="modal-footer">
             <form action="@routes.GroupsSecured.delete(group.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+              <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash glyphicon-inverse"></span> Ta bort</button>
             </form>
           </div>
         </div>
@@ -51,7 +51,7 @@
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h3>Sammankomster</h3>
     @if(showingAll) {
       <a href="@routes.Groups.show(group.id.get)">Visa bara framtida</a>
@@ -63,9 +63,9 @@
 
 @events.map { event =>
 <div class="row">
-  <div class="span5 list-row">
+  <div class="col-md-5 list-row">
     <div class="row">
-      <div class="span3">
+      <div class="col-md-3">
         <div class="item-list">
           <p class="small-space-berfore"><strong>
             @if(event.isCancelled){
@@ -76,7 +76,7 @@
           <p class="small-space-berfore">@Html(event.description)</p>
         </div>
       </div>
-      <div class="span2">
+      <div class="col-md-2">
         <p class="small-space-berfore"><strong>@asDate(event.startTime), </strong>@asTime(event.startTime)-@asTime(event.endTime)</p>
         @if(!sameDay(event.startTime, event.lastSignUpDate)) {
           <p class="small-space-berfore">Sista anmälningsdag: <br/> @asDate(event.lastSignUpDate)</p>
@@ -89,27 +89,27 @@
 
 @if(isAdmin(loggedInUser)) {
   <div class="row">
-    <div class="span5 btn-row">
-      <a href="@routes.EventsSecured.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny sammankomst</a>
+    <div class="col-md-5 btn-row">
+      <a href="@routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Ny sammankomst</a>
     </div>
   </div>
 }
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h3>Medlemmar</h3>
   </div>
 </div>
 @members.map { membership =>
 <div class="row">
-  <div class="span5 list-row">
+  <div class="col-md-5 list-row">
     <div class="row">
-      <div class="span1">
+      <div class="col-md-1">
         <a href="@routes.Users.show(membership.user.id.get)">
           <img class="thumb thumb-background40" src="@ImageUrl(membership.user)" onerror="imgError(this);"/>
         </a>
       </div>
-      <div class="span2">
+      <div class="col-md-2">
         <dl class="participation">
           <dt><a href="@routes.Users.show(membership.user.id.get)">
             @membership.user.firstName @membership.user.lastName
@@ -122,13 +122,13 @@
       </div>
 
       @if(isAdmin(loggedInUser)) {
-        <div class="span2">
-          <a data-toggle="modal" href="#remove_member_@membership.id" class="btn pull-right"><i class="icon-trash"></i> Ta
+        <div class="col-md-2">
+          <a data-toggle="modal" href="#remove_member_@membership.id" class="btn pull-right"><span class="glyphicon glyphicon-trash"></span> Ta
             bort</a>
 
           <div id="remove_member_@membership.id" class="modal smaller-modal hide fade" style="display: none">
             <div class="modal-header">
-              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
               <h3>Vill du ta bort medlemmen?</h3>
             </div>
             <div class="modal-body">
@@ -142,8 +142,8 @@
             </div>
             <div class="modal-footer">
               <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
-                <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+                <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash icon-white"></span> Ta bort</button>
               </form>
             </div>
           </div>
@@ -157,8 +157,8 @@
 
 @if(isAdmin(loggedInUser)) {
   <div class="row">
-    <div class="span5 btn-row">
-      <a href="@routes.Memberships.createForm(group.id.get)" class="btn"><i class="icon-plus"></i> Ny medlem</a>
+    <div class="col-md-5 btn-row">
+      <a href="@routes.Memberships.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Ny medlem</a>
     </div>
   </div>
 }

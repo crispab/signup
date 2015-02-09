@@ -5,7 +5,6 @@ import anorm._
 import models.security.{NormalUser, Permission}
 import play.api.Play.current
 import play.api.db._
-import services.GravatarUrl
 import util.AuthHelper
 
 case class User(

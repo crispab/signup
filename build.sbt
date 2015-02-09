@@ -24,7 +24,7 @@ libraryDependencies ++= Seq(
   "com.netaporter" %% "scala-uri" % "0.4.2",
   "com.nimbusds" % "nimbus-jose-jwt" % "3.1.2",
   "org.webjars" %% "webjars-play" % "2.3.0-2",
-  "org.webjars" % "bootstrap" % "2.3.1",
+  "org.webjars" % "bootstrap" % "3.3.2",
   jdbc,
   anorm,
   ws,

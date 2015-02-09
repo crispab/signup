@@ -5,7 +5,7 @@
 
 @field(fieldName: String) = @{ groupForm(fieldName).value.getOrElse("") }
 
-@hasErrors(fieldName: String) = @{ if(groupForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(groupForm(fieldName).hasErrors) { "has-error" } }
 
 @creatingNew() = @{
   idToUpdate.isEmpty
@@ -30,67 +30,57 @@
 
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>@if(creatingNew()) {Nytt} else {Redigera} Grupp</h2>
   </div>
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <form class="form-horizontal" action="@theAction()" method="POST">
       <fieldset>
-        <div class='control-group @hasErrors("name")'>
+        <div class='form-group @hasErrors("name")'>
           <label class="control-label" for="name">Namn</label>
-          <div class="controls">
-            <input type="text" maxlength="127" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
-            <span class="show-on-error">Fyll i ett namn på gruppen</span>
-          </div>
+          <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>
+          <span class="show-on-error">Fyll i ett namn på gruppen</span>
         </div>
 
-        <div class='control-group  @hasErrors("description")'>
+        <div class='form-group  @hasErrors("description")'>
           <label class="control-label" for="description">Beskrivning</label>
-          <div class="controls">
-            <textarea maxlength="127" class="input-xlarge" id="description" name="description" rows="3">@field("description")</textarea>
-            <span class="show-on-error">Det här var en underlig beskrivning</span>
-          </div>
+          <textarea maxlength="127" class="form-control" id="description" name="description" rows="3">@field("description")</textarea>
+          <span class="show-on-error">Det här var en underlig beskrivning</span>
         </div>
 
         <fieldset>
           <legend>Konfigurering av epost från gruppen</legend>
 
-          <div class='control-group @hasErrors("mail_from")'>
+          <div class='form-group @hasErrors("mail_from")'>
             <label class="control-label" for="mail_from">Avsändare</label>
-            <div class="controls">
-              <input type="email" maxlength="127" class="input-xlarge" id="mail_from" name="mail_from" value='@field("mail_from")' required=""/>
-              <span class="show-on-error">Fyll i adressen till den som skall stå som avsändare</span>
-            </div>
+            <input type="email" maxlength="127" class="form-control" id="mail_from" name="mail_from" value='@field("mail_from")' required=""/>
+            <span class="show-on-error">Fyll i adressen till den som skall stå som avsändare</span>
           </div>
 
-          <div class='control-group @hasErrors("mail_subject_prefix")'>
+          <div class='form-group @hasErrors("mail_subject_prefix")'>
             <label class="control-label" for="mail_subject_prefix">Rubrikprefix</label>
-            <div class="controls">
-              <input type="text" maxlength="127" class="input-xlarge" id="mail_subject_prefix" name="mail_subject_prefix" value='@field("mail_subject_prefix")' required=""/>
-              <span class="show-on-error">Fyll i vad mailrubriker skall börja med</span>
-            </div>
+            <input type="text" maxlength="127" class="form-control" id="mail_subject_prefix" name="mail_subject_prefix" value='@field("mail_subject_prefix")' required=""/>
+            <span class="show-on-error">Fyll i vad mailrubriker skall börja med</span>
           </div>
         </fieldset>
 
         @if(groupForm.hasErrors || groupForm.hasGlobalErrors) {
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
           <p>@errors(groupForm).mkString(", ")</p>
         </div>
         }
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-            <i class="icon-ok icon-white"></i>Spara
-          </button>
-          <button type="button" class="btn" id="cancel" onClick='history.go(-1)'>
-            <i class="icon-ban-circle"></i>Avbryt
-          </button>
-        </div>
+        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+          <span class="glyphicon glyphicon-ok glyphicon-inverse"></span>Spara
+        </button>
+        <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'>
+          <span class="glyphicon glyphicon-ban-circle"></span>Avbryt
+        </button>
       </fieldset>
     </form>
   </div>

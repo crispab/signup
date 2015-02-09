@@ -7,7 +7,7 @@
 
 @field(fieldName: String) = @{ membershipForm(fieldName).value.getOrElse("") }
 
-@hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(membershipForm(fieldName).hasErrors) { "has-error" } }
 
 
 @page("Ny medlem i " + group.name, section = Groups) {
@@ -16,57 +16,53 @@
             "Ny medlem")
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>Ny medlem i @group.name</h2>
   </div>
 </div>
 
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <form action="@routes.Memberships.create()" method="POST">
       <fieldset>
 
-        <div class='control-group @hasErrors("userId")'>
+        <div class='form-group @hasErrors("userId")'>
           <label class="control-label" for="userId">Befintlig användare</label>
-          <div class="controls">
-            <select id="userId" name="userId" required="">
-              <option>Ingen vald</option>
-              @nonMembers.map { user =>
-              <option value='@user.id.get'
-                      @if(user.id.get.toString.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, isLoggedIn(loggedInUser)) )</option>
-              }
-            </select>
-            <span class="show-on-error">Välj en användare som medlem</span>
-          </div>
+          <select id="userId" name="userId" required="">
+            <option>Ingen vald</option>
+            @nonMembers.map { user =>
+            <option value='@user.id.get'
+                    @if(user.id.get.toString.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, isLoggedIn(loggedInUser)) )</option>
+            }
+          </select>
+          <span class="show-on-error">Välj en användare som medlem</span>
         </div>
 
         <input type="hidden" id="groupId" name="groupId" value="@group.id.get"/>
 
         @if(membershipForm.hasErrors || membershipForm.hasGlobalErrors) {
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
           <p>@errors(membershipForm).mkString(", ")</p>
         </div>
         }
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-            <i class="icon-ok icon-white"></i>
-            Lägg till
-          </button>
-          <button type="button" class="btn" id="create"
-                  onClick='window.location.assign("@routes.UsersSecured.createMemberForm(group.id.get)") '>
-            <i class="icon-plus"></i>
-            Ny användare
-          </button>
-          <button type="button" class="btn" id="cancel"
-                  onClick='window.location.assign("@routes.Groups.show(group.id.get)") '>
-            <i class="icon-ban-circle"></i>
-            Avbryt
-          </button>
-        </div>
+        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+          <span class="glyphicon glyphicon-ok glyphicon-inverse"></span>
+          Lägg till
+        </button>
+        <button type="button" class="btn btn-default" id="create"
+                onClick='window.location.assign("@routes.UsersSecured.createMemberForm(group.id.get)") '>
+          <span class="glyphicon glyphicon-plus"></span>
+          Ny användare
+        </button>
+        <button type="button" class="btn btn-default" id="cancel"
+                onClick='window.location.assign("@routes.Groups.show(group.id.get)") '>
+          <span class="glyphicon glyphicon-ban-circle"></span>
+          Avbryt
+        </button>
       </fieldset>
     </form>
   </div>

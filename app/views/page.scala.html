@@ -2,121 +2,114 @@
 
 <!DOCTYPE html>
 
-@import util.AuthHelper._
-@import util.ThemeHelper._
-@import services.ImageUrl
+  @import util.AuthHelper._
+  @import util.ThemeHelper._
+  @import services.ImageUrl
 
-@sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
-
-
-
-<html lang="sv">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader)
-
-  <link rel="shortcut icon" href='@routes.Assets.at(forTheme("images/[THEME]-favicon.png"))'>
-
-  <link rel="stylesheet" href='@routes.Assets.at(forTheme("stylesheets/[THEME]-bootstrap.css"))'>
-  <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-responsive.min.css"))'>
-  <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css")'>
-
-  <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
-  <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
-
-  <script src='@routes.Assets.at("javascripts/signup.js")'></script>
-  <title>@title</title>
-</head>
+  @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
 
-<body>
-<div class="navbar navbar-static-top">
-  <div class="navbar-inner">
-    <div class="container">
 
-    <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
+  <html lang="sv">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader)
+
+      <link rel="shortcut icon" href='@routes.Assets.at(forTheme("images/[THEME]-favicon.png"))'>
+
+      <link rel="stylesheet" href='@routes.Assets.at(forTheme("stylesheets/[THEME]-bootstrap.css"))'>
+      <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css")'>
+
+      <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+      <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
+
+      <script src='@routes.Assets.at("javascripts/signup.js")'></script>
+      <title>@title</title>
+    </head>
 
 
-      <a class="brand" href="@routes.Application.index()">
-        @APPLICATION_NAME
-      </a>
+    <body>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#signup_navbar">
+              <span class="sr-only">Visa/dölj navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="@routes.Application.index()">@APPLICATION_NAME</a>
+          </div>
 
-      <div class="nav-collapse collapse">
-
-        <ul class="nav">
-          <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
-          @if(isAdmin(loggedInUser)) {
-            <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.UsersSecured.list()">Användare</a></li>
-          }
-        </ul>
-        @if(showLogin) {
-          @if(isLoggedIn(loggedInUser)) {
-            <ul class="nav pull-right">
-              <li class="dropdown @sectionClass(util.Section.Login.toString)">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img class="login-thumb thumb-background16" src="@ImageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
-                  @loggedInUser.get.firstName @loggedInUser.get.lastName
-                  <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="@routes.Users.show(loggedInUser.get.id.get)">Min sida</a></li>
-                  <li><a href="@routes.Application.logout()">Logga ut</a></li>
+          <div class="navbar-collapse collapse" id="signup_navbar">
+            <ul class="nav navbar-nav">
+              <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
+              @if(isAdmin(loggedInUser)) {
+                <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.UsersSecured.list()">Användare</a></li>
+              }
+            </ul>
+            @if(showLogin) {
+              @if(isLoggedIn(loggedInUser)) {
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="dropdown @sectionClass(util.Section.Login.toString)">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                      <img class="login-thumb thumb-background16" src="@ImageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
+                      @loggedInUser.get.firstName @loggedInUser.get.lastName
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="@routes.Users.show(loggedInUser.get.id.get)">Min sida</a></li>
+                      <li><a href="@routes.Application.logout()">Logga ut</a></li>
+                    </ul>
+                  </li>
                 </ul>
-              </li>
-            </ul>
-          } else {
-            <ul class="nav pull-right">
-              <li class="@sectionClass(util.Section.Login.toString)"><a href="@routes.Application.loginForm()"><i class="icon-user"></i>
-                Logga in</a></li>
-            </ul>
-          }
-        }
+              } else {
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="@sectionClass(util.Section.Login.toString)">
+                    <a href="@routes.Application.loginForm()"><span class="glyphicon glyphicon-user"></span>&nbsp;Logga in</a>
+                  </li>
+                </ul>
+              }
+            }
+          </div>
+        </div>
+      </nav>
+      <div class="navigation-divider"></div>
 
+
+      <div class="container">
+      @body
       </div>
-    </div>
-  </div>
-  <div class="navigation-divider"></div>
-</div>
 
-<div class="container">
-  @body
-</div>
-
-<div class="footer">
-  <div class="container">
-    <div class="row">
-      <div class="span5">
-        <div class="footer-logo">
+      <div class="footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="footer-logo"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
 
-<script src='@routes.Assets.at("javascripts/wysihtml5-0.3.0.min.js")'></script>
-<script src='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.min.js")'></script>
+      <script src='@routes.Assets.at("javascripts/wysihtml5-0.3.0.min.js")'></script>
+      <script src='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.min.js")'></script>
 
 
-<script type="text/javascript">
-  $('.rich-textarea').wysihtml5({
-  	"font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
-  	"emphasis": true, //Italics, bold, etc. Default true
-  	"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-  	"html": false, //Button which allows you to edit the generated HTML. Default false
-  	"link": true, //Button to insert a link. Default true
-  	"image": false //Button to insert an image. Default true
-  });
-</script>
+      <script type="text/javascript">
+      $('.rich-textarea').wysihtml5({
+      "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+      "emphasis": true, //Italics, bold, etc. Default true
+      "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+      "html": false, //Button which allows you to edit the generated HTML. Default false
+      "link": true, //Button to insert a link. Default true
+      "image": false //Button to insert an image. Default true
+      });
+      </script>
 
-@Html(com.newrelic.api.agent.NewRelic.getBrowserTimingFooter)
-</body>
-</html>
+      @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingFooter)
+    </body>
+  </html>

@@ -1,36 +1,33 @@
 @import "signup.less";
 
-@iconSpritePath: "/webjars/bootstrap/2.3.1/img/glyphicons-halflings-white.png";
-@iconWhiteSpritePath: "/webjars/bootstrap/2.3.1/img/glyphicons-halflings-white.png";
-
+/*
 @textColor: #2B2B2B;
-@linkColor: #9D0000;
-@linkColorHover: brighten(@linkColor, 15%);
-@sansFontFamily: arial, helvetica, sans-serif;
-@baseFontSize: 13px;
-@baseLineHeight: 18px;
-@headingsFontFamily: @serifFontFamily;
-@headingsFontWeight: normal;
+@link-color: #9D0000;
+@linkColorHover: brighten(@link-color, 15%);
+@font-family-sans-serif: arial, helvetica, sans-serif;
+@font-size-base: 13px;
+@headings-font-family: @serifFontFamily;
+@headings-font-weight: normal;
 @headingsColor: #995E00;
 @btnBackground: #CFC4B7;
+
 @btnBackgroundHighlight: #A09086;
 @btnBorder: #928B87;
-@btnPrimaryBackground: @navbarBackgroundHighlight;
-@btnPrimaryBackgroundHighlight: @navbarBackground;
+
+@btn-primary-bg: #9D0000;
+
 @inputBackground: #f5f3f1;
-@inputBackgroundFocus: @wellBackground;
+@inputBackgroundFocus: @well-bg;
 @inputBorder: #979490;
 @inputBorderRadius: 3px;
-@formActionsBackground: @wellBackground;
-@wellBackground: @navbarBorder;
-@navbarBackgroundHighlight: #9D0000;
-@navbarBorder: darken(#F8F3EC, 3%);
-@navbarText: white;
-@navbarLinkColor: white;
-@navbarLinkColorHover: @textColor;
+@well-bg: @navbar-default-border;
+@navbar-default-border: darken(#F8F3EC, 3%);
+@navbar-default-color: white;
+@navbar-default-link-color: white;
+@navbar-default-link-hover-color: @textColor;
 @navbarLinkColorActive: @textColor;
-@navbarLinkBackgroundHover: darken(@navbarBorder, 3%);
-@navbarLinkBackgroundActive: @navbarBorder;
+@navbar-default-link-hover-bg: darken(@navbar-default-border, 3%);
+@navbar-default-link-active-bg: @navbar-default-border;
 
 .signup-icon {
   filter: invert(1);
@@ -74,8 +71,8 @@
   .ie7-inline-block();
   padding: 4px 12px;
   margin-bottom: 0; // For input.btn
-  font-size: @baseFontSize;
-  line-height: @baseLineHeight;
+  font-size: @font-size-base;
+  line-height: @line-height-computed;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -123,12 +120,6 @@
 
 }
 
-// Set the backgrounds
-// -------------------------
-.btn-primary {
-  .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
-}
-
 // Warning appears are orange
 .btn-warning {
   .buttonBackground(@btnWarningBackground, @btnWarningBackgroundHighlight);
@@ -153,3 +144,4 @@
 .btn-inverse {
   .buttonBackground(@btnInverseBackground, @btnInverseBackgroundHighlight);
 }
+*/

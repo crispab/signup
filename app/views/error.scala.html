@@ -7,21 +7,21 @@
   @breadcrumb(Seq(), "")
 
   <div class="row">
-    <div class="span5">
+    <div class="col-md-5">
       <h2>Oj! Nu blev det visst fel.</h2>
-      <p class="alert alert-error">
+      <p class="alert alert-danger">
         @errorMessage
       </p>
       @if(details.length > 0) {
-        <div class="accordion" id="tech-description">
-          <div class="accordion-group">
-            <div class="accordion-heading">
-              <a class="accordion-toggle" data-toggle="collapse" data-parent="#tech-description" href="#tech-description-details">
+        <div class="panel-group" id="tech-description">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <a data-toggle="collapse" data-parent="#tech-description" href="#tech-description-details">
                 Tekniska detaljer
               </a>
             </div>
-            <div id="tech-description-details" class="accordion-body collapse">
-                <pre class="accordion-inner"><code>@details</code></pre>
+            <div id="tech-description-details" class="panel-collapse collapse">
+                <pre class="panel-body"><code>@details</code></pre>
             </div>
           </div>
         </div>

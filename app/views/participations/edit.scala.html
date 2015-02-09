@@ -8,7 +8,7 @@
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
-@hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "has-error" } }
 
 
 @page("Anmälan till " + event.name, section = Groups) {
@@ -17,7 +17,7 @@
             "Anmälan")
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>Anmälan till @event.name</h2>
 
     @event match {
@@ -46,7 +46,7 @@
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <div class="well">
       <p>@Html(event.description)</p>
       <ul>
@@ -65,11 +65,11 @@
       @views.html.events.tags.addToCalendarButton(event)
 
       @if(isAdmin(loggedInUser)) {
-        <a data-toggle="modal" href="#notify_participant" class="btn"><i class="icon-envelope"></i> Påminn deltagaren</a>
+        <a data-toggle="modal" href="#notify_participant" class="btn btn-default"><span class="glyphicon glyphicon-envelope"></span> Påminn deltagaren</a>
 
         <div id="notify_participant" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
             <h3>Vill du e-posta deltagaren?</h3>
           </div>
           <div class="modal-body">
@@ -82,8 +82,8 @@
           </div>
           <div class="modal-footer">
             <form action="@routes.UsersSecured.notifyParticipant(user.id.get, event.id.get)" method="POST">
-              <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> Påminn deltagaren</button>
+              <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
+              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-envelope glyphicon-inverse"></span> Påminn deltagaren</button>
             </form>
           </div>
         </div>
@@ -95,51 +95,47 @@
 
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <form action="@routes.Participations.createOrUpdate()" method="POST">
       <fieldset>
-        <div class='control-group  @hasErrors("status")'>
+        <div class='form-group  @hasErrors("status")'>
           <label class="control-label big-name">
             <img class="thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
             @user.firstName @user.lastName
           </label>
-          <div class="controls">
-            <label class="radio inline">
-              <input type="radio" name="status" id="on" value="On" @if((field("status") == Status.On.toString) || ((field("status") == Status.Unregistered.toString) && !Event.isFullyBooked(event))) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
-              <span class="label participation-on">Kommer</span>
-            </label>
-            <label class="radio inline">
-              <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""} />
-              <span class="label participation-maybe">Kanske</span>
-            </label>
-            <label class="radio inline">
-              <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""} />
-              <span class="label participation-off">Kommer inte</span>
-            </label>
-          </div>
+          <label class="radio-inline">
+            <input type="radio" name="status" id="on" value="On" @if((field("status") == Status.On.toString) || ((field("status") == Status.Unregistered.toString) && !Event.isFullyBooked(event))) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
+            <span class="label label-default participation-on">Kommer</span>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""} />
+            <span class="label label-default participation-maybe">Kanske</span>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""} />
+            <span class="label label-default participation-off">Kommer inte</span>
+          </label>
         </div>
 
         @if(event.allowExtraFriends) {
-          <div class='form-inline control-group @hasErrors("number_of_participants")'>
+          <div class='form-inline form-group @hasErrors("number_of_participants")'>
             <label class="control-label" for="number_of_participants">Antal deltagare</label>
-            <input type="number" class="input-mini" id="number_of_participants" name="number_of_participants" value='@field("number_of_participants")' min="1" />
+            <input type="number" class="form-control" id="number_of_participants" name="number_of_participants" value='@field("number_of_participants")' min="1" />
           </div>
         } else {
           <input type="hidden" id="number_of_participants" name="number_of_participants" value="1"/>
         }
 
-        <div class='control-group  @hasErrors("comment")'>
+        <div class='form-group  @hasErrors("comment")'>
           <label class="control-label" for="comment">Kommentar</label>
-          <div class="controls">
-            <textarea maxlength="127" class="span5" id="comment" name="comment" rows="2">@field("comment")</textarea>
-          </div>
+          <textarea maxlength="127" class="col-md-5" id="comment" name="comment" rows="2">@field("comment")</textarea>
         </div>
 
         <input type="hidden" id="userId" name="userId" value='@field("userId")'/>
         <input type="hidden" id="eventId" name="eventId" value='@field("eventId")'/>
 
         @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
           <p>@errors(participationForm).mkString(", ")</p>
@@ -147,17 +143,15 @@
         }
 
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-            <i class="icon-ok icon-white"></i>
-            Spara
-          </button>
-          <button type="button" class="btn" id="cancel"
-                  onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
-            <i class="icon-ban-circle"></i>
-            Avbryt
-          </button>
-        </div>
+        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+          <span class="glyphicon glyphicon-ok icon-white"></span>
+          Spara
+        </button>
+        <button type="button" class="btn btn-default" id="cancel"
+                onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
+          <span class="glyphicon glyphicon-ban-circle"></span>
+          Avbryt
+        </button>
       </fieldset>
     </form>
   </div>

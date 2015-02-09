@@ -19,7 +19,7 @@
 </script>
 
 <a href="@routes.Events.show(event.id.get)" title="Lägg till i kalender" class="addthisevent">
-  <i class="icon-calendar"></i> Lägg till i kalender
+  <span class="glyphicon glyphicon-calendar"></span> Lägg till i kalender
   <span class="_url">@routes.Events.show(event.id.get)</span>
   <span class="_start">@util.DateHelper.asDate(event.startTime) @util.DateHelper.asTime(event.startTime)</span>
   <span class="_end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>

@@ -8,7 +8,7 @@
 @lastSignupIsSameDay() = @{field("same_day") == "true" || creatingNew}
 
 
-@hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "error" } }
+@hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "has-error" } }
 
 @creatingNew() = @{
   idToUpdate.isEmpty
@@ -40,60 +40,51 @@
 
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>@if(creatingNew()) {Ny} else {Redigera} Sammankomst</h2>
   </div>
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <form class="form" action="@theAction()" method="POST">
       <fieldset>
-        <div class='control-group @hasErrors("name")'>
+        <div class='form-group @hasErrors("name")'>
           <label class="control-label" for="name">Namn:</label>
-
-          <div class="controls">
-            <input type="text" maxlength="127" class="input-xlarge" id="name" name="name" value='@field("name")' required=""/>
-            <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
-          </div>
+          <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>
+          <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
         </div>
 
-        <div class='control-group  @hasErrors("description")'>
+        <div class='form-group  @hasErrors("description")'>
           <label class="control-label" for="description">Beskrivning:</label>
-
-          <div class="controls">
-            <textarea class="span5 rich-textarea" id="description" name="description" rows="7" maxlength="10240">@field("description")</textarea>
-            <span class="show-on-error">Beskrivningen är för lång (max 10240 tecken)</span>
-          </div>
+          <textarea class="col-md-5 rich-textarea" id="description" name="description" rows="7" maxlength="10240">@field("description")</textarea>
+          <span class="show-on-error">Beskrivningen är för lång (max 10240 tecken)</span>
         </div>
 
-        <div class='control-group  @hasErrors("venue")'>
+        <div class='form-group  @hasErrors("venue")'>
           <label class="control-label" for="venue">Plats:</label>
-
-          <div class="controls">
-            <input type="text" maxlength="127" class="input-xlarge" id="venue" name="venue" value='@field("venue")'/>
-            <span class="show-on-error">Fyll i en plats där sammankomsten äger rum</span>
-          </div>
+          <input type="text" maxlength="127" class="form-control" id="venue" name="venue" value='@field("venue")'/>
+          <span class="show-on-error">Fyll i en plats där sammankomsten äger rum</span>
         </div>
 
-        <div class='control-group @hasErrors("start_date")'>
+        <div class='form-group @hasErrors("start_date")'>
           <label class="control-label" for="start_date">Dag: </label>
 
-          <input type="date" class="input-medium" id="start_date" name="start_date"
+          <input type="date" class="form-control" id="start_date" name="start_date"
           value='@field("start_date")' min="@today()" required=""/>
 
           <div class="show-on-error">Ogiltigt datum eller klockslag</div>
         </div>
 
-        <div class='form-inline control-group @hasErrors("start_time") @hasErrors("end_time")'>
+        <div class='form-inline form-group @hasErrors("start_time") @hasErrors("end_time")'>
           <label class="control-label" for="start_time"> från kl</label>
 
-          <input type="time" class="input-small" id="start_time" name="start_time" value='@field("start_time")'
+          <input type="time" class="form-control" id="start_time" name="start_time" value='@field("start_time")'
           required=""/>
 
           <label class="control-label" for="end_time"> till kl</label>
 
-          <input type="time" class="input-small" id="end_time" name="end_time" value='@field("end_time")'
+          <input type="time" class="form-control" id="end_time" name="end_time" value='@field("end_time")'
           required=""/>
           <div class="show-on-error">Ogiltigt datum eller klockslag</div>
         </div>
@@ -101,13 +92,13 @@
         <div class="space-berfore">
         Sista anmälning:
         </div>
-        <div class='form-inline control-group @hasErrors("last_signup_date")'>
-          <input type="checkbox" class="input-xlarge" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
+        <div class='form-inline form-group @hasErrors("last_signup_date")'>
+          <input type="checkbox" class="form-control" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
             onclick='signupDate=document.getElementById("last_signup_date"); signupDate.disabled=this.checked; signupDate.required=!this.checked' />
           <label class="control-label" for="same_day">samma dag</label>
 
           <label class="control-label" for="last_signup_date">, eller </label>
-          <input type="date" class="input-medium" id="last_signup_date" name="last_signup_date"
+          <input type="date" class="form-control" id="last_signup_date" name="last_signup_date"
                  value='@field("last_signup_date")' min="@today()" @if(!lastSignupIsSameDay()){required=""} else {disabled=""}/>
 
           <div class="show-on-error">Sista anmälningsdag får inte vara efter sammankomsten</div>
@@ -144,7 +135,7 @@
                 onclick='noField=document.getElementById("max_participants"); noField.disabled=false; noField.required=true'>
           Max antal deltagare:
           <input type="number"
-                class="input-mini"
+                class="form-control"
                 id="max_participants"
                 name="max_participants"
                 value='@field("max_participants")'
@@ -155,7 +146,7 @@
         <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
 
         @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">Inmatningsfel</h4>
 
@@ -163,14 +154,12 @@
         </div>
         }
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-            <i class="icon-ok icon-white"></i>Spara
-          </button>
-          <button type="button" class="btn" id="cancel" onClick="history.go(-1)">
-            <i class="icon-ban-circle"></i>Avbryt
-          </button>
-        </div>
+        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+          <span class="glyphicon glyphicon-ok glyphicon-inverse"></span>Spara
+        </button>
+        <button type="button" class="btn btn-default" id="cancel" onClick="history.go(-1)">
+          <span class="glyphicon glyphicon-ban-circle"></span>Avbryt
+        </button>
       </fieldset>
     </form>
   </div>

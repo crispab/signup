@@ -8,14 +8,14 @@
 
 @participations.map { participation =>
 <div class="row">
-  <div class="span5 list-row">
+  <div class="col-md-5 list-row">
     <div class="row">
-      <div class="span1">
+      <div class="col-md-1">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
         <img class="thumb thumb-background40" src="@ImageUrl(participation.user)" onerror="imgError(this);"/>
         </a>
       </div>
-      <div class="span2">
+      <div class="col-md-2">
         <dl class="participation">
           <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
             @participation.user.firstName
@@ -26,9 +26,9 @@
           <dd>@participation.comment</dd>
         </dl>
       </div>
-      <div class="span2">
+      <div class="col-md-2">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-          <span class="label @asCssClass(participation.status)">
+          <span class="label label-default @asCssClass(participation.status)">
           @asMessage(participation.status)
           </span>
         </a>
@@ -40,11 +40,11 @@
         }
 
         @if(withRemoveButton && isAdmin(loggedInUser)) {
-          <a data-toggle="modal" href="#remove_participant_@participation.id" class="btn pull-right"><i class="icon-trash"></i></a>
+          <a data-toggle="modal" href="#remove_participant_@participation.id" class="btn pull-right"><span class="glyphicon glyphicon-trash"></span></a>
 
           <div id="remove_participant_@participation.id" class="modal smaller-modal hide fade" style="display: none">
             <div class="modal-header">
-              <button class="close transparent" data-dismiss="modal"><i class="icon-remove"></i></button>
+              <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
               <h3>Vill du ta bort gästen?</h3>
             </div>
             <div class="modal-body">
@@ -58,8 +58,8 @@
             </div>
             <div class="modal-footer">
               <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
-                <a href="#" class="btn" data-dismiss="modal"><i class="icon-ban-circle"></i> Avbryt</a>
-                <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i> Ta bort</button>
+                <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash glyphicon-inverse"></span> Ta bort</button>
               </form>
             </div>
           </div>

@@ -10,13 +10,13 @@
                 "Byt bild")
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>Byt bild</h2>
   </div>
 </div>
 
 <div class="row">
-  <div class="span5 input-group">
+  <div class="col-md-5 input-group">
     <img class="upload-thumb thumb-background80" src="@GravatarUrl.url(user, 80)" onerror='imgError(this);'/>
     <h3>Standardbild</h3>
     <p>Om du har registrerat dig på <a href="http://gravatar.com">gravatar.com</a> och kopplat en bild till din epostadress visas den bilden. </p>
@@ -28,19 +28,17 @@
 </div>
 
 <div class="row">
-  <div class="span5 input-group">
+  <div class="col-md-5 input-group">
     <img class="upload-thumb" src='@routes.Assets.at("images/Images_icon.png")'/>
     <h3>Egen bild</h3>
     <p>Välj en bild på datorn och använd den som profilbild.</p>
     <p>Bilden kommer automatiskt att zoomas in på ansiktet, beskäras och skalas om.</p>
     <form action="@routes.UsersSecured.uploadImage(user.id.get)" method="POST" enctype="multipart/form-data">
-      <div class='control-group'>
-        <div class="controls">
-          <input type="file" accept="image/*" id="image" name="image" >
-        </div>
+      <div class='form-group'>
+        <input type="file" accept="image/*" id="image" name="image" >
       </div>
       @if(errorMessage.isDefined) {
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <button type="button" class="close" data-dismiss="alert">×</button>
           @errorMessage.get
         </div>
@@ -51,9 +49,9 @@
 </div>
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <p>
-      <a href="@routes.Users.show(user.id.get)" class="btn"><i class="icon-ban-circle"></i> Avbryt</a>
+      <a href="@routes.Users.show(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
     </p>
   </div>
 </div>

@@ -9,16 +9,16 @@
 
 
 <div class="row">
-  <div class="span5">
+  <div class="col-md-5">
     <h2>Grupper</h2>
   </div>
 </div>
 
 @groups.map { group =>
 <div class="row">
-  <div class="span5 list-row">
+  <div class="col-md-5 list-row">
     <div class="row">
-      <div class="span5">
+      <div class="col-md-5">
         <dl class="participation">
           <dt><a href="@routes.Groups.show(group.id.get)">
             @group.name
@@ -33,8 +33,8 @@
 
 @if(isAdmin(loggedInUser)) {
   <div class="row">
-    <div class="span5 btn-row">
-      <a href="@routes.GroupsSecured.createForm()" class="btn"><i class="icon-plus"></i> Ny grupp</a>
+    <div class="col-md-5 btn-row">
+      <a href="@routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Ny grupp</a>
     </div>
   </div>
 }
