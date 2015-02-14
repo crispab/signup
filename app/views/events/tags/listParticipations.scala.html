@@ -44,7 +44,7 @@
 
           <div id="remove_participant_@participation.id" class="modal smaller-modal hide fade" style="display: none">
             <div class="modal-header">
-              <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
               <h3>Vill du ta bort gästen?</h3>
             </div>
             <div class="modal-body">
@@ -58,8 +58,10 @@
             </div>
             <div class="modal-footer">
               <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
-                <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash glyphicon-inverse"></span> Ta bort</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> Ta bort</button>
               </form>
             </div>
           </div>

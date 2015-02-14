@@ -3,39 +3,32 @@
 @import util.AuthHelper._
 @import util.Section._
 
-@page("Grupper", section = Groups){
+@page("Grupper", section = Groups) {
 
-@breadcrumb(Seq(), "Grupper")
+  @breadcrumb(Seq(), "Grupper")
 
 
-<div class="row">
-  <div class="col-md-5">
-    <h2>Grupper</h2>
+  <div class="row">
+    <div class="col-md-5">
+      <h2>Grupper</h2>
+    </div>
   </div>
-</div>
 
-@groups.map { group =>
-<div class="row">
-  <div class="col-md-5 list-row">
+  @groups.map { group =>
     <div class="row">
-      <div class="col-md-5">
-        <dl class="participation">
-          <dt><a href="@routes.Groups.show(group.id.get)">
-            @group.name
-          </a></dt>
-          <dd>@group.description</dd>
-        </dl>
+      <div class="col-md-5 list-row">
+        <h4><a href="@routes.Groups.show(group.id.get)">@group.name</a></h4>
+        <p>@group.description</p>
       </div>
     </div>
-  </div>
-</div>
-}
+  }
 
-@if(isAdmin(loggedInUser)) {
-  <div class="row">
-    <div class="col-md-5 btn-row">
-      <a href="@routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Ny grupp</a>
+  @if(isAdmin(loggedInUser)) {
+    <div class="row">
+      <div class="col-md-5 btn-row">
+        <a href="@routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+          Ny grupp</a>
+      </div>
     </div>
-  </div>
-}
+  }
 }

@@ -69,7 +69,7 @@
 
         <div id="notify_participant" class="modal smaller-modal hide fade" style="display: none">
           <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
             <h3>Vill du e-posta deltagaren?</h3>
           </div>
           <div class="modal-body">
@@ -82,8 +82,10 @@
           </div>
           <div class="modal-footer">
             <form action="@routes.UsersSecured.notifyParticipant(user.id.get, event.id.get)" method="POST">
-              <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-envelope glyphicon-inverse"></span> Påminn deltagaren</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">
+                <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+              </button>
+              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Påminn deltagaren</button>
             </form>
           </div>
         </div>
@@ -119,7 +121,7 @@
 
         @if(event.allowExtraFriends) {
           <div class='form-inline form-group @hasErrors("number_of_participants")'>
-            <label class="control-label" for="number_of_participants">Antal deltagare</label>
+            <label for="number_of_participants">Antal deltagare</label>
             <input type="number" class="form-control" id="number_of_participants" name="number_of_participants" value='@field("number_of_participants")' min="1" />
           </div>
         } else {
@@ -127,7 +129,7 @@
         }
 
         <div class='form-group  @hasErrors("comment")'>
-          <label class="control-label" for="comment">Kommentar</label>
+          <label for="comment">Kommentar</label>
           <textarea maxlength="127" class="col-md-5" id="comment" name="comment" rows="2">@field("comment")</textarea>
         </div>
 
@@ -144,7 +146,7 @@
 
 
         <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-          <span class="glyphicon glyphicon-ok icon-white"></span>
+          <span class="glyphicon glyphicon-ok"></span>
           Spara
         </button>
         <button type="button" class="btn btn-default" id="cancel"

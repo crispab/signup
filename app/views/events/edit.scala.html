@@ -50,25 +50,25 @@
     <form class="form" action="@theAction()" method="POST">
       <fieldset>
         <div class='form-group @hasErrors("name")'>
-          <label class="control-label" for="name">Namn:</label>
+          <label for="name">Namn:</label>
           <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>
           <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
         </div>
 
         <div class='form-group  @hasErrors("description")'>
-          <label class="control-label" for="description">Beskrivning:</label>
+          <label for="description">Beskrivning:</label>
           <textarea class="col-md-5 rich-textarea" id="description" name="description" rows="7" maxlength="10240">@field("description")</textarea>
           <span class="show-on-error">Beskrivningen är för lång (max 10240 tecken)</span>
         </div>
 
         <div class='form-group  @hasErrors("venue")'>
-          <label class="control-label" for="venue">Plats:</label>
+          <label for="venue">Plats:</label>
           <input type="text" maxlength="127" class="form-control" id="venue" name="venue" value='@field("venue")'/>
           <span class="show-on-error">Fyll i en plats där sammankomsten äger rum</span>
         </div>
 
         <div class='form-group @hasErrors("start_date")'>
-          <label class="control-label" for="start_date">Dag: </label>
+          <label for="start_date">Dag: </label>
 
           <input type="date" class="form-control" id="start_date" name="start_date"
           value='@field("start_date")' min="@today()" required=""/>
@@ -77,12 +77,12 @@
         </div>
 
         <div class='form-inline form-group @hasErrors("start_time") @hasErrors("end_time")'>
-          <label class="control-label" for="start_time"> från kl</label>
+          <label for="start_time"> från kl</label>
 
           <input type="time" class="form-control" id="start_time" name="start_time" value='@field("start_time")'
           required=""/>
 
-          <label class="control-label" for="end_time"> till kl</label>
+          <label for="end_time"> till kl</label>
 
           <input type="time" class="form-control" id="end_time" name="end_time" value='@field("end_time")'
           required=""/>
@@ -95,9 +95,9 @@
         <div class='form-inline form-group @hasErrors("last_signup_date")'>
           <input type="checkbox" class="form-control" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
             onclick='signupDate=document.getElementById("last_signup_date"); signupDate.disabled=this.checked; signupDate.required=!this.checked' />
-          <label class="control-label" for="same_day">samma dag</label>
+          <label for="same_day">samma dag</label>
 
-          <label class="control-label" for="last_signup_date">, eller </label>
+          <label for="last_signup_date">, eller </label>
           <input type="date" class="form-control" id="last_signup_date" name="last_signup_date"
                  value='@field("last_signup_date")' min="@today()" @if(!lastSignupIsSameDay()){required=""} else {disabled=""}/>
 
@@ -155,7 +155,7 @@
         }
 
         <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-          <span class="glyphicon glyphicon-ok glyphicon-inverse"></span>Spara
+          <span class="glyphicon glyphicon-ok"></span>Spara
         </button>
         <button type="button" class="btn btn-default" id="cancel" onClick="history.go(-1)">
           <span class="glyphicon glyphicon-ban-circle"></span>Avbryt

@@ -10,6 +10,7 @@
 @breadcrumb-color: @text-color;
 @breadcrumb-active-color: @text-color;
 @breadcrumb-separator: "»";
+@font-size-h4: ceil((@font-size-base * 1.1));
 
 
 .navbar-brand {
@@ -38,36 +39,14 @@ body {
   margin-bottom: 0;
 }
 
-//.form-actions {
-//  padding: (@baseLineHeight - 1) 20px @baseLineHeight;
-//  margin-top: @baseLineHeight;
-//  margin-bottom: @baseLineHeight;
-//  .border-radius(@baseBorderRadius);
-//  .clearfix(); // Adding clearfix to allow for .pull-right button containers
-//}
-//
-//
-//.has-error .show-on-error {
-//  display: inline-block;
-//  *display: inline;
-//  /* IE7 inline-block hack */
-//
-//  *zoom: 1;
-//  vertical-align: middle;
-//  padding-left: 5px;
-//  margin-bottom: 0;
-//  color: @btnDangerBackground;
-//}
-//
+h4 {
+  margin-bottom: (@line-height-computed / 4);
+}
 
 
 
 // From here on, SignUp specific stuff
 
-
-.glyphicon-inverse {
-  color: white;
-}
 
 @footerBackground: @gray;
 
@@ -99,38 +78,11 @@ body {
   margin-bottom: 4px;
 }
 
-dt {
-  padding-left: 4px;
-}
-
-dd {
-  padding-left: 20px;
-  margin-left: 0;
-}
-
-.item-list {
-  margin-left: 10px;
-}
-
-dl.participation {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.transparent {
-  background: transparent;
-  padding: 0;
-  border: none;
-}
-
-.smaller-modal {
-  width: 370px;
-}
-
 .thumb {
   padding: 1px;
   margin: 3px;
   vertical-align: top;
+  box-sizing: content-box;
 }
 
 .thumb-background16 {
@@ -156,12 +108,14 @@ dl.participation {
   margin: 3px;
   vertical-align: top;
   float: right;
+  box-sizing: content-box;
 }
 
 .big-thumb {
   padding: 1px;
   margin: 3px 3px 0 3px;
   vertical-align: bottom;
+  box-sizing: content-box;
 }
 
 .login-thumb {
@@ -169,18 +123,22 @@ dl.participation {
   margin: 0;
   vertical-align: middle;
   background: white;
+  box-sizing: content-box;
 }
 
 .show-on-error {
   display: none;
 }
 
+.has-error .show-on-error {
+  display: inline-block;
+  color: @state-danger-text;
+}
 
 .list-row {
   border-top-width: 2px;
   border-top-style: solid;
   border-top-color: darken(@well-bg, 10%);
-  padding: 4px;
   margin-top: 4px;
   background-color: @well-bg;
 }
@@ -188,10 +146,6 @@ dl.participation {
 .btn-row {
   margin-top: 6px;
   margin-bottom: 20px;
-}
-
-.email-address {
-  color: @gray-light;
 }
 
 .big-name {
@@ -216,15 +170,15 @@ dl.participation {
 }
 
 .large-space-berfore {
-  margin-top: 30px;
+  margin-top: 2 * @line-height-computed
 }
 
 .space-berfore {
-  margin-top: 20px;
+  margin-top: @line-height-computed
 }
 
 .small-space-berfore {
-  margin-top: 10px;
+  margin-top: (@line-height-computed / 4)
 }
 
 pre {

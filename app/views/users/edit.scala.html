@@ -53,42 +53,42 @@
 
   <div class="row">
     <div class="col-md-5">
-      <form class="form-horizontal" action="@theAction()" method="POST">
+      <form action="@theAction()" method="POST">
         <fieldset>
 
           <div class='form-group @hasErrors("firstName")'>
-            <label class="control-label" for="firstName">Förnamn</label>
+            <label for="firstName">Förnamn</label>
             <input type="text" maxlength="127" class="form-control" id="firstName" name="firstName" value='@field("firstName")' required="" />
             <span class="show-on-error">Fyll i ett förnamn</span>
           </div>
 
           <div class='form-group @hasErrors("lastName")'>
-            <label class="control-label" for="lastName">Efternamn</label>
+            <label for="lastName">Efternamn</label>
             <input type="text" maxlength="127" class="form-control" id="lastName" name="lastName" value='@field("lastName")' required="" />
             <span class="show-on-error">Fyll i ett efternamn</span>
           </div>
 
 
           <div class='form-group @hasErrors("email")'>
-            <label class="control-label" for="email">Epost</label>
+            <label for="email">Epost</label>
             <input type="email" maxlength="127" class="form-control" id="email" name="email" value='@field("email")' required="" />
             <span class="show-on-error">Fyll i en korrekt epostadress</span>
           </div>
 
           <div class='form-group @hasErrors("phone")'>
-            <label class="control-label" for="phone">Telefon</label>
+            <label for="phone">Telefon</label>
             <input type="tel" maxlength="127" class="form-control" id="phone" name="phone" value='@field("phone")' />
             <span class="show-on-error">Ogiltigt telefonnummer</span>
           </div>
 
           <div class='form-group @hasErrors("comment")'>
-            <label class="control-label" for="comment">Kommentar</label>
+            <label for="comment">Kommentar</label>
             <textarea maxlength="127" class="form-control" id="comment" name="comment" rows="3">@field("comment")</textarea>
             <span class="show-on-error">Det här var en skum kommentar</span>
           </div>
 
           <div class='form-group @hasErrors("password")'>
-            <label class="control-label" for="password">Lösenord</label>
+            <label for="password">Lösenord</label>
             @if(updating()) {
               <input type="password" maxlength="127" class="form-control" id="password" name="password" value='@field("password")' required>
             } else {
@@ -99,7 +99,7 @@
 
           @if(isAdmin(loggedInUser)) {
             <div class='form-group @hasErrors("administrator")'>
-              <label class="control-label" for="administrator">Administratör</label>
+              <label for="administrator">Administratör</label>
               <input type="checkbox" class="form-control" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}>
             </div>
           }
@@ -117,7 +117,7 @@
           <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")' />
 
           <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
-                  class="glyphicon glyphicon-ok glyphicon-inverse"></span>Spara
+                  class="glyphicon glyphicon-ok"></span>Spara
           </button>
           <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'><i
                   class="glyphicon glyphicon-ban-circle"></span>Avbryt

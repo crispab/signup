@@ -28,7 +28,7 @@
       <fieldset>
 
         <div class='form-group @hasErrors("userId")'>
-          <label class="control-label" for="userId">Befintlig användare</label>
+          <label for="userId">Befintlig användare</label>
           <select id="userId" name="userId" required="">
             <option>Ingen vald</option>
             @nonMembers.map { user =>
@@ -50,7 +50,7 @@
         }
 
         <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-          <span class="glyphicon glyphicon-ok glyphicon-inverse"></span>
+          <span class="glyphicon glyphicon-ok"></span>
           Lägg till
         </button>
         <button type="button" class="btn btn-default" id="create"

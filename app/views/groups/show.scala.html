@@ -7,159 +7,166 @@
 
 @page(group.name, section = Groups) {
 
-@breadcrumb(Seq("Grupper" -> routes.Groups.list()), group.name)
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list()), group.name)
 
-<div class="row">
-  <div class="col-md-5">
-    <h2>@group.name</h2>
+  <div class="row">
+    <div class="col-md-5">
+      <h2>@group.name</h2>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-5">
-    <div class="well">
+  <div class="row">
+    <div class="col-md-5 well">
       <p>@group.description</p>
 
       @if(isAdmin(loggedInUser)) {
-        <p></p>
-        <a href="@routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Redigera</a>
-        <a data-toggle="modal" href="#remove_group_@group.id" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Ta bort</a>
-
-        <div id="remove_group_@group.id" class="modal smaller-modal hide fade" style="display: none">
-          <div class="modal-header">
-            <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
-            <h3>Vill du ta bort gruppen?</h3>
-          </div>
-          <div class="modal-body">
-            <p>
-              Du håller på att ta bort gruppen <strong>@group.name</strong>.
-            </p>
-            <p>
-              Vill du fortsätta?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <form action="@routes.GroupsSecured.delete(group.id.get)" method="POST">
-              <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
-              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash glyphicon-inverse"></span> Ta bort</button>
-            </form>
-          </div>
-        </div>
-      }
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-5">
-    <h3>Sammankomster</h3>
-    @if(showingAll) {
-      <a href="@routes.Groups.show(group.id.get)">Visa bara framtida</a>
-    } else {
-      <a href="@routes.Groups.show(group.id.get, showAll = true)">Visa alla</a>
-    }
-  </div>
-</div>
-
-@events.map { event =>
-<div class="row">
-  <div class="col-md-5 list-row">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="item-list">
-          <p class="small-space-berfore"><strong>
-            @if(event.isCancelled){
-              Inställt:
-            }
-            <a href="@routes.Events.show(event.id.get)">@event.name</a>
-          </strong></p>
-          <p class="small-space-berfore">@Html(event.description)</p>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <p class="small-space-berfore"><strong>@asDate(event.startTime), </strong>@asTime(event.startTime)-@asTime(event.endTime)</p>
-        @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-          <p class="small-space-berfore">Sista anmälningsdag: <br/> @asDate(event.lastSignUpDate)</p>
-        }
-      </div>
-    </div>
-  </div>
-</div>
-}
-
-@if(isAdmin(loggedInUser)) {
-  <div class="row">
-    <div class="col-md-5 btn-row">
-      <a href="@routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Ny sammankomst</a>
-    </div>
-  </div>
-}
-
-<div class="row">
-  <div class="col-md-5">
-    <h3>Medlemmar</h3>
-  </div>
-</div>
-@members.map { membership =>
-<div class="row">
-  <div class="col-md-5 list-row">
-    <div class="row">
-      <div class="col-md-1">
-        <a href="@routes.Users.show(membership.user.id.get)">
-          <img class="thumb thumb-background40" src="@ImageUrl(membership.user)" onerror="imgError(this);"/>
+        <a href="@routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default">
+          <span class="glyphicon glyphicon-pencil"></span> Redigera
         </a>
-      </div>
-      <div class="col-md-2">
-        <dl class="participation">
-          <dt><a href="@routes.Users.show(membership.user.id.get)">
-            @membership.user.firstName @membership.user.lastName
-          </a></dt>
-          @if(isLoggedIn(loggedInUser)) {
-            <dd class="email-address">@membership.user.email</dd>
-          }
-          <dd>@membership.user.comment</dd>
-        </dl>
-      </div>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_group_@group.id">
+          <span class="glyphicon glyphicon-trash"></span> Ta bort
+        </button>
 
-      @if(isAdmin(loggedInUser)) {
-        <div class="col-md-2">
-          <a data-toggle="modal" href="#remove_member_@membership.id" class="btn pull-right"><span class="glyphicon glyphicon-trash"></span> Ta
-            bort</a>
-
-          <div id="remove_member_@membership.id" class="modal smaller-modal hide fade" style="display: none">
-            <div class="modal-header">
-              <button class="close transparent" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
-              <h3>Vill du ta bort medlemmen?</h3>
-            </div>
-            <div class="modal-body">
-              <p>
-                Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
-                från gruppen <strong>@group.name</strong>.
-              </p>
-              <p>
-                Vill du fortsätta?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
-                <a href="#" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-ban-circle"></span> Avbryt</a>
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash icon-white"></span> Ta bort</button>
-              </form>
+        <div class="modal fade" id="remove_group_@group.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_group_@group.id" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                <h3 id="label_remove_group_@group.id">Vill du ta bort gruppen?</h3>
+              </div>
+              <div class="modal-body">
+                <p>Du håller på att ta bort gruppen <strong>@group.name</strong>.</p>
+                <p>Vill du fortsätta?</p>
+              </div>
+              <div class="modal-footer">
+                <form action="@routes.GroupsSecured.delete(group.id.get)" method="POST">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-trash"></span> Ta bort
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       }
-
     </div>
   </div>
-</div>
-}
 
-@if(isAdmin(loggedInUser)) {
   <div class="row">
-    <div class="col-md-5 btn-row">
-      <a href="@routes.Memberships.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Ny medlem</a>
+    <div class="col-md-5">
+      <h3>Sammankomster</h3>
+      @if(showingAll) {
+        <a href="@routes.Groups.show(group.id.get)">Visa bara framtida</a>
+      } else {
+        <a href="@routes.Groups.show(group.id.get, showAll = true)">Visa alla</a>
+      }
     </div>
   </div>
-}
+
+  @events.map { event =>
+    <div class="row">
+      <div class="col-md-5 list-row">
+        <h4>
+          @if(event.isCancelled) {
+            Inställt:
+          }
+        <a href="@routes.Events.show(event.id.get)">@event.name</a>
+        <small class="pull-right"><strong>@asDate(event.startTime), </strong>
+          @asTime(event.startTime)-@asTime(event.endTime)</small>
+        </h4>
+        @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+          <p class="text-muted"><em>Sista anmälningsdag: @asDate(event.lastSignUpDate)</em></p>
+        }
+        <p>@Html(event.description)</p>
+      </div>
+    </div>
+  }
+
+  @if(isAdmin(loggedInUser)) {
+    <div class="row">
+      <div class="col-md-5 btn-row">
+        <a href="@routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+          Ny sammankomst</a>
+      </div>
+    </div>
+  }
+
+  <div class="row">
+    <div class="col-md-5">
+      <h3>Medlemmar</h3>
+    </div>
+  </div>
+  @members.map { membership =>
+    <div class="row">
+      <div class="col-md-5 list-row">
+        <div class="row">
+          <div class="col-md-2">
+            <a href="@routes.Users.show(membership.user.id.get)">
+              <img class="thumb thumb-background40 pull-left" src="@ImageUrl(membership.user)" onerror="imgError(this);"/>
+            </a>
+          </div>
+          <div class="col-md-7">
+            <h4>
+              <a href="@routes.Users.show(membership.user.id.get)">@membership.user.firstName @membership.user.lastName</a>
+            </h4>
+            @if(isLoggedIn(loggedInUser)) {
+              <p class="text-muted small-space-berfore"><em>@membership.user.email</em></p>
+            }
+            <p>@membership.user.comment</p>
+          </div>
+
+          @if(isAdmin(loggedInUser)) {
+            <div class="col-md-3">
+              <p class="small-space-berfore">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_member_@membership.id">
+                  <span class="glyphicon glyphicon-trash"></span> Ta bort
+                </button>
+              </p>
+
+              <div class="modal fade" id="remove_member_@membership.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_member_@membership.id" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                      <h3 id="label_remove_member_@membership.id">Vill du ta bort medlemmen?</h3>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                        Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
+                        från gruppen <strong>@group.name</strong>.
+                      </p>
+                      <p>
+                        Vill du fortsätta?
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                          <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                          <span class="glyphicon glyphicon-trash"></span> Ta bort</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @if(isAdmin(loggedInUser)) {
+    <div class="row">
+      <div class="col-md-5 btn-row">
+        <a href="@routes.Memberships.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+          Ny medlem</a>
+      </div>
+    </div>
+  }
 }
