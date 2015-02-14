@@ -68,7 +68,6 @@
             <span class="show-on-error">Fyll i ett efternamn</span>
           </div>
 
-
           <div class='form-group @hasErrors("email")'>
             <label for="email">Epost</label>
             <input type="email" maxlength="127" class="form-control" id="email" name="email" value='@field("email")' required="" />
@@ -92,15 +91,17 @@
             @if(updating()) {
               <input type="password" maxlength="127" class="form-control" id="password" name="password" value='@field("password")' required>
             } else {
-              <input type="password" maxlength="127" class="form-control" id="password" name="password" value='@randomPassword' required>
+              <input type="password" maxlength="127" class="form-control" id="password" name="password" value="@randomPassword" required>
             }
             <span class="show-on-error">Du måste ange ett lösenord på minst 8 tecken</span>
           </div>
 
           @if(isAdmin(loggedInUser)) {
-            <div class='form-group @hasErrors("administrator")'>
-              <label for="administrator">Administratör</label>
-              <input type="checkbox" class="form-control" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}>
+            <div class='checkbox @hasErrors("administrator")'>
+              <label>
+                <input type="checkbox" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}>
+                Har administratörsbehörighet
+              </label>
             </div>
           }
 
@@ -112,15 +113,18 @@
           </div>
           }
 
-          <input type="hidden" id="id" name="id" value='@field("id")' />
-          <input type="hidden" id="groupId" name="groupId" value='@groupId.getOrElse("")' />
-          <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")' />
+        </fieldset>
 
-          <button type="submit" class="btn btn-primary" id="action" name="action" value="save"><i
-                  class="glyphicon glyphicon-ok"></span>Spara
+        <input type="hidden" id="id" name="id" value='@field("id")' />
+        <input type="hidden" id="groupId" name="groupId" value='@groupId.getOrElse("")' />
+        <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")' />
+
+        <fieldset class="space-berfore">
+          <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+            <span class="glyphicon glyphicon-ok"></span> Spara
           </button>
-          <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'><i
-                  class="glyphicon glyphicon-ban-circle"></span>Avbryt
+          <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'>
+            <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
           </button>
         </fieldset>
       </form>

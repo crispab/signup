@@ -20,7 +20,8 @@
     <div class="col-md-5">
       <img class="big-thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
       @if(isAdminOrSelf(loggedInUser, user)) {
-        <a href="@routes.UsersSecured.updateImageForm(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Byt bild</a>
+        <a href="@routes.UsersSecured.updateImageForm(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span>
+          Byt bild</a>
       }
       <h2>@user.firstName @user.lastName</h2>
     </div>
@@ -30,16 +31,16 @@
       <dl class="dl-horizontal">
         @if(isLoggedIn(loggedInUser)) {
           <dt>Epost:</dt>
-          <dd>@user.email&nbsp;</dd>
+          <dd>@user.email &nbsp;</dd>
         }
 
         <dt>Telefon:</dt>
-        <dd>@user.phone&nbsp;</dd>
+        <dd>@user.phone &nbsp;</dd>
 
         <dt>Kommentar:</dt>
-        <dd>@user.comment&nbsp;</dd>
+        <dd>@user.comment &nbsp;</dd>
 
-        @if(user.permission == models.security.Administrator){
+        @if(user.permission == models.security.Administrator) {
           <dt>Roll:</dt>
           <dd>Administratör&nbsp;</dd>
         }
@@ -50,33 +51,41 @@
   @if(isAdminOrSelf(loggedInUser, user)) {
     <div class="row">
       <div class="col-md-5">
-        <p></p>
-        <a href="@routes.UsersSecured.updateForm(user.id.get)" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span>
-          Redigera</a>
+        <a href="@routes.UsersSecured.updateForm(user.id.get)" class="btn btn-primary">
+          <span class="glyphicon glyphicon-pencil"></span> Redigera
+        </a>
 
         @if(isAdmin(loggedInUser)) {
-          <a data-toggle="modal" href="#remove_user_@user.id" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Ta bort</a>
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_user_@user.id">
+            <span class="glyphicon glyphicon-trash"></span> Ta bort
+          </button>
 
-          <div id="remove_user_@user.id" class="modal smaller-modal hide fade" style="display : none ;">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-              <h3>Vill du ta bort användaren?</h3>
-            </div>
-            <div class="modal-body">
-              <p>
-                Du håller på att ta bort användaren <strong>@user.firstName @user.lastName</strong>.
-              </p>
-              <p>
-                Vill du fortsätta?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <form action="@routes.UsersSecured.delete(user.id.get)" method="POST">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                </button>
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> Ta bort</button>
-              </form>
+          <div class="modal fade" id="remove_user_@user.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_user_@user.id" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                  <h3 id="label_remove_user_@user.id">Vill du ta bort användaren?</h3>
+                </div>
+                <div class="modal-body">
+                  <p>
+                    Du håller på att ta bort användaren <strong>@user.firstName @user.lastName</strong>.
+                  </p>
+                  <p>
+                    Vill du fortsätta?
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <form action="@routes.UsersSecured.delete(user.id.get)" method="POST">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                      <span class="glyphicon glyphicon-trash"></span> Ta bort
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         }
@@ -97,8 +106,8 @@
           <div class="col-md-3">
             <div class="item-list">
               <p><strong>
-                @if(event.isCancelled){Inställt: }
-                <a href="@routes.Participations.editForm(event.id.get,user.id.get)">@event.name</a>
+                @if(event.isCancelled) {Inställt: }
+              <a href="@routes.Participations.editForm(event.id.get, user.id.get)">@event.name</a>
               </strong></p>
               <p><a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a></p>
             </div>
