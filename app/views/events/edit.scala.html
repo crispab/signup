@@ -47,7 +47,7 @@
 
 <div class="row">
   <div class="col-md-5">
-    <form class="form" action="@theAction()" method="POST">
+    <form class="form" id="editForm" action="@theAction()" method="POST">
       <fieldset>
         <div class='form-group @hasErrors("name")'>
           <label for="name">Namn</label>
@@ -55,11 +55,48 @@
           <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
         </div>
 
+
         <div class='form-group  @hasErrors("description")'>
-          <label for="description">Beskrivning</label>
-          <textarea class="form-control" id="description" name="description" rows="7" maxlength="10240">@field("description")</textarea>
+          <input type="hidden" id="description" name="description" value='@field("description")'/>
+          <label>Beskrivning</label>
+          <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+            <div class="btn-group">
+              <a class="btn btn-default" data-edit="bold" data-toggle="tooltip" data-placement="top" title="Fet"><i class="glyphicon glyphicon-bold"></i></a>
+              <a class="btn btn-default" data-edit="italic" data-toggle="tooltip" data-placement="top" title="Kursiv"><i class="glyphicon glyphicon-italic"></i></a>
+            </div>
+            <div class="btn-group">
+              <a class="btn btn-default" data-edit="insertunorderedlist" data-toggle="tooltip" data-placement="top" title="Punktlista"><i class="glyphicon glyphicon-list"></i></a>
+              <a class="btn btn-default" data-edit="insertorderedlist" data-toggle="tooltip" data-placement="top" title="Numrerad lista"><i class="glyphicon glyphicon-list-alt"></i></a>
+              <a class="btn btn-default" data-edit="indent" data-toggle="tooltip" data-placement="top" title="Indrag"><i class="glyphicon glyphicon-indent-right"></i></a>
+              <a class="btn btn-default" data-edit="outdent" data-toggle="tooltip" data-placement="top" title="Minska indrag"><i class="glyphicon glyphicon-indent-left"></i></a>
+            </div>
+          </div>
+
+          <div class="form-control" id="editor">
+            @Html(field("description"))
+          </div>
+
+          <script>
+            $.getScript('@routes.Assets.at("javascripts/jquery.hotkeys.js")',function(){
+              $.getScript('@routes.Assets.at("javascripts/bootstrap-wysiwyg.js")',function(){
+                $('#editor').wysiwyg();
+              });
+             });
+
+
+            $('#editForm').submit(function() {
+              var allExtraWhitespace = /\s+/g;
+              var theHtml = $('#editor').html().replace(allExtraWhitespace, ' ');
+              $('#description').val(theHtml);
+            });
+
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            })
+          </script>
           <span class="show-on-error">Beskrivningen är för lång (max 10240 tecken)</span>
         </div>
+
 
         <div class='form-group  @hasErrors("venue")'>
           <label for="venue">Plats</label>

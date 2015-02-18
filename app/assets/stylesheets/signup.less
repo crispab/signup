@@ -12,6 +12,8 @@
 @breadcrumb-active-color: @text-color;
 @breadcrumb-separator: "»";
 @font-size-h4: ceil((@font-size-base * 1.1));
+@blockquote-font-size: @font-size-base;
+
 
 
 .navbar-brand {
@@ -255,4 +257,10 @@ pre code {
     color: white;
     text-decoration: none;
   }
+}
+
+#editor {
+  overflow: scroll;
+  min-height: @line-height-computed * 8;
+  margin-top: 2px;
 }
