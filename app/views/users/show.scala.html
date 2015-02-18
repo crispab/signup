@@ -102,29 +102,24 @@
   @Event.findFutureEventsByUser(user).map { event =>
     <div class="row">
       <div class="col-md-5 list-row">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="item-list">
-              <p><strong>
-                @if(event.isCancelled) {Inställt: }
-              <a href="@routes.Participations.editForm(event.id.get, user.id.get)">@event.name</a>
-              </strong></p>
-              <p><a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a></p>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <p><strong>@asDate(event.startTime), </strong>@asTime(event.startTime)-@asTime(event.endTime)</p>
-            @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-              <p>Sista anmälningsdag: <br/> @asDate(event.lastSignUpDate)</p>
-            }
-            <a href="@routes.Participations.editForm(event.id.get, user.id.get)">
-              <span class="label label-default @asCssClass(Participation.findStatus(user, event))">
-              @asMessage(Participation.findStatus(user, event))
-              </span>
-            </a>
-
-          </div>
-        </div>
+        <h4>
+          @if(event.isCancelled) {Inställt:}
+        <a href="@routes.Events.show(event.id.get)">@event.name</a>
+        <small class="pull-right"><strong>@asDate(event.startTime), </strong>
+          @asTime(event.startTime)-@asTime(event.endTime)</small>
+        </h4>
+        <p>
+          <a href="@routes.Groups.show(event.group.id.get)">@event.group.name</a>
+          <a href="@routes.Participations.editForm(event.id.get, user.id.get)" class="pull-right">
+            <span class="label label-default @asCssClass(Participation.findStatus(user, event))">
+            @asMessage(Participation.findStatus(user, event))
+            </span>
+          </a>
+          <br/>
+          @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+            <em class="text-muted">Sista anmälningsdag: @asDate(event.lastSignUpDate)</em>
+          }
+        </p>
       </div>
     </div>
   }

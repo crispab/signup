@@ -42,7 +42,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-includeFilter in (Assets, LessKeys.less) := "*.less"
+includeFilter in (Assets, LessKeys.less) := "*-bootstrap.less"
 
 scalacOptions ++= Seq("-target:jvm-1.7", "-feature")
 

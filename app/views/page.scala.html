@@ -21,7 +21,6 @@
       <link rel="shortcut icon" href='@routes.Assets.at(forTheme("images/[THEME]-favicon.png"))'>
 
       <link rel="stylesheet" href='@routes.Assets.at(forTheme("stylesheets/[THEME]-bootstrap.css"))'>
-      <link rel="stylesheet" href='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css")'>
 
       <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
       <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
@@ -81,7 +80,7 @@
 
 
       <div class="container">
-      @body
+        @body
       </div>
 
       <div class="footer">
@@ -93,22 +92,6 @@
           </div>
         </div>
       </div>
-
-
-      <script src='@routes.Assets.at("javascripts/wysihtml5-0.3.0.min.js")'></script>
-      <script src='@routes.Assets.at("bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.min.js")'></script>
-
-
-      <script type="text/javascript">
-      $('.rich-textarea').wysihtml5({
-      "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
-      "emphasis": true, //Italics, bold, etc. Default true
-      "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-      "html": false, //Button which allows you to edit the generated HTML. Default false
-      "link": true, //Button to insert a link. Default true
-      "image": false //Button to insert an image. Default true
-      });
-      </script>
 
       @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingFooter)
     </body>

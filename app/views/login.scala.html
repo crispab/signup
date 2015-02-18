@@ -40,7 +40,7 @@
 
 
       <form class="form-inline" action="@routes.Application.authenticate()" method="POST">
-        <fieldset>
+        <fieldset class="space-berfore">
           <legend>Logga in med lösenord</legend>
           <div class='form-group @hasErrors("email")'>
             <input type="email" placeholder="Epost" class="form-control" id="email" name="email" value='@field("email")' required="" autofocus=""/>
@@ -57,12 +57,12 @@
   @if(GoogleAuth.isConfigured || FacebookAuth.isConfigured) {
     <div class="row">
       <div class="col-md-5">
-        <fieldset class="large-space-berfore">
+        <fieldset class="xlarge-space-berfore">
           <legend>Logga in med sociala media</legend>
           @if(GoogleAuth.isConfigured) {
             <div class="row">
               <div class="col-md-12">
-                <p class="text-left space-berfore">
+                <p class="text-left">
                   <a href="@routes.GoogleAuth.authenticate()" class="btn-google">Logga in med Google</a>
                 </p>
               </div>

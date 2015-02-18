@@ -1,0 +1,120 @@
+// AddThisEvent (calendar button) styling
+
+.addthisevent-drop {
+  display: inline-block;
+  position: relative;
+  z-index: 1038;
+  font-family: @font-family-sans-serif;
+  color: @navbar-default-color !important;
+  text-decoration: none;
+  border: 1px solid @btn-default-border;
+  border-bottom-color: darken(@btn-default-border, 10%);
+  font-weight: normal;
+  font-size: @font-size-base;
+  padding: 4px 12px;
+  border-radius: 4px;
+  .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+  .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
+  margin-top: 2px;
+}
+
+.addthisevent-drop:hover {
+  text-decoration: none;
+  background-position: 0 -15px;
+  .transition(background-position .1s linear);
+}
+
+.addthisevent-drop:active {
+  top: 1px;
+}
+
+.addthisevent-selected {
+  background-color: #f7f7f7;
+}
+
+.addthisevent_dropdown {
+  width: 200px;
+  position: absolute;
+  z-index: 1039;
+  padding: 6px 0 0 0;
+  background: #fff;
+  text-align: left;
+  display: none;
+  margin-top: -2px;
+  margin-left: -1px;
+  border-top: 1px solid #c8c8c8;
+  border-right: 1px solid #bebebe;
+  border-bottom: 1px solid #a8a8a8;
+  border-left: 1px solid #bebebe;
+  border-radius: @border-radius-base;
+  .box-shadow(0 6px 12px rgba(0,0,0,.175));
+}
+
+.addthisevent_dropdown span {
+  width: 175px;
+  display: block;
+  line-height: 110%;
+  background: #fff;
+  text-decoration: none;
+  font-size: @font-size-base;
+  color: @dropdown-link-color;
+  padding: 8px 10px 9px 15px;
+}
+
+.addthisevent_dropdown span:hover {
+  color: @dropdown-link-hover-color;
+  background-color: @dropdown-link-hover-bg;
+  text-decoration: none;
+}
+
+.addthisevent span {
+  display: none !important;
+}
+
+.addthisevent-drop ._url, .addthisevent-drop ._start, .addthisevent-drop ._end, .addthisevent-drop ._summary, .addthisevent-drop ._description, .addthisevent-drop ._location, .addthisevent-drop ._organizer, .addthisevent-drop ._organizer_email, .addthisevent-drop ._facebook_event, .addthisevent-drop ._all_day_event {
+  display: none !important;
+}
+
+.addthisevent_dropdown .copyx {
+  width: 200px;
+  height: 21px;
+  display: block;
+  position: relative;
+  cursor: default;
+}
+
+.addthisevent_dropdown .brx {
+  width: 180px;
+  height: 1px;
+  overflow: hidden;
+  background: #e0e0e0;
+  position: absolute;
+  z-index: 100;
+  left: 10px;
+  top: 9px;
+}
+
+.addthisevent_dropdown .frs {
+  position: absolute;
+  top: 5px;
+  cursor: pointer;
+  right: 10px;
+  padding-left: 10px;
+  font-style: normal;
+  font-weight: normal;
+  text-align: right;
+  z-index: 101;
+  line-height: 110%;
+  background: #fff;
+  text-decoration: none;
+  font-size: 9px;
+  color: #cacaca;
+}
+
+.addthisevent_dropdown .frs:hover {
+  color: #6d84b4;
+}
+
+.addthisevent {
+  visibility: hidden;
+}

@@ -10,65 +10,78 @@
 <div class="row">
   <div class="col-md-5 list-row">
     <div class="row">
-      <div class="col-md-1">
+      <div class="col-md-2">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-        <img class="thumb thumb-background40" src="@ImageUrl(participation.user)" onerror="imgError(this);"/>
+          <img class="thumb thumb-background40" src="@ImageUrl(participation.user)" onerror="imgError(this);"/>
         </a>
       </div>
-      <div class="col-md-2">
-        <dl class="participation">
-          <dt><a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-            @participation.user.firstName
-            @participation.user.lastName</a></dt>
+      <div class="col-md-7">
+        <h4>
+          <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
+            @participation.user.firstName @participation.user.lastName
+          </a>
+        </h4>
           @if(isLoggedIn(loggedInUser)) {
-            <dd class="email-address">@participation.user.email</dd>
+            <p class="text-muted small-space-berfore"><em>@participation.user.email</em></p>
           }
-          <dd>@participation.comment</dd>
-        </dl>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
           <span class="label label-default @asCssClass(participation.status)">
-          @asMessage(participation.status)
+            @asMessage(participation.status)
           </span>
         </a>
         @if(participation.isLateSignUp) {
-          <a id="warning_@{participation.id.get}" href="javascript:void(0);" rel="popover" data-placement="right" data-content="Anmälde sig @asDate(participation.signUpTime.get), vilket är efter sista anmälningsdag." data-original-title="Sen anmälan">
+          <a id="warning_@{participation.id.get}" tabindex="0" role="button" rel="popover" data-toggle="popover" data-trigger="focus" data-placement="top" title="Sen anmälan" data-content="Anmälde sig @asDate(participation.signUpTime.get), vilket är efter sista anmälningsdag.">
             <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")' alt="Sen anmälan"/>
           </a>
-          <script type="text/javascript">$('#warning_@{participation.id.get}').popover()</script>
+          <script type="text/javascript">
+            $('#warning_@{participation.id.get}').popover()
+          </script>
         }
 
         @if(withRemoveButton && isAdmin(loggedInUser)) {
-          <a data-toggle="modal" href="#remove_participant_@participation.id" class="btn pull-right"><span class="glyphicon glyphicon-trash"></span></a>
+          <button type="button" class="btn btn-default pull-right small-space-berfore" data-toggle="modal" data-target="#remove_participant_@participation.id">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
 
-          <div id="remove_participant_@participation.id" class="modal smaller-modal hide fade" style="display: none">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-              <h3>Vill du ta bort gästen?</h3>
-            </div>
-            <div class="modal-body">
-              <p>
-                  Du håller på att ta bort gästen <strong>@participation.user.firstName @participation.user.lastName</strong>
-                  från sammankomsten <strong>@participation.event.name</strong>.
-              </p>
-              <p>
-                  Vill du fortsätta?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                </button>
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> Ta bort</button>
-              </form>
+          <div class="modal fade" id="remove_participant_@participation.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_participant_@participation.id" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                  <h3 id="label_remove_participant_@participation.id">Vill du ta bort gästen?</h3>
+                </div>
+                <div class="modal-body">
+                  <p>
+                    Du håller på att ta bort gästen <strong>@participation.user.firstName @participation.user.lastName</strong>
+                    från sammankomsten <strong>@participation.event.name</strong>.
+                  </p>
+                  <p>
+                    Vill du fortsätta?
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span>
+                      Ta bort</button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         }
         @if(participation.numberOfParticipants > 1){
           <p>@{participation.numberOfParticipants}st i sällskapet</p>
         }
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10 col-md-offset-2">
+        <p>@participation.comment</p>
       </div>
     </div>
   </div>
