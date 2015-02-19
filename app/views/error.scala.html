@@ -13,15 +13,15 @@
         @errorMessage
       </p>
       @if(details.length > 0) {
-        <div class="panel-group" id="tech-description">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <a data-toggle="collapse" data-parent="#tech-description" href="#tech-description-details">
-                Tekniska detaljer
-              </a>
-            </div>
-            <div id="tech-description-details" class="panel-collapse collapse">
-                <pre class="panel-body"><code>@details</code></pre>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" href="#techBody" aria-expanded="false" aria-controls="techBody">
+              <h4 class="panel-title">Tekniska detaljer</h4>
+            </a>
+          </div>
+          <div class="collapse" id="techBody">
+            <div class="panel-body scrollx">
+             <code>@details</code>
             </div>
           </div>
         </div>
