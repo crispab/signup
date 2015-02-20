@@ -1,33 +1,40 @@
 @import "signup.less";
 
-/*
-@textColor: #2B2B2B;
-@link-color: #9D0000;
-@linkColorHover: brighten(@link-color, 15%);
-@font-family-sans-serif: arial, helvetica, sans-serif;
-@font-size-base: 13px;
-@headings-font-family: @serifFontFamily;
-@headings-font-weight: normal;
-@headingsColor: #995E00;
-@btnBackground: #CFC4B7;
-
-@btnBackgroundHighlight: #A09086;
-@btnBorder: #928B87;
-
-@btn-primary-bg: #9D0000;
-
-@inputBackground: #f5f3f1;
-@inputBackgroundFocus: @well-bg;
-@inputBorder: #979490;
-@inputBorderRadius: 3px;
-@well-bg: @navbar-default-border;
-@navbar-default-border: darken(#F8F3EC, 3%);
+@headings-font-family: @font-family-serif;
+@headings-color: #995E00;
+@navbar-default-bg: #930000;
 @navbar-default-color: white;
 @navbar-default-link-color: white;
-@navbar-default-link-hover-color: @textColor;
-@navbarLinkColorActive: @textColor;
-@navbar-default-link-hover-bg: darken(@navbar-default-border, 3%);
-@navbar-default-link-active-bg: @navbar-default-border;
+@navbar-default-link-hover-color: white;
+@navbar-default-link-active-color: @text-color;
+@navbar-default-link-active-bg: #F4ECE1;
+@navbar-default-link-hover-bg: darken(@navbar-default-link-active-bg, 5%);
+@navbar-default-link-hover-color: @text-color;
+@navbar-border-radius: 0;
+@link-color: #9D0000;
+@link-hover-color: @link-color;
+@well-bg: @navbar-default-link-active-bg;
+@btn-default-color: white;
+@btn-default-bg: #a99e91;
+@btn-default-border: darken(@btn-default-bg, 5%);
+@btn-primary-color: white;
+@btn-primary-bg: #9D0000;
+@btn-primary-border: darken(@btn-primary-bg, 5%);
+@input-bg: #f5f3f1;
+@dropdown-link-hover-color: white;
+@dropdown-link-hover-bg: #930000;
+
+@footerBackground: url(/assets/images/b73-paper.png) repeat-x;
+.footer-logo {
+  margin-top: 10px;
+  width: 100%;
+  height: 90px;
+  background: url(/assets/images/b73-logo.png) no-repeat center center;
+  background-size: contain;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+}
 
 .signup-icon {
   filter: invert(1);
@@ -36,112 +43,3 @@
   -o-filter: invert(1);
   -ms-filter: invert(1);
 }
-
-.footer {
-  margin-top: 60px;
-  min-height: 100px;
-  background: url(/assets/images/b73-paper.png) repeat-x;
-}
-
-.footer-logo {
-  margin-top: 10px;
-  width: 100%;
-  height: 70px;
-  background: url(/assets/images/b73-logo.png) no-repeat center center;
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  background-size: contain;
-}
-
-.caret {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  vertical-align: top;
-  border-top:   4px solid @white;
-  border-right: 4px solid transparent;
-  border-left:  4px solid transparent;
-  content: "";
-}
-
-
-.btn {
-  display: inline-block;
-  .ie7-inline-block();
-  padding: 4px 12px;
-  margin-bottom: 0; // For input.btn
-  font-size: @font-size-base;
-  line-height: @line-height-computed;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  .buttonBackground(@btnBackground, @btnBackgroundHighlight, white);
-  border: 1px solid @btnBorder;
-  *border: 0; // Remove the border to prevent IE7's black border on input:focus
-  border-bottom-color: darken(@btnBorder, 10%);
-  .border-radius(@baseBorderRadius);
-  .ie7-restore-left-whitespace(); // Give IE7 some love
-  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
-
-  // Hover/focus state
-  &:hover,
-  &:focus {
-    color: white;
-    text-decoration: none;
-    background-position: 0 -15px;
-
-    // transition is only when going to hover/focus, otherwise the background
-    // behind the gradient (there for IE<=9 fallback) gets mismatched
-    .transition(background-position .1s linear);
-  }
-
-  // Focus state for keyboard and accessibility
-  &:focus {
-    .tab-focus();
-  }
-
-  // Active state
-  &.active,
-  &:active {
-    background-image: none;
-    outline: 0;
-    .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
-  }
-
-  // Disabled state
-  &.disabled,
-  &[disabled] {
-    cursor: default;
-    background-image: none;
-    .opacity(65);
-    .box-shadow(none);
-  }
-
-}
-
-// Warning appears are orange
-.btn-warning {
-  .buttonBackground(@btnWarningBackground, @btnWarningBackgroundHighlight);
-}
-
-// Danger and error appear as red
-.btn-danger {
-  .buttonBackground(@btnDangerBackground, @btnDangerBackgroundHighlight);
-}
-
-// Success appears as green
-.btn-success {
-  .buttonBackground(@btnSuccessBackground, @btnSuccessBackgroundHighlight);
-}
-
-// Info appears as a neutral blue
-.btn-info {
-  .buttonBackground(@btnInfoBackground, @btnInfoBackgroundHighlight);
-}
-
-// Inverse appears as dark gray
-.btn-inverse {
-  .buttonBackground(@btnInverseBackground, @btnInverseBackgroundHighlight);
-}
-*/
