@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 
 public class IndexPageSteps {
 
+    public static int PORT = 19000;
+
     private final WebDriver driver;
 
     // Instantiated by Cucumber/Dependency Injection/Picocontainer
@@ -23,7 +25,7 @@ public class IndexPageSteps {
 
     @When("^I enter the site index page url$")
     public void i_enter_the_site_s_index_page_url() throws Throwable {
-        driver.navigate().to("http://localhost:19000");
+        driver.navigate().to("http://localhost:" + PORT);
     }
 
     @Then("^it should display$")
@@ -35,7 +37,7 @@ public class IndexPageSteps {
 
     @Given("^I am on the start page$")
     public void i_am_on_the_start_page() throws Throwable {
-        driver.navigate().to("http://localhost:19000");
+        driver.navigate().to("http://localhost:" + PORT);
     }
 
     @When("^I click on the home link$")
@@ -56,7 +58,7 @@ public class IndexPageSteps {
 
     @Given("^I am on the groups page$")
     public void i_am_on_the_groups_page() throws Throwable {
-        driver.navigate().to("http://localhost:19000");
+        driver.navigate().to("http://localhost:" + PORT);
         driver.findElement(By.xpath("//a[@href='/groups']")).click();
     }
 
@@ -74,7 +76,7 @@ public class IndexPageSteps {
 
     @Given("^I am on a group page$")
     public void i_am_on_a_group_page() throws Throwable {
-        driver.navigate().to("http://localhost:19000");
+        driver.navigate().to("http://localhost:" + PORT);
         driver.findElement(By.xpath("//a[@href='/groups']")).click();
         driver.findElement(By.xpath("//a[contains(., 'Crisp Rocket Days')]")).click();
     }
