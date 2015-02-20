@@ -20,7 +20,7 @@
   <div class="col-md-5">
 
     <div class="alert alert-danger">
-      Sammankomsten är inställt.
+      Sammankomsten är inställd.
     </div>
 
     @if(flash.get("success").isDefined) {
@@ -51,11 +51,10 @@
 
       @if(isAdmin(loggedInUser)) {
         <div class="btn-group">
-          <button class="btn btn-default">Åtgärder</button>
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Åtgärder <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" role="menu">
             <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span> Ta bort</a></li>
           </ul>
         </div>
