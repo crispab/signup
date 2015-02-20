@@ -8,14 +8,14 @@
 
   @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
-
-
   <html lang="sv">
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="">
       <meta name="author" content="">
+      <meta name="robots" content="noindex, nofollow">
+
       @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader)
 
       <link rel="shortcut icon" href='@routes.Assets.at(forTheme("images/[THEME]-favicon.png"))'>
