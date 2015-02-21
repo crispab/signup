@@ -20,7 +20,7 @@ This is the fourth version of the SignUp Service.
 
 ### Presentation ###
 
-- Twitter Bootstrap 3.3.2 - http://bootstrapdocs.com/v2.3.1/docs/
+- Twitter Bootstrap 3.3.2 - http://getbootstrap.com/
 - jQuery 1.11.1 (used by Twitter Bootstrap) - http://jquery.com
 - bootstrap-wysiwyg - http://github.com/mindmup/bootstrap-wysiwyg
 - jQuery Hotkeys Plugin (used by bootstrap-wysiwyg) - https://github.com/jeresig/jquery.hotkeys
