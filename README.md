@@ -24,7 +24,7 @@ This is the fourth version of the SignUp Service.
 - jQuery 1.11.1 (used by Twitter Bootstrap) - http://jquery.com
 - bootstrap-wysiwyg - http://github.com/mindmup/bootstrap-wysiwyg
 - jQuery Hotkeys Plugin (used by bootstrap-wysiwyg) - https://github.com/jeresig/jquery.hotkeys
-- AddThisEvent 1.5.1 - http://addthisevent.com
+- AddThisEvent 1.5.8 - http://addthisevent.com
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play plugins ###
@@ -49,7 +49,9 @@ License, credits and stuff
 
 Some clipart comes from http://openclipart.org and is Public Domain, see http://openclipart.org/share
 
-The rest of the code is Copyright 2012, 2013, 2014 by Mats Strandberg and Jan Grape and
+The libraries, services and tools listed under General above is copyright and licensed by the respective creators and owners.
+
+The rest of the code is Copyright 2012, 2013, 2014, 2015 by Mats Strandberg and Jan Grape and
 licensed under the Apache License v2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
