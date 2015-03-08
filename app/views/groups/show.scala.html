@@ -94,70 +94,86 @@
 
   <div class="row">
     <div class="col-md-5">
-      <h3>Medlemmar</h3>
+      <a href="#" class="toggle" data-toggle="collapse" data-target="#to_toggle">
+        <h3>
+          Medlemmar
+          <small>(@members.size st)</small>
+          <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
+        </h3>
+      </a>
     </div>
   </div>
-  @members.map { membership =>
-    <div class="row">
-      <div class="col-md-5 list-row">
-        <div class="row">
-          <div class="col-md-2">
-            <a href="@routes.Users.show(membership.user.id.get)">
-              <img class="thumb thumb-background40 pull-left" src="@ImageUrl(membership.user)" onerror="imgError(this);"/>
-            </a>
-          </div>
-          <div class="col-md-7">
-            <h4>
-              <a href="@routes.Users.show(membership.user.id.get)">@membership.user.firstName @membership.user.lastName</a>
-            </h4>
-            @if(isLoggedIn(loggedInUser)) {
-              <p class="text-muted small-space-berfore"><em>@membership.user.email</em></p>
-            }
-            <p>@membership.user.comment</p>
-          </div>
 
-          @if(isAdmin(loggedInUser)) {
-            <div class="col-md-3">
-              <p class="small-space-berfore">
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_member_@membership.id">
-                  <span class="glyphicon glyphicon-trash"></span> Ta bort
-                </button>
-              </p>
+  <div id="to_toggle" class="collapse" >
+    @members.map { membership =>
+      <div class="row">
+        <div class="col-md-5 list-row">
+          <div class="row">
+            <div class="col-md-2">
+              <a href="@routes.Users.show(membership.user.id.get)">
+                <img class="thumb thumb-background40 pull-left" src="@ImageUrl(membership.user)" onerror="imgError(this);"/>
+              </a>
+            </div>
+            <div class="col-md-7">
+              <h4>
+                <a href="@routes.Users.show(membership.user.id.get)">@membership.user.firstName @membership.user.lastName</a>
+              </h4>
+              @if(isLoggedIn(loggedInUser)) {
+                <p class="text-muted small-space-berfore"><em>@membership.user.email</em></p>
+              }
+              <p>@membership.user.comment</p>
+            </div>
 
-              <div class="modal fade" id="remove_member_@membership.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_member_@membership.id" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                      <h3 id="label_remove_member_@membership.id">Vill du ta bort medlemmen?</h3>
-                    </div>
-                    <div class="modal-body">
-                      <p>
-                        Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
-                        från gruppen <strong>@group.name</strong>.
-                      </p>
-                      <p>
-                        Vill du fortsätta?
-                      </p>
-                    </div>
-                    <div class="modal-footer">
-                      <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                          <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                          <span class="glyphicon glyphicon-trash"></span> Ta bort</button>
-                      </form>
+            @if(isAdmin(loggedInUser)) {
+              <div class="col-md-3">
+                <p class="small-space-berfore">
+                  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_member_@membership.id">
+                    <span class="glyphicon glyphicon-trash"></span> Ta bort
+                  </button>
+                </p>
+
+                <div class="modal fade" id="remove_member_@membership.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_member_@membership.id" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                        <h3 id="label_remove_member_@membership.id">Vill du ta bort medlemmen?</h3>
+                      </div>
+                      <div class="modal-body">
+                        <p>
+                          Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
+                          från gruppen <strong>@group.name</strong>.
+                        </p>
+                        <p>
+                          Vill du fortsätta?
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <form action="@routes.Memberships.delete(membership.id.get)" method="POST">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                          </button>
+                          <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-trash"></span> Ta bort</button>
+                        </form>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
-    </div>
-  }
+    }
+  </div>
+
+  <script type="text/javascript">
+    $('#to_toggle').on('show.bs.collapse hide.bs.collapse', function (e) {
+      if(!$(this).is(e.target))return;
+      $('#toggle_icon').toggleClass('glyphicon-triangle-right glyphicon-triangle-bottom');
+    });
+  </script>
 
   @if(isAdmin(loggedInUser)) {
     <div class="row">
