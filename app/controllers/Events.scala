@@ -28,7 +28,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
   def show(id: Long) = StackAction { implicit request =>
     val event = Event.find(id)
     if(event.isCancelled) {
-      Ok(views.html.events.showcancelled(event))
+      Ok(views.html.events.showcancelled(event, LogEntry.findByEvent(event)))
     } else {
       Ok(views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
     }
@@ -232,6 +232,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
         event => {
           val eventId = Event.create(event)
           Reminder.createRemindersForEvent(eventId, event)
+          LogEntry.create(eventId, "Sammankomsten skapad")
           Redirect(routes.Groups.show(event.group.id.get))
         }
       )
@@ -272,6 +273,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     Event.cancel(id)
+    LogEntry.create(event, "Sammankomsten inställd")
 
     import play.api.Play.current
     import play.api.libs.concurrent.Execution.Implicits._

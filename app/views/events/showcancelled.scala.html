@@ -1,4 +1,4 @@
-@(event: models.Event)(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+@(event: models.Event, logEntries: Seq[LogEntry])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
 
 @import util.AuthHelper._
 @import util.DateHelper._
@@ -7,82 +7,104 @@
 
 @page(event.name, section = Groups) {
 
-@breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get)),
-            event.name)
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get)),
+    event.name)
 
-<div class="row">
-  <div class="col-md-5">
-    <h2>@event.name</h2>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-5">
-
-    <div class="alert alert-danger">
-      Sammankomsten är inställd.
+  <div class="row">
+    <div class="col-md-5">
+      <h2>@event.name</h2>
     </div>
+  </div>
 
-    @if(flash.get("success").isDefined) {
-      <div class="alert alert-success">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        @flash.get("success")
-      </div>
-    }
+  <div class="row">
+    <div class="col-md-5">
 
-    @if(flash.get("error").isDefined) {
       <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        @flash.get("error")
+        Sammankomsten är inställd.
       </div>
-    }
 
-    <div class="well">
-      <p>@Html(event.description)</p>
-      <ul>
-        <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
-        <li><strong>Plats:</strong> @event.venue</li>
-      </ul>
-
-      @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-        <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
-      }
-
-
-      @if(isAdmin(loggedInUser)) {
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            Åtgärder <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span> Ta bort</a></li>
-          </ul>
-        </div>
-
-        <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display: none">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-            <h3>Vill du ta bort sammankomsten?</h3>
-          </div>
-          <div class="modal-body">
-            <p>
-              Du håller på att ta bort sammankomsten <strong>@event.name</strong>.
-            </p>
-            <p>
-              Vill du fortsätta?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <form action="@routes.EventsSecured.delete(event.id.get)" method="POST">
-              <button type="button" class="btn btn-default" data-dismiss="modal">
-                <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-              </button>
-              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> Ta bort</button>
-            </form>
-          </div>
+      @if(flash.get("success").isDefined) {
+        <div class="alert alert-success">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          @flash.get("success")
         </div>
       }
+
+      @if(flash.get("error").isDefined) {
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          @flash.get("error")
+        </div>
+      }
+
+      <div class="well">
+        <p>@Html(event.description)</p>
+        <ul>
+          <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
+          <li><strong>Plats:</strong> @event.venue</li>
+        </ul>
+
+        @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+          <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+        }
+
+
+        @if(isAdmin(loggedInUser)) {
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              Åtgärder <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
+                Ta bort</a></li>
+            </ul>
+          </div>
+
+          <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display : none">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3>Vill du ta bort sammankomsten?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att ta bort sammankomsten <strong>@event.name</strong>.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.EventsSecured.delete(event.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> Ta bort</button>
+              </form>
+            </div>
+          </div>
+        }
+      </div>
     </div>
   </div>
-</div>
+
+  @if(logEntries.nonEmpty) {
+    <div class="row">
+      <div class="col-md-5">
+        <h3>Händelser</h3>
+      </div>
+    </div>
+
+    @logEntries.map { logEntry =>
+      <div class="row">
+        <div class="col-md-5 list-row">
+          <div class="row">
+            <div class="col-md-12">
+              <span class="text-muted">@asDateTime(logEntry.when)</span> @logEntry.message
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
 }

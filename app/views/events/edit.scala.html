@@ -142,7 +142,7 @@
               name="invited"
               id="invited_only"
               value="invited_only"
-              @if(field("invited") equals "invited_only") {checked}
+              @if((field("invited") equals "invited_only") || creatingNew) {checked}
               onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false' />
             Bara inbjudna får komma
           </label>
@@ -180,12 +180,12 @@
         <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
 
         @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
-        <div class="alert alert-danger">
-          <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel</h4>
+          <div class="alert alert-danger">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">Inmatningsfel</h4>
 
-          <p>@errors(eventForm).mkString(", ")</p>
-        </div>
+            <p>@errors(eventForm).mkString(", ")</p>
+          </div>
         }
 
         <button type="submit" class="btn btn-primary" id="action" name="action" value="save">

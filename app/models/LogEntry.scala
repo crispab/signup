@@ -53,6 +53,20 @@ object LogEntry {
     }
   }
 
+  def create(eventId: Long, message: String, when: Date): Long = {
+    DB.withTransaction {
+      implicit connection =>
+        SQL(insertQueryString).on(
+          'event -> eventId,
+          'message -> message,
+          'whenx -> when
+        ).executeInsert()
+    } match {
+      case Some(primaryKey: Long) => primaryKey
+      case _ => throw new RuntimeException("Could not insert into database, no PK returned")
+    }
+  }
+
   val insertQueryString =
     """
 INSERT INTO log_entries (
@@ -69,6 +83,10 @@ INSERT INTO log_entries (
 
   def create(event: Event, message: String) {
     create(LogEntry(event = event, message = message))
+  }
+
+  def create(eventId: Long, message: String) {
+    create(eventId, message, new Date())
   }
 }
 
