@@ -90,10 +90,17 @@
   @if(logEntries.nonEmpty) {
     <div class="row">
       <div class="col-md-5">
-        <h3>Händelser</h3>
+        <a href="#" class="toggle" data-toggle="collapse" data-target="#to_toggle">
+          <h3>
+            Händelser
+            <small>(@logEntries.size st)</small>
+            <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
+          </h3>
+        </a>
       </div>
     </div>
 
+    <div id="to_toggle" class="collapse" >
     @logEntries.map { logEntry =>
       <div class="row">
         <div class="col-md-5 list-row">
@@ -105,6 +112,14 @@
         </div>
       </div>
     }
+    </div>
+
+    <script type="text/javascript">
+      $('#to_toggle').on('show.bs.collapse hide.bs.collapse', function (e) {
+        if(!$(this).is(e.target))return;
+        $('#toggle_icon').toggleClass('glyphicon-triangle-right glyphicon-triangle-bottom');
+      });
+    </script>
   }
 
 }
