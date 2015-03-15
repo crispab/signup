@@ -263,8 +263,8 @@ pre code {
 }
 
 #editor {
-  overflow: scroll;
-  min-height: @line-height-computed * 8;
+  overflow-y: auto;
+  min-height: @line-height-computed * 12;
   margin-top: 2px;
 }
 
@@ -284,4 +284,13 @@ pre code {
 
 .toggle .glyphicon {
   font-size: 70%;
+}
+
+.url-input {
+  padding: 5px;
+  width: 20em;
+}
+
+.url-input button {
+  margin-top: 5px;
 }

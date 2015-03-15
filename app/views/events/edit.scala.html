@@ -60,15 +60,29 @@
           <input type="hidden" id="description" name="description" value='@field("description")'/>
           <label>Beskrivning</label>
           <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
-            <div class="btn-group">
-              <a class="btn btn-default" data-edit="bold" data-toggle="tooltip" data-placement="top" title="Fet"><i class="glyphicon glyphicon-bold"></i></a>
-              <a class="btn btn-default" data-edit="italic" data-toggle="tooltip" data-placement="top" title="Kursiv"><i class="glyphicon glyphicon-italic"></i></a>
+            <div class="btn-group" role="group">
+              <a class="btn btn-default" data-edit="bold" data-toggle="tooltip" data-placement="top" title="Fet"><span class="glyphicon glyphicon-bold"></span></a>
+              <a class="btn btn-default" data-edit="italic" data-toggle="tooltip" data-placement="top" title="Kursiv"><span class="glyphicon glyphicon-italic"></span></a>
             </div>
-            <div class="btn-group">
-              <a class="btn btn-default" data-edit="insertunorderedlist" data-toggle="tooltip" data-placement="top" title="Punktlista"><i class="glyphicon glyphicon-list"></i></a>
-              <a class="btn btn-default" data-edit="insertorderedlist" data-toggle="tooltip" data-placement="top" title="Numrerad lista"><i class="glyphicon glyphicon-list-alt"></i></a>
-              <a class="btn btn-default" data-edit="indent" data-toggle="tooltip" data-placement="top" title="Indrag"><i class="glyphicon glyphicon-indent-right"></i></a>
-              <a class="btn btn-default" data-edit="outdent" data-toggle="tooltip" data-placement="top" title="Minska indrag"><i class="glyphicon glyphicon-indent-left"></i></a>
+            <div class="btn-group" role="group">
+              <div class="btn-group" role="group">
+                <a class="btn btn-default" data-toggle="dropdown"><span class="glyphicon glyphicon-link" data-toggle="tooltip" data-placement="top" title="Skapa länk"></span></a>
+                <ul class="dropdown-menu url-input" role="menu">
+                  <li>
+                    <input class="form-control" placeholder="URL" type="text" data-edit="createLink">
+                  </li>
+                  <li>
+                    <button class="btn btn-primary" type="button">Lägg till</button>
+                  </li>
+                </ul>
+              </div>
+              <a class="btn btn-default" data-edit="unlink" data-toggle="tooltip" data-placement="top" title="Ta bort länk"><span class="glyphicon glyphicon-remove"></span></a>
+            </div>
+            <div class="btn-group" role="group">
+              <a class="btn btn-default" data-edit="insertunorderedlist" data-toggle="tooltip" data-placement="top" title="Punktlista"><span class="glyphicon glyphicon-list"></span></a>
+              <a class="btn btn-default" data-edit="insertorderedlist" data-toggle="tooltip" data-placement="top" title="Numrerad lista"><span class="glyphicon glyphicon-list-alt"></span></a>
+              <a class="btn btn-default" data-edit="indent" data-toggle="tooltip" data-placement="top" title="Indrag"><span class="glyphicon glyphicon-indent-right"></span></a>
+              <a class="btn btn-default" data-edit="outdent" data-toggle="tooltip" data-placement="top" title="Minska indrag"><span class="glyphicon glyphicon-indent-left"></span></a>
             </div>
           </div>
 
@@ -92,7 +106,11 @@
 
             $(function () {
               $('[data-toggle="tooltip"]').tooltip()
-            })
+            });
+
+            $('.dropdown-menu input').click(function(e) {
+              e.stopPropagation();
+            });
           </script>
           <span class="show-on-error">Beskrivningen är för lång (max 10240 tecken)</span>
         </div>
