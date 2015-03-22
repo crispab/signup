@@ -1,58 +1,23 @@
 @(description: String)
 
-<input type="hidden" id="description" name="description" value="@description" />
+<label for="description">Beskrivning</label>
+<textarea class="form-control" id="description" name="description">@Html(description)</textarea>
 
-<label>Beskrivning</label>
-<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
-  <div class="btn-group" role="group">
-    <a class="btn btn-default" data-edit="bold" data-toggle="tooltip" data-placement="top" title="Fet"><span class="glyphicon glyphicon-bold"></span></a>
-    <a class="btn btn-default" data-edit="italic" data-toggle="tooltip" data-placement="top" title="Kursiv"><span class="glyphicon glyphicon-italic"></span></a>
-  </div>
-  <div class="btn-group" role="group">
-    <div class="btn-group" role="group">
-      <a class="btn btn-default" data-toggle="dropdown"><span class="glyphicon glyphicon-link" data-toggle="tooltip" data-placement="top" title="Skapa länk"></span></a>
-      <ul class="dropdown-menu url-input" role="menu">
-        <li>
-          <input class="form-control" placeholder="URL" type="text" data-edit="createLink">
-        </li>
-        <li>
-          <button class="btn btn-primary" type="button">Lägg till</button>
-        </li>
-      </ul>
-    </div>
-    <a class="btn btn-default" data-edit="unlink" data-toggle="tooltip" data-placement="top" title="Ta bort länk"><span class="glyphicon glyphicon-remove"></span></a>
-  </div>
-  <div class="btn-group" role="group">
-    <a class="btn btn-default" data-edit="insertunorderedlist" data-toggle="tooltip" data-placement="top" title="Punktlista"><span class="glyphicon glyphicon-list"></span></a>
-    <a class="btn btn-default" data-edit="insertorderedlist" data-toggle="tooltip" data-placement="top" title="Numrerad lista"><span class="glyphicon glyphicon-list-alt"></span></a>
-    <a class="btn btn-default" data-edit="indent" data-toggle="tooltip" data-placement="top" title="Indrag"><span class="glyphicon glyphicon-indent-right"></span></a>
-    <a class="btn btn-default" data-edit="outdent" data-toggle="tooltip" data-placement="top" title="Minska indrag"><span class="glyphicon glyphicon-indent-left"></span></a>
-  </div>
-</div>
-
-<div class="form-control" id="editor">
-  @Html(description)
-</div>
-
+<script src='@routes.Assets.at("bootstrap3-wysiwyg/bootstrap3-wysihtml5.all.min.js")'></script>
+<script src='@routes.Assets.at("bootstrap3-wysiwyg/locales/bootstrap-wysihtml5.sv-SE.js")'></script>
 <script>
-  $.getScript('@routes.Assets.at("javascripts/jquery.hotkeys.js")', function(){
-    $.getScript('@routes.Assets.at("javascripts/bootstrap-wysiwyg.js")', function(){
-      $('#editor').wysiwyg();
-    });
-   });
-
-
-  $('#editForm').submit(function() {
-    var allExtraWhitespace = /\s+/g;
-    var theHtml = $('#editor').html().replace(allExtraWhitespace, ' ');
-    $('#description').val(theHtml);
-  });
-
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  });
-
-  $('.dropdown-menu input').click(function(e) {
-    e.stopPropagation();
+  $('#description').wysihtml5({
+    locale: "sv-SE",
+    toolbar: {
+      "font-styles": false,
+      "emphasis": true,
+      "lists": true,
+      "html": false,
+      "link": true,
+      "image": false,
+      "color": false,
+      "blockquote": false
+    }
   });
 </script>
+

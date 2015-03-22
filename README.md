@@ -20,10 +20,9 @@ This is the fourth version of the SignUp Service.
 
 ### Presentation ###
 
-- Twitter Bootstrap 3.3.2 - http://getbootstrap.com/
-- jQuery 1.11.1 (used by Twitter Bootstrap) - http://jquery.com
-- bootstrap-wysiwyg - http://github.com/mindmup/bootstrap-wysiwyg
-- jQuery Hotkeys Plugin (used by bootstrap-wysiwyg) - https://github.com/jeresig/jquery.hotkeys
+- Bootstrap 3.3.2 - http://getbootstrap.com/
+- jQuery 1.11.1 (used by Bootstrap) - http://jquery.com
+- bootstrap3-wysiwyg - https://github.com/bootstrap-wysiwyg/bootstrap3-wysiwyg
 - AddThisEvent 1.5.8 - http://addthisevent.com
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
