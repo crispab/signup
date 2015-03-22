@@ -25,6 +25,7 @@ libraryDependencies ++= Seq(
   "com.nimbusds" % "nimbus-jose-jwt" % "3.1.2",
   "org.webjars" %% "webjars-play" % "2.3.0-2",
   "org.webjars" % "bootstrap" % "3.3.2",
+  "org.webjars" % "font-awesome" % "4.3.0-1",
   jdbc,
   anorm,
   ws,
