@@ -13,7 +13,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
 
   def editForm(eventId: Long, userId: Long) = StackAction { implicit request =>
     val event = Event.find(eventId)
-    if(!event.isCancelled) {
+    if (!event.isCancelled) {
       val userToAttend = User.find(userId)
       val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = Unregistered, user = userToAttend, event = event))
       Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
@@ -41,10 +41,10 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     )
   }
 
-  val participationForm:Form[Participation] =
+  val participationForm: Form[Participation] =
     Form(
       mapping(
-        "id" -> ignored(None:Option[Long]),
+        "id" -> ignored(None: Option[Long]),
         "status" -> nonEmptyText(maxLength = 20),
         "number_of_participants" -> number(min = 1),
         "comment" -> text(maxLength = 127),
@@ -78,7 +78,6 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
 }
 
 
-
 object ParticipationsSecured extends Controller with AuthElement with AuthConfigImpl {
   def createGuestForm(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
@@ -89,15 +88,15 @@ object ParticipationsSecured extends Controller with AuthElement with AuthConfig
   def createGuest = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Participations.participationForm.bindFromRequest.fold(
-        formWithErrors => {
-          val event = Event.find(formWithErrors("eventId").value.get.toLong)
-          BadRequest(views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
-        },
-        participation => {
-          Participation.createGuest(participation.event.id.get, participation.user.id.get)
-          Redirect(routes.Participations.editForm(participation.event.id.get, participation.user.id.get))
-        }
-      )
+      formWithErrors => {
+        val event = Event.find(formWithErrors("eventId").value.get.toLong)
+        BadRequest(views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
+      },
+      participation => {
+        Participation.createGuest(participation.event.id.get, participation.user.id.get)
+        Redirect(routes.Events.show(participation.event.id.get))
+      }
+    )
   }
 
   def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
