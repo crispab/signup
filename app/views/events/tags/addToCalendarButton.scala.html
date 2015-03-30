@@ -1,31 +1,33 @@
 @(event: Event)
 
 @import util.HtmlHelper._
+@import util.LocaleHelper._
 @import play.api.Play.current
 
 <script type="text/javascript" src="https://addthisevent.com/libs/ate-latest.min.js"></script>
 
 <script type="text/javascript">
-  addthisevent.settings ( {
+  addthisevent.settings ({
     license : '@play.api.Play.configuration.getString("addthisevent.license").getOrElse("")',
     mouse : false,
     css : false,
-    outlook : { show : true, text : "Outlook / iCal" },
-    ical : { show : false, text : "Kalendern i datorn" },
-    google : { show : true, text : "Google-kalender" },
-    yahoo : { show : true, text : "Yahoo-kalender" },
-    hotmail : { show : true, text : "Hotmail-kalender" }
-} ) ;
+    outlook    : {show:true, text:"Outlook"},
+    appleical  : {show:true, text:"Apple Kalender"},
+    google     : {show:true, text:"Google (online)"},
+    outlookcom : {show:true, text:"Outlook.com (online)"},
+    yahoo      : {show:true, text:"Yahoo (online)"},
+    dropdown   : {order:"google,outlookcom,yahoo,outlook,appleical"}
+  });
 </script>
 
-<a href="@routes.Events.show(event.id.get)" title="Lägg till i kalender" class="addthisevent">
+
+<div title="Add to Calendar" class="addthisevent">
   <span class="glyphicon glyphicon-calendar"></span> Lägg till i kalender <span class="caret"></span>
-  <span class="_url">@routes.Events.show(event.id.get)</span>
-  <span class="_start">@util.DateHelper.asDate(event.startTime) @util.DateHelper.asTime(event.startTime)</span>
-  <span class="_end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
-  <span class="_zonecode">38</span>
-  <span class="_summary">@event.name</span>
-  <span class="_description">@{
+  <span class="start">@util.DateHelper.asDate(event.startTime) @util.DateHelper.asTime(event.startTime)</span>
+  <span class="end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
+  <span class="timezone">@TZ_NAME</span>
+  <span class="title">@event.name</span>
+  <span class="description">@{
     val DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API = 700
     val description = stripFromHtml(event.description)
     if(description.length > DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API)
@@ -33,9 +35,9 @@
     else
       description
   }</span>
-  <span class="_location">@event.venue</span>
-  <span class="_organizer">@event.group.name</span>
-  <span class="_organizer_email">@event.group.mailFrom</span>
-  <span class="_all_day_event">false</span>
-  <span class="_date_format">@util.DateHelper.DATE</span>
-</a>
+  <span class="location">@event.venue</span>
+  <span class="organizer">@event.group.name</span>
+  <span class="organizer_email">@event.group.mailFrom</span>
+  <span class="all_day_event">false</span>
+  <span class="date_format">@util.DateHelper.DATE.toUpperCase</span>
+</div>
