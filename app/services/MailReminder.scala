@@ -9,12 +9,12 @@ import util.ThemeHelper._
 
 
 object MailReminder {
-  def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html) {
+  def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User) {
     Logger.debug("Sending messages for: " + event.name)
-    receivers map { receiver =>
+    receivers foreach { receiver =>
       sendMessage(event, receiver, createMessage)
     }
-    LogEntry.create(event, "Skickat påminnelse till " + receivers.size + " medlem(mar)")
+    LogEntry.create(event, loggedIn.name + " har skickat påminnelse till " + receivers.size + " medlem(mar)")
   }
 
   private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html) {
@@ -59,13 +59,13 @@ object MailReminder {
   }
 
 
-  def sendReminderMessages(event: Event) {
+  def sendReminderMessages(event: Event)(implicit loggedIn: User) {
     sendMessages(event, findReceiversToRemind(event), createReminderMessage)
   }
 
-  def sendReminderMessage(event: Event, user: User) {
+  def sendReminderMessage(event: Event, user: User)(implicit loggedIn: User) {
     sendMessage(event, user, createReminderMessage)
-    LogEntry.create(event, "Skickat påminnelse till " + user.firstName + " " + user.lastName)
+    LogEntry.create(event, loggedIn.name + " har skickat påminnelse till " + user.firstName + " " + user.lastName)
   }
 
   private def findReceiversToCancel(event: Event): Seq[User] = {
@@ -87,7 +87,7 @@ object MailReminder {
     }
   }
 
-  def sendCancellationMessage(event: Event) = {
+  def sendCancellationMessage(event: Event)(implicit loggedIn: User) = {
     sendMessages(event, findReceiversToCancel(event), createCancellationMessage)
   }
 }

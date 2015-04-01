@@ -27,9 +27,13 @@ case class User(
       this.lastName.compare(that.lastName)
     }
   }
+
+  def name = firstName + " " + lastName
 }
 
 object User {
+
+  def system = User(firstName = "Systemet", lastName = "", email = "")
 
   import scala.language.postfixOps
 

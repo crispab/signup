@@ -1,5 +1,6 @@
 import java.util.TimeZone
 
+import models.User
 import org.apache.commons.lang.exception.ExceptionUtils
 import play.api.libs.concurrent.Akka
 import services.{CheckEvents, EventReminderActor}
@@ -23,7 +24,7 @@ object Global extends GlobalSettings {
     import play.api.Play.current
     import scala.concurrent.duration._
     import scala.concurrent.ExecutionContext.Implicits.global
-    Akka.system.scheduler.schedule(firstRun, 24.hours, EventReminderActor.create(), CheckEvents())
+    Akka.system.scheduler.schedule(firstRun, 24.hours, EventReminderActor.create(), CheckEvents(loggedIn = User.system))
   }
 
   private def firstRun = {

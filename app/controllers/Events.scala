@@ -208,7 +208,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     if(!event.isCancelled) {
-      EventReminderActor.instance() ! NotifyAllParticipants(event)
+      EventReminderActor.instance() ! NotifyAllParticipants(event, loggedIn)
       Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om sammankomsten kommer att skickas till alla delatagare som inte redan meddelat sig.")
     } else {
       Redirect(routes.Events.show(id)).flashing("error" -> "Sammankomsten är inställd. Det går inte att skicka påminnelser.")
@@ -232,7 +232,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
         event => {
           val eventId = Event.create(event)
           Reminder.createRemindersForEvent(eventId, event)
-          LogEntry.create(eventId, "Sammankomsten skapad")
+          LogEntry.create(eventId, "Sammankomsten skapad av " + loggedIn.name)
           Redirect(routes.Groups.show(event.group.id.get))
         }
       )
@@ -273,7 +273,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     Event.cancel(id)
-    LogEntry.create(event, "Sammankomsten inställd")
+    LogEntry.create(event, "Sammankomsten inställd av " + loggedIn.name)
 
     import play.api.Play.current
     import play.api.libs.concurrent.Execution.Implicits._
