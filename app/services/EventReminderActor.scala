@@ -8,8 +8,8 @@ import play.api.Logger
 import play.api.libs.concurrent.Akka
 
 case class CheckEvents(loggedIn: User)
-case class NotifyParticipant(event: Event, user: User, loggedIn: User)
-case class NotifyAllParticipants(event: Event, loggedIn: User)
+case class RemindParticipant(event: Event, user: User, loggedIn: User)
+case class RemindAllParticipants(event: Event, loggedIn: User)
 
 class EventReminderActor extends Actor {
 
@@ -17,8 +17,8 @@ class EventReminderActor extends Actor {
 
   def receive = {
     case CheckEvents(loggedIn) => checkEvents(loggedIn)
-    case NotifyParticipant(event, user, loggedIn) => notifyParticipant(event, user, loggedIn)
-    case NotifyAllParticipants(event, loggedIn) => notifyParticipants(event, loggedIn)
+    case RemindParticipant(event, user, loggedIn) => remindParticipant(event, user, loggedIn)
+    case RemindAllParticipants(event, loggedIn) => remindParticipants(event, loggedIn)
   }
 
   private def checkEvents(loggedIn: User) {
@@ -29,13 +29,13 @@ class EventReminderActor extends Actor {
       _.event
     }).distinct
 
-    notifyParticipantsForEach(events, loggedIn)
+    remindParticipantsForEach(events, loggedIn)
     cleanUpReminders(reminders)
   }
 
-  private def notifyParticipantsForEach(events: Seq[Event], loggedIn: User) {
+  private def remindParticipantsForEach(events: Seq[Event], loggedIn: User) {
     events foreach { event =>
-      notifyParticipants(event, loggedIn)
+      remindParticipants(event, loggedIn)
     }
   }
 
@@ -45,12 +45,12 @@ class EventReminderActor extends Actor {
     }
   }
 
-  private def notifyParticipant(event: Event, user: User, loggedInUser: User) {
+  private def remindParticipant(event: Event, user: User, loggedInUser: User) {
     implicit val loggedIn: User = loggedInUser
     MailReminder.sendReminderMessage(event, user)
   }
 
-  private def notifyParticipants(event: Event, loggedInUser: User) {
+  private def remindParticipants(event: Event, loggedInUser: User) {
     implicit val loggedIn: User = loggedInUser
     MailReminder.sendReminderMessages(event)
     SlackReminder.sendReminderMessage(event)

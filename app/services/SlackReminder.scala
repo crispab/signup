@@ -25,7 +25,7 @@ object SlackReminder {
 
   private def createReminderMessage(event: Event) = {
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    Json.parse(views.txt.events.slacknotificationmessage(event, baseUrl).toString())
+    Json.parse(views.txt.events.slackremindermessage(event, baseUrl).toString())
   }
 
   def sendReminderMessage(event: Event)(implicit loggedIn: User)  {

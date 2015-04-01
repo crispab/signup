@@ -8,7 +8,7 @@ import models.{Event, Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
 import play.api.mvc._
-import services.{NotifyParticipant, EventReminderActor, GravatarUrl, CloudinaryUrl}
+import services.{RemindParticipant, EventReminderActor, GravatarUrl, CloudinaryUrl}
 import util.AuthHelper._
 
 import scala.concurrent.{Future, ExecutionContext}
@@ -84,12 +84,12 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def notifyParticipant(id: Long, eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def remindParticipant(id: Long, eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val user = User.find(id)
     val event = Event.find(eventId)
     if(!event.isCancelled) {
-      EventReminderActor.instance() ! NotifyParticipant(event, user, loggedIn)
+      EventReminderActor.instance() ! RemindParticipant(event, user, loggedIn)
       Redirect(routes.Events.show(eventId)).flashing("success" -> ("En påminnelse om sammankomsten kommer att skickas till " + user.firstName + " " + user.lastName))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att skicka påminnelser.")

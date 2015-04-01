@@ -52,9 +52,9 @@ object MailReminder {
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if(THEME == "b73") {
-      views.html.events.b73.emailnotificationmessage(event, user, baseUrl)
+      views.html.events.b73.emailremindermessage(event, user, baseUrl)
     } else {
-      views.html.events.crisp.emailnotificationmessage(event, user, baseUrl)
+      views.html.events.crisp.emailremindermessage(event, user, baseUrl)
     }
   }
 

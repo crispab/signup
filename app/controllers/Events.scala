@@ -18,7 +18,7 @@ import java.util
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
 import play.api.libs.concurrent.Akka
-import services.{NotifyAllParticipants, EventReminderActor, SlackReminder, MailReminder}
+import services.{RemindAllParticipants, EventReminderActor, SlackReminder, MailReminder}
 
 
 import scala.concurrent.ExecutionContext
@@ -150,7 +150,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 
 
-  def asEmailNotification(eventId: Long, userId: Long) = Action {
+  def asEmailReminder(eventId: Long, userId: Long) = Action {
     val event = Event.find(eventId)
     val user = User.find(userId)
     import play.api.Play.current
@@ -158,9 +158,9 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if(THEME == "b73") {
-      Ok(views.html.events.b73.emailnotificationmessage(event, user, baseUrl))
+      Ok(views.html.events.b73.emailremindermessage(event, user, baseUrl))
     } else {
-      Ok(views.html.events.crisp.emailnotificationmessage(event, user, baseUrl))
+      Ok(views.html.events.crisp.emailremindermessage(event, user, baseUrl))
     }
   }
 
@@ -180,12 +180,12 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
   }
 
 
-  def asSlackNotification(id: Long) = Action { implicit request =>
+  def asSlackReminder(id: Long) = Action { implicit request =>
     val event = Event.find(id)
 
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    val message: JsValue = Json.parse(views.txt.events.slacknotificationmessage(event, baseUrl).toString())
+    val message: JsValue = Json.parse(views.txt.events.slackremindermessage(event, baseUrl).toString())
 
     Ok(message)
   }
@@ -205,10 +205,10 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
-  def notifyParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def remindParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     if(!event.isCancelled) {
-      EventReminderActor.instance() ! NotifyAllParticipants(event, loggedIn)
+      EventReminderActor.instance() ! RemindAllParticipants(event, loggedIn)
       Redirect(routes.Events.show(id)).flashing("success" -> "En påminnelse om sammankomsten kommer att skickas till alla delatagare som inte redan meddelat sig.")
     } else {
       Redirect(routes.Events.show(id)).flashing("error" -> "Sammankomsten är inställd. Det går inte att skicka påminnelser.")
