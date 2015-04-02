@@ -27,14 +27,7 @@
   <span class="end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
   <span class="timezone">@TZ_NAME</span>
   <span class="title">@event.name</span>
-  <span class="description">@{
-    val DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API = 700
-    val description = stripFromHtml(event.description)
-    if(description.length > DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API)
-      description.substring(0, DESCRIPTION_MAX_LENGTH_FOR_ADDTHISEVENT_API) + "..."
-    else
-      description
-  }</span>
+  <span class="description">@calendarDescriptionAsText(event, routes.Events.show(event.id.get).url, 700)</span>
   <span class="location">@event.venue</span>
   <span class="organizer">@event.group.name</span>
   <span class="organizer_email">@event.group.mailFrom</span>
