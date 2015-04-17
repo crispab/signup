@@ -42,6 +42,50 @@ This is the fourth version of the SignUp Service.
     * Papertrail add-on (log monitoring) - http://papertrailapp.com
 - Gravatar.com (default profile image)
 
+### Testing ###
+SignUp is far from a good example when it comes to automated testing.
+
+This incarnation of SignUp (the fourth) was conceived with the intention of trying out the Play 2 framework and its 
+highly interactive way of developing; write some code and immediately experience the changes in the browser, write 
+some more code... 
+
+While this truly is awesome in many ways, one discovery we have made is that we got caught up in the 
+edit-(manual)test-cycle to the degree that very few automated tests were written as the application evolved. 
+A lesson to be learned.
+
+The test cases that do exist are divided into three categories: unit, integration and acceptance.
+
+#### Unit tests ####
+To execute the unit tests:
+```
+activator 'test-only unit.*'
+```
+- ScalaTest + Play - http://www.scalatest.org/plus/play
+
+#### Integration tests ####
+These tests mainly do database related tests.
+
+To execute the integration tests:
+```
+activator 'test-only integration.*'
+```
+Services used in addition to the unit tests:
+- posgression (temporary PostgreSQL database instance on demand) - http://www.postgression.com
+
+#### Acceptance tests ####
+The acceptance tests (fixtures) are actually written in Java (and not Scala).
+
+To execute the acceptance tests:
+```
+activator 'test-only acceptance.*'
+```
+Tools used for acceptance tests:
+- Cucumber Java 1.2 - https://cukes.info/docs/reference/jvm#java
+- Selenium WebDriver 2.44 - http://docs.seleniumhq.org/docs/03_webdriver.jsp
+
+Services:
+- Relish (documentaion) - http://www.relishapp.com/crisp/signup/docs
+- Mailinator (temporary mail boxes on demand) - https://mailinator.com
 
 License, credits and stuff
 --------------------------
@@ -104,11 +148,6 @@ SignUp from inside the virtual machine:
     vagrant@vagrant-ubuntu-trusty-64:~$ activator run
 
 And then point your browser on your local computer to [http://localhost:19000](http://localhost:19000)
-
-### Acceptance tests ###
-
-UI acceptance tests are implemented through cucumber and webdriver.
-
 
 
 Deploy in production
