@@ -23,7 +23,7 @@ This is the fourth version of the SignUp Service.
 - Bootstrap 3.3.2 - http://getbootstrap.com/
 - jQuery 1.11.1 (used by Bootstrap) - http://jquery.com
 - bootstrap3-wysiwyg - https://github.com/bootstrap-wysiwyg/bootstrap3-wysiwyg
-- AddThisEvent 1.5.8 - http://addthisevent.com
+- AddThisEvent 1.6.0 - http://addthisevent.com
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play plugins ###

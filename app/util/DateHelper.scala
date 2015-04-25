@@ -7,6 +7,7 @@ import java.util.{Date, TimeZone}
 object DateHelper {
 
   def DATE = "yyyy-MM-dd"
+  def US_DATE = "MM/dd/yyyy"
 
   def TIME = "HH:mm"
 
@@ -17,6 +18,8 @@ object DateHelper {
   }
 
   def asDate(date: Date): String = formatted(date, DATE)
+
+  def asUsDate(date: Date): String = formatted(date, US_DATE)
 
   def asTime(date: Date): String = formatted(date, TIME)
 

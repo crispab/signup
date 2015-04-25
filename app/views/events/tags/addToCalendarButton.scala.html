@@ -4,7 +4,7 @@
 @import util.LocaleHelper._
 @import play.api.Play.current
 
-<script type="text/javascript" src="https://addthisevent.com/libs/ate-latest.min.js"></script>
+<script type="text/javascript" src="https://addthisevent.com/libs/1.6.0/ate.min.js"></script>
 
 <script type="text/javascript">
   addthisevent.settings ({
@@ -23,8 +23,8 @@
 
 <div title="Add to Calendar" class="addthisevent">
   <span class="glyphicon glyphicon-calendar"></span> Lägg till i kalender <span class="caret"></span>
-  <span class="start">@util.DateHelper.asDate(event.startTime) @util.DateHelper.asTime(event.startTime)</span>
-  <span class="end">@util.DateHelper.asDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
+  <span class="start">@util.DateHelper.asUsDate(event.startTime) @util.DateHelper.asTime(event.startTime)</span>
+  <span class="end">@util.DateHelper.asUsDate(event.endTime) @util.DateHelper.asTime(event.endTime)</span>
   <span class="timezone">@TZ_NAME</span>
   <span class="title">@event.name</span>
   <span class="description">@calendarDescriptionAsText(event, routes.Events.show(event.id.get).url, 700)</span>
@@ -32,5 +32,5 @@
   <span class="organizer">@event.group.name</span>
   <span class="organizer_email">@event.group.mailFrom</span>
   <span class="all_day_event">false</span>
-  <span class="date_format">@util.DateHelper.DATE.toUpperCase</span>
+  <span class="date_format">@util.DateHelper.US_DATE.toUpperCase</span>
 </div>
