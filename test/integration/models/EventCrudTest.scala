@@ -3,20 +3,25 @@ package integration.models
 import java.util.Date
 
 import models._
+import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play._
 import play.api.test.FakeApplication
 import util.TestHelper._
 
-class EventCrudTest extends PlaySpec with OneAppPerSuite {
+class EventCrudTest extends PlaySpec with OneAppPerSuite with BeforeAndAfter {
 
   implicit override lazy val app: FakeApplication =
     FakeApplication(additionalConfiguration = Map("db.default.url" -> postgressionDb))
 
-  "Event object " must {
-    "list DB property" in {
-      val dbUrl = play.api.Play.configuration.getString("db.default.url")
-    }
+  before {
+    // possibly create som new data
+  }
 
+  after {
+    // possibly clean up some data
+  }
+
+  "Event object " must {
     "be able to be read from DB" in {
       val events = Event.findAll()
       events.size must be > 0
