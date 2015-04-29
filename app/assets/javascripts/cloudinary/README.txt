@@ -1,0 +1,1 @@
+This file exist here only to prevent the Cloudinary plugin to download a bunch of unwanted assets in development mode.
