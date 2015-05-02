@@ -2,9 +2,9 @@ package services
 
 import cloudinary.plugin.CloudinaryPlugin
 import com.cloudinary.Transformation
-import com.typesafe.plugin._
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.Play
 
 
 trait ImageUrl {
@@ -39,7 +39,10 @@ object GravatarUrl extends ImageUrl {
 object CloudinaryUrl extends ImageUrl {
   import play.api.Play.current
   lazy val CLOUDINARY_FOLDER = play.api.Play.configuration.getString("cloudinary.folder").getOrElse("signup")
-  lazy val cloudinary = use[CloudinaryPlugin].cloudinary
+  lazy val cloudinary = Play.application.plugin[CloudinaryPlugin]
+    .getOrElse(throw new RuntimeException("MyPlugin not loaded"))
+    .cloudinary
+
 
   override def url(user: User, size: Int): String = {
     cloudinary.url().secure(secureValue = true).transformation(Transformation().w_(size).h_(size).c_("thumb").g_("face")).version(user.imageVersion).generate(publicId(user))

@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
   "jp.t2v" %% "stackable-controller" % "0.4.+",
   "jp.t2v" %% "play2-auth"      % "0.13.+",
-  "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.+",
+  "com.typesafe.play" %% "play-mailer" % "2.4.+",
   "commons-lang" % "commons-lang" % "2.6",
   "com.cloudinary" %% "cloudinary-scala-play" % "0.9.7-SNAPSHOT",
   "org.json" % "json" % "20140107",
@@ -34,7 +34,7 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-java" % "1.2.+" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.+" % "test",
   "info.cukes" % "cucumber-picocontainer" % "1.2.+" % "test",
-  "org.seleniumhq.selenium" % "selenium-server" % "2.44.+" % "test",
+  "org.seleniumhq.selenium" % "selenium-server" % "2.45.+" % "test",
   "com.codeborne" % "phantomjsdriver" % "1.2.+" % "test"
 )
 

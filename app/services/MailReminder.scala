@@ -1,6 +1,6 @@
 package services
 
-import com.typesafe.plugin._
+import play.api.libs.mailer._
 import models.Status._
 import models._
 import play.api.Logger
@@ -18,17 +18,19 @@ object MailReminder {
   }
 
   private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html) {
-    import play.api.Play.current
-    val mailer = use[MailerPlugin].email
-    mailer.setRecipient(receiver.email)
-    mailer.setSubject(event.group.mailSubjectPrefix + ": " + event.name)
-    mailer.setReplyTo(event.group.mailFrom)
-    mailer.setFrom(event.group.mailFrom)
-
     val emailMessage = createMessage(event, receiver)
+    val email = Email(
+      subject = event.group.mailSubjectPrefix + ": " + event.name,
+      from = event.group.mailFrom,
+      to = Seq(receiver.email),
+      bodyHtml = Some(emailMessage.toString()),
+      replyTo = Some(event.group.mailFrom)
+    )
+
     try {
       Logger.debug("Sending email for " + event.name + " to " + receiver)
-      mailer.sendHtml(emailMessage.toString())
+      import play.api.Play.current
+      MailerPlugin.send(email)
       Logger.info("DONE sending email for " + event.name + " to " + receiver)
     } catch {
       case ex: Exception =>
@@ -46,12 +48,12 @@ object MailReminder {
     unregisteredMembers union unregisteredGuests union maybeMembers union maybeGuests
   }
 
-  private def createReminderMessage(event: Event, user: User) : Html = {
+  private def createReminderMessage(event: Event, user: User): Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
 
     // TODO: get rid of this by using SendGrid mail templates instead
-    if(THEME == "b73") {
+    if (THEME == "b73") {
       views.html.events.b73.emailremindermessage(event, user, baseUrl)
     } else {
       views.html.events.crisp.emailremindermessage(event, user, baseUrl)
@@ -75,12 +77,12 @@ object MailReminder {
     members union guests
   }
 
-  private def createCancellationMessage(event: Event, user: User) : Html = {
+  private def createCancellationMessage(event: Event, user: User): Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
 
     // TODO: get rid of this by using SendGrid mail templates instead
-    if(THEME == "b73") {
+    if (THEME == "b73") {
       views.html.events.b73.emailcancellationmessage(event, user, baseUrl)
     } else {
       views.html.events.crisp.emailcancellationmessage(event, user, baseUrl)
