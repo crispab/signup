@@ -1,9 +1,9 @@
-package acceptance.signup;
+package acceptance.steps;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import acceptance.cucumber.examples.java.websockets.SharedDriver;
+import acceptance.pages.SharedDriver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

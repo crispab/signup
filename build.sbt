@@ -34,8 +34,7 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-java" % "1.2.+" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.+" % "test",
   "info.cukes" % "cucumber-picocontainer" % "1.2.+" % "test",
-  "org.seleniumhq.selenium" % "selenium-server" % "2.45.+" % "test",
-  "com.codeborne" % "phantomjsdriver" % "1.2.+" % "test"
+  "org.seleniumhq.selenium" % "selenium-java" % "2.45.+" % "test"
 )
 
 resolvers ++= Seq(

@@ -48,6 +48,14 @@ object Group {
   }
 
 
+  def findByName(name: String) = {
+    DB.withTransaction {
+      implicit connection =>
+        SQL("SELECT * FROM groups g WHERE g.name={name}").on('name -> name).as(Group.parser singleOpt)
+    }
+  }
+
+
   def create(group: Group): Long = {
     DB.withTransaction {
       implicit connection =>

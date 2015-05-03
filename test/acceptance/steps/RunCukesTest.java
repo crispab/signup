@@ -1,4 +1,4 @@
-package acceptance.signup;
+package acceptance.steps;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
