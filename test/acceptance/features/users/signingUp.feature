@@ -22,7 +22,7 @@ Feature: Sign up for an event
     And enters a comment "<comment>"
     And submits he is <coming>
     Then the participation of <user> is <coming>
-    And and the comment by <user> is "<comment>"
+    And the comment by <user> is "<comment>"
 
     Examples:
       |user  |comment               |coming|

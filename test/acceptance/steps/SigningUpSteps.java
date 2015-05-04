@@ -1,21 +1,18 @@
 package acceptance.steps;
 
 import acceptance.pages.SignUpPage;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.junit.Assert;
 import models.Event;
 import models.Group;
 import models.User;
+import org.junit.Assert;
 import util.Inspect;
 import util.SetUp;
 import util.TearDown;
 
-import java.lang.Long;
 import java.util.List;
 
 // TODO: use a session ID to make names etc unique
@@ -87,14 +84,17 @@ public class SigningUpSteps {
     Assert.assertEquals(status, Inspect.getStatus(findMember(member), event));
   }
 
-  @Then("^and the comment by (\\S+) is \"([^\"]*)\"$")
+  @Then("^the comment by (\\S+) is \"([^\"]*)\"$")
   public void verifyComment(String member, String comment) throws Throwable {
     Assert.assertEquals(comment, Inspect.getComment(findMember(member), event));
   }
 
   @After
   public void cleanUpScenario() {
-    TearDown.removeGroupAndMembers(group.name());
+    if(group!= null) {
+      TearDown.removeGroupAndMembers(group.name());
+      group = null;
+    }
   }
 
 }

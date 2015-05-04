@@ -53,7 +53,7 @@
               @if(isLoggedIn(loggedInUser)) {
                 <ul class="nav navbar-nav navbar-right">
                   <li class="dropdown @sectionClass(util.Section.Login.toString)">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <a id="logged_in_user" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                       <img class="login-thumb thumb-background16" src="@ImageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
                       @loggedInUser.get.firstName @loggedInUser.get.lastName
                       <span class="caret"></span>
@@ -67,7 +67,7 @@
               } else {
                 <ul class="nav navbar-nav navbar-right">
                   <li class="@sectionClass(util.Section.Login.toString)">
-                    <a href="@routes.Application.loginForm()"><span class="glyphicon glyphicon-user"></span>&nbsp;Logga in</a>
+                    <a id="logged_in_user" href="@routes.Application.loginForm()"><span class="glyphicon glyphicon-user"></span>&nbsp;Logga in</a>
                   </li>
                 </ul>
               }

@@ -17,4 +17,8 @@ object Inspect {
   def getComment(member: User, event: Event): String = {
     Participation.findByEventAndUser(eventId = event.id.get, userId = member.id.get).get.comment
   }
+
+  def getUser(userName: String): User = {
+    User.findByFirstName(userName).head
+  }
 }

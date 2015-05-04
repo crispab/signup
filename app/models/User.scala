@@ -81,6 +81,14 @@ object User {
     }
   }
 
+  def findByFirstName(firstName: String): Seq[User] = {
+    DB.withTransaction {
+      implicit connection =>
+        SQL("select * from users where first_name={first_name}").on('first_name -> firstName).as(User.parser *)
+    }
+  }
+
+
   def findUnregisteredMembers(event: Event): Seq[User] = {
     DB.withTransaction {
       implicit connection =>
