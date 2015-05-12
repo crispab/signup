@@ -1,23 +1,21 @@
 package acceptance.pages;
 
+import acceptance.PlayContainer;
+import acceptance.SharedDriver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 
 public class LoginPage {
 
   private SharedDriver driver;
-  private String baseUrl;
 
   public LoginPage(SharedDriver driver) {
     this.driver = driver;
   }
 
-  public void setBaseUrl(String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
 
   public void navigateTo() {
-    driver.navigate().to(baseUrl + "/login");
+    driver.navigate().to(PlayContainer.getBaseUrl() + "/login");
     Assert.assertEquals("Logga in", driver.findElement(By.id("page_name")).getText());
   }
 

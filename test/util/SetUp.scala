@@ -2,7 +2,6 @@ package util
 
 import java.util
 import models.{Membership, Event, Group, User}
-import org.joda.time.DateTime
 import collection.JavaConversions._
 import TestHelper._
 

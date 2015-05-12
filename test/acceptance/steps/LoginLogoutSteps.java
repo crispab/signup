@@ -1,6 +1,6 @@
 package acceptance.steps;
 
-import acceptance.pages.IndexPage;
+import acceptance.pages.StartPage;
 import acceptance.pages.LoginPage;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -11,16 +11,13 @@ import util.Inspect;
 
 public class LoginLogoutSteps {
 
-  public final String BASE_URL = "http://localhost:9000";
-  private final IndexPage indexPage;
+  private final StartPage startPage;
   private final LoginPage loginPage;
   private User user = null;
 
-  public LoginLogoutSteps(IndexPage indexPage, LoginPage loginPage) {
-    this.indexPage = indexPage;
+  public LoginLogoutSteps(StartPage startPage, LoginPage loginPage) {
+    this.startPage = startPage;
     this.loginPage = loginPage;
-    indexPage.setBaseUrl(BASE_URL);
-    loginPage.setBaseUrl(BASE_URL);
   }
 
   @Given("^the (\\S+) user exist$")
@@ -32,19 +29,19 @@ public class LoginLogoutSteps {
 
   @Given("^is not logged in$")
   public void verifyNotLoggedIn() throws Throwable {
-    indexPage.navigateTo();
-    Assert.assertEquals("Logga in", indexPage.getLoggedInName());
+    startPage.navigateTo();
+    Assert.assertEquals("Logga in", startPage.getLoggedInName());
   }
 
   @When("^(\\S+) logs in$")
   public void login(String userName) throws Throwable {
-    indexPage.selectLogin();
+    startPage.selectLogin();
     Assert.assertTrue("Not on login page!", loginPage.isViewing());
     loginPage.loginUsingPw(user.email(), userName.toLowerCase());
   }
 
   @Then("^the user name should be visible on the screen$")
   public void verifyUserName() throws Throwable {
-    Assert.assertTrue("Not logged in!", indexPage.getLoggedInName().startsWith(user.firstName()));
+    Assert.assertTrue("Not logged in!", startPage.getLoggedInName().startsWith(user.firstName()));
   }
 }

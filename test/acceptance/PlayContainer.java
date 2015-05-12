@@ -1,16 +1,14 @@
-package acceptance.steps;
+package acceptance;
 
 import cucumber.api.java.Before;
+import play.Play;
 import play.test.TestServer;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static play.test.Helpers.testServer;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.start;
 
-public class GlobalHooks {
+public class PlayContainer {
   public static int LOCAL_PORT = 3333;
   private static TestServer testServerForDbAccess;
   private static boolean initialised = false;
@@ -18,12 +16,7 @@ public class GlobalHooks {
   @Before
   public void before() {
     if (!initialised) {
-
-      // TODO: make database url configurable (point to CI-test install)
-      Map<String, String> additionalConfiguration = new HashMap<>();
-      //additionalConfiguration.put("db.default.url", TestHelper.postgressionDb());
-
-      testServerForDbAccess = testServer(LOCAL_PORT, fakeApplication(additionalConfiguration));
+      testServerForDbAccess = testServer(LOCAL_PORT, fakeApplication());
       start(testServerForDbAccess);
       initialised = true;
       Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -33,5 +26,9 @@ public class GlobalHooks {
         }
       });
     }
+  }
+
+  public static String getBaseUrl() {
+    return  Play.application().configuration().getString("application.base.url");
   }
 }

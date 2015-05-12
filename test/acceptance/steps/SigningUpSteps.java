@@ -19,9 +19,6 @@ import java.util.List;
 // TODO: make BASE_URL configurable (point to CI-test install)
 
 public class SigningUpSteps {
-
-  public final String BASE_URL = "http://localhost:9000";
-
   List<User> members = null;
   Group group = null;
   Event event = null;
@@ -29,7 +26,6 @@ public class SigningUpSteps {
 
   public SigningUpSteps(SignUpPage signUpPage) {
     this.signUpPage = signUpPage;
-    signUpPage.setBaseUrl(BASE_URL);
   }
 
   private User findMember(String memberName) {
@@ -46,9 +42,8 @@ public class SigningUpSteps {
 
   @Given("^the group (\\S+) exist with (.*)$")
   public void createGroup(String groupName, List<String> memberNames) throws Throwable {
-    TearDown.removeGroupAndMembers(groupName);
-    members = SetUp.createUsers(memberNames);
     group = SetUp.createGroup(groupName);
+    members = SetUp.createUsers(memberNames);
     SetUp.addMembers(group, members);
   }
 
@@ -94,6 +89,8 @@ public class SigningUpSteps {
     if(group!= null) {
       TearDown.removeGroupAndMembers(group.name());
       group = null;
+      event = null;
+      members = null;
     }
   }
 

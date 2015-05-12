@@ -1,23 +1,20 @@
 package acceptance.pages;
 
+import acceptance.PlayContainer;
+import acceptance.SharedDriver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 
 public class SignUpPage {
 
   private SharedDriver driver;
-  private String baseUrl;
 
   public SignUpPage(SharedDriver driver) {
     this.driver = driver;
   }
 
-  public void setBaseUrl(String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
-
   public void navigateTo(long userId, long eventId) {
-    driver.navigate().to(baseUrl + "/participations/edit?eventId=" + eventId + "&userId=" + userId);
+    driver.navigate().to(PlayContainer.getBaseUrl() + "/participations/edit?eventId=" + eventId + "&userId=" + userId);
     Assert.assertEquals("Anmälan", driver.findElement(By.id("page_name")).getText());
   }
 

@@ -1,4 +1,4 @@
-package acceptance.pages;
+package acceptance;
 
 import cucumber.api.Scenario;
 import cucumber.api.java.After;

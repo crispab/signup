@@ -1,21 +1,21 @@
 package acceptance.steps;
 
+import acceptance.SharedDriver;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import acceptance.pages.SharedDriver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class IndexPageSteps {
+public class SimpleNavigationStepsOLD {
 
     public static int PORT = 19000;
 
     private final WebDriver driver;
 
     // Instantiated by Cucumber/Dependency Injection/Picocontainer
-    public IndexPageSteps(SharedDriver driver) {
+    public SimpleNavigationStepsOLD(SharedDriver driver) {
         this.driver = driver;
     }
 
