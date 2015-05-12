@@ -1,6 +1,6 @@
 package util
 
-import models.{User, Participation, Event}
+import models.{Group, User, Participation, Event}
 
 object Inspect {
 
@@ -20,5 +20,9 @@ object Inspect {
 
   def getUser(userName: String): User = {
     User.findByFirstName(userName).head
+  }
+
+  def getGroup(groupName: String): Group = {
+    Group.findByName(groupName).get
   }
 }

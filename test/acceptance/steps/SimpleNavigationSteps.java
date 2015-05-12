@@ -4,6 +4,7 @@ import acceptance.pages.AllGroupsPage;
 import acceptance.pages.GroupPage;
 import acceptance.pages.SignUpPage;
 import acceptance.pages.StartPage;
+import acceptance.pages.UserPage;
 import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.en.And;
@@ -29,11 +30,13 @@ public class SimpleNavigationSteps {
   StartPage startPage;
   AllGroupsPage allGroupsPage;
   GroupPage groupPage;
+  UserPage userPage;
 
-  public SimpleNavigationSteps(StartPage startPage, AllGroupsPage allGroupsPage, GroupPage groupPage) {
+  public SimpleNavigationSteps(StartPage startPage, AllGroupsPage allGroupsPage, GroupPage groupPage, UserPage userPage) {
     this.startPage = startPage;
     this.allGroupsPage = allGroupsPage;
     this.groupPage = groupPage;
+    this.userPage = userPage;
   }
 
   private User findMember(String memberName) {
@@ -103,5 +106,21 @@ public class SimpleNavigationSteps {
     for (String memberName : memberNames) {
       Assert.assertTrue("Member " + memberNames + " not listed on page!", groupPage.verifyMemberListed(memberName));
     }
+  }
+
+  @When("^the user is on the group (\\S+) page$")
+  public void navigateToGroup(String groupName) throws Throwable {
+    groupPage.navigateTo(groupName);
+  }
+
+  @When("^selecting the member (\\S+)$")
+  public void selectMember(String memberName) throws Throwable {
+    groupPage.toggleMemberList();
+    groupPage.selectMember(memberName);
+  }
+
+  @Then("^the user page for (\\S+) should display$")
+  public void verifyViewingUser(String userName) throws Throwable {
+    Assert.assertTrue("Not viewing user " + userName + "!", userPage.isViewing(userName));
   }
 }

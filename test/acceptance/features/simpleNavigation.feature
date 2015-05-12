@@ -24,8 +24,8 @@ Feature: Simple navigation
     Then the group Friends page should display
       And members Tom, Dick, Harry is listed on the page
 
-#  Scenario: The user clicks on a user on the groups page
-#    Given the group Friends exist with Tom, Dick, Harry
-#      And the user is on the group Friends page
-#    When selecting the member Dick
-#    Then the user page for Dick should display
+  Scenario: The user clicks on a user on the groups page
+    Given the group Friends exist with Tom, Dick, Harry
+      And the user is on the group Friends page
+    When selecting the member Dick
+    Then the user page for Dick should display
