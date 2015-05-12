@@ -1,6 +1,8 @@
 package acceptance.pages;
 
+import acceptance.PlayContainer;
 import acceptance.SharedDriver;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -22,5 +24,14 @@ public class AllGroupsPage {
     } catch (NoSuchElementException ex) {
       return false;
     }
+  }
+
+  public void navigateTo() {
+    driver.navigate().to(PlayContainer.getBaseUrl() + "/groups");
+    Assert.assertTrue("Not on groups page!", isViewing());
+  }
+
+  public void selectGroup(String groupName) {
+    driver.findElement(By.xpath("//a[contains(., '" + groupName + "')]")).click();
   }
 }

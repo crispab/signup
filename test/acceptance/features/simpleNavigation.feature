@@ -17,13 +17,13 @@ Feature: Simple navigation
     Then the groups page should display
       And the group Friends is listed on the page
 
-#  Scenario: The user clicks on a group on the groups page
-#    Given the group Friends exist with Tom, Dick, Harry
-#      And the user is on the groups page
-#    When selecting the Friends group
-#    Then the group Friends page should display
-#      And members Tom, Dick, Harry is listed on the page
-#
+  Scenario: The user clicks on a group on the groups page
+    Given the group Friends exist with Tom, Dick, Harry
+      And the user is on the groups page
+    When selecting the Friends group
+    Then the group Friends page should display
+      And members Tom, Dick, Harry is listed on the page
+
 #  Scenario: The user clicks on a user on the groups page
 #    Given the group Friends exist with Tom, Dick, Harry
 #      And the user is on the group Friends page

@@ -82,4 +82,26 @@ public class SimpleNavigationSteps {
   public void verifyGroupListed(String groupName) throws Throwable {
     Assert.assertTrue("Group is not listed on page!", allGroupsPage.verifyGroupListed(groupName));
   }
+
+  @Given("^the user is on the groups page$")
+  public void navigateToGroupsPage() throws Throwable {
+    allGroupsPage.navigateTo();
+  }
+
+  @When("^selecting the (\\S+) group$")
+  public void selectGroup(String groupName) throws Throwable {
+    allGroupsPage.selectGroup(groupName);
+  }
+
+  @Then("^the group (\\S+) page should display$")
+  public void verifyViewingGroup(String groupName) throws Throwable {
+    Assert.assertTrue("Not on group page for " + groupName + "!", groupPage.isViewing(groupName));
+  }
+
+  @Then("^members (.*) is listed on the page$")
+  public void membersListed(List<String> memberNames) throws Throwable {
+    for (String memberName : memberNames) {
+      Assert.assertTrue("Member " + memberNames + " not listed on page!", groupPage.verifyMemberListed(memberName));
+    }
+  }
 }
