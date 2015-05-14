@@ -9,7 +9,7 @@ import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.start;
 
 public class PlayContainer {
-  public static int LOCAL_PORT = 3333;
+  private static final int LOCAL_PORT = 3333;
   private static TestServer testServerForDbAccess;
   private static boolean initialised = false;
 

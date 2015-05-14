@@ -27,7 +27,7 @@ class ImageUrlTest extends PlaySpec {
 
     "handle empty string" in {
       val user = User(firstName = "Hari", lastName = "Seldon", email = "", imageProvider = GravatarUrl.identifier)
-      ImageUrl(user).size must be > 0
+      ImageUrl(user).length must be > 0
     }
   }
 }

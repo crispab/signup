@@ -7,38 +7,23 @@ import acceptance.pages.UserPage;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import models.Group;
-import models.User;
+
 import org.junit.Assert;
 
 import java.util.List;
 
 
 public class SimpleNavigationSteps {
-  List<User> members = null;
-  Group group = null;
-  StartPage startPage;
-  AllGroupsPage allGroupsPage;
-  GroupPage groupPage;
-  UserPage userPage;
+  private final StartPage startPage;
+  private final AllGroupsPage allGroupsPage;
+  private final GroupPage groupPage;
+  private final UserPage userPage;
 
   public SimpleNavigationSteps(StartPage startPage, AllGroupsPage allGroupsPage, GroupPage groupPage, UserPage userPage) {
     this.startPage = startPage;
     this.allGroupsPage = allGroupsPage;
     this.groupPage = groupPage;
     this.userPage = userPage;
-  }
-
-  private User findMember(String memberName) {
-    for(User member: members){
-      if(member.firstName().equals(memberName))
-        return member;
-    }
-    throw new IllegalArgumentException("Can't find member with name " + memberName);
-  }
-
-  private long asLong(scala.Option<Object> optionLong) {
-    return Long.parseLong(optionLong.get().toString());
   }
 
   @Given("^the user has a blank web browser$")

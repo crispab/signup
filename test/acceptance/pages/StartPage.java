@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 
 public class StartPage {
 
-  private SharedDriver driver;
+  private final SharedDriver driver;
 
   public StartPage(SharedDriver driver) {
     this.driver = driver;

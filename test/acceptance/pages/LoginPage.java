@@ -7,7 +7,7 @@ import org.openqa.selenium.Cookie;
 
 public class LoginPage {
 
-  private SharedDriver driver;
+  private final SharedDriver driver;
 
   public LoginPage(SharedDriver driver) {
     this.driver = driver;

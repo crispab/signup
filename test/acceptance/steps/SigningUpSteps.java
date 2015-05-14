@@ -16,10 +16,10 @@ import util.TearDown;
 import java.util.List;
 
 public class SigningUpSteps {
-  List<User> members = null;
-  Group group = null;
-  Event event = null;
-  SignUpPage signUpPage;
+  private List<User> members = null;
+  private Group group = null;
+  private Event event = null;
+  private final SignUpPage signUpPage;
 
   public SigningUpSteps(SignUpPage signUpPage) {
     this.signUpPage = signUpPage;

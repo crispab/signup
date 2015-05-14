@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 
 public class SignUpPage {
 
-  private SharedDriver driver;
+  private final SharedDriver driver;
 
   public SignUpPage(SharedDriver driver) {
     this.driver = driver;

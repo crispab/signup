@@ -1,12 +1,7 @@
 package acceptance.pages;
 
-import acceptance.PlayContainer;
 import acceptance.SharedDriver;
-import models.Group;
-import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import util.Inspect;
 
 public class UserPage {
   private final SharedDriver driver;
