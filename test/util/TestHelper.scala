@@ -42,7 +42,7 @@ object TestHelper {
               case None => "NO DB URL RECEIVED FROM POSTGRESSION API!"
             }
           } else {
-            throw new ClientProtocolException("Unexpected response status: " + status)
+            throw new ClientProtocolException("Unexpected response: " + response.getStatusLine.toString)
           }
         }
       }
