@@ -2,27 +2,17 @@ package acceptance.steps;
 
 import acceptance.pages.AllGroupsPage;
 import acceptance.pages.GroupPage;
-import acceptance.pages.SignUpPage;
 import acceptance.pages.StartPage;
 import acceptance.pages.UserPage;
-import cucumber.api.PendingException;
-import cucumber.api.java.After;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import models.Event;
 import models.Group;
 import models.User;
 import org.junit.Assert;
-import util.Inspect;
-import util.SetUp;
-import util.TearDown;
 
 import java.util.List;
 
-// TODO: use a session ID to make names etc unique
-// TODO: make BASE_URL configurable (point to CI-test install)
 
 public class SimpleNavigationSteps {
   List<User> members = null;

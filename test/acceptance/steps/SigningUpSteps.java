@@ -15,9 +15,6 @@ import util.TearDown;
 
 import java.util.List;
 
-// TODO: use a session ID to make names etc unique
-// TODO: make BASE_URL configurable (point to CI-test install)
-
 public class SigningUpSteps {
   List<User> members = null;
   Group group = null;
