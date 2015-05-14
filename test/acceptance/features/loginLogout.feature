@@ -4,7 +4,7 @@ Feature: Login and logout
     Given the Admin user exist
     And is not logged in
     When Admin logs in
-    Then the user name should be visible on the screen
+    Then the user should be logged in
 
 #  Scenario: The admin logs out
 #    Given I am logged in

@@ -1,5 +1,6 @@
 package util
 
+import java.io.{IOException, FileReader, BufferedReader}
 import java.util.Date
 
 import org.apache.http.HttpResponse
@@ -52,6 +53,49 @@ object TestHelper {
     } finally {
       httpClient.close()
     }
+  }
+
+  def readPropertyFromFile(propertyName: String, fileName: String): String = {
+    try {
+      val applicationConfigFile = new BufferedReader(new FileReader(fileName))
+      var driverType = ""
+      var line: String = null
+      while ( {
+        line = applicationConfigFile.readLine
+        line
+      } != null) {
+        if (propertyMatches(propertyName, line)) {
+          val value: String = extractValue(line)
+          if (isEnvironmentVariableRef(value)) {
+            val envValue: String = System.getenv(environmentVariableName(value))
+            if (envValue != null) {
+              driverType = envValue
+            }
+          }
+          else {
+            driverType = value
+          }
+        }
+      }
+      driverType
+    }
+    catch {case e: IOException => ""}
+  }
+
+  private def environmentVariableName(value: String): String = {
+    value.substring(3, value.length - 1)
+  }
+
+  private def isEnvironmentVariableRef(value: String): Boolean = {
+    value.startsWith("${?")
+  }
+
+  private def extractValue(line: String): String = {
+    line.substring(line.indexOf('=') + 1).trim
+  }
+
+  private def propertyMatches(propertyName: String, line: String): Boolean = {
+    line.trim.startsWith(propertyName)
   }
 
   lazy val testId = Random.alphanumeric.take(8).mkString

@@ -30,7 +30,7 @@ public class LoginLogoutSteps {
   @Given("^is not logged in$")
   public void verifyNotLoggedIn() throws Throwable {
     startPage.navigateTo();
-    Assert.assertEquals("Logga in", startPage.getLoggedInName());
+    loginPage.ensureLoggedOut();
   }
 
   @When("^(\\S+) logs in$")
@@ -40,8 +40,8 @@ public class LoginLogoutSteps {
     loginPage.loginUsingPw(user.email(), userName.toLowerCase());
   }
 
-  @Then("^the user name should be visible on the screen$")
-  public void verifyUserName() throws Throwable {
-    Assert.assertTrue("Not logged in!", startPage.getLoggedInName().startsWith(user.firstName()));
+  @Then("^the user should be logged in$")
+  public void verifyLoggedIn() throws Throwable {
+    Assert.assertTrue("Not logged in!", loginPage.isLoggedIn());
   }
 }
