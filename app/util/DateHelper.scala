@@ -1,7 +1,7 @@
 package util
 
 import java.text.SimpleDateFormat
-import java.util.{Date, TimeZone}
+import java.util.Date
 
 
 object DateHelper {

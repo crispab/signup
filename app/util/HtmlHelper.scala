@@ -1,6 +1,5 @@
 package util
 
-import com.sun.org.glassfish.gmbal.Description
 import models.{Event, Status}
 
 object HtmlHelper {
