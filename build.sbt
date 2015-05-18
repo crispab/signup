@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "com.cloudinary" %% "cloudinary-scala-play" % "0.9.7-SNAPSHOT",
   "org.json" % "json" % "20140107",
   "com.newrelic.agent.java" % "newrelic-agent" % "3.16.1",
+  "com.newrelic.agent.java" % "newrelic-api" % "3.16.1",
   "org.apache.poi" % "poi" % "3.10-FINAL",
   "org.apache.poi" % "poi-ooxml" % "3.10-FINAL",
   "com.netaporter" %% "scala-uri" % "0.4.2",
