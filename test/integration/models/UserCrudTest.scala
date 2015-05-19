@@ -1,14 +1,10 @@
 package integration.models
 
 import models.User
-import models.security.{NormalUser, Permission}
 import org.scalatestplus.play._
-import play.api.test.FakeApplication
 import util.TestHelper._
 
 class UserCrudTest extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app: FakeApplication = FakeApplication(additionalConfiguration = Map("db.default.url" -> postgressionDb))
 
   "User object " must {
     "be able to be read from DB" in {
