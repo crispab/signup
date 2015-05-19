@@ -9,5 +9,13 @@ branches:
   only:
     - master
 
+addons:
+  postgresql: "9.1"
+
+before_script:
+  - psql -c "create database signup;" -U postgres
+  - psql signup -c "create user signup4 password 's7p2+';" -U postgres
+  - psql signup -c "grant all privileges on database signup to signup4;" -U postgres
+
 script:
   - sbt 'test-only unit.* integration.*'
