@@ -11,6 +11,8 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import util.TestHelper;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Copyright (c) 2008-2014 The Cucumber Organisation
  *
@@ -23,12 +25,14 @@ public class SharedDriver extends EventFiringWebDriver {
   private static final WebDriver realDriver = createWebDriver();
 
   private static WebDriver createWebDriver() {
-    String driverType = getWebDriverType();
+    String driverType = getWebDriverType().toLowerCase();
     switch (driverType) {
       case "htmlunit":
         return new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
       case "firefox":
-        return new FirefoxDriver();
+        FirefoxDriver firefox = new FirefoxDriver();
+        firefox.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        return firefox;
       default:
         throw new RuntimeException("WebDriver type not correctly configured. Unknown driver type: '" + driverType + "'");
     }
