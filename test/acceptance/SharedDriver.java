@@ -8,6 +8,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import util.TestHelper;
 
@@ -25,14 +26,16 @@ public class SharedDriver extends EventFiringWebDriver {
   private static final WebDriver realDriver = createWebDriver();
 
   private static WebDriver createWebDriver() {
-    String driverType = getWebDriverType().toLowerCase();
-    switch (driverType) {
+    String driverType = getWebDriverType();
+    switch (driverType.toLowerCase()) {
       case "htmlunit":
         return new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
       case "firefox":
         FirefoxDriver firefox = new FirefoxDriver();
         firefox.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         return firefox;
+      case "phantomjs":
+        return new PhantomJSDriver();
       default:
         throw new RuntimeException("WebDriver type not correctly configured. Unknown driver type: '" + driverType + "'");
     }

@@ -1,19 +1,27 @@
 language: scala
 scala:
-- 2.11.1
+  - 2.11.1
 jdk:
-- openjdk7
+  - openjdk7
+
 branches:
   only:
-  - master
+    - master
+
 addons:
   postgresql: '9.1'
+
 before_script:
-- psql -c "create database signup;" -U postgres
-- psql signup -c "create user signup4 password 's7p2+';" -U postgres
-- psql signup -c "grant all privileges on database signup to signup4;" -U postgres
+  - psql -c "create database signup;" -U postgres
+  - psql signup -c "create user signup4 password 's7p2+';" -U postgres
+  - psql signup -c "grant all privileges on database signup to signup4;" -U postgres
+
+env:
+  - WEB_DRIVER_TYPE="phantomjs"
+
 script:
-- sbt 'test-only unit.* integration.*'
+  - sbt 'test-only unit.* integration.* acceptance.*'
+
 deploy:
   provider: heroku
   api_key:
