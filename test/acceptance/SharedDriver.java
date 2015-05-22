@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -27,18 +28,23 @@ public class SharedDriver extends EventFiringWebDriver {
 
   private static WebDriver createWebDriver() {
     String driverType = getWebDriverType();
+    final WebDriver driver;
     switch (driverType.toLowerCase()) {
       case "htmlunit":
-        return new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
+        driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
+        break;
       case "firefox":
-        FirefoxDriver firefox = new FirefoxDriver();
-        firefox.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        return firefox;
+        driver = new FirefoxDriver();
+        break;
       case "phantomjs":
-        return new PhantomJSDriver();
+        driver = new PhantomJSDriver();
+        break;
       default:
         throw new RuntimeException("WebDriver type not correctly configured. Unknown driver type: '" + driverType + "'");
     }
+    driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+    driver.manage().window().setSize(new Dimension(1280,800));
+    return driver;
   }
 
   private static String getWebDriverType() {
