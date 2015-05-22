@@ -26,5 +26,3 @@ deploy:
   api_key:
     secure: JqF2IvQNmglaQezetx89DjcxXLiPhlQLyychkDssNod3vB7iGo0ETDAQQ4JdblLe5uFexYs2iDkjRDp68JHtZ4Bv0lW8xjuMozjbgR41QZuSSBYySmv3n3bVpsjWVlq4xR6+jJn1aM+8MozDhUc9t9s6pMHUMxX5/yaNm8C2mdU=
   app: signup-ci-test
-  on:
-    repo: crispab/signup
