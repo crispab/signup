@@ -16,7 +16,7 @@ before_script:
   - psql signup -c "create user signup4 password 's7p2+';" -U postgres
   - psql signup -c "grant all privileges on database signup to signup4;" -U postgres
 
-env: WEB_DRIVER_TYPE=htmlunit APPLICATION_BASE_URL=http://localhost:3333
+env: WEB_DRIVER_TYPE=phantomjs APPLICATION_BASE_URL=http://localhost:3333
 
 script:
   - sbt 'test-only unit.* integration.* acceptance.*'
