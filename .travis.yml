@@ -1,21 +1,30 @@
 language: scala
 scala:
-  - "2.11.1"
+- 2.11.1
 jdk:
-  - openjdk7
+- openjdk7
 
-# whitelist
+
 branches:
   only:
-    - master
+  - master
+
 
 addons:
-  postgresql: "9.1"
-
+  postgresql: '9.1'
 before_script:
-  - psql -c "create database signup;" -U postgres
-  - psql signup -c "create user signup4 password 's7p2+';" -U postgres
-  - psql signup -c "grant all privileges on database signup to signup4;" -U postgres
+- psql -c "create database signup;" -U postgres
+- psql signup -c "create user signup4 password 's7p2+';" -U postgres
+- psql signup -c "grant all privileges on database signup to signup4;" -U postgres
+
 
 script:
-  - sbt 'test-only unit.* integration.*'
+- sbt 'test-only unit.* integration.*'
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: JqF2IvQNmglaQezetx89DjcxXLiPhlQLyychkDssNod3vB7iGo0ETDAQQ4JdblLe5uFexYs2iDkjRDp68JHtZ4Bv0lW8xjuMozjbgR41QZuSSBYySmv3n3bVpsjWVlq4xR6+jJn1aM+8MozDhUc9t9s6pMHUMxX5/yaNm8C2mdU=
+  app: signup-ci-test
+  on:
+    repo: crispab/signup
