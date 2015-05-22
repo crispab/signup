@@ -3,11 +3,10 @@ package integration.models
 import java.util.Date
 
 import models._
-import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play._
 import util.TestHelper._
 
-class EventCrudTest extends PlaySpec with OneAppPerSuite with BeforeAndAfter {
+class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
   "Event object " must {
     "be able to be read from DB" in {
