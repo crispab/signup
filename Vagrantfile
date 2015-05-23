@@ -18,10 +18,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, path: "provisioning/InstallJava.sh"
   config.vm.provision :shell, path: "provisioning/InstallActivator.sh"
 
+  # Web app HTTP
   config.vm.network "forwarded_port", guest: 9000, host: 19000
+  # Debug towards JVM
   config.vm.network "forwarded_port", guest: 9999, host: 19999
+  # PostgreSQL
   config.vm.network "forwarded_port", guest: 5432, host: 15432
-  config.vm.network "forwarded_port", guest: 8888, host: 18888
+
+  #config.vm.network "forwarded_port", guest: 8888, host: 18888
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]

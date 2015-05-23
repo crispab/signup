@@ -1,5 +1,6 @@
 package acceptance.pages;
 
+import acceptance.PlayContainer;
 import acceptance.SharedDriver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -13,6 +14,10 @@ public class LoginPage {
     this.driver = driver;
   }
 
+  public void navigateTo() {
+      driver.navigate().to(PlayContainer.getBaseUrl() + "/login");
+      Assert.assertTrue("Not viewing login page", isViewing());
+  }
 
   public boolean isViewing() {
     return "Logga in".equals(driver.findElement(By.id("page_name")).getText());
