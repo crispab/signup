@@ -27,7 +27,7 @@ public class CreateEventPage {
   public CreateEventPage submitForm(String eventName, String description, String venue, DateTime eventDateTime) {
     driver.findElement(By.id("name")).sendKeys(eventName);
 
-    enterDescription(description);
+    //enterDescription(description);
 
     driver.findElement(By.id("venue")).sendKeys(venue);
     driver.findElement(By.id("start_date")).sendKeys(date(eventDateTime));
