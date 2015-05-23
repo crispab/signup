@@ -28,17 +28,20 @@ public class GroupPage {
     }
   }
 
-  public void navigateTo(String groupName) {
+  public GroupPage navigateTo(String groupName) {
     Group group = Inspect.getGroup(groupName);
     driver.navigate().to(PlayContainer.getBaseUrl() + "/groups/" + group.id().get());
     Assert.assertTrue("Not viewing group " + groupName + "!", isViewing(groupName));
+    return this;
   }
 
-  public void selectMember(String memberName) {
+  public GroupPage selectMember(String memberName) {
     driver.findElement(By.xpath("//a[contains(., '" + memberName + "')]")).click();
+    return this;
   }
 
-  public void toggleMemberList() {
+  public GroupPage toggleMemberList() {
     driver.findElement(By.id("toggle_icon")).click();
+    return this;
   }
 }

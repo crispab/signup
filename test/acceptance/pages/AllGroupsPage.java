@@ -26,12 +26,14 @@ public class AllGroupsPage {
     }
   }
 
-  public void navigateTo() {
+  public AllGroupsPage navigateTo() {
     driver.navigate().to(PlayContainer.getBaseUrl() + "/groups");
     Assert.assertTrue("Not on groups page!", isViewing());
+    return this;
   }
 
-  public void selectGroup(String groupName) {
+  public AllGroupsPage selectGroup(String groupName) {
     driver.findElement(By.xpath("//a[contains(., '" + groupName + "')]")).click();
+    return this;
   }
 }

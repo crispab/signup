@@ -90,8 +90,7 @@ public class SimpleNavigationSteps {
 
   @When("^selecting the member (\\S+)$")
   public void selectMember(String memberName) throws Throwable {
-    groupPage.toggleMemberList();
-    groupPage.selectMember(memberName);
+    groupPage.toggleMemberList().selectMember(memberName);
   }
 
   @Then("^the user page for (\\S+) should display$")

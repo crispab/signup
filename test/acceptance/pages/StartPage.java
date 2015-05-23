@@ -13,32 +13,37 @@ public class StartPage {
     this.driver = driver;
   }
 
-  public void navigateTo() {
+  public StartPage navigateTo() {
     driver.navigate().to(PlayContainer.getBaseUrl());
     Assert.assertTrue("Not on start page", isViewing());
+    return this;
   }
 
   public String getLoggedInName() {
     return driver.findElement(By.id("logged_in_user")).getText().trim();
   }
 
-  public void selectLogin() {
+  public StartPage selectLogin() {
     driver.findElement(By.id("logged_in_user")).click();
+    return this;
   }
 
-  public void navigateToBlank() {
+  public StartPage navigateToBlank() {
     driver.navigate().to("about:blank");
+    return this;
   }
 
   public boolean isViewing() {
     return driver.findElement(By.tagName("h2")).getText().startsWith("Välkommen till");
   }
 
-  public void selectHome() {
+  public StartPage selectHome() {
     driver.findElement(By.className("navbar-brand")).click();
+    return this;
   }
 
-  public void selectGroups() {
+  public StartPage selectGroups() {
     driver.findElement(By.xpath("//a[@href='/groups']")).click();
+    return this;
   }
 }

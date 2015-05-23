@@ -26,10 +26,15 @@ object Inspect {
     Group.findByName(groupName).get
   }
 
-  def isEventAvailableForGroup(eventName: String, groupName: String): Boolean = {
-    val group = Inspect.getGroup(groupName);
-    val events = Event.findAllEventsByGroup(group);
+  def getEvent(eventName: String, groupName: String): Event = {
+    val group = Inspect.getGroup(groupName)
+    val events = Event.findAllEventsByGroup(group)
+    events.find(event => event.name == eventName).get
+  }
 
-    events.exists(event => event.name == eventName);
+  def isEventAvailableForGroup(eventName: String, groupName: String): Boolean = {
+    val group = Inspect.getGroup(groupName)
+    val events = Event.findAllEventsByGroup(group)
+    events.exists(event => event.name == eventName)
   }
 }

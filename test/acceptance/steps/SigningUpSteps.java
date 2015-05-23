@@ -60,8 +60,7 @@ public class SigningUpSteps {
 
   @When("^submits he is (\\S+)$")
   public void setParticipationAndSubmit(String status) throws Throwable {
-    signUpPage.setStatus(status);
-    signUpPage.save();
+    signUpPage.setStatus(status).save();
   }
 
   @Then("^the number of participants is (\\d+)$")

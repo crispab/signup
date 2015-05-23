@@ -14,24 +14,27 @@ public class LoginPage {
     this.driver = driver;
   }
 
-  public void navigateTo() {
-      driver.navigate().to(PlayContainer.getBaseUrl() + "/login");
-      Assert.assertTrue("Not viewing login page", isViewing());
+  public LoginPage navigateTo() {
+    driver.navigate().to(PlayContainer.getBaseUrl() + "/login");
+    Assert.assertTrue("Not viewing login page", isViewing());
+    return this;
   }
 
   public boolean isViewing() {
     return "Logga in".equals(driver.findElement(By.id("page_name")).getText());
   }
 
-  public void loginUsingPw(String email, String password) {
+  public LoginPage loginUsingPw(String email, String password) {
     driver.findElement(By.id("email")).sendKeys(email);
     driver.findElement(By.id("password")).sendKeys(password);
     driver.findElement(By.tagName("form")).submit();
+    return this;
   }
 
-  public void ensureLoggedOut() {
+  public LoginPage ensureLoggedOut() {
     driver.manage().deleteAllCookies();
     Assert.assertFalse("Still loggen in!", isLoggedIn());
+    return this;
   }
 
   public boolean isLoggedIn() {

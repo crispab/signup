@@ -13,20 +13,24 @@ public class SignUpPage {
     this.driver = driver;
   }
 
-  public void navigateTo(long userId, long eventId) {
+  public SignUpPage navigateTo(long userId, long eventId) {
     driver.navigate().to(PlayContainer.getBaseUrl() + "/participations/edit?eventId=" + eventId + "&userId=" + userId);
     Assert.assertEquals("Anmälan", driver.findElement(By.id("page_name")).getText());
+    return this;
   }
 
-  public void setStatus(String status) {
+  public SignUpPage setStatus(String status) {
     driver.findElement(By.id(status.toLowerCase())).click();
+    return this;
   }
 
-  public void save() {
+  public SignUpPage save() {
     driver.findElement(By.id("action")).submit();
+    return this;
   }
 
-  public void addComment(String comment) {
+  public SignUpPage addComment(String comment) {
     driver.findElement(By.id("comment")).sendKeys(comment);
+    return this;
   }
 }
