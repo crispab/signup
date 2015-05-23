@@ -15,6 +15,8 @@ import util.TearDown;
 
 import java.util.List;
 
+import static util.Conversion.*;
+
 public class SigningUpSteps {
   private List<User> members = null;
   private Group group = null;
@@ -31,10 +33,6 @@ public class SigningUpSteps {
         return member;
     }
     throw new IllegalArgumentException("Can't find member with name " + memberName);
-  }
-
-  private long asLong(scala.Option<Object> optionLong) {
-    return Long.parseLong(optionLong.get().toString());
   }
 
   @Given("^the group (\\S+) exist with (.*)$")
