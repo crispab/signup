@@ -117,6 +117,8 @@ WHERE id = {id}
       implicit connection => {
         SQL("DELETE FROM memberships m WHERE m.groupx={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM participations p WHERE p.event IN (SELECT id FROM events WHERE groupx={id})").on('id -> id).executeUpdate()
+        SQL("DELETE FROM log_entries l WHERE l.event IN (SELECT e.id FROM events e WHERE e.groupx = {id})").on('id -> id).executeUpdate()
+        SQL("DELETE FROM reminders r WHERE r.event IN (SELECT e.id FROM events e WHERE e.groupx = {id})").on('id -> id).executeUpdate()
         SQL("DELETE FROM events e WHERE e.groupx={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM groups g WHERE g.id={id}").on('id -> id).executeUpdate()
       }
