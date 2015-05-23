@@ -1,6 +1,7 @@
 package acceptance.steps;
 
 import acceptance.pages.CreateEventPage;
+import acceptance.pages.ErrorPage;
 import acceptance.pages.LoginPage;
 import cucumber.api.java.After;
 import cucumber.api.java.en.Then;
@@ -21,13 +22,15 @@ import static util.Conversion.*;
 public class CreateEventSteps {
   private final LoginPage loginPage;
   private final CreateEventPage createEventPage;
+  private final ErrorPage errorPage;
   private String groupName;
   private String eventName;
   private Date eventDateTime;
 
-  public CreateEventSteps(LoginPage loginPage, CreateEventPage createEventPage) {
+  public CreateEventSteps(LoginPage loginPage, CreateEventPage createEventPage, ErrorPage errorPage) {
     this.loginPage = loginPage;
     this.createEventPage = createEventPage;
+    this.errorPage = errorPage;
   }
 
   @Given("^the (\\S+) plan a (\\S+) (.*)$")
@@ -42,6 +45,7 @@ public class CreateEventSteps {
     loginPage.navigateTo().loginUsingPw("admin@crisp.se", "admin");
     Group group = Inspect.getGroup(groupName);
     createEventPage.navigateTo(asLong(group.id())).submitForm(eventName, "Let's get together and fine dine!", "The Ritz", new DateTime(eventDateTime));
+    Assert.assertFalse("Got an error page!!!", errorPage.isViewing());
   }
 
   @Then("^the event (\\S+) exists in the (\\S+) group$")
