@@ -10,16 +10,13 @@ This is the fourth version of the SignUp Service.
 - Anorm is used for SQL Database access
 - Heroku is used for deployment
 
-
 ### Play Framework ###
-
 - Activator 1.2.12 (that's how you get the Play Framework these days) - http://www.playframework.org/
 - Play 2.3.7 (comes with Activator) - http://www.playframework.org/
 - Scala 2.11.1 (comes with Activator) - http://www.scala-lang.org/
 - Anorm (part of Play) - http://www.playframework.com/documentation/2.3.x/ScalaAnorm
 
 ### Presentation ###
-
 - Bootstrap 3.3.2 - http://getbootstrap.com/
 - jQuery 1.11.1 (used by Bootstrap) - http://jquery.com
 - bootstrap3-wysiwyg - https://github.com/bootstrap-wysiwyg/bootstrap3-wysiwyg
@@ -27,12 +24,10 @@ This is the fourth version of the SignUp Service.
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play plugins ###
-
 - Play2.x module for Authentication and Authorization 0.13 - https://github.com/t2v/play2-auth
 - Emailer Plugin 2.3.x - http://github.com/typesafehub/play-plugins/tree/master/mailer
 
 ### Run-time environment ###
-
 - Heroku (general app server environment) - http://heroku.com
     * PostgreSQL add-on (SQL database)
     * PG Backup add-on (database backup)
@@ -73,7 +68,7 @@ Services used in addition to the unit tests:
 - posgression (temporary PostgreSQL database instance on demand) - http://www.postgression.com
 
 #### Acceptance tests ####
-The acceptance tests (fixtures) are actually written in Java (and not Scala).
+The acceptance tests (step functions) are actually written in Java (and not Scala).
 
 To execute the acceptance tests:
 ```
@@ -81,15 +76,20 @@ activator 'test-only acceptance.*'
 ```
 Tools used for acceptance tests:
 - Cucumber Java 1.2 - https://cukes.info/docs/reference/jvm#java
-- Selenium WebDriver 2.44 - http://docs.seleniumhq.org/docs/03_webdriver.jsp
+- Selenium WebDriver 2.45 - http://docs.seleniumhq.org/docs/03_webdriver.jsp
 
 Services:
 - Relish (documentaion) - http://www.relishapp.com/crisp/signup/docs
 - Mailinator (temporary mail boxes on demand) - https://mailinator.com
 
+#### Continuous integration ####
+The CI server builds, run all tests and deploy to a staging environment, https://signup-ci-test.herokuapp.com
+
+Service:
+- Travis CI - https://travis-ci.org/crispab/signup
+
 License, credits and stuff
 --------------------------
-
 Some clipart comes from http://openclipart.org and is Public Domain, see http://openclipart.org/share
 
 The libraries, services and tools listed under General above is copyright and licensed by the respective creators and owners.
@@ -110,7 +110,6 @@ limitations under the License.
 
 Setting up a development environment
 ----------------------------------
-
 In the SignUp development environment Vagrant is used to create a local deployment environment in a virtual machine
 (VirtualBox) with a Java run-time, Play Framework (including Scala) and a PostgreSQL database pre-installed.
 
@@ -118,9 +117,8 @@ The source code tree is shared between your host computer (where you do your edi
 (where Play is run).
 
 ### Get the source code ###
-
 The source code is stored on GitHub and managed by the version control system Git. Follow the instructions on
-https://help.github.com/articles/set-up-git/ to get going with Git and GitHub.
+https://help.github.com/articles/set-up-git to get going with Git and GitHub.
 
 Get a copy of the source code for SignUp by typing on your command line:
 
@@ -130,7 +128,6 @@ This will give you the latest version of the source code.
 
 
 ### Set up Vagrant ###
-
 If you already have Vagrant on your local system, you just need to:
 
     $ cd signup
@@ -139,7 +136,6 @@ If you already have Vagrant on your local system, you just need to:
 To install and configure Vagrant, follow the instructions in [Using Vagrant](UsingVagrant.md).
 
 ### Run SignUp ###
-
 Once you have the development environment set up you should be able to launch
 SignUp from inside the virtual machine:
 
@@ -152,5 +148,4 @@ And then point your browser on your local computer to [http://localhost:19000](h
 
 Deploy in production
 ------
-
 Read [Setting up Heroku](SettingUpHeroku.md) to learn how to deploy a SignUp instance on Heroku.
