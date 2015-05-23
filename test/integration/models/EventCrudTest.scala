@@ -142,5 +142,26 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
       Event.delete(eventId)
     }
 
+    "be possible to delete with log entries" in {
+      val group = Group.findAll().head
+      val event = Event(group = group, name = withTestId("Midsommardans"), startTime = morningStart, endTime = morningEnd, lastSignUpDate = morningStart)
+      val eventId = Event.create(event)
+      val newEvent = Event.find(eventId)
+
+      LogEntry.create(event = newEvent, message = "Created!!")
+
+      noException must be thrownBy Event.delete(eventId)
+    }
+
+    "be possible to delete with reminders" in {
+      val group = Group.findAll().head
+      val event = Event(group = group, name = withTestId("Midsommardans"), startTime = morningStart, endTime = morningEnd, lastSignUpDate = morningStart)
+      val eventId = Event.create(event)
+
+      Reminder.createRemindersForEvent(eventId, event)
+
+      noException must be thrownBy Event.delete(eventId)
+    }
+
   }
 }
