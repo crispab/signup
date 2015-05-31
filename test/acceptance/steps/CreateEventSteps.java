@@ -34,7 +34,7 @@ public class CreateEventSteps {
   }
 
   @Given("^the (\\S+) plan a (\\S+) (.*)$")
-  public void createEventAtTime(String groupName, String eventName, String eventDateTime) throws Throwable {
+  public void planEventAtTime(String groupName, String eventName, String eventDateTime) throws Throwable {
     this.groupName = groupName;
     this.eventName = eventName;
     this.eventDateTime = new PrettyTimeParser().parse(eventDateTime).get(0);

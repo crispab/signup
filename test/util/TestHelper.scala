@@ -58,7 +58,7 @@ object TestHelper {
   def readPropertyFromFile(propertyName: String, fileName: String): String = {
     try {
       val applicationConfigFile = new BufferedReader(new FileReader(fileName))
-      var driverType = ""
+      var propertyValue = ""
       var line: String = null
       while ( {
         line = applicationConfigFile.readLine
@@ -69,15 +69,15 @@ object TestHelper {
           if (isEnvironmentVariableRef(value)) {
             val envValue: String = System.getenv(environmentVariableName(value))
             if (envValue != null) {
-              driverType = envValue
+              propertyValue = envValue
             }
           }
           else {
-            driverType = value
+            propertyValue = value
           }
         }
       }
-      driverType
+      propertyValue
     }
     catch {case e: IOException => ""}
   }

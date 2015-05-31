@@ -4,12 +4,15 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import org.apache.poi.util.StringUtil;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import util.TestHelper;
 
@@ -37,7 +40,14 @@ public class SharedDriver extends EventFiringWebDriver {
         driver = new FirefoxDriver();
         break;
       case "phantomjs":
-        driver = new PhantomJSDriver();
+        String phantomjsBinaryPath = getPhantomjsBinaryPath();
+        if(phantomjsBinaryPath.length() > 0) {
+          DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+          desiredCapabilities.setCapability("phantomjs.binary.path", phantomjsBinaryPath);
+          driver = new PhantomJSDriver(desiredCapabilities);
+        } else {
+          driver = new PhantomJSDriver();
+        }
         break;
       default:
         throw new RuntimeException("WebDriver type not correctly configured. Unknown driver type: '" + driverType + "'");
@@ -49,6 +59,10 @@ public class SharedDriver extends EventFiringWebDriver {
 
   private static String getWebDriverType() {
     return TestHelper.readPropertyFromFile("test.webdriver.type", "conf/application.conf");
+  }
+
+  private static String getPhantomjsBinaryPath() {
+    return TestHelper.readPropertyFromFile("phantomjs.binary.path", "conf/application.conf");
   }
 
 

@@ -16,7 +16,7 @@ public class CreateEventPage {
 
   public CreateEventPage navigateTo(long groupId) {
     driver.navigate().to(PlayContainer.getBaseUrl() + "/events/new?groupId=" + groupId);
-    Assert.assertTrue("Not viewing create new event page!", isViewing());
+    Assert.assertTrue("Not viewing create new event page: " + driver.getCurrentUrl(), isViewing());
     return this;
   }
 
