@@ -27,12 +27,18 @@ public class CreateEventPage {
   public CreateEventPage submitForm(String eventName, String description, String venue, DateTime eventDateTime) {
     driver.findElement(By.id("name")).sendKeys(eventName);
 
+    enterDescription(description);
+
     driver.findElement(By.id("venue")).sendKeys(venue);
     driver.findElement(By.id("start_date")).sendKeys(date(eventDateTime));
     driver.findElement(By.id("start_time")).sendKeys(time(eventDateTime));
     driver.findElement(By.id("end_time")).sendKeys(time(eventDateTime.plusHours(3)));
     driver.findElement(By.id("action")).click();
     return this;
+  }
+
+  private void enterDescription(String description) {
+    driver.findElement(By.id("editor")).sendKeys(description);
   }
 
   private String date(DateTime eventDateTime) {

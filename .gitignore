@@ -15,6 +15,7 @@ acceptance_test.sh
 .DS_Store
 opt
 .vagrant
+phantomjsdriver.log
 
 *.class
 
