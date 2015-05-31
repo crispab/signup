@@ -17,9 +17,9 @@ This is the fourth version of the SignUp Service.
 - Anorm (part of Play) - http://www.playframework.com/documentation/2.3.x/ScalaAnorm
 
 ### Presentation ###
-- Bootstrap 3.3.2 - http://getbootstrap.com/
-- jQuery 1.11.1 (used by Bootstrap) - http://jquery.com
-- bootstrap3-wysiwyg - https://github.com/bootstrap-wysiwyg/bootstrap3-wysiwyg
+- Bootstrap 3.3.4 - http://getbootstrap.com/
+- jQuery 2.1.4 - http://jquery.com
+- bootstrap3-wysiwyg 0.3.3 - https://github.com/bootstrap-wysiwyg/bootstrap3-wysiwyg
 - AddThisEvent 1.6.0 - http://addthisevent.com
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
