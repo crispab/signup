@@ -25,6 +25,10 @@ env: WEB_DRIVER_TYPE=phantomjs APPLICATION_BASE_URL=http://localhost:3333
 script:
   - sbt 'test-only unit.* integration.* acceptance.*'
 
+after_script:
+  - rm test/travis_log/*
+  - cp target/test-reports/html/* test/travis_log
+
 deploy:
   provider: heroku
   api_key:
