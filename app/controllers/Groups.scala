@@ -46,8 +46,8 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.groups.edit(formWithErrors)),
         group => {
-          Group.create(group)
-          Redirect(routes.Groups.list())
+          val groupId = Group.create(group)
+          Redirect(routes.Groups.show(groupId))
         }
       )
   }
