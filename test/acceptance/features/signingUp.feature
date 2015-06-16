@@ -1,6 +1,6 @@
 Feature: Sign up for an event
 
-  Scenario Outline: Tom responds to an event
+  Scenario Outline: Tom responds to an invite
     Given the group Friends exist with Tom, Dick, Harry
       And the group Friends has an event Dinner
     When Tom navigates to his sign up page

@@ -233,7 +233,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
           val eventId = Event.create(event)
           Reminder.createRemindersForEvent(eventId, event)
           LogEntry.create(eventId, "Sammankomsten skapad av " + loggedIn.name)
-          Redirect(routes.Groups.show(event.group.id.get))
+          Redirect(routes.Events.show(eventId))
         }
       )
   }
