@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ACTIVATOR_VERSION=1.2.12
+ACTIVATOR_VERSION=1.3.5
 ACTIVATOR_ZIP=typesafe-activator-${ACTIVATOR_VERSION}-minimal.zip
 INSTALL_DIR=/vagrant/opt
 BIN_DIR=/home/vagrant/bin

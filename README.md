@@ -11,9 +11,9 @@ This is the fourth version of the SignUp Service.
 - Heroku is used for deployment
 
 ### Play Framework ###
-- Activator 1.2.12 (that's how you get the Play Framework these days) - http://www.playframework.org/
+- Activator 1.3.5 (that's how you get the Play Framework these days) - http://www.playframework.org/
 - Play 2.3.7 (comes with Activator) - http://www.playframework.org/
-- Scala 2.11.1 (comes with Activator) - http://www.scala-lang.org/
+- Scala 2.11.4 - http://www.scala-lang.org/
 - Anorm (part of Play) - http://www.playframework.com/documentation/2.3.x/ScalaAnorm
 
 ### Presentation ###

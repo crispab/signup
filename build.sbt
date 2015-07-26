@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq(
   "org.apache.httpcomponents" % "httpclient" % "4.3.+",
@@ -48,10 +48,17 @@ resolvers ++= Seq(
 
 includeFilter in (Assets, LessKeys.less) := "*-bootstrap.less"
 
-scalacOptions ++= Seq("-target:jvm-1.7", "-feature")
+scalacOptions ++= Seq("-target:jvm-1.8", "-feature")
 
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 herokuAppName in Compile := "signup-ci-test"
 
+initialize := {
+  val _ = initialize.value
+  if (sys.props("java.specification.version") != "1.8")
+    sys.error("Java 8 is required for this project. Found " + sys.props("java.specification.version"))
+}
 
+
+fork in run := true
