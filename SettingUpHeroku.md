@@ -69,12 +69,11 @@ SignUp requires a number of Heroku add-ons to run, and some are just nice to hav
 
 Get the add-ons via the command line interface:
 
-    $ heroku addons:add heroku-postgresql
-    $ heroku addons:add pgbackups:auto-month
-    $ heroku addons:add sendgrid
-    $ heroku addons:add cloudinary
-    $ heroku addons:add newrelic:stark
-    $ heroku addons:add papertrail
+    $ heroku addons:create heroku-postgresql
+    $ heroku addons:create sendgrid
+    $ heroku addons:create cloudinary
+    $ heroku addons:create newrelic
+    $ heroku addons:create papertrail
 
 The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid
 plan for each add-on.
