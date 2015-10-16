@@ -134,7 +134,14 @@ Configure environment variables for your Heroku application
 SignUp's default configuration is for a development environment, but it can be overridden by setting environment
 variables in the execution environment.
 
-Edit and run the script [conf/heroku_config.sh](conf/heroku_config.sh) on your local machine with your values.
+Copy the script [conf/heroku_config_template.sh](conf/heroku_config_template.sh) on your local machine.
+
+    $ cp heroku_config_template.sh heroku_config_current.sh
+    
+Edit [conf/heroku_config_current.sh](conf/heroku_config_current.sh) and set the values that apply to your SignUp4 instance.
+
+Finally run `heroku_config_current.sh` (it contains an Heroku toolbelt command to set up your applications environment).
+
 
 | Environment variable | Description |
 | --------------------:| ----------- |
@@ -147,7 +154,11 @@ Edit and run the script [conf/heroku_config.sh](conf/heroku_config.sh) on your l
 | GOOGLE_CLIENT_SECRET | To enable Google login - get from Google Developers Console, https://console.developers.google.com |
 | FACEBOOK_CLIENT_ID | To enable Facebook login - get from Facebook's developer site, https://developers.facebook.com/ |
 | FACEBOOK_CLIENT_SECRET | To enable Facebook login - get from Facebook's developer site, https://developers.facebook.com/ |
+| EVENT_REMINDER_FIRST_DAYS | Number of days before the event that the first reminder is sent. Defaults to 7 (Note 1) |
+| EVENT_REMINDER_SEND_TIME | The time of day that automatic reminders are sent. Defaults to 01:00 (Note 1) |
 
+Note 1) Default values mentioned here are "snapshot values" valid when this documentation was last updated. 
+Checking `application.conf` is always the best source of information for default values.
 
 Push the source code to Heroku and whitness the automatic deploy
 ------

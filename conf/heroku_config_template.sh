@@ -1,4 +1,10 @@
 #!/bin/sh
+# This is a config template for the SignUp4 config.
+# Make a copy of this file and update it with your instance-specific config.
+# It is not run as part of pushing to Heroku - it's a command you run with Heroku toolbelt.
+# Your copy of this file will contain sensitive information, so you do NOT want to check it in to Git.
+# If you call your copy heroku_config_current.sh it will be git ignored.
+# E.g. cp heroku_config_template.sh heroku_config_current.sh
 heroku config:set \
     APPLICATION_NAME="<The display name for the application>" \
     APPLICATION_THEME="crisp" \
