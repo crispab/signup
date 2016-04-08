@@ -159,6 +159,38 @@ Finally run `heroku_config_current.sh` (it contains an Heroku toolbelt command t
 Note 1) Default values mentioned here are "snapshot values" valid when this documentation was last updated. 
 Checking `application.conf` is always the best source of information for default values.
 
+Set password for admin user in the application
+------
+By setting the environment variable PASSWORD_SALT the passwords in the database will be encrypted more safely. 
+However, since you just changed the salt, this means that the existing default "admin" user has a password encrypted the wrong way.
+So we have to update it manually.
+
+Open a shell on your Heroku server:
+    
+    $ heroku run bash
+    Running bash on signup-<your name>... up, run.7816
+    ~ $ 
+
+Start the PostgreSQL interpreter
+   
+    ~ $ psql --set "salt=$PASSWORD_SALT" $DATABASE_URL
+    psql (9.5.1, server 9.3.9)
+    SSL connection (protocol: TLSv1.2, cipher: DHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+    Type "help" for help.
+    
+    d94mbv2v0vv2dc=>
+
+Update the password for the "admin" user, quit psql and exit the shell
+
+    d94mbv2v0vv2dc=> update users set pwd=md5(:salt || 'mypassword') where email='admin@crisp.se';
+    d94mbv2v0vv2dc=> \q
+    ~ $ exit
+    $
+
+Once the system is up & running (next section) you can login using:
+- Email: admin@crisp.se
+- Password: mypassword (or whatever you set above)
+    
 Push the source code to Heroku and whitness the automatic deploy
 ------
 
