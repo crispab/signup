@@ -8,7 +8,7 @@ import play.api.Play
 
 
 trait ImageUrl {
-  def url(user: User, size: Int = 40): String
+  def url(user: User, size: Int): String
   def identifier: String
 }
 
@@ -59,7 +59,7 @@ object CloudinaryUrl extends ImageUrl {
 
 
 object ImageUrl {
-  def apply(user: User, size: Int = 40): String = {
+  def apply(user: User, size: Int): String = {
     provider(user.imageProvider).url(user, size)
   }
 

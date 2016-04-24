@@ -17,70 +17,54 @@
 
   @breadcrumb(Seq(), "Logga in")
 
-  <div class="row">
-    <div class="col-md-5">
-      @if(flash.get("success").isDefined) {
-        <div class="alert alert-success">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          @flash.get("success")
-        </div>
-      }
-      @if(flash.get("error").isDefined) {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          @flash.get("error")
-        </div>
-      }
-      @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
-        <div class="alert alert-danger">
-          <a class="close" data-dismiss="alert" href="#">×</a>
-          <p>Felaktig epostadress eller lösenord.</p>
-        </div>
-      }
-
-
-      <form class="form-inline" action="@routes.Application.authenticate()" method="POST">
-        <fieldset class="space-berfore">
-          <legend>Logga in med lösenord</legend>
-          <div class='form-group @hasErrors("email")'>
-            <input type="email" placeholder="Epost" class="form-control" id="email" name="email" value='@field("email")' required="" autofocus=""/>
-          </div>
-          <div class='form-group @hasErrors("password")'>
-            <input type="password" placeholder="Lösenord" class="form-control" id="password" name="password" value='@field("password")' required="" />
-          </div>
-          <button type="submit" class="btn btn-primary">Logga in</button>
-        </fieldset>
-      </form>
+  @if(flash.get("success").isDefined) {
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("success")
     </div>
-  </div>
+  }
+  @if(flash.get("error").isDefined) {
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("error")
+    </div>
+  }
+  @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
+    <div class="alert alert-danger">
+      <a class="close" data-dismiss="alert" href="#">×</a>
+      <p>Felaktig epostadress eller lösenord.</p>
+    </div>
+  }
+
+
+  <form class="form-inline" action="@routes.Application.authenticate()" method="POST">
+    <fieldset class="space-berfore">
+      <legend>Logga in med lösenord</legend>
+      <div class='form-group @hasErrors("email")'>
+        <input type="email" placeholder="Epost" class="form-control" id="email" name="email" value='@field("email")' required="" autofocus=""/>
+      </div>
+      <div class='form-group @hasErrors("password")'>
+        <input type="password" placeholder="Lösenord" class="form-control" id="password" name="password" value='@field("password")' required="" />
+      </div>
+      <button type="submit" class="btn btn-primary">Logga in</button>
+    </fieldset>
+  </form>
 
   @if(GoogleAuth.isConfigured || FacebookAuth.isConfigured) {
-    <div class="row">
-      <div class="col-md-5">
-        <fieldset class="xlarge-space-berfore">
-          <legend>Logga in med sociala media</legend>
-          @if(GoogleAuth.isConfigured) {
-            <div class="row">
-              <div class="col-md-12">
-                <p class="text-left">
-                  <a href="@routes.GoogleAuth.authenticate()" class="btn-google">Logga in med Google</a>
-                </p>
-              </div>
-            </div>
-          }
+    <fieldset class="xlarge-space-berfore">
+      <legend>Logga in med sociala media</legend>
+      @if(GoogleAuth.isConfigured) {
+        <p class="text-left">
+          <a href="@routes.GoogleAuth.authenticate()" class="btn-google">Logga in med Google</a>
+        </p>
+      }
 
-          @if(FacebookAuth.isConfigured) {
-            <div class="row">
-              <div class="col-md-12">
-                <p class="text-left space-berfore">
-                  <a href="@routes.FacebookAuth.authenticate()" class="btn-facebook">Logga in med Facebook</a>
-                </p>
-              </div>
-            </div>
-          }
-        </fieldset>
-      </div>
-    </div>
+      @if(FacebookAuth.isConfigured) {
+        <p class="text-left large-space-berfore">
+          <a href="@routes.FacebookAuth.authenticate()" class="btn-facebook">Logga in med Facebook</a>
+        </p>
+      }
+    </fieldset>
   }
 
 }(loggedInUser = None)

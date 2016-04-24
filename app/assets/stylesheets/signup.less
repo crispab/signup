@@ -60,33 +60,28 @@ h4 {
 .participation-on {
   background-color: @brand-success;
   text-transform: none;
-  margin-right: 8px;
   margin-bottom: 4px;
 }
 
 .participation-maybe {
   background-color: @brand-warning;
   text-transform: none;
-  margin-right: 8px;
   margin-bottom: 4px;
 }
 
 .participation-off {
   background-color: @brand-danger;
   text-transform: none;
-  margin-right: 8px;
   margin-bottom: 4px;
 }
 
 .participation-unregistered {
   text-transform: none;
-  margin-right: 8px;
   margin-bottom: 4px;
 }
 
 .thumb {
   padding: 1px;
-  margin: 3px;
   vertical-align: top;
   box-sizing: content-box;
 }
@@ -101,6 +96,12 @@ h4 {
   width: 40px;
   height: 40px;
   background: white center no-repeat url(/assets/images/user40.png);
+}
+
+.thumb-background60 {
+  width: 60px;
+  height: 60px;
+  background: white center no-repeat url(/assets/images/user60.png);
 }
 
 .thumb-background80 {
@@ -149,6 +150,15 @@ h4 {
   background-color: @well-bg;
   padding-top: ceil(@line-height-computed/4);
   padding-bottom: ceil(@line-height-computed/4);
+  padding-left: 19px;
+  padding-right: 19px;
+}
+
+.media-row {
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: darken(@well-bg, 10%);
+  background-color: @well-bg;
 }
 
 .btn-row {
@@ -288,4 +298,8 @@ pre code {
 
 .action-button {
   margin-top: -3px;
+}
+
+.maxwidth {
+  width: 100%;
 }

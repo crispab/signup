@@ -7,83 +7,83 @@
 
 
 @participations.map { participation =>
-<div class="row">
-  <div class="col-md-5 list-row">
-    <div class="row">
-      <div class="col-md-2">
+
+  <div class="media list-row">
+
+    <div class="media-left">
+      <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
+        <img class="thumb thumb-background60" src="@ImageUrl(participation.user, 60)" onerror="imgError(this);"/>
+      </a>
+    </div>
+
+    <div class="media-body">
+      <h4 class="media-heading">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-          <img class="thumb thumb-background40" src="@ImageUrl(participation.user)" onerror="imgError(this);"/>
+          @participation.user.firstName @participation.user.lastName
         </a>
-      </div>
-      <div class="col-md-7">
-        <h4>
-          <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-            @participation.user.firstName @participation.user.lastName
-          </a>
-        </h4>
-          @if(isLoggedIn(loggedInUser)) {
-            <p class="text-muted small-space-berfore"><em>@participation.user.email</em></p>
-          }
-      </div>
-      <div class="col-md-3">
+      </h4>
+      @if(isLoggedIn(loggedInUser)) {
+        <p class="text-muted small-space-berfore"><em>@participation.user.email</em></p>
+      }
+      <p>@participation.comment</p>
+    </div>
+
+    <div class="media-right">
+      <span class="text-nowrap pull-right">
         <a href="@routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
           <span class="label label-default @asCssClass(participation.status)">
-            @asMessage(participation.status)
+          @asMessage(participation.status)
           </span>
         </a>
         @if(participation.isLateSignUp) {
+            &nbsp;
           <a id="warning_@{participation.id.get}" tabindex="0" role="button" rel="popover" data-toggle="popover" data-trigger="focus" data-placement="top" title="Sen anmälan" data-content="Anmälde sig @asDate(participation.signUpTime.get), vilket är efter sista anmälningsdag.">
             <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")' alt="Sen anmälan"/>
           </a>
           <script type="text/javascript">
-            $('#warning_@{participation.id.get}').popover()
+              $('#warning_@{participation.id.get}').popover()
           </script>
         }
+      </span>
 
-        @if(withRemoveButton && isAdmin(loggedInUser)) {
-          <button type="button" class="btn btn-default pull-right small-space-berfore" data-toggle="modal" data-target="#remove_participant_@participation.id">
-            <span class="glyphicon glyphicon-trash"></span>
-          </button>
+      @if(participation.numberOfParticipants > 1) {
+        <p>@{participation.numberOfParticipants}st</p>
+      }
 
-          <div class="modal fade" id="remove_participant_@participation.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_participant_@participation.id" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                  <h3 id="label_remove_participant_@participation.id">Vill du ta bort gästen?</h3>
-                </div>
-                <div class="modal-body">
-                  <p>
-                    Du håller på att ta bort gästen <strong>@participation.user.firstName @participation.user.lastName</strong>
-                    från sammankomsten <strong>@participation.event.name</strong>.
-                  </p>
-                  <p>
-                    Vill du fortsätta?
-                  </p>
-                </div>
-                <div class="modal-footer">
-                  <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                    </button>
-                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span>
-                      Ta bort</button>
-                  </form>
-                </div>
+      @if(withRemoveButton && isAdmin(loggedInUser)) {
+        <button type="button" class="btn btn-default pull-right small-space-berfore" data-toggle="modal" data-target="#remove_participant_@participation.id">
+          <span class="glyphicon glyphicon-trash"></span>
+        </button>
+
+        <div class="modal fade" id="remove_participant_@participation.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_participant_@participation.id" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                <h3 id="label_remove_participant_@participation.id">Vill du ta bort gästen?</h3>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Du håller på att ta bort gästen <strong>@participation.user.firstName @participation.user.lastName</strong>
+                  från sammankomsten <strong>@participation.event.name</strong>.
+                </p>
+                <p>
+                  Vill du fortsätta?
+                </p>
+              </div>
+              <div class="modal-footer">
+                <form action="@routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                  </button>
+                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span>
+                    Ta bort</button>
+                </form>
               </div>
             </div>
           </div>
-        }
-        @if(participation.numberOfParticipants > 1){
-          <p>@{participation.numberOfParticipants}st i sällskapet</p>
-        }
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-10 col-md-offset-2">
-        <p>@participation.comment</p>
-      </div>
+        </div>
+      }
     </div>
   </div>
-</div>
 }

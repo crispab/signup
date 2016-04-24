@@ -8,38 +8,33 @@
 
   @breadcrumb(Seq(), "")
 
-  <div class="row">
-    <div class="col-md-5">
-
-      @if(flash.get("success").isDefined) {
-        <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            @flash.get("success")
-        </div>
-      }
-
-      <h2>Välkommen till @APPLICATION_NAME</h2>
-      <p>
-        @APPLICATION_NAME är en tjänst för grupper som vill ha ordning på sina sammankomster.
-      </p>
-      <p>
-        Du kan lägga upp nya sammankomster i gruppens kalender och medlemmarna kan själva
-        gå in och markera ifall de kan komma eller inte.
-      </p>
-      <p>
-        @APPLICATION_NAME skickar inbjudningar och påminnelser till alla medlemmar i
-        gruppen för varje sammankomst.
-      </p>
-      <p>
-        <a href="@routes.Groups.list()">Grupper</a>
-      </p>
-      @if(isAdmin(loggedInUser)) {
-        <p>
-          <a href="@routes.UsersSecured.list()">Användare</a>
-        </p>
-      }
+  @if(flash.get("success").isDefined) {
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("success")
     </div>
-  </div>
+  }
+
+  <h2>Välkommen till @APPLICATION_NAME</h2>
+  <p>
+    @APPLICATION_NAME är en tjänst för grupper som vill ha ordning på sina sammankomster.
+  </p>
+  <p>
+    Du kan lägga upp nya sammankomster i gruppens kalender och medlemmarna kan själva
+    gå in och markera ifall de kan komma eller inte.
+  </p>
+  <p>
+    @APPLICATION_NAME skickar inbjudningar och påminnelser till alla medlemmar i
+    gruppen för varje sammankomst.
+  </p>
+  <p>
+    <a href="@routes.Groups.list()">Grupper</a>
+  </p>
+  @if(isAdmin(loggedInUser)) {
+    <p>
+      <a href="@routes.UsersSecured.list()">Användare</a>
+    </p>
+  }
 }
 
 

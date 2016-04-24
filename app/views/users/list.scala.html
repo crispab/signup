@@ -15,34 +15,29 @@
   </div>
 
   @users.map { user =>
-    <div class="row">
-      <div class="col-md-5 list-row">
-        <div class="row">
-          <div class="col-md-2">
-            <a href="@routes.Users.show(user.id.get)">
-              <img class="thumb thumb-background40 pull-left" src="@ImageUrl(user)" onerror="imgError(this);"/>
-            </a>
-          </div>
-          <div class="col-md-10">
-            <h4>
-              <a href="@routes.Users.show(user.id.get)">@user.firstName @user.lastName</a>
-            </h4>
-            @if(isLoggedIn(loggedInUser)) {
-              <p class="text-muted small-space-berfore"><em>@user.email</em></p>
-            }
-            <p>@user.comment</p>
-          </div>
-        </div>
+    <div class="media list-row">
+      <div class="media-left">
+        <a href="@routes.Users.show(user.id.get)">
+          <img class="thumb thumb-background60 pull-left" src="@ImageUrl(user, 60)" onerror="imgError(this);"/>
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <a href="@routes.Users.show(user.id.get)">@user.firstName @user.lastName</a>
+        </h4>
+        @if(isLoggedIn(loggedInUser)) {
+          <p class="text-muted small-space-berfore"><em>@user.email</em></p>
+        }
+        <p>@user.comment</p>
       </div>
     </div>
   }
 
   @if(isAdmin(loggedInUser)) {
-    <div class="row">
-      <div class="col-md-5 btn-row">
-        <a href="@routes.UsersSecured.createForm()" class="btn btn-default">
-          <span class="glyphicon glyphicon-plus"></span> Ny användare</a>
-      </div>
+    <div class="btn-row">
+      <a href="@routes.UsersSecured.createForm()" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus"></span> Ny användare
+      </a>
     </div>
   }
 }

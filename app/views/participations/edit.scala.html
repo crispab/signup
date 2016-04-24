@@ -13,159 +13,144 @@
 
 @page("Anmälan till " + event.name, section = Groups) {
 
-@breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get), event.name -> routes.Events.show(event.id.get)),
+  @breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get), event.name -> routes.Events.show(event.id.get)),
             "Anmälan")
 
-<div class="row">
-  <div class="col-md-5">
-    <h2>Anmälan till @event.name</h2>
+  <h2>Anmälan till @event.name</h2>
 
-    @event match {
-      case ev if(ev.endTime.before(new java.util.Date())) => {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          Den här sammankomsten har redan inträffat!
-        </div>
-      }
-      case ev if(ev.lastSignupDatePassed) => {
-        <div class="alert alert-info">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
-          Sista anmälningsdatum har passerats.
-        </div>
-      }
-      case ev if(Event.isFullyBooked(ev)) => {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
-        </div>
-      }
-      case _ => {}
+  @event match {
+    case ev if(ev.endTime.before(new java.util.Date())) => {
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Den här sammankomsten har redan inträffat!
+      </div>
     }
-  </div>
-</div>
+    case ev if(ev.lastSignupDatePassed) => {
+      <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
+        Sista anmälningsdatum har passerats.
+      </div>
+    }
+    case ev if(Event.isFullyBooked(ev)) => {
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
+      </div>
+    }
+    case _ => {}
+  }
 
-<div class="row">
-  <div class="col-md-5">
-    <div class="well">
-      <p>@Html(event.description)</p>
-      <ul>
-        <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
-        <li><strong>Plats:</strong> @event.venue</li>
-        @if(event.maxParticipants.isDefined) {
-          <li><strong>Max antal deltagare:</strong> @event.maxParticipants
-            @if(Event.isFullyBooked(event)) {(fullbokat)}
-          </li>
-        }
-      </ul>
-      @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-        <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+  <div class="well">
+    <p>@Html(event.description)</p>
+    <ul>
+      <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
+      <li><strong>Plats:</strong> @event.venue</li>
+      @if(event.maxParticipants.isDefined) {
+        <li><strong>Max antal deltagare:</strong> @event.maxParticipants
+          @if(Event.isFullyBooked(event)) {(fullbokat)}
+        </li>
       }
+    </ul>
+    @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+      <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+    }
 
-      @views.html.events.tags.addToCalendarButton(event)
+    @views.html.events.tags.addToCalendarButton(event)
 
-      @if(isAdmin(loggedInUser)) {
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#notify_participant">
-          <span class="glyphicon glyphicon-envelope"></span> Påminn deltagaren
-        </button>
+    @if(isAdmin(loggedInUser)) {
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#notify_participant">
+        <span class="glyphicon glyphicon-envelope"></span> Påminn deltagaren
+      </button>
 
-        <div class="modal fade" id="notify_participant" tabindex="-1" role="dialog" aria-labelledby="label_rnotify_participant" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                <h3 id="label_rnotify_participant">Vill du e-posta deltagaren?</h3>
-              </div>
-              <div class="modal-body">
-                <p>
-                  Du håller på att skicka en påminnelse via e-post till <strong>@user.firstName @user.lastName</strong>
-                  om sammankomsten <strong>@event.name</strong>.
-                </p>
-                <p>
-                  Vill du fortsätta?
-                </p>
-              </div>
-              <div class="modal-footer">
-                <form action="@routes.UsersSecured.remindParticipant(user.id.get, event.id.get)" method="POST">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                  </button>
-                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span>
-                    Påminn deltagaren</button>
-                </form>
-              </div>
+      <div class="modal fade" id="notify_participant" tabindex="-1" role="dialog" aria-labelledby="label_rnotify_participant" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3 id="label_rnotify_participant">Vill du e-posta deltagaren?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att skicka en påminnelse via e-post till <strong>@user.firstName @user.lastName</strong>
+                om sammankomsten <strong>@event.name</strong>.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.UsersSecured.remindParticipant(user.id.get, event.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span>
+                  Påminn deltagaren</button>
+              </form>
             </div>
           </div>
         </div>
+      </div>
+    }
+  </div>
+
+
+  <h3>
+    <img class="thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
+    @user.firstName @user.lastName
+  </h3>
+
+  <form action="@routes.Participations.createOrUpdate()" method="POST">
+    <fieldset>
+      <div class='form-group  @hasErrors("status")'>
+        <label class="radio-inline">
+          <input type="radio" name="status" id="on" value="On" @if((field("status") == Status.On.toString)) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
+          <span class="label label-default participation-on">Kommer</span>
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""} />
+          <span class="label label-default participation-maybe">Kanske</span>
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""} />
+          <span class="label label-default participation-off">Kommer inte</span>
+        </label>
+        <p class="show-on-error">Välj om du kommer eller inte</p>
+      </div>
+
+      @if(event.allowExtraFriends) {
+        <div class='form-inline form-group @hasErrors("number_of_participants")'>
+          <label for="number_of_participants">Antal deltagare: </label>
+          <input type="number" class="form-control" id="number_of_participants" name="number_of_participants" value='@field("number_of_participants")' min="1" />
+        </div>
+      } else {
+        <input type="hidden" id="number_of_participants" name="number_of_participants" value="1"/>
       }
-    </div>
-  </div>
-</div>
+
+      <div class='form-group  @hasErrors("comment")'>
+        <label for="comment">Kommentar</label>
+        <textarea class="form-control" maxlength="127" id="comment" name="comment" rows="2">@field("comment")</textarea>
+      </div>
+
+      <input type="hidden" id="userId" name="userId" value='@field("userId")'/>
+      <input type="hidden" id="eventId" name="eventId" value='@field("eventId")'/>
+
+      @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
+      <div class="alert alert-danger">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">Inmatningsfel</h4>
+        <p>@errors(participationForm).mkString(", ")</p>
+      </div>
+      }
 
 
-<div class="row">
-  <div class="col-md-5">
-    <h3>
-      <img class="thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
-      @user.firstName @user.lastName
-    </h3>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-5">
-    <form action="@routes.Participations.createOrUpdate()" method="POST">
-      <fieldset>
-        <div class='form-group  @hasErrors("status")'>
-          <label class="radio-inline">
-            <input type="radio" name="status" id="on" value="On" @if((field("status") == Status.On.toString)) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
-            <span class="label label-default participation-on">Kommer</span>
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="status" id="maybe" value="Maybe" @if(field("status") == Status.Maybe.toString) {checked=""} />
-            <span class="label label-default participation-maybe">Kanske</span>
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="status" id="off" value="Off" @if(field("status") == Status.Off.toString) {checked=""} />
-            <span class="label label-default participation-off">Kommer inte</span>
-          </label>
-          <p class="show-on-error">Välj om du kommer eller inte</p>
-        </div>
-
-        @if(event.allowExtraFriends) {
-          <div class='form-inline form-group @hasErrors("number_of_participants")'>
-            <label for="number_of_participants">Antal deltagare: </label>
-            <input type="number" class="form-control" id="number_of_participants" name="number_of_participants" value='@field("number_of_participants")' min="1" />
-          </div>
-        } else {
-          <input type="hidden" id="number_of_participants" name="number_of_participants" value="1"/>
-        }
-
-        <div class='form-group  @hasErrors("comment")'>
-          <label for="comment">Kommentar</label>
-          <textarea class="form-control" maxlength="127" class="col-md-5" id="comment" name="comment" rows="2">@field("comment")</textarea>
-        </div>
-
-        <input type="hidden" id="userId" name="userId" value='@field("userId")'/>
-        <input type="hidden" id="eventId" name="eventId" value='@field("eventId")'/>
-
-        @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
-        <div class="alert alert-danger">
-          <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel</h4>
-          <p>@errors(participationForm).mkString(", ")</p>
-        </div>
-        }
-
-
-        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-          <span class="glyphicon glyphicon-ok"></span> Anmäl
-        </button>
-        <button type="button" class="btn btn-default" id="cancel"
-                onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
-          <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-        </button>
-      </fieldset>
-    </form>
-  </div>
-</div>
+      <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+        <span class="glyphicon glyphicon-ok"></span> Anmäl
+      </button>
+      <button type="button" class="btn btn-default" id="cancel"
+              onClick='window.location.assign("@routes.Events.show(event.id.get)") '>
+        <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+      </button>
+    </fieldset>
+  </form>
 }

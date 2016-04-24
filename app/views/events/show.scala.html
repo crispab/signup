@@ -11,266 +11,228 @@
   @breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get)),
     event.name)
 
-  <div class="row">
-    <div class="col-md-5">
-      <h2>@event.name</h2>
-    </div>
-  </div>
+  <h2>@event.name</h2>
 
-  <div class="row">
-    <div class="col-md-5">
-
-      @event match {
-        case ev if (ev.endTime.before(new java.util.Date())) => {
-          <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            Denna sammankomst har redan inträffat!
-          </div>
-        }
-        case ev if (ev.lastSignupDatePassed) => {
-          <div class="alert alert-info">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
-            Sista anmälningsdatum har passerats.
-          </div>
-        }
-        case ev if (Event.isFullyBooked(ev)) => {
-          <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
-          </div>
-        }
-        case _ => {}
-      }
-
-      @if(flash.get("success").isDefined) {
-        <div class="alert alert-success">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          @flash.get("success")
-        </div>
-      }
-
-      @if(flash.get("error").isDefined) {
-        <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          @flash.get("error")
-        </div>
-      }
-
-      <div class="well">
-        <p>@Html(event.description)</p>
-        <ul>
-          <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
-          <li><strong>Plats:</strong> @event.venue</li>
-          @if(event.maxParticipants.isDefined) {
-            <li><strong>Max antal deltagare:</strong> @event.maxParticipants
-              @if(Event.isFullyBooked(event)) {(fullbokat)}
-            </li>
-          }
-        </ul>
-
-        @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-          <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
-        }
-
-        @views.html.events.tags.addToCalendarButton(event)
-
-        @if(isAdmin(loggedInUser)) {
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown" aria-expanded="false">
-              Åtgärder <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><span class="glyphicon glyphicon-pencil"></span>
-                Redigera</a></li>
-              <li><a data-toggle="modal" data-target="#notify_participants_@event.id" href="#notify_participants_@event.id"><span class="glyphicon glyphicon-envelope"></span>
-                Påminn de som inte svarat</a></li>
-              <li><a data-toggle="modal" data-target="#cancel_event_@event.id" href="#cancel_event_@event.id"><span class="glyphicon glyphicon-off"></span>
-                Ställ in</a></li>
-              <li class="divider"></li>
-              <li><a data-toggle="modal" data-target="#remove_event_@event.id" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
-                Ta bort</a></li>
-            </ul>
-          </div>
-
-          <div class="modal fade" id="notify_participants_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_notify_participants_@event.id" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                  <h3 id="label_notify_participants_@event.id">Vill du e-posta de som ännu inte svarat?</h3>
-                </div>
-                <div class="modal-body">
-                  <p>
-                    Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till sammankomsten <strong>@event.name</strong>
-                    som ännu inte svarat.
-                  </p>
-                  <p>
-                    Vill du fortsätta?
-                  </p>
-                </div>
-                <div class="modal-footer">
-                  <form action="@routes.EventsSecured.remindParticipants(event.id.get)" method="POST">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-envelope"></span> Påminn de som inte svarat
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal fade" id="cancel_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_cancel_event_@event.id" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                  <h3 id="label_cancel_event_@event.id">Vill du ställa in sammankomsten?</h3>
-                </div>
-                <div class="modal-body">
-                  <p>
-                    Du håller på att ställa in sammankomsten <strong>@event.name</strong> och meddela alla deltagare.
-                  </p>
-                  <p>
-                    Vill du fortsätta?
-                  </p>
-                </div>
-                <div class="modal-footer">
-                  <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-off"></span> Ställ in
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal fade" id="remove_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_event_@event.id" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                  <h3 id="label_remove_event_@event.id">Vill du ta bort sammankomsten?</h3>
-                </div>
-                <div class="modal-body">
-                  <p>
-                    Du håller på att ta bort sammankomsten <strong>@event.name</strong>.
-                  </p>
-                  <p>
-                    Vill du fortsätta?
-                  </p>
-                </div>
-                <div class="modal-footer">
-                  <form action="@routes.EventsSecured.delete(event.id.get)" method="POST">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-trash"></span> Ta bort
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
+  @event match {
+    case ev if (ev.endTime.before(new java.util.Date())) => {
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Denna sammankomst har redan inträffat!
       </div>
+    }
+    case ev if (ev.lastSignupDatePassed) => {
+      <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
+        Sista anmälningsdatum har passerats.
+      </div>
+    }
+    case ev if (Event.isFullyBooked(ev)) => {
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
+      </div>
+    }
+    case _ => {}
+  }
+
+  @if(flash.get("success").isDefined) {
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("success")
     </div>
+  }
+
+  @if(flash.get("error").isDefined) {
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("error")
+    </div>
+  }
+
+  <div class="well">
+    <p>@Html(event.description)</p>
+    <ul>
+      <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
+      <li><strong>Plats:</strong> @event.venue</li>
+      @if(event.maxParticipants.isDefined) {
+        <li><strong>Max antal deltagare:</strong> @event.maxParticipants
+          @if(Event.isFullyBooked(event)) {(fullbokat)}
+        </li>
+      }
+    </ul>
+
+    @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+      <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+    }
+
+    @views.html.events.tags.addToCalendarButton(event)
+
+    @if(isAdmin(loggedInUser)) {
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown" aria-expanded="false">
+          Åtgärder <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><span class="glyphicon glyphicon-pencil"></span>
+            Redigera</a></li>
+          <li><a data-toggle="modal" data-target="#notify_participants_@event.id" href="#notify_participants_@event.id"><span class="glyphicon glyphicon-envelope"></span>
+            Påminn de som inte svarat</a></li>
+          <li><a data-toggle="modal" data-target="#cancel_event_@event.id" href="#cancel_event_@event.id"><span class="glyphicon glyphicon-off"></span>
+            Ställ in</a></li>
+          <li class="divider"></li>
+          <li><a data-toggle="modal" data-target="#remove_event_@event.id" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
+            Ta bort</a></li>
+        </ul>
+      </div>
+
+      <div class="modal fade" id="notify_participants_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_notify_participants_@event.id" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3 id="label_notify_participants_@event.id">Vill du e-posta de som ännu inte svarat?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till sammankomsten <strong>@event.name</strong>
+                som ännu inte svarat.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.EventsSecured.remindParticipants(event.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-envelope"></span> Påminn de som inte svarat
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="cancel_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_cancel_event_@event.id" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3 id="label_cancel_event_@event.id">Vill du ställa in sammankomsten?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att ställa in sammankomsten <strong>@event.name</strong> och meddela alla deltagare.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-off"></span> Ställ in
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="remove_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_event_@event.id" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3 id="label_remove_event_@event.id">Vill du ta bort sammankomsten?</h3>
+            </div>
+            <div class="modal-body">
+              <p>
+                Du håller på att ta bort sammankomsten <strong>@event.name</strong>.
+              </p>
+              <p>
+                Vill du fortsätta?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <form action="@routes.EventsSecured.delete(event.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-trash"></span> Ta bort
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 
-  <div class="row">
-    <div class="col-md-5">
-      <p>
-        <span class="label label-default @asCssClass(Status.On)">
-          @{members.numberOn + guests.numberOn} @asMessage(Status.On).toLowerCase
-        </span>
-
-        <span class="label label-default @asCssClass(Status.Maybe)">
-          @{members.numberMaybe + guests.numberMaybe} @asMessage(Status.Maybe).toLowerCase
-        </span>
-
-        <span class="label label-default @asCssClass(Status.Off)">
-          @{members.numberOff + guests.numberOff} @asMessage(Status.Off).toLowerCase
-        </span>
-
-        <span class="label label-default @asCssClass(Status.Unregistered)">
-          @{members.numberUnregistered + guests.numberUnregistered} @asMessage(Status.Unregistered).toLowerCase
-        </span>
-      </p>
-      <p><a href="@routes.Events.asExcel(event.id.get)" class="btn btn-default">
-        <img src="@routes.Assets.at("images/icon-spreadsheet.png")" class="signup-icon"/> Som Excel
-      </a></p>
-
-    </div>
-  </div>
+  <p>
+    <span class="label label-default @asCssClass(Status.On)">
+      @{members.numberOn + guests.numberOn} @asMessage(Status.On).toLowerCase
+    </span>
+      &nbsp;
+    <span class="label label-default @asCssClass(Status.Maybe)">
+      @{members.numberMaybe + guests.numberMaybe} @asMessage(Status.Maybe).toLowerCase
+    </span>
+      &nbsp;
+    <span class="label label-default @asCssClass(Status.Off)">
+      @{members.numberOff + guests.numberOff} @asMessage(Status.Off).toLowerCase
+    </span>
+      &nbsp;
+    <span class="label label-default @asCssClass(Status.Unregistered)">
+      @{members.numberUnregistered + guests.numberUnregistered} @asMessage(Status.Unregistered).toLowerCase
+    </span>
+  </p>
+  <p><a href="@routes.Events.asExcel(event.id.get)" class="btn btn-default">
+    <img src="@routes.Assets.at("images/icon-spreadsheet.png")" class="signup-icon"/> Som Excel
+  </a></p>
 
   @if(isAdmin(loggedInUser) && reminders.nonEmpty) {
-    <div class="row">
-      <div class="col-md-5">
-        <h3>Påminnelser</h3>
-      </div>
-    </div>
+    <h3>Påminnelser</h3>
 
     @reminders.map { reminder =>
-      <div class="row">
-        <div class="col-md-5 list-row">
-          <div class="row">
-            <div class="col-md-12">
-              Påminnelse kommer automatiskt att skickas @asDate(reminder.date)
-            </div>
-          </div>
-        </div>
+      <div class="list-row">
+        Påminnelse kommer automatiskt att skickas @asDate(reminder.date)
       </div>
     }
   }
 
   @if(logEntries.nonEmpty) {
-    <div class="row">
-      <div class="col-md-5">
-        <a href="javascript:;" class="toggle" data-toggle="collapse" data-target="#to_toggle">
-          <h3>
-            Händelser
-            <small>(@logEntries.size st)</small>
-            <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
-          </h3>
-        </a>
-      </div>
-    </div>
+    <a href="javascript:;" class="toggle" data-toggle="collapse" data-target="#to_toggle">
+      <h3>
+        Händelser
+        <small>(@logEntries.size st)</small>
+        <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
+      </h3>
+    </a>
 
     <div id="to_toggle" class="collapse" >
     @logEntries.map { logEntry =>
-      <div class="row">
-        <div class="col-md-5 list-row">
-          <div class="row">
-            <div class="col-md-12">
-              <span class="text-muted">@asDateTime(logEntry.when)</span> @logEntry.message
-            </div>
-          </div>
-        </div>
+      <div class="list-row">
+        <span class="text-muted">@asDateTime(logEntry.when)</span> @logEntry.message
       </div>
     }
     </div>
 
     <script type="text/javascript">
-      $('#to_toggle').on('show.bs.collapse hide.bs.collapse', function (e) {
-        if(!$(this).is(e.target))return;
-        $('#toggle_icon').toggleClass('glyphicon-triangle-right glyphicon-triangle-bottom');
-      });
+        $('#to_toggle').on('show.bs.collapse hide.bs.collapse', function (e) {
+          if (!$(this).is(e.target))return;
+          $('#toggle_icon').toggleClass('glyphicon-triangle-right glyphicon-triangle-bottom');
+        });
     </script>
   }
 
-  <div class="row">
-    <div class="col-md-5">
-      <h3>Gäster</h3>
-    </div>
-  </div>
+  <h3>Gäster</h3>
 
 
   @if(guests.isEmpty) {
@@ -283,19 +245,13 @@
   }
 
   @if(isAdmin(loggedInUser)) {
-    <div class="row">
-      <div class="col-md-5 btn-row">
-        <a href="@routes.ParticipationsSecured.createGuestForm(event.id.get)" class="btn btn-default">
-          <span class="glyphicon glyphicon-plus"></span> Ny gäst</a>
-      </div>
+    <div class="btn-row">
+      <a href="@routes.ParticipationsSecured.createGuestForm(event.id.get)" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus"></span> Ny gäst</a>
     </div>
   }
 
-  <div class="row">
-    <div class="col-md-5">
-      <h3>Medlemmar</h3>
-    </div>
-  </div>
+  <h3>Medlemmar</h3>
 
   @views.html.events.tags.listParticipations(members.on)
   @views.html.events.tags.listParticipations(members.maybe)

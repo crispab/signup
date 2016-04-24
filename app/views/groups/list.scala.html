@@ -7,28 +7,19 @@
 
   @breadcrumb(Seq(), "Grupper")
 
-
-  <div class="row">
-    <div class="col-md-5">
-      <h2>Grupper</h2>
-    </div>
-  </div>
+  <h2>Grupper</h2>
 
   @groups.map { group =>
-    <div class="row">
-      <div class="col-md-5 list-row">
-        <h4><a href="@routes.Groups.show(group.id.get)">@group.name</a></h4>
-        <p>@group.description</p>
-      </div>
+    <div class="list-row">
+      <h4><a href="@routes.Groups.show(group.id.get)">@group.name</a></h4>
+      <p>@group.description</p>
     </div>
   }
 
   @if(isAdmin(loggedInUser)) {
-    <div class="row">
-      <div class="col-md-5 btn-row">
-        <a href="@routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
-          Ny grupp</a>
-      </div>
+    <div class="btn-row">
+      <a href="@routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+        Ny grupp</a>
     </div>
   }
 }
