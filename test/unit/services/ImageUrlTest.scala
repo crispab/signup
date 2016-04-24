@@ -12,22 +12,22 @@ class ImageUrlTest extends PlaySpec {
 
     "handle simple case" in {
       val user = User(firstName = "Hari", lastName = "Seldon", email = "myemailaddress@example.com", imageProvider = GravatarUrl.identifier)
-      ImageUrl(user) must equal(CORRECT_URL)
+      ImageUrl(user, 40) must equal(CORRECT_URL)
     }
 
     "handle CamelCase" in {
       val user = User(firstName = "Hari", lastName = "Seldon", email = "MyEmailAddress@example.com", imageProvider = GravatarUrl.identifier)
-      ImageUrl(user) must equal(CORRECT_URL)
+      ImageUrl(user, 40) must equal(CORRECT_URL)
     }
 
     "handle white space" in {
       val user = User(firstName = "Hari", lastName = "Seldon", email = "  MyEmailAddress@example.com ", imageProvider = GravatarUrl.identifier)
-      ImageUrl(user) must equal(CORRECT_URL)
+      ImageUrl(user, 40) must equal(CORRECT_URL)
     }
 
     "handle empty string" in {
       val user = User(firstName = "Hari", lastName = "Seldon", email = "", imageProvider = GravatarUrl.identifier)
-      ImageUrl(user).length must be > 0
+      ImageUrl(user, 40).length must be > 0
     }
   }
 }
