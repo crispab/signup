@@ -200,7 +200,7 @@ Update the password for the "admin" user, quit psql and exit the shell
     ~ $ exit
     $
 
-Once the system is up & running (next section) you can login using:
+You can now login using:
 - Email: admin@crisp.se
 - Password: mypassword (or whatever you set above)
     
