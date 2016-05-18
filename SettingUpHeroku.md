@@ -159,6 +159,19 @@ Finally run `heroku_config_current.sh` (it contains an Heroku toolbelt command t
 Note 1) Default values mentioned here are "snapshot values" valid when this documentation was last updated. 
 Checking `application.conf` is always the best source of information for default values.
 
+Push the source code to Heroku and whitness the automatic deploy
+------
+
+Push the source code (master branch) to Heroku for build and deploy:
+
+    $ git push heroku master
+
+If you get an error message about "Permission denied (publickey)" you might first have to do:
+
+    $ heroku keys:add ~/.ssh/id_rsa.pub
+
+The above tells Heroku that it's OK for your Git client to push changes to your application's Git repository on Heroku.
+
 Set password for admin user in the application
 ------
 By setting the environment variable PASSWORD_SALT the passwords in the database will be encrypted more safely. 
@@ -173,7 +186,7 @@ Open a shell on your Heroku server:
 
 Start the PostgreSQL interpreter
    
-    ~ $ psql --set "salt=$PASSWORD_SALT" $DATABASE_URL
+    ~ $ psql --set "salt='$PASSWORD_SALT'" $DATABASE_URL
     psql (9.5.1, server 9.3.9)
     SSL connection (protocol: TLSv1.2, cipher: DHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
     Type "help" for help.
@@ -182,7 +195,7 @@ Start the PostgreSQL interpreter
 
 Update the password for the "admin" user, quit psql and exit the shell
 
-    d94mbv2v0vv2dc=> update users set pwd=md5(:salt || 'mypassword') where email='admin@crisp.se';
+    d94mbv2v0vv2dc=> update users set pwd=md5('mypassword' || :salt) where email='admin@crisp.se';
     d94mbv2v0vv2dc=> \q
     ~ $ exit
     $
@@ -191,20 +204,6 @@ Once the system is up & running (next section) you can login using:
 - Email: admin@crisp.se
 - Password: mypassword (or whatever you set above)
     
-Push the source code to Heroku and whitness the automatic deploy
-------
-
-Push the source code (master branch) to Heroku for build and deploy:
-
-    $ git push heroku master
-
-If you get an error message about "Permission denied (publickey)" you might first have to do:
-
-    $ heroku keys:add ~/.ssh/id_rsa.pub
-
-The above tells Heroku that it's OK for your Git client to push changes to your application's Git repository on Heroku.
-
-
 Check that the application is running
 ------
 
