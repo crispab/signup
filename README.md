@@ -46,7 +46,7 @@ some more code...
 
 While this truly is awesome in many ways, one discovery we have made is that we got caught up in the 
 edit-(manual)test-cycle to the degree that very few automated tests were written as the application evolved. 
-A lesson to be learned.
+A lesson learned.
 
 The test cases that do exist are divided into three categories: unit, integration and acceptance.
 
@@ -108,7 +108,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-Setting up a development environment
+Alternative 1: Setting up a development environment using Vagrant
 ----------------------------------
 In the SignUp development environment Vagrant is used to create a local deployment environment in a virtual machine
 (VirtualBox) with a Java run-time, Play Framework (including Scala) and a PostgreSQL database pre-installed.
@@ -144,6 +144,51 @@ SignUp from inside the virtual machine:
     vagrant@vagrant-ubuntu-trusty-64:~$ activator run
 
 And then point your browser on your local computer to [http://localhost:19000](http://localhost:19000)
+
+
+Alternative 2: Setting up a development environment using Docker
+----------------------------------
+Instead of running the whole development environment in a VirtualBox using Vagrant, it's really enough
+to just run the PostgreSQL development database in separate container. The rest of the application can
+be launched in your normal host operating system where you also have your source code.
+
+This is a bit snappier and also makes the Play Framework better at detecting source code changes and 
+initiate re-compilation and reloading.
+
+### Get the source code (same as for the Vagrant option) ###
+The source code is stored on GitHub and managed by the version control system Git. Follow the instructions on
+https://help.github.com/articles/set-up-git to get going with Git and GitHub.
+
+Get a copy of the source code for SignUp by typing on your command line:
+
+    $ git clone https://github.com/crispab/signup.git
+
+This will give you the latest version of the source code.
+
+### Set up Play Framework ###
+In this solution, Play Framework is installed and run in you normal host operating system. Download and install 
+Play from https://www.playframework.com
+
+SignUp is created with Play Framework version 2.3 so it's recommended you get that version. Later versions might work, 
+but Play is known to introduce breaking changes between minor versions so there is no guarantee that version 2.4 or 
+later will work.
+
+### Set up Docker ###
+If you already have Docker on your local system, you just need to:
+
+    $ cd signup
+    $ ./docker_run_dev_db.sh
+
+To install Docker, follow the instructions in https://www.docker.com/. Although Docker is based on Linux 
+there are official solutions for running Docker on Mac OS X and in Windows as well.
+
+### Run SignUp ###
+Once you have the development database running in a Docker container you can launch Play using activator:
+
+    $ cd signup
+    $ activator run
+
+And then point your browser on your local computer to [http://localhost:9000](http://localhost:9000)
 
 
 Deploy in production

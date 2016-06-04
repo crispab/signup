@@ -47,7 +47,7 @@ What is installed by Vagrant on the VirtualBox?
 
 ### Java ###
 
-- Java 7 is installed
+- Java 8 is installed
 
 ### Play Framework ###
 
