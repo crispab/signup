@@ -2,12 +2,13 @@ package controllers
 
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import models.security.Administrator
-import models.{Event, Participation, User}
+import models.{Event, LogEntry, Participation, User}
 import models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 import util.AuthHelper._
+import util.StatusHelper
 
 object Participations extends Controller with OptionalAuthElement with AuthConfigImpl {
 
@@ -19,6 +20,14 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
       Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att anmäla sig.")
+    }
+  }
+
+  private def asMessage(participation: Participation) = {
+    if(participation.numberOfParticipants > 1) {
+      s"${participation.user.name}: ${StatusHelper.asMessage(participation.status)} ${participation.numberOfParticipants} i sällskapet (${participation.comment})"
+    } else {
+      s"${participation.user.name}: ${StatusHelper.asMessage(participation.status)} (${participation.comment})"
     }
   }
 
@@ -35,6 +44,9 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
           Participation.create(participation)
         } else {
           Participation.update(existingParticipation.get.id.get, participation)
+          val updatedParticipation = Participation.find(existingParticipation.get.id.get)
+          val message = s"Anmälan uppdaterad för ${asMessage(updatedParticipation)}"
+          LogEntry.create(existingParticipation.get.event, message)
         }
         Redirect(routes.Events.show(participation.event.id.get))
       }
