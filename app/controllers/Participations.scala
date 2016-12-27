@@ -6,7 +6,9 @@ import models.{Event, LogEntry, Participation, User}
 import models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.concurrent.Akka
 import play.api.mvc._
+import services.SlackReminder
 import util.AuthHelper._
 import util.StatusHelper
 
@@ -23,12 +25,19 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     }
   }
 
-  private def asMessage(participation: Participation) = {
+  private def asMessage(participation: Participation):String = {
+    val message = new StringBuffer()
+    message.append(s"${participation.user.name}: ${StatusHelper.asMessage(participation.status)}")
+
     if(participation.numberOfParticipants > 1) {
-      s"${participation.user.name}: ${StatusHelper.asMessage(participation.status)} ${participation.numberOfParticipants} i sällskapet (${participation.comment})"
-    } else {
-      s"${participation.user.name}: ${StatusHelper.asMessage(participation.status)} (${participation.comment})"
+      message.append(s" ${participation.numberOfParticipants} i sällskapet")
     }
+
+    if(!participation.comment.isEmpty) {
+      message.append(s" (${participation.comment})")
+    }
+
+    message.toString
   }
 
   def createOrUpdate = StackAction { implicit request =>
@@ -45,8 +54,16 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
         } else {
           Participation.update(existingParticipation.get.id.get, participation)
           val updatedParticipation = Participation.find(existingParticipation.get.id.get)
-          val message = s"Anmälan uppdaterad för ${asMessage(updatedParticipation)}"
-          LogEntry.create(existingParticipation.get.event, message)
+          val logMessage = s"Anmälan uppdaterad för ${asMessage(updatedParticipation)}"
+          LogEntry.create(updatedParticipation.event, logMessage)
+
+          import play.api.Play.current
+          import play.api.libs.concurrent.Execution.Implicits._
+          import scala.concurrent.duration._
+          Akka.system.scheduler.scheduleOnce(1.second) {
+            SlackReminder.sendUpdatedParticipationMessage(updatedParticipation)
+          }
+
         }
         Redirect(routes.Events.show(participation.event.id.get))
       }

@@ -9,6 +9,8 @@ import play.api.Play.current
 
 object SlackReminder {
 
+  private val ANONYMOUS = new User(firstName = "John", lastName = "Doe", email = "")
+
   private def sendMessage(event: Event, message: JsValue)(implicit loggedIn: User)  {
     val slackChannelURL = play.api.Play.configuration.getString("slack.channel.url")
     if(slackChannelURL.isDefined) {
@@ -19,7 +21,9 @@ object SlackReminder {
           Logger.error("FAILED sending Slack message: " + message, ex)
           LogEntry.create(event, "Misslyckades att skicka chattmeddelande på Slack. " + ex.getClass.getSimpleName + ": " + ex.getMessage)
       }
-      LogEntry.create(event, loggedIn.name + " har skickat chattmeddelande på Slack")
+      if(loggedIn != ANONYMOUS) {
+        LogEntry.create(event, loggedIn.name + " har skickat chattmeddelande på Slack")
+      }
     }
   }
 
@@ -37,8 +41,17 @@ object SlackReminder {
     Json.parse(views.txt.events.slackcancellationmessage(event, baseUrl).toString())
   }
 
-  def sendCancellationMessage(event: Event)(implicit loggedIn: User)= {
+  def sendCancellationMessage(event: Event)(implicit loggedIn: User) {
     sendMessage(event, createCancellationMessage(event))
+  }
+
+  private def createUpdatedParticipationMessage(participation: Participation) = {
+    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    Json.parse(views.txt.events.slackupdatedparticipationmessage(participation.event, participation, baseUrl).toString())
+  }
+
+  def sendUpdatedParticipationMessage(participation: Participation) {
+    sendMessage(participation.event, createUpdatedParticipationMessage(participation))(loggedIn = ANONYMOUS)
   }
 
 }
