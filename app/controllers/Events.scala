@@ -281,8 +281,9 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     import play.api.libs.concurrent.Execution.Implicits._
     import scala.concurrent.duration._
     Akka.system.scheduler.scheduleOnce(1.second) {
-      MailReminder.sendCancellationMessage(event)
-      SlackReminder.sendCancellationMessage(event)
+      val cancelledEvent = Event.find(id)
+      MailReminder.sendCancellationMessage(cancelledEvent)
+      SlackReminder.sendCancellationMessage(cancelledEvent)
     }
 
     Redirect(routes.Events.show(id))
