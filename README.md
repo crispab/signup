@@ -6,8 +6,7 @@ General
 
 This is the fourth version of the SignUp Service.
 
-- It is written in Scala and based on the Play Framework.
-- Anorm is used for SQL Database access
+- It is written in Scala and is based on the Play Framework.
 - Heroku is used for deployment
 
 ### Play Framework ###
@@ -37,6 +36,21 @@ This is the fourth version of the SignUp Service.
     * Papertrail add-on (log monitoring) - http://papertrailapp.com
 - Gravatar.com (default profile image)
 
+### Test environment ###
+Libraries:
+- ScalaTest + Play (unit test framework) - http://www.scalatest.org/plus/play
+- JUnit 4.12 (unit test framework in Java)
+- Cucumber Java 1.2 (BDD style acceptance test framework)
+- Selenium Web Driver 2.45 (web bowser driven tests)
+- PhantomJS (WebKit based headless web browser) - http://phantomjs.org
+- phantomjsdriver 1.2.1 (glue between Selenium Web Driver and PhantomJS)
+
+Services:
+- Postgression (test database on demand) - http://www.postgression.com
+- Relish (documentaion) - http://www.relishapp.com/crisp/signup/docs
+- Mailinator (temporary mail boxes on demand) - https://mailinator.com
+- Travis CI (CI server) - https://travis-ci.org/crispab/signup
+
 ### Testing ###
 SignUp is far from a good example when it comes to automated testing.
 
@@ -55,7 +69,6 @@ To execute the unit tests:
 ```
 activator 'test-only unit.*'
 ```
-- ScalaTest + Play - http://www.scalatest.org/plus/play
 
 #### Integration tests ####
 These tests mainly do database related tests.
@@ -64,8 +77,6 @@ To execute the integration tests:
 ```
 activator 'test-only integration.*'
 ```
-Services used in addition to the unit tests:
-- posgression (temporary PostgreSQL database instance on demand) - http://www.postgression.com
 
 #### Acceptance tests ####
 The acceptance tests (step functions) are actually written in Java (and not Scala).
@@ -74,13 +85,6 @@ To execute the acceptance tests:
 ```
 activator 'test-only acceptance.*'
 ```
-Tools used for acceptance tests:
-- Cucumber Java 1.2 - https://cukes.info/docs/reference/jvm#java
-- Selenium WebDriver 2.45 - http://docs.seleniumhq.org/docs/03_webdriver.jsp
-
-Services:
-- Relish (documentaion) - http://www.relishapp.com/crisp/signup/docs
-- Mailinator (temporary mail boxes on demand) - https://mailinator.com
 
 #### Continuous integration ####
 The CI server builds, run all tests and deploy to a staging environment, https://signup-ci-test.herokuapp.com
