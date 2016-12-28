@@ -11,6 +11,11 @@
                  "title" : "Tid",
                  "value" : "@util.DateHelper.asDateTime(event.startTime)-@util.DateHelper.asTime(event.endTime)",
                  "short" : false
+              },
+              {
+                 "title" : "Orsak",
+                 "value" : @quote(event.cancellationReason.getOrElse("Ej angiven")),
+                 "short" : false
               }
            ]
         }

@@ -119,28 +119,29 @@
       <div class="modal fade" id="cancel_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_cancel_event_@event.id" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-              <h3 id="label_cancel_event_@event.id">Vill du ställa in sammankomsten?</h3>
-            </div>
-            <div class="modal-body">
-              <p>
-                Du håller på att ställa in sammankomsten <strong>@event.name</strong> och meddela alla deltagare.
-              </p>
-              <p>
-                Vill du fortsätta?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
+            <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                <h3 id="label_cancel_event_@event.id">Vill du ställa in sammankomsten?</h3>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Du håller på att ställa in sammankomsten <strong>@event.name</strong> och meddela alla deltagare.
+                </p>
+                <div class='form-group'>
+                  <label for="reason">Orsak</label>
+                  <textarea class="form-control" maxlength="512" id="reason" name="reason" rows="4"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
                 </button>
                 <button type="submit" class="btn btn-primary">
                   <span class="glyphicon glyphicon-off"></span> Ställ in
                 </button>
-              </form>
             </div>
+            </form>
           </div>
         </div>
       </div>

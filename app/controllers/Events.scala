@@ -272,8 +272,10 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
   def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
-    Event.cancel(id)
-    LogEntry.create(event, "Sammankomsten inställd av " + loggedIn.name)
+
+    val reason = Option(request.body.asFormUrlEncoded.get.get("reason").head.head).filter(_.trim.nonEmpty)
+    Event.cancel(id, reason)
+    LogEntry.create(event, "Sammankomsten inställd av " + loggedIn.name + ". Orsak: " + reason.getOrElse("ej angiven"))
 
     import play.api.Play.current
     import play.api.libs.concurrent.Execution.Implicits._

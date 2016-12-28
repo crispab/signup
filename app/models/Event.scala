@@ -26,7 +26,8 @@ case class Event(
                   venue: String = "",
                   allowExtraFriends: Boolean = false,
                   eventStatus: EventStatus = Created,
-                  maxParticipants: Option[Int] = None
+                  maxParticipants: Option[Int] = None,
+                  cancellationReason: Option[String] = None
                   ) {
 
   def lastSignupDatePassed() = {
@@ -51,8 +52,9 @@ object Event {
       get[Boolean]("allow_extra_friends") ~
       get[Long]("groupx") ~
       get[String]("event_status") ~
-      get[Option[Int]]("max_participants") map {
-      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx ~ event_status ~ max_participants =>
+      get[Option[Int]]("max_participants") ~
+      get[Option[String]]("cancellation_reason") map {
+      case id ~ name ~ description ~ start_time ~ end_time ~ last_signup_date ~ venue ~ allow_extra_friends ~ groupx ~ event_status ~ max_participants ~ cancellation_reason =>
         Event(
           id = id,
           name = name,
@@ -64,7 +66,8 @@ object Event {
           allowExtraFriends = allow_extra_friends,
           group = Group.find(groupx),
           eventStatus = EventStatus.withName(event_status),
-          maxParticipants = max_participants
+          maxParticipants = max_participants,
+          cancellationReason = cancellation_reason
         )
     }
   }
@@ -128,7 +131,8 @@ object Event {
           'allow_extra_friends -> event.allowExtraFriends,
           'groupx -> event.group.id,
           'event_status -> event.eventStatus.toString,
-          'max_participants -> event.maxParticipants
+          'max_participants -> event.maxParticipants,
+          'cancellation_reason -> event.cancellationReason
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey
@@ -148,7 +152,8 @@ INSERT INTO events (
       allow_extra_friends,
       groupx,
       event_status,
-      max_participants
+      max_participants,
+      cancellation_reason
     )
     values (
       {name},
@@ -160,7 +165,8 @@ INSERT INTO events (
       {allow_extra_friends},
       {groupx},
       {event_status},
-      {max_participants}
+      {max_participants},
+      {cancellation_reason}
     )
     """
 
@@ -178,7 +184,8 @@ INSERT INTO events (
           'allow_extra_friends -> event.allowExtraFriends,
           'groupx -> event.group.id,
           'event_status -> event.eventStatus.toString,
-          'max_participants -> event.maxParticipants
+          'max_participants -> event.maxParticipants,
+          'cancellation_reason -> event.cancellationReason
         ).executeUpdate()
     }
   }
@@ -196,15 +203,16 @@ SET name = {name},
     allow_extra_friends = {allow_extra_friends},
     groupx = {groupx},
     event_status = {event_status},
-    max_participants = {max_participants}
+    max_participants = {max_participants},
+    cancellation_reason = {cancellation_reason}
 WHERE id = {id}
     """
 
 
-  def cancel(id: Long) {
+  def cancel(id: Long, reason: Option[String]) {
     DB.withTransaction {
       implicit connection =>
-        SQL("UPDATE events SET event_status = 'Cancelled' WHERE id = {id}").on('id -> id).executeUpdate()
+        SQL("UPDATE events SET event_status = 'Cancelled', cancellation_reason = {cancellation_reason} WHERE id = {id}").on('id -> id, 'cancellation_reason -> reason).executeUpdate()
         SQL("DELETE FROM reminders r WHERE r.event={id}").on('id -> id).executeUpdate()
     }
   }
