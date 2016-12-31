@@ -79,7 +79,7 @@
       <div class='form-inline form-group @hasErrors("last_signup_date")'>
         <div class="checkbox">
           <label>
-            <input type="checkbox" class="form-control" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
+            <input type="checkbox" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
             onclick='signupDate=document.getElementById("last_signup_date"); signupDate.disabled=this.checked; signupDate.required=!this.checked'/>
             samma dag, eller
           </label>
@@ -142,12 +142,28 @@
         </div>
       }
 
-      <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-        <span class="glyphicon glyphicon-ok"></span> Spara
-      </button>
-      <button type="button" class="btn btn-default" id="cancel" onClick="history.go(-1)">
-        <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
-      </button>
+      @if(creatingNew()) {
+        <label class="space-berfore" for="immediate_reminder">Påminnelse</label>
+        <p>
+          Två påminnelser kommer att göras helt automatiskt med början @Reminder.firstReminderDays dagar innan sammankomsten.<br/>
+          Det går även att begära att ett utskick görs direkt när sammankomsten skapas:
+        </p>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="immediate_reminder" name="immediate_reminder" value="true">
+            Skicka påminnelse/inbjudan till alla när jag sparar
+          </label>
+        </div>
+      }
+
+      <div class="form-group space-berfore">
+        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+          <span class="glyphicon glyphicon-ok"></span> Spara
+        </button>
+        <button type="button" class="btn btn-default" id="cancel" onClick="history.go(-1)">
+          <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+        </button>
+      </div>
     </fieldset>
   </form>
 }

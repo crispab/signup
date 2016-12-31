@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 import models._
 import models.Status._
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import util.AuthHelper._
 import util.DateHelper._
 import util.StatusHelper._
@@ -15,11 +15,12 @@ import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
 import play.api.mvc._
 import java.util
+
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
+import jp.t2v.lab.play2.stackc.RequestWithAttributes
 import models.security.Administrator
 import play.api.libs.concurrent.Akka
-import services.{RemindAllParticipants, EventReminderActor, SlackReminder, MailReminder}
-
+import services.{EventReminderActor, MailReminder, RemindAllParticipants, SlackReminder}
 
 import scala.concurrent.ExecutionContext
 
@@ -233,9 +234,21 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
           val eventId = Event.create(event)
           Reminder.createRemindersForEvent(eventId, event)
           LogEntry.create(eventId, "Sammankomsten skapad av " + loggedIn.name)
-          Redirect(routes.Events.show(eventId))
+
+          if(isReminderToBeSent(request)) {
+            val storedEvent = Event.find(eventId)
+            EventReminderActor.instance() ! RemindAllParticipants(storedEvent, loggedIn)
+            Redirect(routes.Events.show(storedEvent.id.get)).flashing("success" -> "En inbjudan till sammankomsten håller på att skickas till alla.")
+          } else {
+            Redirect(routes.Events.show(eventId))
+          }
         }
       )
+  }
+
+  private def isReminderToBeSent(request: RequestWithAttributes[AnyContent]) = {
+    val immediateReminderParameter = request.body.asFormUrlEncoded.get.get("immediate_reminder")
+    immediateReminderParameter.isDefined && immediateReminderParameter.head.head.equals("true")
   }
 
 
