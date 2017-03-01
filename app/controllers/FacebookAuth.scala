@@ -17,7 +17,7 @@ import scala.language.postfixOps
 object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
 
   private val FACEBOOK_AUTHENTICATION_URL = "https://graph.facebook.com/oauth/authorize"
-  private val FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v2.2/oauth/access_token"
+  private val FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v2.8/oauth/access_token"
   private val FACEBOOK_GET_EMAIL_URL = "https://graph.facebook.com/me"
 
   import play.api.Play.current
@@ -77,12 +77,7 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
       "scope" -> Seq("email")
     )).map { response =>
       onOkResponse(response) {
-        response.body.split("&|=") match {
-          case Array("access_token", access_token: String, "expires", expires: String) => access_token
-          case Array("access_token", access_token: String) => access_token
-          case _ =>
-            throw new IllegalStateException("Can't parse Facebook response. Expected an access_token: " + response.body)
-        }
+        (response.json \ "access_token").as[String]
       }
     }
 
