@@ -19,7 +19,7 @@ case class User(
    imageProvider: String = "",
    imageVersion: Option[String] = None) extends Ordered[User] {
 
-  def compare(that: User) = {
+  def compare(that: User): Int = {
     val c = this.firstName.compare(that.firstName)
     if (c != 0) {
       c
@@ -28,7 +28,7 @@ case class User(
     }
   }
 
-  def name = firstName + " " + lastName
+  def name: String = firstName + " " + lastName
 }
 
 object User {
@@ -39,7 +39,7 @@ object User {
 
   val NOT_CHANGED_PASSWORD = "Y2j1EsDUvc6V" // just a random string
 
-  val parser = {
+  val parser: RowParser[User] = {
     get[Option[Long]]("id") ~
       get[String]("first_name") ~
       get[String]("last_name") ~
@@ -257,7 +257,7 @@ SET first_name = {firstName},
 WHERE id = {id}
     """
 
-  def updateInfo(id: Long, imageProvider: String, imageVersion: Option[String] = None) = {
+  def updateInfo(id: Long, imageProvider: String, imageVersion: Option[String] = None): Int = {
     DB.withTransaction {
       implicit connection =>
         SQL("UPDATE users SET image_provider = {imageProvider}, image_version = {imageVersion} WHERE id = {id}").on(

@@ -2,8 +2,8 @@ package services
 
 import java.util.Date
 
-import akka.actor.{Props, Actor}
-import models.{User, Event, Reminder}
+import akka.actor.{Actor, ActorRef, ActorSelection, Props}
+import models.{Event, Reminder, User}
 import play.api.Logger
 import play.api.libs.concurrent.Akka
 
@@ -13,9 +13,9 @@ case class RemindAllParticipants(event: Event, loggedIn: User)
 
 class EventReminderActor extends Actor {
 
-  override def preStart() = {Logger.debug("my path is: " + context.self.path)}
+  override def preStart() {Logger.debug("my path is: " + context.self.path)}
 
-  def receive = {
+  def receive: PartialFunction[Any, Unit] = {
     case CheckEvents(loggedIn) => checkEvents(loggedIn)
     case RemindParticipant(event, user, loggedIn) => remindParticipant(event, user, loggedIn)
     case RemindAllParticipants(event, loggedIn) => remindParticipants(event, loggedIn)
@@ -63,12 +63,12 @@ object EventReminderActor {
 
   val ACTOR_NAME = "EventReminder"
 
-  def create() = {
+  def create(): ActorRef = {
     import play.api.Play.current
     Akka.system.actorOf(Props[EventReminderActor], name = ACTOR_NAME)
   }
 
-  def instance() = {
+  def instance(): ActorSelection = {
     import play.api.Play.current
     Akka.system.actorSelection(path = "akka://application/user/" + ACTOR_NAME)
   }

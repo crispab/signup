@@ -8,7 +8,7 @@ import play.api.db.DB
 case class Membership(id: Option[Long] = None,
                       group: Group,
                       user: User) extends Ordered[Membership] {
-  def compare(that: Membership) = {
+  def compare(that: Membership): Int = {
     this.user.compare(that.user)
   }
 }
@@ -44,7 +44,7 @@ INSERT INTO memberships (
 )
     """
 
-  val parser = {
+  val parser: RowParser[Membership] = {
     get[Option[Long]]("id") ~
       get[Long]("groupx") ~
       get[Long]("userx") map {

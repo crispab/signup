@@ -16,7 +16,7 @@ case class Group(
 
 object Group {
   import scala.language.postfixOps
-  val parser = {
+  val parser: RowParser[Group] = {
     get[Option[Long]]("id") ~
     get[String]("name") ~
     get[String]("description") ~
@@ -48,7 +48,7 @@ object Group {
   }
 
 
-  def findByName(name: String) = {
+  def findByName(name: String): Option[Group] = {
     DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM groups g WHERE g.name={name}").on('name -> name).as(Group.parser singleOpt)

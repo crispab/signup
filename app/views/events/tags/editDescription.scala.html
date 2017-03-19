@@ -6,7 +6,8 @@
 
 <script src='@routes.Assets.at("bootstrap3-wysiwyg/bootstrap3-wysihtml5.all.min.js")'></script>
 <script src='@routes.Assets.at("bootstrap3-wysiwyg/locales/bootstrap-wysihtml5.sv-SE.js")'></script>
-<script>
+
+<script type="text/javascript">
   $('#editor').wysihtml5({
     locale: "sv-SE",
     toolbar: {
@@ -26,6 +27,5 @@
     var descr = $('#editor').html();
     $('#description').val(descr);
   }
-
 </script>
 

@@ -23,35 +23,35 @@ object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
 
-  def list = StackAction(AuthorityKey -> hasPermission(Administrator))  { implicit request =>
+  def list: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator))  { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val usersToList = User.findAll()
     Ok(views.html.users.list(usersToList))
   }
 
-  def createForm = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createForm: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.users.edit(userCreateForm))
   }
 
-  def createMemberForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createMemberForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.users.edit(userCreateForm, groupId = Option(groupId)))
   }
 
-  def createGuestForm(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.users.edit(userCreateForm, eventId = Option(eventId)))
   }
 
 
-  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
+  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
-  def create = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
@@ -62,7 +62,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def createMember(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createMember(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
@@ -73,7 +73,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def createGuest(eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createGuest(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors)),
@@ -84,7 +84,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def remindParticipant(id: Long, eventId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def remindParticipant(id: Long, eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val user = User.find(id)
     val event = Event.find(eventId)
@@ -96,7 +96,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def update(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
+  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.users.edit(formWithErrors, Option(id))),
@@ -125,13 +125,13 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     )
   }
 
-  def updateImageForm(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
+  def updateImageForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(views.html.users.updateImage(userToUpdate))
   }
 
-  def resetImage(id: Long) = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
+  def resetImage(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
 
@@ -140,7 +140,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     Redirect(routes.Users.show(id))
   }
 
-  def uploadImage(id: Long) = AsyncStack(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
+  def uploadImage(id: Long): Action[AnyContent] = AsyncStack(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val userToUpdate = User.find(id)
 
@@ -167,7 +167,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     User.delete(id)
     Redirect(routes.UsersSecured.list())
   }
@@ -204,14 +204,15 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   )
 
   def toUser(id: Option[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: String): User = {
-    val permission = isAdministrator match {
-      case true => Administrator
-      case _ => NormalUser
+    val permission = if (isAdministrator) {
+      Administrator
+    } else {
+      NormalUser
     }
     User(id=id, firstName=firstName.trim, lastName=lastName.trim, email=email.trim, phone=phone.trim, comment=comment.trim, permission=permission, password=password, imageProvider = GravatarUrl.identifier)
   }
 
-  def fromUser(user: models.User) = {
+  def fromUser(user: models.User): Option[(Option[Long], String, String, String, String, String, Boolean, String)] = {
     Option(user.id, user.firstName, user.lastName, user.email, user.phone, user.comment, user.permission==Administrator, User.NOT_CHANGED_PASSWORD)
   }
 }

@@ -11,7 +11,7 @@ object DateHelper {
 
   def TIME = "HH:mm"
 
-  def DATE_TIME = DATE + ", " + TIME
+  def DATE_TIME: String = DATE + ", " + TIME
 
   private def formatted(date: Date, format: String): String = {
     new SimpleDateFormat(format).format(date)
@@ -25,7 +25,7 @@ object DateHelper {
 
   def asDateTime(date: Date): String = formatted(date, DATE_TIME)
 
-  def sameDay(date1: Date, date2: Date) = {
+  def sameDay(date1: Date, date2: Date): Boolean = {
     asDate(date1).equals(asDate(date2))
   }
 }

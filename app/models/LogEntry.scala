@@ -17,7 +17,7 @@ case class LogEntry(
 
 object LogEntry {
   import scala.language.postfixOps
-  val parser = {
+  val parser: RowParser[LogEntry] = {
     get[Option[Long]]("id") ~
     get[Long]("event") ~
     get[String]("message") ~

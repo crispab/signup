@@ -30,18 +30,18 @@ object Groups extends Controller with OptionalAuthElement with AuthConfigImpl {
 object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
 
 
-  def createForm = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createForm: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Ok(views.html.groups.edit(groupForm))
   }
 
-  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val group = Group.find(id)
     Ok(views.html.groups.edit(groupForm.fill(group), Option(id)))
   }
 
-  def create = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.groups.edit(formWithErrors)),
@@ -52,7 +52,7 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.groups.edit(formWithErrors, Option(id))),
@@ -63,7 +63,7 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
       )
   }
 
-  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     Group.delete(id)
     Redirect(routes.Groups.list())

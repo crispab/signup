@@ -5,8 +5,8 @@ import play.api.i18n.Messages
 
 object LocaleHelper {
   import play.api.Play.current
-  val LC_NAME = play.api.Play.configuration.getString("application.locale").getOrElse("sv_SE")
-  val TZ_NAME = play.api.Play.configuration.getString("application.timezone").getOrElse("Europe/Stockholm")
+  val LC_NAME: String = play.api.Play.configuration.getString("application.locale").getOrElse("sv_SE")
+  val TZ_NAME: String = play.api.Play.configuration.getString("application.timezone").getOrElse("Europe/Stockholm")
 
   private def isKey(s: String) = s.startsWith("error.")
 

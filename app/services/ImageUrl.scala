@@ -1,7 +1,7 @@
 package services
 
 import cloudinary.plugin.CloudinaryPlugin
-import com.cloudinary.Transformation
+import com.cloudinary.{Cloudinary, Transformation}
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
 import play.api.Play
@@ -38,8 +38,8 @@ object GravatarUrl extends ImageUrl {
 
 object CloudinaryUrl extends ImageUrl {
   import play.api.Play.current
-  lazy val CLOUDINARY_FOLDER = play.api.Play.configuration.getString("cloudinary.folder").getOrElse("signup")
-  lazy val cloudinary = Play.application.plugin[CloudinaryPlugin]
+  lazy val CLOUDINARY_FOLDER: String = play.api.Play.configuration.getString("cloudinary.folder").getOrElse("signup")
+  lazy val cloudinary: Cloudinary = Play.application.plugin[CloudinaryPlugin]
     .getOrElse(throw new RuntimeException("MyPlugin not loaded"))
     .cloudinary
 
@@ -48,7 +48,7 @@ object CloudinaryUrl extends ImageUrl {
     cloudinary.url().secure(secureValue = true).transformation(Transformation().w_(size).h_(size).c_("thumb").g_("face")).version(user.imageVersion).generate(publicId(user))
   }
 
-  def publicId(user: User) = {
+  def publicId(user: User): String = {
     CLOUDINARY_FOLDER + "/" + user.id.get.toString
   }
 

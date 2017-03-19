@@ -15,6 +15,7 @@ import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
 import play.api.mvc._
 import java.util
+import java.util.Date
 
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import jp.t2v.lab.play2.stackc.RequestWithAttributes
@@ -206,7 +207,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
-  def remindParticipants(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def remindParticipants(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     if(!event.isCancelled) {
       EventReminderActor.instance() ! RemindAllParticipants(event, loggedIn)
@@ -216,13 +217,13 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def createForm(groupId: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val group = Group.find(groupId)
     Ok(views.html.events.edit(eventForm, group))
   }
 
-  def create = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
       eventForm.bindFromRequest.fold(
         formWithErrors => {
@@ -252,7 +253,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def updateForm(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
     if(!event.isCancelled) {
@@ -262,7 +263,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def update(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser = Option(loggedIn)
     val event = Event.find(id)
     if(!event.isCancelled) {
@@ -283,7 +284,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def cancel(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def cancel(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
 
     val reason = Option(request.body.asFormUrlEncoded.get.get("reason").head.head).filter(_.trim.nonEmpty)
@@ -303,7 +304,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
 
-  def delete(id: Long) = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     val groupId = event.group.id.get
     Event.delete(id)
@@ -331,11 +332,12 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
                    event => event.lastSignUpDate==event.startTime || event.lastSignUpDate.before(event.startTime))
     )
 
-  def fromEvent(event: Event) = {
+  def fromEvent(event: Event): Option[(Option[Long], String, String, Date, Date, Date, String, String, Long, Boolean, Option[Date], Option[Int])] = {
     val isSameDay = sameDay(event.startTime, event.lastSignUpDate)
-    val lastSignUpDay = isSameDay match {
-      case true => None
-      case _ => Option(event.lastSignUpDate)
+    val lastSignUpDay = if (isSameDay) {
+      None
+    } else {
+      Option(event.lastSignUpDate)
     }
 
     val invited = if(event.allowExtraFriends) {
@@ -367,9 +369,10 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
     val start_time_str = new SimpleDateFormat("HH:mm").format(start_time)
     val end_time_str = new SimpleDateFormat("HH:mm").format(end_time)
 
-    val lastSignUpDate = sameDay match {
-      case true => start_date
-      case _ => last_signup_date.getOrElse(start_date)
+    val lastSignUpDate = if (sameDay) {
+      start_date
+    } else {
+      last_signup_date.getOrElse(start_date)
     }
 
     Event(

@@ -47,7 +47,7 @@ object Global extends GlobalSettings {
   }
 
 
-  override def onError(request: RequestHeader, ex: Throwable) = {
+  override def onError(request: RequestHeader, ex: Throwable): Future[Result] = {
     val cause = ExceptionUtils.getCause(ex)
     val stackTrace = ExceptionUtils.getStackTrace(cause)
     Future.successful(InternalServerError(
@@ -55,13 +55,13 @@ object Global extends GlobalSettings {
     ))
   }
 
-  override def onHandlerNotFound(request: RequestHeader) = {
+  override def onHandlerNotFound(request: RequestHeader): Future[Result] = {
     Future.successful(NotFound(
       views.html.error("Sidan du försökte gå till finns inte.", request.uri)
     ))
   }
 
-  override def onBadRequest(request: RequestHeader, error: String) = {
+  override def onBadRequest(request: RequestHeader, error: String): Future[Result] = {
     Future.successful(BadRequest(
       views.html.error("Sidan du försökte gå till kan inte visas.", error)
     ))

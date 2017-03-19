@@ -5,17 +5,17 @@ case class ParticipationLists(event: Event,
                               maybe: Seq[Participation],
                               off: Seq[Participation],
                               unregistered: Seq[Participation]) {
-  def isEmpty = on.isEmpty && maybe.isEmpty && off.isEmpty && unregistered.isEmpty
+  def isEmpty: Boolean = on.isEmpty && maybe.isEmpty && off.isEmpty && unregistered.isEmpty
 
-  def numberOn = {
+  def numberOn: Int = {
     on.map(_.numberOfParticipants).sum
   }
 
-  def numberMaybe = {
+  def numberMaybe: Int = {
     maybe.map(_.numberOfParticipants).sum
   }
 
-  def numberOff = off.size
+  def numberOff: Int = off.size
 
-  def numberUnregistered = unregistered.size
+  def numberUnregistered: Int = unregistered.size
 }

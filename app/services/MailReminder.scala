@@ -89,7 +89,7 @@ object MailReminder {
     }
   }
 
-  def sendCancellationMessage(event: Event)(implicit loggedIn: User) = {
+  def sendCancellationMessage(event: Event)(implicit loggedIn: User) {
     sendMessages(event, findReceiversToCancel(event), createCancellationMessage)
   }
 }

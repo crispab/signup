@@ -4,7 +4,7 @@ import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
 import play.api.libs.ws.WS
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, AnyContent, Controller}
 import util.ThemeHelper._
 import util.WsHelper._
 
@@ -25,7 +25,7 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
   private lazy val FACEBOOK_CLIENT_ID = play.api.Play.configuration.getString("facebook.client.id")
   private lazy val FACEBOOK_CLIENT_SECRET = play.api.Play.configuration.getString("facebook.client.secret")
 
-  def isConfigured = FACEBOOK_CLIENT_ID.isDefined && FACEBOOK_CLIENT_SECRET.isDefined
+  def isConfigured: Boolean = FACEBOOK_CLIENT_ID.isDefined && FACEBOOK_CLIENT_SECRET.isDefined
 
   def authenticate = Action { implicit request =>
     val randomString = DigestUtils.md5Hex(Math.random().toString)
@@ -43,7 +43,7 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
     Redirect(requestAuthenticationTokenUrl)
   }
 
-  def callback(error: Option[String] = None, state: Option[String] = None, code: Option[String] = None) = Action.async { implicit request =>
+  def callback(error: Option[String] = None, state: Option[String] = None, code: Option[String] = None): Action[AnyContent] = Action.async { implicit request =>
     if (code.isDefined) {
       val callbackUrl = routes.FacebookAuth.callback().absoluteURL()
       val access_token = requestAccessToken(code.get, callbackUrl)

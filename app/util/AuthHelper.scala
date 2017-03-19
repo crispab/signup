@@ -60,6 +60,6 @@ object AuthHelper {
   import play.api.Play.current
   private def salt = play.api.Play.configuration.getString("password.salt").getOrElse("")
 
-  def randomPassword = Random.alphanumeric.take(12).mkString
+  def randomPassword: String = Random.alphanumeric.take(12).mkString
 
 }

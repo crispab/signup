@@ -4,7 +4,7 @@ import models.Status
 
 object StatusHelper {
 
-  def asMessage(status: models.Status.Value) = {
+  def asMessage(status: models.Status.Value): String = {
     status match {
       case Status.On => "Kommer"
       case Status.Maybe => "Kanske"
@@ -13,7 +13,7 @@ object StatusHelper {
     }
   }
 
-  def asCssClass(status: models.Status.Value) = {
+  def asCssClass(status: models.Status.Value): String = {
     status match {
       case Status.On => "participation-on"
       case Status.Maybe => "participation-maybe"

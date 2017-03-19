@@ -24,9 +24,9 @@ case class Participation(id: Option[Long] = None,
                          event: Event,
                          signUpTime: Option[Date]) extends Ordered[Participation] {
 
-  def compare(that: Participation) = this.user.compare(that.user)
+  def compare(that: Participation): Int = this.user.compare(that.user)
 
-  def participantsComing = {
+  def participantsComing: Int = {
     status match {
       case Status.On => numberOfParticipants
       case Status.Maybe => numberOfParticipants
@@ -34,7 +34,7 @@ case class Participation(id: Option[Long] = None,
     }
   }
 
-  def isLateSignUp = {
+  def isLateSignUp: Boolean = {
     if(status != On || signUpTime.isEmpty) {
       false
     } else {
@@ -61,7 +61,7 @@ object Participation {
 
 
   import scala.language.postfixOps
-  val parser = {
+  val parser: RowParser[Participation] = {
     get[Option[Long]]("id") ~
       get[String]("status") ~
       get[Int]("number_of_participants") ~
@@ -152,7 +152,7 @@ INSERT INTO participations (
     }
   }
 
-  def calculateNewSignUpTime(oldParticipation: Participation, newParticipation: Participation) = {
+  def calculateNewSignUpTime(oldParticipation: Participation, newParticipation: Participation): Option[Date] = {
     if(newParticipation.status != oldParticipation.status)
       newParticipation.signUpTime
     else

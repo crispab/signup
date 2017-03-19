@@ -6,7 +6,7 @@ import models.User
 import org.apache.commons.codec.digest.DigestUtils
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, AnyContent, Controller}
 import util.ThemeHelper._
 import util.WsHelper._
 
@@ -26,7 +26,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
   private lazy val GOOGLE_CLIENT_ID = play.api.Play.configuration.getString("google.client.id")
   private lazy val GOOGLE_CLIENT_SECRET = play.api.Play.configuration.getString("google.client.secret")
 
-  def isConfigured = GOOGLE_CLIENT_ID.isDefined && GOOGLE_CLIENT_SECRET.isDefined
+  def isConfigured: Boolean = GOOGLE_CLIENT_ID.isDefined && GOOGLE_CLIENT_SECRET.isDefined
 
   def authenticate = Action { implicit request =>
     val randomString = DigestUtils.md5Hex(Math.random().toString)
@@ -45,7 +45,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
     Redirect(requestAuthenticationTokenUrl)
   }
 
-  def callback(error: Option[String] = None, state: Option[String] = None, code: Option[String] = None) = Action.async { implicit request =>
+  def callback(error: Option[String] = None, state: Option[String] = None, code: Option[String] = None): Action[AnyContent] = Action.async { implicit request =>
     if (code.isDefined) {
       val callbackUrl = routes.GoogleAuth.callback().absoluteURL()
       val callToGoogle = WS.url(GOOGLE_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(

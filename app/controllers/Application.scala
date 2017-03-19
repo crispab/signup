@@ -17,7 +17,7 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
     Ok(views.html.index())
   }
 
-  def loginForm = httpsAction { implicit request =>
+  def loginForm: Action[AnyContent] = httpsAction { implicit request =>
     if (request.session.get("access_uri").isEmpty && request.headers.get(REFERER).isDefined) {
       Logger.debug("Using REFERER URL: " + request.headers.get(REFERER).get)
       Ok(views.html.login(loginDataForm)).withSession("access_uri" -> request.headers.get(REFERER).get)
@@ -26,7 +26,7 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
     }
   }
 
-  def authenticate = Action.async { implicit request =>
+  def authenticate: Action[AnyContent] = Action.async { implicit request =>
     loginDataForm.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(views.html.login(formWithErrors))),
       user => gotoLoginSucceeded(user.get.id.get)
@@ -55,7 +55,7 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
 
   case class LoginDataForm(email : String, password : String)
 
-  def logout = Action.async { implicit request =>
+  def logout: Action[AnyContent] = Action.async { implicit request =>
     gotoLogoutSucceeded.map(_.flashing(
       "success" -> "Du har loggats ut!"
     ))

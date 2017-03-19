@@ -30,18 +30,18 @@ case class Event(
                   cancellationReason: Option[String] = None
                   ) {
 
-  def lastSignupDatePassed() = {
+  def lastSignupDatePassed(): Boolean = {
     val today = new DateTime().withTimeAtStartOfDay
     val lastSignUpDay = new DateTime(lastSignUpDate).withTimeAtStartOfDay
     today.isAfter(lastSignUpDay)
   }
 
-  def isCancelled = eventStatus == Cancelled
+  def isCancelled: Boolean = eventStatus == Cancelled
 }
 
 object Event {
   import scala.language.postfixOps
-  val parser = {
+  val parser: RowParser[Event] = {
     get[Option[Long]]("id") ~
       get[String]("name") ~
       get[String]("description") ~
@@ -255,6 +255,6 @@ WHERE
     e.id = {eventId}
     """
 
-  def isFullyBooked(event: Event) = !hasSeatsAvailable(event.id.get)
+  def isFullyBooked(event: Event): Boolean = !hasSeatsAvailable(event.id.get)
 
 }

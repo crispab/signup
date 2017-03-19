@@ -17,7 +17,7 @@ case class Reminder(id: Option[Long] = None,
 
 object Reminder {
   import scala.language.postfixOps
-  val parser = {
+  val parser: RowParser[Reminder] = {
     get[Option[Long]]("id") ~
     get[Date]("datex") ~
     get[Long]("event") map {
@@ -43,9 +43,9 @@ object Reminder {
     }
   }
 
-  def firstReminderDays = play.api.Play.configuration.getInt("event.reminder.first.days").getOrElse(7)
+  def firstReminderDays: Int = play.api.Play.configuration.getInt("event.reminder.first.days").getOrElse(7)
 
-  def lastReminderDays(event: Event) = {
+  def lastReminderDays(event: Event): Int = {
     if(sameDay(event.startTime, event.lastSignUpDate))
       1
     else
@@ -85,7 +85,7 @@ INSERT INTO reminders (
     )
     """
 
-  def findByEvent(event: Event) = {
+  def findByEvent(event: Event): List[Reminder] = {
     DB.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM reminders WHERE event={event} ORDER BY datex").on('event -> event.id).as(parser *)
