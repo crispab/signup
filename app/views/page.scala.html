@@ -1,4 +1,4 @@
-@(title: String, section: util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User])
+@(title: String, section: util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User], lang: Lang)
 
 <!DOCTYPE html>
 
@@ -34,7 +34,7 @@
         <div class="container-fluid">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#signup_navbar">
-              <span class="sr-only">Visa/dölj navigation</span>
+              <span class="sr-only">@Messages("page.nav.showhide")</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -44,9 +44,9 @@
 
           <div class="navbar-collapse collapse" id="signup_navbar">
             <ul class="nav navbar-nav">
-              <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">Grupper</a></li>
+              <li class="@sectionClass(util.Section.Groups.toString)"><a href="@routes.Groups.list()">@Messages("page.groups")</a></li>
               @if(isAdmin(loggedInUser)) {
-                <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.UsersSecured.list()">Användare</a></li>
+                <li class="@sectionClass(util.Section.Users.toString)"><a href="@routes.UsersSecured.list()">@Messages("page.users")</a></li>
               }
             </ul>
             @if(showLogin) {
@@ -59,15 +59,15 @@
                       <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                      <li><a href="@routes.Users.show(loggedInUser.get.id.get)">Min sida</a></li>
-                      <li><a href="@routes.Application.logout()">Logga ut</a></li>
+                      <li><a href="@routes.Users.show(loggedInUser.get.id.get)">@Messages("page.mypage")</a></li>
+                      <li><a href="@routes.Application.logout()">@Messages("page.logout")</a></li>
                     </ul>
                   </li>
                 </ul>
               } else {
                 <ul class="nav navbar-nav navbar-right">
                   <li class="@sectionClass(util.Section.Login.toString)">
-                    <a id="logged_in_user" href="@routes.Application.loginForm()"><span class="glyphicon glyphicon-user"></span>&nbsp;Logga in</a>
+                    <a id="logged_in_user" href="@routes.Application.loginForm()"><span class="glyphicon glyphicon-user"></span>&nbsp;@Messages("login.login")</a>
                   </li>
                 </ul>
               }

@@ -1,12 +1,11 @@
-@(errorMessage: String, details: String)(implicit loggedInUser: Option[User] = None)
+@(errorMessage: String, details: String)(implicit loggedInUser: Option[User] = None, lang: Lang)
 
-@import util.Section._
 
-@page(title = "Fel", section = Other, showLogin = false) {
+@page(title = Messages("errorpage.title"), section = util.Section.Other, showLogin = false) {
 
   @breadcrumb(Seq(), "")
 
-  <h2>Oj! Nu blev det visst fel.</h2>
+  <h2>@Messages("errorpage.oops")</h2>
   <p class="alert alert-danger">
   @errorMessage
   </p>
@@ -14,7 +13,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <a data-toggle="collapse" href="#techBody" aria-expanded="false" aria-controls="techBody">
-          <h4 class="panel-title">Tekniska detaljer</h4>
+          <h4 class="panel-title">@Messages("errorpage.details")</h4>
         </a>
       </div>
       <div class="collapse" id="techBody">
@@ -25,7 +24,7 @@
     </div>
   }
   <p>
-    <a href="@routes.Application.index()">Till startsidan</a>
+    <a href="@routes.Application.index()">@Messages("errorpage.startpage")</a>
   </p>
 }
 

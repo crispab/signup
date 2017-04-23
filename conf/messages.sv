@@ -1,3 +1,9 @@
+# SignUp messages
+
+
+# ----------------------------------------------
+# Default messages in Play translated to Swedish
+
 # --- Constraints
 constraint.required=Obligatorisk
 constraint.min=Minvärde: {0}
@@ -43,3 +49,29 @@ error.expected.uuid=UUID förväntas
 error.path.empty=Tom sökväg
 error.path.missing=Sökväg saknas
 error.path.result.multiple=Sökvägen ger fler än ett resultat
+language.check=Språket är svenska!
+breadcrumb.home=Hem
+errorpage.oops=Oj! Nu blev det visst fel.
+errorpage.details=Tekniska detaljer
+errorpage.startpage=Till startsidan
+index.welcome=Välkommen till {0}
+index.description.1={0} är en tjänst för grupper som vill ha ordning på sina sammankomster.
+index.description.2=Du kan lägga upp nya sammankomster i gruppens kalender och medlemmarna kan själva gå in och markera ifall de kan komma eller inte.
+index.description.3={0} skickar inbjudningar och påminnelser till alla medlemmar i gruppen för varje sammankomst.
+page.groups=Grupper
+page.users=Användare
+login.login=Logga in
+login.failed=Felaktig epostadress eller lösenord.
+login.google=Logga in med Google
+login.facebook=Logga in med Facebook
+page.nav.showhide=Visa/dölj navigation
+page.mypage=Min sida
+page.logout=Logga ut
+login.email=Epost
+login.password=Lösenord
+login.with.password=Logga in med lösenord
+login.with.social=Logga in med sociala media
+errorpage.title=Fel
+http.notfound=Sidan du försökte gå till finns inte
+http.error=Sidan du försökte gå till kan inte visas
+http.badrequest=Sidan du försökte gå till kan inte visas

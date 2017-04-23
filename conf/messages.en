@@ -1,0 +1,82 @@
+# SignUp messages
+
+
+# ----------------------------------------------
+# Below:
+# Copyright (C) 2009-2013 Typesafe Inc. <http://www.typesafe.com>
+#
+# from play_2.11-2.3.8.jar!/messages.default
+
+# Default messages
+
+# --- Constraints
+constraint.required=Required
+constraint.min=Minimum value: {0}
+constraint.max=Maximum value: {0}
+constraint.minLength=Minimum length: {0}
+constraint.maxLength=Maximum length: {0}
+constraint.email=Email
+
+# --- Formats
+format.date=Date (''{0}'')
+format.numeric=Numeric
+format.real=Real
+
+# --- Errors
+error.invalid=Invalid value
+error.invalid.java.util.Date=Invalid date value
+error.required=This field is required
+error.number=Numeric value expected
+error.real=Real number value expected
+error.real.precision=Real number value with no more than {0} digit(s) including {1} decimal(s) expected
+error.min=Must be greater or equal to {0}
+error.min.strict=Must be strictly greater than {0}
+error.max=Must be less or equal to {0}
+error.max.strict=Must be strictly less than {0}
+error.minLength=Minimum length is {0}
+error.maxLength=Maximum length is {0}
+error.email=Valid email required
+error.pattern=Must satisfy {0}
+error.date=Valid date required
+
+error.expected.date=Date value expected
+error.expected.date.isoformat=Iso date value expected
+error.expected.jodadate.format=Joda date value expected
+error.expected.jsarray=Array value expected
+error.expected.jsboolean=Boolean value expected
+error.expected.jsnumber=Number value expected
+error.expected.jsobject=Object value expected
+error.expected.jsstring=String value expected
+error.expected.jsnumberorjsstring=String or number expected
+error.expected.keypathnode=Node value expected
+error.expected.uuid=UUID value expected
+
+error.path.empty=Empty path
+error.path.missing=Missing path
+error.path.result.multiple=Multiple results for the given path
+language.check=The language is English!
+breadcrumb.home=Home
+errorpage.oops=Oops! Something went wrong.
+errorpage.details=Technical details
+errorpage.startpage=To start page
+index.welcome=Welcome to {0}
+index.description.1={0} is a service for groups of people to administrate common events.
+index.description.2=You create  events in the group''s calendar. Each member can sign up for it individually.
+index.description.3={0} will send invites and reminders to all group members for each event.
+page.groups=Groups
+page.users=Users
+login.login=Log in
+login.failed=Invalid email address or password.
+login.google=Log in using Google
+login.facebook=Log in using Facebook
+page.nav.showhide=Show/hide navigation
+page.mypage=My page
+page.logout=Log out
+login.email=Email
+login.password=Password
+login.with.password=Log in using a password
+login.with.social=Login via social media
+errorpage.title=Error
+http.notfound=The page you tried to reach doesn''t exist
+http.error=The page you tried to reach can''t be displayed
+http.badrequest=The page you tried to reach can''t be displayed

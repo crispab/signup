@@ -1,6 +1,10 @@
 package util
 
-import play.api.i18n.Messages
+import java.util.{Locale, TimeZone}
+
+import org.apache.commons.lang.LocaleUtils
+import play.api.i18n.{Lang, Messages}
+import play.api.mvc.RequestHeader
 
 
 object LocaleHelper {
@@ -16,4 +20,8 @@ object LocaleHelper {
     else
       keyOrMessage
   }
+
+  def getConfiguredLocale: Locale = LocaleUtils.toLocale(LocaleHelper.LC_NAME)
+  def getConfiguredTimeZone: TimeZone = TimeZone.getTimeZone(util.LocaleHelper.TZ_NAME)
+  def getLang(request: RequestHeader): Lang = Lang.preferred(request.acceptLanguages)
 }
