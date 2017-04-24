@@ -3,6 +3,7 @@ package controllers
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import models.User
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.i18n.Messages
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}
 import util.ThemeHelper._
@@ -54,13 +55,14 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
       if (user.isDefined) {
         gotoLoginSucceeded(user.get.id.get)
       } else {
-        val errorMessage = "Det finns ingen användare med epostadressen " + email + " i " + APPLICATION_NAME + "."
+        val errorMessage = Messages("login.nonexistentemail", email, APPLICATION_NAME)
         Future.successful(
           Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
         )
       }
     } else {
-      val errorMessage = "Det gick inte att logga in via Facebook: " + error.getOrElse("okänt fel")
+      val cause = error.getOrElse(Messages("login.unknownerror"))
+      val errorMessage = Messages("login.facebookfail", cause)
       Future.successful(
         Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
       )

@@ -6,6 +6,7 @@ import models.{Event, LogEntry, Participation, User}
 import models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.{Lang, Messages}
 import play.api.libs.concurrent.Akka
 import play.api.mvc._
 import services.SlackReminder
@@ -21,16 +22,17 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
       val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = Unregistered, user = userToAttend, event = event))
       Ok(views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
     } else {
-      Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att anmäla sig.")
+      Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("error.signup.eventcancelled"))
     }
   }
 
-  private def asMessage(participation: Participation):String = {
+  private def asLogMessage(participation: Participation)(implicit lang: Lang):String = {
     val message = new StringBuffer()
-    message.append(s"${participation.user.name}: ${StatusHelper.asMessage(participation.status)}")
+    message.append(Messages("participation.updated", participation.user.name, StatusHelper.asMessage(participation.status)))
 
     if(participation.numberOfParticipants > 1) {
-      message.append(s" ${participation.numberOfParticipants} i sällskapet")
+      message.append(s" ${participation.numberOfParticipants} ")
+      message.append(Messages("participation.people"))
     }
 
     if(!participation.comment.isEmpty) {
@@ -54,8 +56,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
         } else {
           Participation.update(existingParticipation.get.id.get, participation)
           val updatedParticipation = Participation.find(existingParticipation.get.id.get)
-          val logMessage = s"Anmälan uppdaterad för ${asMessage(updatedParticipation)}"
-          LogEntry.create(updatedParticipation.event, logMessage)
+          LogEntry.create(updatedParticipation.event, asLogMessage(updatedParticipation))
 
           import play.api.Play.current
           import play.api.libs.concurrent.Execution.Implicits._
@@ -80,7 +81,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
         "userId" -> longNumber,
         "eventId" -> longNumber
       )(toParticipation)(fromParticipation)
-        .verifying("Sammankomsten är inställd. Det går inte att anmäla sig.", participation => !participation.event.isCancelled)
+        .verifying("error.signup.eventcancelled", participation => !participation.event.isCancelled)
     )
 
   def toParticipation(

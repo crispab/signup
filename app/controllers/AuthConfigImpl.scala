@@ -2,10 +2,12 @@ package controllers
 
 import jp.t2v.lab.play2.auth.AuthConfig
 import play.api.Logger
+import play.api.i18n.Messages
 import play.api.mvc.Results._
 import play.api.mvc._
+import util.LocaleHelper
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect._
 
 trait AuthConfigImpl extends AuthConfig {
@@ -65,7 +67,7 @@ trait AuthConfigImpl extends AuthConfig {
     Future.successful(
       Redirect(routes.Application.loginForm())
       .withSession("access_uri" -> request.uri)
-      .flashing(("error" , "Nädu, det här får du inte göra utan att logga in som administratör!"))
+      .flashing(("error" , Messages("application.authfail")(lang = LocaleHelper.getLang(request))))
     )
   }
 
@@ -73,7 +75,7 @@ trait AuthConfigImpl extends AuthConfig {
    * If authorization failed (usually incorrect password) redirect the user as follows:
    */
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
-    Future.successful(Forbidden("Nädu, det här får du inte göra utan att logga in som administratör!"))
+    Future.successful(Forbidden(Messages("application.authfail")(lang = LocaleHelper.getLang(request))))
   }
 
   /**

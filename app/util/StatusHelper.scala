@@ -1,15 +1,16 @@
 package util
 
 import models.Status
+import play.api.i18n.{Lang, Messages}
 
 object StatusHelper {
 
-  def asMessage(status: models.Status.Value): String = {
+  def asMessage(status: models.Status.Value)(implicit lang: Lang): String = {
     status match {
-      case Status.On => "Kommer"
-      case Status.Maybe => "Kanske"
-      case Status.Off => "Kommer inte"
-      case Status.Unregistered => "Har inte svarat"
+      case Status.On => Messages("status.on")
+      case Status.Maybe => Messages("status.maybe")
+      case Status.Off => Messages("status.off")
+      case Status.Unregistered => Messages("status.unregistered")
     }
   }
 

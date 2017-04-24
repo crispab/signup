@@ -7,11 +7,12 @@ import models.security.{Administrator, NormalUser}
 import models.{Event, Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
+import play.api.i18n.Messages
 import play.api.mvc._
-import services.{RemindParticipant, EventReminderActor, GravatarUrl, CloudinaryUrl}
+import services.{CloudinaryUrl, EventReminderActor, GravatarUrl, RemindParticipant}
 import util.AuthHelper._
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ExecutionContext, Future}
 
 object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
@@ -90,9 +91,9 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     val event = Event.find(eventId)
     if(!event.isCancelled) {
       EventReminderActor.instance() ! RemindParticipant(event, user, loggedIn)
-      Redirect(routes.Events.show(eventId)).flashing("success" -> ("En påminnelse om sammankomsten kommer att skickas till " + user.firstName + " " + user.lastName))
+      Redirect(routes.Events.show(eventId)).flashing("success" -> Messages("user.reminder", user.name))
     } else {
-      Redirect(routes.Events.show(eventId)).flashing("error" -> "Sammankomsten är inställd. Det går inte att skicka påminnelser.")
+      Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("event.cancelled.noreminders"))
     }
   }
 
@@ -149,7 +150,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     val body = request.body.asMultipartFormData
     val resourceFile = body.get.file("image")
     if (resourceFile.isEmpty) {
-      Future(BadRequest(views.html.users.updateImage(userToUpdate, Option("Du måste välja en bild från datorn"))))
+      Future(BadRequest(views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.nofile")))))
     } else {
       CloudinaryResource.upload(resourceFile.get.ref.file, UploadParameters()
                                                             .publicId(CloudinaryUrl.publicId(userToUpdate))
@@ -162,7 +163,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       } recover {
         case ex: Exception =>
           val msg = ex.getMessage
-          BadRequest(views.html.users.updateImage(userToUpdate, Option("Något gick snett vid inläsningen. Prova en annan bild.")))
+          BadRequest(views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.error"))))
       }
     }
   }
@@ -178,13 +179,13 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       "id" -> ignored(None:Option[Long]),
       "firstName" -> nonEmptyText(maxLength = 127),
       "lastName" -> nonEmptyText(maxLength = 127),
-      "email" -> play.api.data.Forms.email.verifying("Epostadressen används av någon annan", User.findByEmail(_).isEmpty),
+      "email" -> play.api.data.Forms.email.verifying("error.signup.email.alreadyinuse", User.findByEmail(_).isEmpty),
       "phone" -> text(maxLength = 127),
       "comment" -> text(maxLength = 127),
       "administrator" -> boolean,
       "password" -> text(maxLength = 127)
     )(toUser)(fromUser)
-      .verifying("Lösenordet måste vara minst 8 tecken", user => user.password.length >= 8)
+      .verifying("error.signup.password.toshort", user => user.password.length >= 8)
   )
 
 
@@ -199,8 +200,8 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
       "administrator" -> boolean,
       "password" -> text(maxLength = 127)
     )(toUser)(fromUser)
-      .verifying("Epostadressen används av någon annan", user => User.verifyUniqueEmail(user))
-      .verifying("Lösenordet måste vara minst 8 tecken", user => user.password.length >= 8)
+      .verifying("error.signup.email.alreadyinuse", user => User.verifyUniqueEmail(user))
+      .verifying("error.signup.password.toshort", user => user.password.length >= 8)
   )
 
   def toUser(id: Option[Long], firstName: String, lastName: String, email: String, phone: String, comment: String, isAdministrator: Boolean, password: String): User = {
