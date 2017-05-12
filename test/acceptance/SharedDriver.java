@@ -18,6 +18,8 @@ import util.TestHelper;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.openqa.selenium.phantomjs.PhantomJSDriverService.PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX;
+
 /**
  * Copyright (c) 2008-2014 The Cucumber Organisation
  *
@@ -44,6 +46,7 @@ public class SharedDriver extends EventFiringWebDriver {
         if(phantomjsBinaryPath.length() > 0) {
           DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
           desiredCapabilities.setCapability("phantomjs.binary.path", phantomjsBinaryPath);
+          desiredCapabilities.setCapability(PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX + "Accept-Language", "sv-SE");
           driver = new PhantomJSDriver(desiredCapabilities);
         } else {
           driver = new PhantomJSDriver();
