@@ -5,6 +5,7 @@ import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WS
 import play.api.Play.current
+import play.api.i18n.Messages
 
 
 object SlackReminder {
@@ -19,10 +20,11 @@ object SlackReminder {
       } catch {
         case ex: Exception =>
           Logger.error("FAILED sending Slack message: " + message, ex)
-          LogEntry.create(event, "Misslyckades att skicka chattmeddelande på Slack. " + ex.getClass.getSimpleName + ": " + ex.getMessage)
+          LogEntry.create(event, Messages("slack.failedreminder", ex.getClass.getSimpleName, ex.getMessage))
+
       }
       if(loggedIn != ANONYMOUS) {
-        LogEntry.create(event, loggedIn.name + " har skickat chattmeddelande på Slack")
+        LogEntry.create(event, Messages("slack.sentreminders", loggedIn.name))
       }
     }
   }

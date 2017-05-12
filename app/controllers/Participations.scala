@@ -31,8 +31,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     message.append(Messages("participation.updated", participation.user.name, StatusHelper.asMessage(participation.status)))
 
     if(participation.numberOfParticipants > 1) {
-      message.append(s" ${participation.numberOfParticipants} ")
-      message.append(Messages("participation.people"))
+      message.append(Messages("participation.people", participation.numberOfParticipants))
     }
 
     if(!participation.comment.isEmpty) {
@@ -54,6 +53,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
         if (existingParticipation.isEmpty) {
           Participation.create(participation)
         } else {
+          // TODO: only do this if there actually is a change, to avoid unneccessary log messages
           Participation.update(existingParticipation.get.id.get, participation)
           val updatedParticipation = Participation.find(existingParticipation.get.id.get)
           LogEntry.create(updatedParticipation.event, asLogMessage(updatedParticipation))

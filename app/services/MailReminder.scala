@@ -4,6 +4,7 @@ import play.api.libs.mailer._
 import models.Status._
 import models._
 import play.api.Logger
+import play.api.i18n.{Lang, Messages}
 import play.twirl.api.Html
 import util.ThemeHelper._
 
@@ -14,7 +15,7 @@ object MailReminder {
     receivers foreach { receiver =>
       sendMessage(event, receiver, createMessage)
     }
-    LogEntry.create(event, loggedIn.name + " har skickat påminnelse till " + receivers.size + " medlem(mar)")
+    LogEntry.create(event, Messages("mail.sentreminders", loggedIn.name, receivers.size))
   }
 
   private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html) {
@@ -35,7 +36,7 @@ object MailReminder {
     } catch {
       case ex: Exception =>
         Logger.error("FAILED sending email for " + event.name + " to " + receiver, ex)
-        LogEntry.create(event, "Misslyckades att skicka påminnelse till " + receiver.email + ". " + ex.getClass.getSimpleName + ": " + ex.getMessage)
+        LogEntry.create(event, Messages("mail.failedreminder", receiver.email, ex.getClass.getSimpleName, ex.getMessage))
     }
   }
 
@@ -67,7 +68,7 @@ object MailReminder {
 
   def sendReminderMessage(event: Event, user: User)(implicit loggedIn: User) {
     sendMessage(event, user, createReminderMessage)
-    LogEntry.create(event, loggedIn.name + " har skickat påminnelse till " + user.firstName + " " + user.lastName)
+    LogEntry.create(event, Messages("mail.sentonereminder", loggedIn.name, user.name))
   }
 
   private def findReceiversToCancel(event: Event): Seq[User] = {

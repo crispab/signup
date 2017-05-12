@@ -5,6 +5,7 @@ import java.util.Date
 import akka.actor.{Actor, ActorRef, ActorSelection, Props}
 import models.{Event, Reminder, User}
 import play.api.Logger
+import play.api.i18n.Lang
 import play.api.libs.concurrent.Akka
 
 case class CheckEvents(loggedIn: User)
