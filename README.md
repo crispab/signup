@@ -32,7 +32,6 @@ This is the fourth version of the SignUp Service.
     * PG Backup add-on (database backup)
     * SendGrid add-on (bulk email) - http://sendgrid.com
     * Cloudinary add-on (profile image storage) - http://cloudinary.com
-    * NewRelic add-on (app monitoring) - http://newrelic.com
     * Papertrail add-on (log monitoring) - http://papertrailapp.com
 - Gravatar.com (default profile image)
 

@@ -16,8 +16,6 @@
       <meta name="author" content="">
       <meta name="robots" content="noindex, nofollow">
 
-      @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader)
-
       <link rel="shortcut icon" href='@routes.Assets.at(forTheme("themes/[THEME]/[THEME]-favicon.png"))'>
       <link rel="stylesheet" href='@routes.Assets.at(forTheme("themes/[THEME]/[THEME]-bootstrap.css"))'>
       <link rel="stylesheet" href='@routes.Assets.at("bootstrap3-wysiwyg/bootstrap3-wysihtml5.min.css")'>
@@ -91,6 +89,5 @@
         </div>
       </div>
 
-      @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingFooter)
     </body>
   </html>

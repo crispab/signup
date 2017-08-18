@@ -64,7 +64,6 @@ SignUp requires a number of Heroku add-ons to run, and some are just nice to hav
 - PG Backups add-on (database backup)
 - SendGrid add-on (bulk email) - http://sendgrid.com
 - Cloudinary add-on (profile image storage) - http://cloudinary.com
-- NewRelic add-on (app monitoring) - http://newrelic.com
 - Papertrail add-on (log monitoring) - http://papertrailapp.com
 
 Get the add-ons via the command line interface:
@@ -72,7 +71,6 @@ Get the add-ons via the command line interface:
     $ heroku addons:create heroku-postgresql
     $ heroku addons:create sendgrid
     $ heroku addons:create cloudinary
-    $ heroku addons:create newrelic
     $ heroku addons:create papertrail
 
 The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid
@@ -90,7 +88,6 @@ First, find out the Git URL to your application's repository on Heroku:
     === signup-<your name>
     Addons:        cloudinary:starter
                    heroku-postgresql:hobby-dev
-                   newrelic:stark
                    papertrail:choklad
                    pgbackups:auto-month
                    sendgrid:starter

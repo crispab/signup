@@ -22,11 +22,9 @@ heroku config:set \
     SMTP_PORT=587 \
     SMTP_SSL=false \
     SMTP_TLS=true \
-    NEW_RELIC_LOG=stdout \
-    NEW_RELIC_APP_NAME="<The name displayed in Newrelic's console>" \
     TZ="Europe/Stockholm" \
     LC_ALL="sv_SE.UTF-8" \
     DATABASE_DRIVER=org.postgresql.Driver \
     JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
-    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dnewrelic.environment=production -javaagent:target/universal/stage/lib/com.newrelic.agent.java.newrelic-agent-3.21.0.jar" \
+    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops" \
     $*
