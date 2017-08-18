@@ -23,7 +23,7 @@ heroku config:set \
     SMTP_SSL=false \
     SMTP_TLS=true \
     TZ="Europe/Stockholm" \
-    LC_ALL="sv_SE.UTF-8" \
+    LANG="sv_SE" \
     DATABASE_DRIVER=org.postgresql.Driver \
     JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
     JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops" \

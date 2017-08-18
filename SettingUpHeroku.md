@@ -76,6 +76,14 @@ Get the add-ons via the command line interface:
 The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid
 plan for each add-on.
 
+Add the Locale build pack
+------
+Heroku keeps evolving its technology stack and from the runtime stack Heroku-16 and onwards, most international language 
+packs are not installed by default. The Locale build pack can install language packs on the fly listed in the `.locales` 
+file in the root of the project.
+
+    $ heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-locale
+
 Connect your local Git repository to Heroku's Git repository
 ------
 

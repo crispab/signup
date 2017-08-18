@@ -33,6 +33,7 @@ This is the fourth version of the SignUp Service.
     * SendGrid add-on (bulk email) - http://sendgrid.com
     * Cloudinary add-on (profile image storage) - http://cloudinary.com
     * Papertrail add-on (log monitoring) - http://papertrailapp.com
+    * Locale build pack (for i18n on Heroku)
 - Gravatar.com (default profile image)
 
 ### Test environment ###
