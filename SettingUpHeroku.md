@@ -61,7 +61,6 @@ Get add-ons for your new Heroku application
 SignUp requires a number of Heroku add-ons to run, and some are just nice to have:
 
 - Heroku Postgres add-on (SQL database)
-- PG Backups add-on (database backup)
 - SendGrid add-on (bulk email) - http://sendgrid.com
 - Cloudinary add-on (profile image storage) - http://cloudinary.com
 - Papertrail add-on (log monitoring) - http://papertrailapp.com
@@ -76,8 +75,17 @@ Get the add-ons via the command line interface:
 The above will select the cost free plans for each add-on. If you need better service level or more capacity, pick a paid
 plan for each add-on.
 
+Activate automatic backups
+------
+
+The free version of heroku-postgresql comes with automatic backup ability (saves two last backups), but it's not activated from start.
+To activate it, set a daily backup schedule:
+
+    $ heroku pg:backups:schedule DATABASE_URL --at '23:00 Europe/Stockholm'
+
 Add the Locale build pack
 ------
+
 Heroku keeps evolving its technology stack and from the runtime stack Heroku-16 and onwards, most international language 
 packs are not installed by default. The Locale build pack can install language packs on the fly listed in the `.locales` 
 file in the root of the project.

@@ -29,7 +29,6 @@ This is the fourth version of the SignUp Service.
 ### Run-time environment ###
 - Heroku (general app server environment) - http://heroku.com
     * PostgreSQL add-on (SQL database)
-    * PG Backup add-on (database backup)
     * SendGrid add-on (bulk email) - http://sendgrid.com
     * Cloudinary add-on (profile image storage) - http://cloudinary.com
     * Papertrail add-on (log monitoring) - http://papertrailapp.com
