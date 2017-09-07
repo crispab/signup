@@ -8,7 +8,7 @@
 
 @page(event.name, section = Groups) {
 
-  @breadcrumb(Seq("Grupper" -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get)),
+  @breadcrumb(Seq(Messages("breadcrumb.groups") -> routes.Groups.list(), event.group.name -> routes.Groups.show(event.group.id.get)),
     event.name)
 
   <h2>@event.name</h2>
@@ -17,20 +17,20 @@
     case ev if (ev.endTime.before(new java.util.Date())) => {
       <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
-        Denna sammankomst har redan inträffat!
+        @Messages("event.eventpassed")
       </div>
     }
     case ev if (ev.lastSignupDatePassed) => {
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">×</button>
         <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")'/>
-        Sista anmälningsdatum har passerats.
+        @Messages("event.signupdatepassed")
       </div>
     }
     case ev if (Event.isFullyBooked(ev)) => {
       <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
-        Sammankomsten är fullbokad.<br/>Prova att kontrollera vid ett senare tillfälle ifall någon plats blivit ledig.
+        @Messages("event.full")
       </div>
     }
     case _ => {}
@@ -53,17 +53,17 @@
   <div class="well">
     <p>@Html(event.description)</p>
     <ul>
-      <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
-      <li><strong>Plats:</strong> @event.venue</li>
+      <li><strong>@Messages("event.time")</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
+      <li><strong>@Messages("event.venue")</strong> @event.venue</li>
       @if(event.maxParticipants.isDefined) {
-        <li><strong>Max antal deltagare:</strong> @event.maxParticipants
-          @if(Event.isFullyBooked(event)) {(fullbokat)}
+        <li><strong>@Messages("event.maxparticipants")</strong> @event.maxParticipants
+          @if(Event.isFullyBooked(event)) {@Messages("event.fullybooked")}
         </li>
       }
     </ul>
 
     @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-      <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+      <p>@Messages("event.lastsignup", asDate(event.lastSignUpDate))</p>
     }
 
     @views.html.events.tags.addToCalendarButton(event)
@@ -71,18 +71,18 @@
     @if(isAdmin(loggedInUser)) {
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown" aria-expanded="false">
-          Åtgärder <span class="caret"></span>
+          @Messages("event.actions") <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="@routes.EventsSecured.updateForm(event.id.get)"><span class="glyphicon glyphicon-pencil"></span>
-            Redigera</a></li>
+            @Messages("event.edit")</a></li>
           <li><a data-toggle="modal" data-target="#notify_participants_@event.id" href="#notify_participants_@event.id"><span class="glyphicon glyphicon-envelope"></span>
-            Påminn de som inte svarat</a></li>
+            @Messages("event.remind")</a></li>
           <li><a data-toggle="modal" data-target="#cancel_event_@event.id" href="#cancel_event_@event.id"><span class="glyphicon glyphicon-off"></span>
-            Ställ in</a></li>
+            @Messages("event.cancel")</a></li>
           <li class="divider"></li>
           <li><a data-toggle="modal" data-target="#remove_event_@event.id" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
-            Ta bort</a></li>
+            @Messages("event.remove")</a></li>
         </ul>
       </div>
 
@@ -91,24 +91,19 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-              <h3 id="label_notify_participants_@event.id">Vill du e-posta de som ännu inte svarat?</h3>
+              <h3 id="label_notify_participants_@event.id">@Messages("event.reminder.heading")</h3>
             </div>
             <div class="modal-body">
-              <p>
-                Du håller på att skicka en påminnelse via e-post till alla inbjudna delatagare till sammankomsten <strong>@event.name</strong>
-                som ännu inte svarat.
-              </p>
-              <p>
-                Vill du fortsätta?
-              </p>
+              <p>@Messages("event.reminder.warning", event.name)</p>
+              <p>@Messages("event.continue")</p>
             </div>
             <div class="modal-footer">
               <form action="@routes.EventsSecured.remindParticipants(event.id.get)" method="POST">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                  <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
                 <button type="submit" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-envelope"></span> Påminn de som inte svarat
+                  <span class="glyphicon glyphicon-envelope"></span> @Messages("event.remider.action")
                 </button>
               </form>
             </div>
@@ -122,23 +117,21 @@
             <form action="@routes.EventsSecured.cancel(event.id.get)" method="POST">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                <h3 id="label_cancel_event_@event.id">Vill du ställa in sammankomsten?</h3>
+                <h3 id="label_cancel_event_@event.id">@Messages("event.cancel.heading")</h3>
               </div>
               <div class="modal-body">
-                <p>
-                  Du håller på att ställa in sammankomsten <strong>@event.name</strong> och meddela alla deltagare.
-                </p>
+                <p>@Messages("event.cancel.warning", event.name)</p>
                 <div class='form-group'>
-                  <label for="reason">Orsak</label>
+                  <label for="reason">@Messages("event.cancel.reason")</label>
                   <textarea class="form-control" maxlength="512" id="reason" name="reason" rows="4"></textarea>
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                  <span class="glyphicon glyphicon-ban-circle"></span>  @Messages("button.abort")
                 </button>
                 <button type="submit" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-off"></span> Ställ in
+                  <span class="glyphicon glyphicon-off"></span>  @Messages("event.cancel.action")
                 </button>
             </div>
             </form>
@@ -195,11 +188,11 @@
     </span>
   </p>
   <p><a href="@routes.Events.asExcel(event.id.get)" class="btn btn-default">
-    <img src="@routes.Assets.at("images/icon-spreadsheet.png")" class="signup-icon"/> Som Excel
+    <img src="@routes.Assets.at("images/icon-spreadsheet.png")" class="signup-icon"/> @Messages("event.excel")
   </a></p>
 
   @if(isAdmin(loggedInUser) && reminders.nonEmpty) {
-    <h3>Påminnelser</h3>
+    <h3>@Messages("event.reminders")</h3>
 
     @reminders.map { reminder =>
       <div class="list-row">
@@ -211,8 +204,8 @@
   @if(logEntries.nonEmpty) {
     <a href="javascript:;" class="toggle" data-toggle="collapse" data-target="#to_toggle">
       <h3>
-        Händelser
-        <small>(@logEntries.size st)</small>
+        @Messages("event.notifications")
+        <small>(@Messages("event.numberof", logEntries.size))</small>
         <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
       </h3>
     </a>
@@ -233,11 +226,11 @@
     </script>
   }
 
-  <h3>Gäster</h3>
+  <h3>@Messages("event.guests")</h3>
 
 
   @if(guests.isEmpty) {
-    <p>Inga extra gäster</p>
+    <p>@Messages("event.noguests")</p>
   } else {
     @views.html.events.tags.listParticipations(guests.on, withRemoveButton = true)
     @views.html.events.tags.listParticipations(guests.maybe, withRemoveButton = true)
@@ -252,7 +245,7 @@
     </div>
   }
 
-  <h3>Medlemmar</h3>
+  <h3>@Messages("event.members")</h3>
 
   @views.html.events.tags.listParticipations(members.on)
   @views.html.events.tags.listParticipations(members.maybe)

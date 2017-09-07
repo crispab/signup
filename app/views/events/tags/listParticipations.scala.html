@@ -1,8 +1,8 @@
-@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User])
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User],  lang: Lang)
 
 @import util.AuthHelper._
 @import util.DateHelper._
-@import util.HtmlHelper._
+@import util.StatusHelper._
 @import services.ImageUrl
 
 

@@ -4,13 +4,13 @@
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define('bootstrap.wysihtml5.en-US', ['jquery', 'bootstrap.wysihtml5'], factory);
+        define('bootstrap.wysihtml5.en', ['jquery', 'bootstrap.wysihtml5'], factory);
     } else {
         // Browser globals
         factory(jQuery);
     }
 }(function ($) {
-  $.fn.wysihtml5.locale.en = $.fn.wysihtml5.locale['en-US'] = {
+  $.fn.wysihtml5.locale.en = $.fn.wysihtml5.locale['en'] = {
     font_styles: {
       normal: 'Normal text',
       h1: 'Heading 1',

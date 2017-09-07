@@ -1,4 +1,4 @@
-@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit lang: Lang, loggedInUser: Option[User])
 
 @import util.FormHelper._
 @import util.Section._

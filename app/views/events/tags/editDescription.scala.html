@@ -1,15 +1,15 @@
-@(description: String)
+@(description: String)(implicit lang: Lang)
 
 <label for="description">Beskrivning</label>
 <div class="editor form-control" id="editor">@Html(description)</div>
 <input type="hidden" id="description" name="description" value=''/>
 
 <script src='@routes.Assets.at("bootstrap3-wysiwyg/bootstrap3-wysihtml5.all.min.js")'></script>
-<script src='@routes.Assets.at("bootstrap3-wysiwyg/locales/bootstrap-wysihtml5.sv-SE.js")'></script>
+<script src='@routes.Assets.at("bootstrap3-wysiwyg/locales/bootstrap-wysihtml5." + lang.toLocale.toString + ".js")'></script>
 
 <script type="text/javascript">
   $('#editor').wysihtml5({
-    locale: "sv-SE",
+    locale: "@{lang.toLocale.toString}",
     toolbar: {
       "fa": true,
       "font-styles": false,
