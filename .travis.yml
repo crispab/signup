@@ -16,6 +16,10 @@ cache:
 
 addons:
   postgresql: '9.1'
+  apt:
+    packages:
+      - language-pack-en
+      - language-pack-sv
 
 before_script:
   - psql -c "create database signup;" -U postgres
