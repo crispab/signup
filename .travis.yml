@@ -16,6 +16,8 @@ cache:
 
 addons:
   postgresql: '9.1'
+
+addons:
   apt:
     packages:
       - language-pack-en
