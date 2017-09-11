@@ -1,0 +1,1 @@
+web: target/universal/stage/bin/signup -Dhttp.port=$PORT
