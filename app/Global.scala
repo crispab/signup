@@ -1,14 +1,14 @@
 import java.util.{Locale, TimeZone}
 
-import models.User
 import org.apache.commons.lang.exception.ExceptionUtils
 import play.api.libs.concurrent.Akka
-import services.{CheckEvents, EventReminderActor}
+import se.crisp.signup4.services.{CheckEvents, EventReminderActor}
 import play.api._
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc._
 import play.api.mvc.Results._
-import util.LocaleHelper
+import se.crisp.signup4.models.User
+import se.crisp.signup4.util.LocaleHelper
 
 import scala.concurrent.Future
 
@@ -46,8 +46,8 @@ object Global extends GlobalSettings {
 
   def setTimeZoneAndLocaleToAppDefault() {
     // not so pretty, but convenient since Heroku servers may run in another time zone and locale
-    TimeZone.setDefault(util.LocaleHelper.getConfiguredTimeZone)
-    Locale.setDefault(util.LocaleHelper.getConfiguredLocale)
+    TimeZone.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredTimeZone)
+    Locale.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredLocale)
   }
 
 
@@ -56,21 +56,21 @@ object Global extends GlobalSettings {
     val stackTrace = ExceptionUtils.getStackTrace(cause)
     val lang = LocaleHelper.getLang(request)
     Future.successful(InternalServerError(
-      views.html.error(Messages("http.error")(lang = lang), cause.getLocalizedMessage + "\n" + stackTrace)(lang = lang)
+      se.crisp.signup4.views.html.error(Messages("http.error")(lang = lang), cause.getLocalizedMessage + "\n" + stackTrace)(lang = lang)
     ))
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {
     val lang = LocaleHelper.getLang(request)
     Future.successful(NotFound(
-      views.html.error(Messages("http.notfound")(lang = lang), request.uri)(lang = lang)
+      se.crisp.signup4.views.html.error(Messages("http.notfound")(lang = lang), request.uri)(lang = lang)
     ))
   }
 
   override def onBadRequest(request: RequestHeader, error: String): Future[Result] = {
     val lang = LocaleHelper.getLang(request)
     Future.successful(BadRequest(
-      views.html.error(Messages("http.badrequest")(lang = lang), error)(lang = lang)
+      se.crisp.signup4.views.html.error(Messages("http.badrequest")(lang = lang), error)(lang = lang)
     ))
   }
 

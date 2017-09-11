@@ -2,7 +2,7 @@ package integration.models
 
 import java.util.Date
 
-import models._
+import se.crisp.signup4.models._
 import org.scalatestplus.play._
 import util.TestHelper._
 

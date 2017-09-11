@@ -1,0 +1,126 @@
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.FormHelper._
+@import se.crisp.signup4.util.Section._
+
+@(userForm: Form[User], idToUpdate: Option[Long] = None, groupId: Option[Long] = None, eventId: Option[Long] = None)(implicit lang: Lang, loggedInUser: Option[User])
+
+@field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
+
+@hasErrors(fieldName: String) = @{ if(userForm(fieldName).hasErrors) { "has-error" } }
+
+@userIsAdmin() = @{field("administrator") == "true"}
+
+@updating() = @{
+  idToUpdate.isDefined
+}
+
+@creatingMember() = @{
+  groupId.isDefined
+}
+
+@creatingGuest() = @{
+  eventId.isDefined
+}
+
+
+@theAction() = @{
+  if(updating()) {
+    se.crisp.signup4.controllers.routes.UsersSecured.update(idToUpdate.get)
+  } else if(creatingMember()) {
+    se.crisp.signup4.controllers.routes.UsersSecured.createMember(groupId.get)
+  } else if(creatingGuest()) {
+    se.crisp.signup4.controllers.routes.UsersSecured.createGuest(eventId.get)
+  } else {
+    se.crisp.signup4.controllers.routes.UsersSecured.create()
+  }
+}
+
+
+@se.crisp.signup4.views.html.page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
+
+  @if(updating()) {
+    @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list(), field("firstName") + " " + field("lastName") -> se.crisp.signup4.controllers.routes.Users.show(idToUpdate.get)),
+      "Redigera")
+  } else {
+    @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list()), "Ny")
+  }
+
+  <h2>@if(updating()) {Redigera} else {Ny} Användare</h2>
+
+  <form action="@theAction()" method="POST">
+    <fieldset>
+
+      <div class='form-group @hasErrors("firstName")'>
+        <label for="firstName">Förnamn</label>
+        <input type="text" maxlength="127" class="form-control" id="firstName" name="firstName" value='@field("firstName")' required="" />
+        <span class="show-on-error">Fyll i ett förnamn</span>
+      </div>
+
+      <div class='form-group @hasErrors("lastName")'>
+        <label for="lastName">Efternamn</label>
+        <input type="text" maxlength="127" class="form-control" id="lastName" name="lastName" value='@field("lastName")' required="" />
+        <span class="show-on-error">Fyll i ett efternamn</span>
+      </div>
+
+      <div class='form-group @hasErrors("email")'>
+        <label for="email">Epost</label>
+        <input type="email" maxlength="127" class="form-control" id="email" name="email" value='@field("email")' required="" />
+        <span class="show-on-error">Fyll i en korrekt epostadress</span>
+      </div>
+
+      <div class='form-group @hasErrors("phone")'>
+        <label for="phone">Telefon</label>
+        <input type="tel" maxlength="127" class="form-control" id="phone" name="phone" value='@field("phone")' />
+        <span class="show-on-error">Ogiltigt telefonnummer</span>
+      </div>
+
+      <div class='form-group @hasErrors("comment")'>
+        <label for="comment">Kommentar</label>
+        <textarea maxlength="127" class="form-control" id="comment" name="comment" rows="3">@field("comment")</textarea>
+        <span class="show-on-error">Det här var en skum kommentar</span>
+      </div>
+
+      <div class='form-group @hasErrors("password")'>
+        <label for="password">Lösenord</label>
+        @if(updating()) {
+          <input type="password" maxlength="127" class="form-control" id="password" name="password" value='@field("password")' required>
+        } else {
+          <input type="password" maxlength="127" class="form-control" id="password" name="password" value="@randomPassword" required>
+        }
+        <span class="show-on-error">Du måste ange ett lösenord på minst 8 tecken</span>
+      </div>
+
+      @if(isAdmin(loggedInUser)) {
+        <div class='checkbox @hasErrors("administrator")'>
+          <label>
+            <input type="checkbox" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}>
+            Har administratörsbehörighet
+          </label>
+        </div>
+      }
+
+      @if(userForm.hasErrors || userForm.hasGlobalErrors) {
+      <div class="alert alert-danger">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">Inmatningsfel</h4>
+        <p>@errors(userForm).mkString(", ")</p>
+      </div>
+      }
+
+    </fieldset>
+
+    <input type="hidden" id="id" name="id" value='@field("id")' />
+    <input type="hidden" id="groupId" name="groupId" value='@groupId.getOrElse("")' />
+    <input type="hidden" id="eventId" name="eventId" value='@eventId.getOrElse("")' />
+
+    <fieldset class="space-berfore">
+      <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+        <span class="glyphicon glyphicon-ok"></span> Spara
+      </button>
+      <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'>
+        <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+      </button>
+    </fieldset>
+  </form>
+}

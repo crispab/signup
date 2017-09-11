@@ -1,0 +1,36 @@
+@import se.crisp.signup4.models.Event
+@import se.crisp.signup4.util.HtmlHelper._
+@import se.crisp.signup4.util.LocaleHelper._
+@import play.api.Play.current
+
+@(event: Event)(implicit lang: Lang)
+
+<script type="text/javascript" src="https://addthisevent.com/libs/1.6.0/ate.min.js"></script>
+
+<script type="text/javascript">
+  addthisevent.settings ({
+    license : '@play.api.Play.configuration.getString("addthisevent.license").getOrElse("")',
+    mouse : false,
+    css : false,
+    google     : {show:true, text:"<i class='fa fa-google fa-fw'></i> @Messages("calendar.google") <small><em>@Messages("calendar.online")</em></small>"},
+    outlookcom : {show:true, text:"<i class='fa fa-windows fa-fw'></i> @Messages("calendar.outlookcom") <small><em>@Messages("calendar.online")</em></small>"},
+    yahoo      : {show:true, text:"<i class='fa fa-yahoo fa-fw'></i> @Messages("calendar.yahoo") <small><em>@Messages("calendar.online")</em></small>"},
+    outlook    : {show:true, text:"<i class='fa fa-windows fa-fw'></i> @Messages("calendar.outlook")"},
+    appleical  : {show:true, text:"<i class='fa fa-apple fa-fw'></i> @Messages("calendar.apple")"},
+    dropdown   : {order:"google,outlookcom,yahoo,outlook,appleical"}
+  });
+</script>
+
+
+<div title="Add to Calendar" class="addthisevent">
+  <span class="glyphicon glyphicon-calendar"></span> @Messages("calendar.add") <span class="caret"></span>
+  <span class="start">@se.crisp.signup4.util.DateHelper.asUsDate(event.startTime) @se.crisp.signup4.util.DateHelper.asTime(event.startTime)</span>
+  <span class="end">@se.crisp.signup4.util.DateHelper.asUsDate(event.endTime) @se.crisp.signup4.util.DateHelper.asTime(event.endTime)</span>
+  <span class="timezone">@TZ_NAME</span>
+  <span class="title">@event.name</span>
+  <span class="description">@calendarDescriptionAsText(event, se.crisp.signup4.controllers.routes.Events.show(event.id.get).url, 700)</span>
+  <span class="location">@event.venue</span>
+  <span class="organizer">@event.group.name</span>
+  <span class="all_day_event">false</span>
+  <span class="date_format">@se.crisp.signup4.util.DateHelper.US_DATE.toUpperCase</span>
+</div>

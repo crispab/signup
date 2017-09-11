@@ -2,7 +2,7 @@ package acceptance.pages;
 
 import acceptance.PlayContainer;
 import acceptance.SharedDriver;
-import models.Group;
+import se.crisp.signup4.models.Group;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -42,6 +42,18 @@ public class GroupPage {
 
   public GroupPage toggleMemberList() {
     driver.findElement(By.id("toggle_icon")).click();
+    waitForAnimationToComplete();
     return this;
+  }
+
+  private void waitForAnimationToComplete() {
+    synchronized (driver) {
+      try {
+        // Hate this! There is an animation that displays the member list that takes some time to complete
+        driver.wait(300);
+      } catch (InterruptedException e) {
+        // just ignore
+      }
+    }
   }
 }

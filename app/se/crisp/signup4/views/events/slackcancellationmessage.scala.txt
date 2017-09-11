@@ -1,0 +1,24 @@
+@import se.crisp.signup4.models._
+@import org.json.JSONObject._
+@(event: Event, baseURL: String)
+  {
+     "attachments" : [
+        {
+           "fallback" : @quote("Inställd sammankomst: <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Inställd sammankomst: <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "color" : "#EE3C0C",
+           "fields" : [
+              {
+                 "title" : "Tid",
+                 "value" : "@se.crisp.signup4.util.DateHelper.asDateTime(event.startTime)-@se.crisp.signup4.util.DateHelper.asTime(event.endTime)",
+                 "short" : false
+              },
+              {
+                 "title" : "Orsak",
+                 "value" : @quote(event.cancellationReason.getOrElse("Ej angiven")),
+                 "short" : false
+              }
+           ]
+        }
+     ]
+  }

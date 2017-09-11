@@ -1,0 +1,173 @@
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.models.Group
+@import se.crisp.signup4.models.Event
+@import se.crisp.signup4.models.Reminder
+@import se.crisp.signup4.util.FormHelper._
+@import se.crisp.signup4.util.Section._
+
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit lang: Lang, loggedInUser: Option[User])
+
+@field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
+
+@lastSignupIsSameDay() = @{field("same_day") == "true" || creatingNew}
+
+
+@hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "has-error" } }
+
+@creatingNew() = @{
+  idToUpdate.isEmpty
+}
+
+@theAction() = @{
+  if(creatingNew()) {
+    se.crisp.signup4.controllers.routes.EventsSecured.create()
+  } else {
+    se.crisp.signup4.controllers.routes.EventsSecured.update(idToUpdate.get)
+  }
+}
+
+@today() = @{
+  se.crisp.signup4.util.DateHelper.asDate(new java.util.Date())
+}
+
+@se.crisp.signup4.views.html.page("Redigera sammankomst " + field("name"), section = Groups){
+
+  @if(creatingNew()) {
+    @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
+                "Ny")
+  } else {
+    @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
+                "Redigera")
+  }
+
+
+  <h2>@if(creatingNew()) {Ny} else {Redigera} Sammankomst</h2>
+
+  <form class="form" id="editForm" action="@theAction()" method="POST" onsubmit="loadDescription()">
+    <fieldset>
+      <div class='form-group @hasErrors("name")'>
+        <label for="name">Namn</label>
+        <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>
+        <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
+      </div>
+
+      <div class='form-group  @hasErrors("description")'>
+        @se.crisp.signup4.views.html.events.tags.editDescription(field("description"))
+        <span class="show-on-error">Beskrivning saknas</span>
+      </div>
+
+      <div class='form-group  @hasErrors("venue")'>
+        <label for="venue">Plats</label>
+        <input type="text" maxlength="127" class="form-control" id="venue" name="venue" value='@field("venue")'/>
+        <span class="show-on-error">Fyll i en plats där sammankomsten äger rum</span>
+      </div>
+
+      <div class='form-group @hasErrors("start_date")'>
+        <label for="start_date">Dag</label>
+        <input type="date" class="form-control" id="start_date" name="start_date"
+        value='@field("start_date")' min="@today()" required=""/>
+        <div class="show-on-error">Ogiltigt datum eller klockslag</div>
+      </div>
+
+      <div class='form-inline form-group @hasErrors("start_time") @hasErrors("end_time")'>
+        <label for="start_time"> från kl</label>
+        <input type="time" class="form-control" id="start_time" name="start_time" value='@field("start_time")' required=""/>
+
+        <label for="end_time"> till kl</label>
+        <input type="time" class="form-control" id="end_time" name="end_time" value='@field("end_time")'
+        required=""/>
+        <div class="show-on-error">Ogiltigt datum eller klockslag</div>
+      </div>
+
+      <label class="space-berfore" for="same_day">Sista anmälning</label>
+      <div class='form-inline form-group @hasErrors("last_signup_date")'>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
+            onclick='signupDate=document.getElementById("last_signup_date"); signupDate.disabled=this.checked; signupDate.required=!this.checked'/>
+            samma dag, eller
+          </label>
+        </div>
+        <input type="date" class="form-control" id="last_signup_date" name="last_signup_date"
+               value='@field("last_signup_date")' min="@today()" @if(!lastSignupIsSameDay()){required=""} else {disabled=""}/>
+        <div class="show-on-error">Sista anmälningsdag får inte vara efter sammankomsten</div>
+      </div>
+
+      <label class="space-berfore">Hantering av inbjudna</label>
+      <div class="radio">
+        <label>
+          <input type="radio"
+            name="invited"
+            id="invited_only"
+            value="invited_only"
+            @if((field("invited") equals "invited_only") || creatingNew) {checked}
+            onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false' />
+          Bara inbjudna får komma
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio"
+            name="invited"
+            id="allow_extra_friends"
+            value="allow_extra_friends"
+            @if(field("invited") equals "allow_extra_friends") {checked}
+            onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false'>
+          Inbjudna får ta med extra vänner
+        </label>
+      </div>
+      <div class="radio">
+        <label class="form-inline">
+          <input type="radio"
+            name="invited"
+            id="max_number_of_participants_selected"
+            value="max_number_of_participants_selected"
+            @if(field("invited") equals "max_number_of_participants_selected") {checked}
+            onclick='noField=document.getElementById("max_participants"); noField.disabled=false; noField.required=true'>
+          Max antal deltagare:
+          <input type="number"
+            class="form-control"
+            id="max_participants"
+            name="max_participants"
+            value='@field("max_participants")'
+            min="1"
+            @if(!field("invited").equals("max_number_of_participants_selected")) {disabled}>
+        </label>
+      </div>
+
+      <input type="hidden" id="groupId" name="groupId" value='@group.id.get'/>
+
+      @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
+        <div class="alert alert-danger">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">Inmatningsfel</h4>
+
+          <p>@errors(eventForm).mkString(", ")</p>
+        </div>
+      }
+
+      @if(creatingNew()) {
+        <label class="space-berfore" for="immediate_reminder">Påminnelse</label>
+        <p>
+          Två påminnelser kommer att göras helt automatiskt med början @Reminder.firstReminderDays dagar innan sammankomsten.<br/>
+          Det går även att begära att ett utskick görs direkt när sammankomsten skapas:
+        </p>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="immediate_reminder" name="immediate_reminder" value="true">
+            Skicka påminnelse/inbjudan till alla när jag sparar
+          </label>
+        </div>
+      }
+
+      <div class="form-group space-berfore">
+        <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
+          <span class="glyphicon glyphicon-ok"></span> Spara
+        </button>
+        <button type="button" class="btn btn-default" id="cancel" onClick="history.go(-1)">
+          <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+        </button>
+      </div>
+    </fieldset>
+  </form>
+}

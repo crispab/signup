@@ -1,0 +1,110 @@
+@import se.crisp.signup4.models.Event
+@import se.crisp.signup4.models.LogEntry
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.DateHelper._
+@import se.crisp.signup4.util.Section._
+
+@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+
+@se.crisp.signup4.views.html.page(event.name, section = Groups) {
+
+  @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)),
+    event.name)
+
+  <h2>@event.name</h2>
+
+  <div class="alert alert-danger">
+    <h4>Sammankomsten är inställd.</h4>
+    <p>@event.cancellationReason.getOrElse("")</p>
+  </div>
+
+  @if(flash.get("success").isDefined) {
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("success")
+    </div>
+  }
+
+  @if(flash.get("error").isDefined) {
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("error")
+    </div>
+  }
+
+  <div class="well">
+    <p>@Html(event.description)</p>
+    <ul>
+      <li><strong>Tid:</strong> @asDateTime(event.startTime)-@asTime(event.endTime)</li>
+      <li><strong>Plats:</strong> @event.venue</li>
+    </ul>
+
+    @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+      <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+    }
+
+
+    @if(isAdmin(loggedInUser)) {
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown" aria-expanded="false">
+          Åtgärder <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
+            Ta bort</a></li>
+        </ul>
+      </div>
+
+      <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display : none">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+          <h3>Vill du ta bort sammankomsten?</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Du håller på att ta bort sammankomsten <strong>@event.name</strong>.
+          </p>
+          <p>
+            Vill du fortsätta?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <form action="@se.crisp.signup4.controllers.routes.EventsSecured.delete(event.id.get)" method="POST">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+            </button>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> Ta bort</button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+
+
+  @if(logEntries.nonEmpty) {
+    <a href="javascript:;" class="toggle" data-toggle="collapse" data-target="#to_toggle">
+      <h3>
+        Händelser
+        <small>(@logEntries.size st)</small>
+        <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
+      </h3>
+    </a>
+
+    <div id="to_toggle" class="collapse" >
+    @logEntries.map { logEntry =>
+      <div class="list-row">
+        <span class="text-muted">@asDateTime(logEntry.when)</span> @logEntry.message
+      </div>
+    }
+    </div>
+
+    <script type="text/javascript">
+        $('#to_toggle').on('show.bs.collapse hide.bs.collapse', function (e) {
+          if (!$(this).is(e.target))return;
+          $('#toggle_icon').toggleClass('glyphicon-triangle-right glyphicon-triangle-bottom');
+        });
+    </script>
+  }
+
+}

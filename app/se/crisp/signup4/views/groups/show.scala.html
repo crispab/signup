@@ -1,0 +1,165 @@
+@import se.crisp.signup4.models.Event
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.models.Membership
+@import se.crisp.signup4.models.Group
+@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.DateHelper._
+@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.services.ImageUrl
+
+@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User])
+
+@se.crisp.signup4.views.html.page(group.name, section = Groups) {
+
+  @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list()), group.name)
+
+  <h2>@group.name</h2>
+
+  <div class="well">
+    <p>@group.description</p>
+    @if(isAdmin(loggedInUser)) {
+      <a href="@se.crisp.signup4.controllers.routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default">
+        <span class="glyphicon glyphicon-pencil"></span> Redigera
+      </a>
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_group_@group.id">
+        <span class="glyphicon glyphicon-trash"></span> Ta bort
+      </button>
+
+      <div class="modal fade" id="remove_group_@group.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_group_@group.id" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3 id="label_remove_group_@group.id">Vill du ta bort gruppen?</h3>
+            </div>
+            <div class="modal-body">
+              <p>Du håller på att ta bort gruppen <strong>@group.name</strong>.</p>
+              <p>Vill du fortsätta?</p>
+            </div>
+            <div class="modal-footer">
+              <form action="@se.crisp.signup4.controllers.routes.GroupsSecured.delete(group.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-trash"></span> Ta bort
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3>Sammankomster</h3>
+  @if(showingAll) {
+    <a href="@se.crisp.signup4.controllers.routes.Groups.show(group.id.get)">Visa bara framtida</a>
+  } else {
+    <a href="@se.crisp.signup4.controllers.routes.Groups.show(group.id.get, showAll = true)">Visa alla</a>
+  }
+
+  @events.map { event =>
+    <div class="list-row">
+      <h4>
+        @if(event.isCancelled) {
+          Inställt:
+        }
+      <a href="@se.crisp.signup4.controllers.routes.Events.show(event.id.get)">@event.name</a>
+      <small class="pull-right"><strong>@asDate(event.startTime), </strong>
+        @asTime(event.startTime)-@asTime(event.endTime)</small>
+      </h4>
+      @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+        <p class="text-muted"><em>Sista anmälningsdag: @asDate(event.lastSignUpDate)</em></p>
+      }
+    </div>
+  }
+
+  @if(isAdmin(loggedInUser)) {
+    <div class="btn-row">
+      <a href="@se.crisp.signup4.controllers.routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+        Ny sammankomst</a>
+    </div>
+  }
+
+  <a href="javascript:;" class="toggle" data-toggle="collapse" data-target="#to_toggle">
+    <h3>
+      Medlemmar
+      <small>(@members.size st)</small>
+      <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
+    </h3>
+  </a>
+
+  <div id="to_toggle" class="collapse" >
+  @members.map { membership =>
+
+    <div class="media list-row">
+      <div class="media-left">
+        <a href="@se.crisp.signup4.controllers.routes.Users.show(membership.user.id.get)">
+          <img class="thumb thumb-background60 pull-left" src="@ImageUrl(membership.user, 60)" onerror="imgError(this);"/>
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <a href="@se.crisp.signup4.controllers.routes.Users.show(membership.user.id.get)">@membership.user.firstName @membership.user.lastName</a>
+        </h4>
+        @if(isLoggedIn(loggedInUser)) {
+          <p class="text-muted small-space-berfore"><em>@membership.user.email</em></p>
+        }
+        <p>@membership.user.comment</p>
+      </div>
+
+      @if(isAdmin(loggedInUser)) {
+        <div class="media-right">
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_member_@membership.id">
+            <span class="glyphicon glyphicon-trash"></span> Ta bort
+          </button>
+
+          <div class="modal fade" id="remove_member_@membership.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_member_@membership.id" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                  <h3 id="label_remove_member_@membership.id">Vill du ta bort medlemmen?</h3>
+                </div>
+                <div class="modal-body">
+                  <p>
+                    Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
+                    från gruppen <strong>@group.name</strong>.
+                  </p>
+                  <p>
+                    Vill du fortsätta?
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <form action="@se.crisp.signup4.controllers.routes.Memberships.delete(membership.id.get)" method="POST">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                      <span class="glyphicon glyphicon-trash"></span> Ta bort</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+  </div>
+
+  <script type="text/javascript">
+      $('#to_toggle').on('show.bs.collapse hide.bs.collapse', function (e) {
+        if (!$(this).is(e.target))return;
+        $('#toggle_icon').toggleClass('glyphicon-triangle-right glyphicon-triangle-bottom');
+      });
+  </script>
+
+  @if(isAdmin(loggedInUser)) {
+    <div class="btn-row">
+      <a href="@se.crisp.signup4.controllers.routes.Memberships.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+        Ny medlem</a>
+    </div>
+  }
+}

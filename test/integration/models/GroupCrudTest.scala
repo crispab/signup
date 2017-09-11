@@ -1,6 +1,6 @@
 package integration.models
 
-import models._
+import se.crisp.signup4.models._
 import org.scalatestplus.play._
 import util.TestHelper._
 

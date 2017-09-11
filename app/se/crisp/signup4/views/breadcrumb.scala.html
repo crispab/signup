@@ -1,0 +1,17 @@
+@(pathElements: Seq[(String, Call)], active: String)(implicit lang: Lang)
+
+<div class="breadcrumb-row">
+  <ol class="breadcrumb">
+    <li><a href="@se.crisp.signup4.controllers.routes.Application.index()">@Messages("breadcrumb.home")</a></li>
+
+    @pathElements.map { pathElement =>
+      <li><a href="@pathElement._2">@pathElement._1</a></li>
+    }
+
+    @if(!active.isEmpty) {
+      <li class="active" id="page_name">@active</li>
+    }
+  </ol>
+</div>
+
+

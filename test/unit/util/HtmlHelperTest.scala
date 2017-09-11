@@ -1,7 +1,7 @@
 package unit.util
 
 import org.scalatestplus.play.PlaySpec
-import util.HtmlHelper
+import se.crisp.signup4.util.HtmlHelper
 
 class HtmlHelperTest extends PlaySpec {
 

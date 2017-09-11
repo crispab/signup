@@ -4,7 +4,7 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.mvc.Http.Status
-import util.WsHelper
+import se.crisp.signup4.util.WsHelper
 import play.api.libs.ws.WSResponse
 
 

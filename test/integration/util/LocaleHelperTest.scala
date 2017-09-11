@@ -4,7 +4,7 @@ import java.util.Locale
 
 import org.apache.commons.lang.LocaleUtils
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import util.LocaleHelper
+import se.crisp.signup4.util.LocaleHelper
 
 class LocaleHelperTest extends PlaySpec with OneAppPerSuite {
 

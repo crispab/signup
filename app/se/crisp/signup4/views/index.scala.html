@@ -1,0 +1,30 @@
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.ThemeHelper._
+
+@()(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+
+@se.crisp.signup4.views.html.page(title = APPLICATION_NAME, section = Other) {
+
+  @se.crisp.signup4.views.html.breadcrumb(Seq(), "")
+
+  @if(flash.get("success").isDefined) {
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      @flash.get("success")
+    </div>
+  }
+
+  <h2>@Messages("index.welcome", APPLICATION_NAME)</h2>
+  <p>@Messages("index.description.1", APPLICATION_NAME)</p>
+  <p>@Messages("index.description.2", APPLICATION_NAME)</p>
+  <p>@Messages("index.description.3", APPLICATION_NAME)</p>
+  <p><a href="@se.crisp.signup4.controllers.routes.Groups.list()">@Messages("page.groups")</a></p>
+
+  @if(isAdmin(loggedInUser)) {
+    <p><a href="@se.crisp.signup4.controllers.routes.UsersSecured.list()">@Messages("page.users")</a></p>
+  }
+}
+
+

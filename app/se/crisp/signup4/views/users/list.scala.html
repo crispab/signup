@@ -1,0 +1,44 @@
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.services.ImageUrl
+
+@(users: Seq[User])(implicit loggedInUser: Option[User])
+
+@se.crisp.signup4.views.html.page("Användare", section = Users) {
+
+  @se.crisp.signup4.views.html.breadcrumb(Seq(), "Användare")
+
+  <div class="row">
+    <div class="col-md-5">
+      <h2>Användare</h2>
+    </div>
+  </div>
+
+  @users.map { user =>
+    <div class="media list-row">
+      <div class="media-left">
+        <a href="@se.crisp.signup4.controllers.routes.Users.show(user.id.get)">
+          <img class="thumb thumb-background60 pull-left" src="@ImageUrl(user, 60)" onerror="imgError(this);"/>
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <a href="@se.crisp.signup4.controllers.routes.Users.show(user.id.get)">@user.firstName @user.lastName</a>
+        </h4>
+        @if(isLoggedIn(loggedInUser)) {
+          <p class="text-muted small-space-berfore"><em>@user.email</em></p>
+        }
+        <p>@user.comment</p>
+      </div>
+    </div>
+  }
+
+  @if(isAdmin(loggedInUser)) {
+    <div class="btn-row">
+      <a href="@se.crisp.signup4.controllers.routes.UsersSecured.createForm()" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus"></span> Ny användare
+      </a>
+    </div>
+  }
+}

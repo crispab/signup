@@ -1,0 +1,34 @@
+@import se.crisp.signup4.models._
+@import org.json.JSONObject._
+@(event: Event, participation: Participation, baseURL: String)
+  {
+     "attachments" : [
+        {
+           "fallback" : @quote("Uppdaterad anmälan i sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Uppdaterad anmälan i sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "color" : "#00759F",
+           "fields" : [
+              @if(participation.numberOfParticipants > 1) {
+                {
+                   "title" : @quote(participation.user.name),
+                   "value" : @quote(se.crisp.signup4.util.StatusHelper.asMessage(participation.status) + " " + participation.numberOfParticipants + " i sällskapet"),
+                   "short" : false
+                }
+              } else {
+                {
+                   "title" : @quote(participation.user.name),
+                   "value" : @quote(se.crisp.signup4.util.StatusHelper.asMessage(participation.status)),
+                   "short" : false
+                }
+              }
+              @if(!participation.comment.isEmpty) {
+                ,{
+                   "title" : "Kommentar",
+                   "value" : @quote(participation.comment),
+                   "short" : false
+                }
+              }
+           ]
+        }
+     ]
+  }

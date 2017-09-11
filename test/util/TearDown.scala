@@ -1,6 +1,6 @@
 package util
 
-import models.{User, Membership, Group}
+import se.crisp.signup4.models.{Membership, Group, User}
 
 object TearDown {
 

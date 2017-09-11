@@ -1,8 +1,8 @@
 package unit.services
 
-import models.User
 import org.scalatestplus.play._
-import services.{GravatarUrl, ImageUrl}
+import se.crisp.signup4.models.User
+import se.crisp.signup4.services.{GravatarUrl, ImageUrl}
 
 class ImageUrlTest extends PlaySpec {
 

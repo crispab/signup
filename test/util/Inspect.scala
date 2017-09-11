@@ -1,6 +1,7 @@
 package util
 
-import models.{Group, User, Participation, Event}
+import se.crisp.signup4.models.{Event, Group, Participation, User}
+import se.crisp.signup4.models.User
 
 object Inspect {
 

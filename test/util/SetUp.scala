@@ -1,9 +1,12 @@
 package util
 
 import java.util
-import models.{Membership, Event, Group, User}
+
+import se.crisp.signup4.models.{Event, Group, Membership, User}
+
 import collection.JavaConversions._
 import TestHelper._
+import se.crisp.signup4.models.User
 
 object SetUp {
   def createUsers(userNames: util.List[String]): util.List[User] = {

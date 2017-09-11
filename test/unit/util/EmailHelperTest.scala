@@ -1,7 +1,7 @@
 package unit.util
 
 import org.scalatestplus.play._
-import util.EmailHelper
+import se.crisp.signup4.util.EmailHelper
 
 class EmailHelperTest extends PlaySpec {
 

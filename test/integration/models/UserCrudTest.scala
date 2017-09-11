@@ -1,7 +1,7 @@
 package integration.models
 
-import models.User
 import org.scalatestplus.play._
+import se.crisp.signup4.models.User
 import util.TestHelper._
 
 class UserCrudTest extends PlaySpec with OneAppPerSuite {

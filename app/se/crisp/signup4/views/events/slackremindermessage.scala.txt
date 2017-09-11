@@ -1,0 +1,36 @@
+@import se.crisp.signup4.models._
+@import org.json.JSONObject._
+@(event: Event, baseURL: String)
+  {
+     "attachments" : [
+        {
+           "fallback" : @quote("Dags att anmäla sig till sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote("Dags att anmäla sig till sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "color" : "#EE3C0C",
+           "fields" : [
+              {
+                 "title" : @quote(event.group.mailSubjectPrefix + ": " + event.name),
+                 "value" : @quote(se.crisp.signup4.util.HtmlHelper.stripFromHtml(event.description)),
+                 "short" : false
+              },
+              {
+                 "title" : "Tid",
+                 "value" : "@se.crisp.signup4.util.DateHelper.asDateTime(event.startTime)-@se.crisp.signup4.util.DateHelper.asTime(event.endTime)",
+                 "short" : false
+              },
+              {
+                 "title" : "Plats",
+                 "value" : @quote(event.venue),
+                 "short" : false
+              }
+              @if(!se.crisp.signup4.util.DateHelper.sameDay(event.startTime, event.lastSignUpDate)) {
+                ,{
+                   "title" : "Sista anmälningsdag",
+                   "value" : "@se.crisp.signup4.util.DateHelper.asDate(event.lastSignUpDate)",
+                   "short" : false
+                }
+              }
+           ]
+        }
+     ]
+  }

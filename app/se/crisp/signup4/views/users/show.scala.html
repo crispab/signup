@@ -1,0 +1,116 @@
+@import se.crisp.signup4.models.Event
+@import se.crisp.signup4.models.User
+@import se.crisp.signup4.models.Participation
+@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.DateHelper._
+@import se.crisp.signup4.util.StatusHelper._
+
+@(user: User)(implicit loggedInUser: Option[User])
+
+@se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
+
+  @if(isAdmin(loggedInUser)) {
+    @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list()),
+      user.firstName + " " + user.lastName)
+  } else {
+    @se.crisp.signup4.views.html.breadcrumb(Seq(), user.firstName + " " + user.lastName)
+  }
+
+  <img class="big-thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
+  @if(isAdminOrSelf(loggedInUser, user)) {
+    <a href="@se.crisp.signup4.controllers.routes.UsersSecured.updateImageForm(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span>
+      Byt bild</a>
+  }
+  <h2>@user.firstName @user.lastName</h2>
+
+
+  <dl class="dl-horizontal">
+    @if(isLoggedIn(loggedInUser)) {
+      <dt>Epost:</dt>
+      <dd>@user.email &nbsp;</dd>
+    }
+
+    <dt>Telefon:</dt>
+    <dd>@user.phone &nbsp;</dd>
+
+    <dt>Kommentar:</dt>
+    <dd>@user.comment &nbsp;</dd>
+
+    @if(user.permission == se.crisp.signup4.models.security.Administrator) {
+      <dt>Roll:</dt>
+      <dd>Administratör&nbsp;</dd>
+    }
+  </dl>
+
+
+  @if(isAdminOrSelf(loggedInUser, user)) {
+    <div class="btn-row">
+      <a href="@se.crisp.signup4.controllers.routes.UsersSecured.updateForm(user.id.get)" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span> Redigera
+      </a>
+
+      @if(isAdmin(loggedInUser)) {
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_user_@user.id">
+          <span class="glyphicon glyphicon-trash"></span> Ta bort
+        </button>
+
+        <div class="modal fade" id="remove_user_@user.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_user_@user.id" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                <h3 id="label_remove_user_@user.id">Vill du ta bort användaren?</h3>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Du håller på att ta bort användaren <strong>@user.firstName @user.lastName</strong>.
+                </p>
+                <p>
+                  Vill du fortsätta?
+                </p>
+              </div>
+              <div class="modal-footer">
+                <form action="@se.crisp.signup4.controllers.routes.UsersSecured.delete(user.id.get)" method="POST">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-trash"></span> Ta bort
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+
+  <h3>Sammankomster</h3>
+
+  @Event.findFutureEventsByUser(user).map { event =>
+    <div class="list-row">
+      <h4>
+        @if(event.isCancelled) {Inställt:}
+      <a href="@se.crisp.signup4.controllers.routes.Participations.editForm(event.id.get, user.id.get)">@event.name</a>
+      <small class="pull-right"><strong>@asDate(event.startTime), </strong>
+        @asTime(event.startTime)-@asTime(event.endTime)</small>
+      </h4>
+      <p>
+        <a href="@se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)">@event.group.name</a>
+        <a href="@se.crisp.signup4.controllers.routes.Participations.editForm(event.id.get, user.id.get)" class="pull-right">
+          <span class="label label-default @asCssClass(Participation.findStatus(user, event))">
+            @asMessage(Participation.findStatus(user, event))
+          </span>
+        </a>
+        <br/>
+        @if(!sameDay(event.startTime, event.lastSignUpDate)) {
+          <em class="text-muted">Sista anmälningsdag: @asDate(event.lastSignUpDate)</em>
+        }
+      </p>
+    </div>
+  }
+}
