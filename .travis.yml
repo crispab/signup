@@ -31,7 +31,7 @@ before_script:
 env: WEB_DRIVER_TYPE=phantomjs APPLICATION_BASE_URL=http://127.0.0.1:3333 LANG=sv_SE TZ=Europe/Stockholm
 
 script:
-  - sbt 'test-only unit.* integration.* acceptance.*'
+  - sbt 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
 
 deploy:
   provider: heroku
