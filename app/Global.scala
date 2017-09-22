@@ -1,13 +1,13 @@
 import java.util.{Locale, TimeZone}
 
 import org.apache.commons.lang.exception.ExceptionUtils
-import play.api.libs.concurrent.Akka
-import se.crisp.signup4.services.{CheckEvents, EventReminderActor}
 import play.api._
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc._
+import play.api.i18n.Messages
+import play.api.libs.concurrent.Akka
 import play.api.mvc.Results._
+import play.api.mvc._
 import se.crisp.signup4.models.User
+import se.crisp.signup4.services.{CheckEvents, EventReminderActor}
 import se.crisp.signup4.util.LocaleHelper
 
 import scala.concurrent.Future
@@ -25,8 +25,9 @@ object Global extends GlobalSettings {
 
   def startCheckingForRemindersToSend() {
     import play.api.Play.current
-    import scala.concurrent.duration._
+
     import scala.concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration._
     Akka.system.scheduler.schedule(firstRun, 24.hours, EventReminderActor.create(), CheckEvents(loggedIn = User.system))
   }
 
