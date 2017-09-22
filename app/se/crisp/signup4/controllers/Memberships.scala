@@ -11,12 +11,12 @@ import se.crisp.signup4.util.AuthHelper._
 object Memberships extends Controller with AuthElement with AuthConfigImpl {
 
   def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Ok(se.crisp.signup4.views.html.memberships.edit(membershipForm, Group.find(groupId), User.findNonMembers(groupId)))
   }
 
   def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
       membershipForm.bindFromRequest.fold(
         formWithErrors => {
           val group = Group.find(formWithErrors("groupId").value.get.toLong)

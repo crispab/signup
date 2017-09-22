@@ -10,12 +10,12 @@ import se.crisp.signup4.util.AuthHelper._
 
 object Groups extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def list = StackAction { implicit request =>
+  def list: Action[AnyContent] = StackAction { implicit request =>
     val groups = Group.findAll()
     Ok(se.crisp.signup4.views.html.groups.list(groups))
   }
 
-  def show(id: Long, showAll: Boolean) = StackAction { implicit request =>
+  def show(id: Long, showAll: Boolean): Action[AnyContent] = StackAction { implicit request =>
     val group = Group.find(id)
     val members = Membership.findMembers(group)
     if(showAll) {
@@ -31,18 +31,18 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
 
 
   def createForm: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Ok(se.crisp.signup4.views.html.groups.edit(groupForm))
   }
 
   def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val group = Group.find(id)
     Ok(se.crisp.signup4.views.html.groups.edit(groupForm.fill(group), Option(id)))
   }
 
   def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.groups.edit(formWithErrors)),
         group => {
@@ -53,7 +53,7 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.groups.edit(formWithErrors, Option(id))),
         group => {
@@ -64,7 +64,7 @@ object GroupsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Group.delete(id)
     Redirect(routes.Groups.list())
 

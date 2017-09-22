@@ -25,7 +25,7 @@ import scala.concurrent.ExecutionContext
 
 object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def show(id: Long) = StackAction { implicit request =>
+  def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(id)
     if (event.isCancelled) {
       Ok(se.crisp.signup4.views.html.events.showcancelled(event, LogEntry.findByEvent(event)))
@@ -34,7 +34,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
     }
   }
 
-  def asExcel(id: Long) = StackAction { implicit request =>
+  def asExcel(id: Long): Action[AnyContent] = StackAction { implicit request =>
 
     val event = Event.find(id)
     val workbook = ExcelHelper.createWorkbook(allGuests(event), allMembers(event))
@@ -135,13 +135,13 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val group = Group.find(groupId)
     Ok(se.crisp.signup4.views.html.events.edit(eventForm, group))
   }
 
   def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     eventForm.bindFromRequest.fold(
       formWithErrors => {
         val groupId = formWithErrors("groupId").value.get.toLong
@@ -171,7 +171,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
 
   def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(id)
     if (!event.isCancelled) {
       Ok(se.crisp.signup4.views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
@@ -181,7 +181,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(id)
     if (!event.isCancelled) {
       eventForm.bindFromRequest.fold(

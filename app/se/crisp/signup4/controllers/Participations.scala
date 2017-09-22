@@ -15,7 +15,7 @@ import se.crisp.signup4.util.StatusHelper
 
 object Participations extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def editForm(eventId: Long, userId: Long) = StackAction { implicit request =>
+  def editForm(eventId: Long, userId: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(eventId)
     if (!event.isCancelled) {
       val userToAttend = User.find(userId)
@@ -41,7 +41,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     message.toString
   }
 
-  def createOrUpdate = StackAction { implicit request =>
+  def createOrUpdate: Action[AnyContent] = StackAction { implicit request =>
     participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = Event.find(formWithErrors("eventId").value.get.toLong)
@@ -110,13 +110,13 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
 
 object ParticipationsSecured extends Controller with AuthElement with AuthConfigImpl {
   def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(eventId)
     Ok(se.crisp.signup4.views.html.participations.addGuest(Participations.participationForm, event, User.findNonGuests(event.id.get)))
   }
 
   def createGuest: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Participations.participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = Event.find(formWithErrors("eventId").value.get.toLong)

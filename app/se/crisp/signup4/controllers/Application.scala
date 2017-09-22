@@ -15,7 +15,7 @@ import ExecutionContext.Implicits.global
 
 object Application extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with Https {
 
-  def index = StackAction { implicit request =>
+  def index: Action[AnyContent] = StackAction { implicit request =>
     Ok(se.crisp.signup4.views.html.index())
   }
 

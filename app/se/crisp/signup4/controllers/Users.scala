@@ -10,7 +10,6 @@ import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText,
 import play.api.i18n.Messages
 import play.api.mvc._
 import se.crisp.signup4
-import se.crisp.signup4.models.User
 import se.crisp.signup4.services.{CloudinaryUrl, EventReminderActor, GravatarUrl, RemindParticipant}
 import se.crisp.signup4.util.AuthHelper._
 
@@ -18,7 +17,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 
-  def show(id: Long) = StackAction { implicit request =>
+  def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val userToShow = User.find(id)
     Ok(se.crisp.signup4.views.html.users.show(userToShow))
   }
@@ -27,35 +26,35 @@ object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
 object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
 
   def list: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator))  { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val usersToList = User.findAll()
     Ok(se.crisp.signup4.views.html.users.list(usersToList))
   }
 
   def createForm: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Ok(se.crisp.signup4.views.html.users.edit(userCreateForm))
   }
 
   def createMemberForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Ok(se.crisp.signup4.views.html.users.edit(userCreateForm, groupId = Option(groupId)))
   }
 
   def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     Ok(se.crisp.signup4.views.html.users.edit(userCreateForm, eventId = Option(eventId)))
   }
 
 
   def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(se.crisp.signup4.views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
   def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
@@ -66,7 +65,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def createMember(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
@@ -77,7 +76,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def createGuest(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
@@ -88,7 +87,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def remindParticipant(id: Long, eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val user = User.find(id)
     val event = Event.find(eventId)
     if(!event.isCancelled) {
@@ -100,7 +99,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors, Option(id))),
         user => {
@@ -129,14 +128,13 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def updateImageForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val userToUpdate = User.find(id)
     Ok(se.crisp.signup4.views.html.users.updateImage(userToUpdate))
   }
 
   def resetImage(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
-    val userToUpdate = User.find(id)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
 
     User.updateInfo(id, GravatarUrl.identifier)
 
@@ -144,7 +142,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def uploadImage(id: Long): Action[AnyContent] = AsyncStack(AuthorityKey -> hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser = Option(loggedIn)
+    implicit val loggedInUser: Option[User] = Option(loggedIn)
     val userToUpdate = User.find(id)
 
     import ExecutionContext.Implicits.global
@@ -163,8 +161,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
           User.updateInfo(id, CloudinaryUrl.identifier, Some(cloudinaryFileVersion))
           Redirect(routes.Users.show(id))
       } recover {
-        case ex: Exception =>
-          val msg = ex.getMessage
+        case _: Exception =>
           BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.error"))))
       }
     }
