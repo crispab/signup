@@ -1,6 +1,8 @@
 package se.crisp.signup4.util
 
-import se.crisp.signup4.models.{Event, Status}
+import se.crisp.signup4.models.Event
+import play.api.i18n.{Lang, Messages}
+
 
 object HtmlHelper {
   def NON_APLHA_AND_SOME_REGEXP = "[^a-z0-9\\-_]"
@@ -24,9 +26,9 @@ object HtmlHelper {
       description
   }
 
-  def calendarDescriptionAsText(event: Event, url: String, maxlength: Int): String = {
+  def calendarDescriptionAsText(event: Event, url: String, maxlength: Int)(implicit lang: Lang): String = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-    truncatedTextFromHtml("<p>Sammankomst: " + baseUrl + url + "</p>" + event.description, maxlength)
+    truncatedTextFromHtml("<p>" + Messages("calendar.event", baseUrl + url) + "</p>" + event.description, maxlength)
   }
 }

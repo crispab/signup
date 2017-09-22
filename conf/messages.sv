@@ -155,3 +155,4 @@ event.cancel.warning=Du håller på att ställa in sammankomsten {0} och meddela
 event.cancel.reason=Orsak
 button.abort=Avbryt
 event.cancel.action=Ställ in
+calendar.event=Sammankomst: {0}

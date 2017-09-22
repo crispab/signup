@@ -160,3 +160,4 @@ event.cancel.warning=You are about to cancel the event {0} and notify all partic
 event.cancel.reason=Reason
 button.abort=Abort
 event.cancel.action=Cancel the event
+calendar.event=Event: {0}
