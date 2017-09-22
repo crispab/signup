@@ -1,6 +1,6 @@
 @(description: String)(implicit lang: Lang)
 
-<label for="description">Beskrivning</label>
+<label for="description">@Messages("event.edit.description")</label>
 <div class="editor form-control" id="editor">@Html(description)</div>
 <input type="hidden" id="description" name="description" value=''/>
 

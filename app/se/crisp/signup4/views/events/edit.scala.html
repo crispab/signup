@@ -12,7 +12,7 @@
 @lastSignupIsSameDay() = @{field("same_day") == "true" || creatingNew}
 
 
-@hasErrors(fieldName: String) = @{ if(eventForm(fieldName).hasErrors) { "has-error" } }
+@hasErrors(fieldName: String) = @{if(eventForm(fieldName).hasErrors) {"has-error"}}
 
 @creatingNew() = @{
   idToUpdate.isEmpty
@@ -30,70 +30,70 @@
   se.crisp.signup4.util.DateHelper.asDate(new java.util.Date())
 }
 
-@se.crisp.signup4.views.html.page("Redigera sammankomst " + field("name"), section = Groups){
+@se.crisp.signup4.views.html.page(Messages("event.edit.title", field("name")), section = Groups){
 
   @if(creatingNew()) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
-                "Ny")
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
+      Messages("edit.new"))
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
-                "Redigera")
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
+      Messages("edit.edit"))
   }
 
 
-  <h2>@if(creatingNew()) {Ny} else {Redigera} Sammankomst</h2>
+  <h2>@if(creatingNew()) {@Messages("event.new")} else {@Messages("event.edit")}</h2>
 
   <form class="form" id="editForm" action="@theAction()" method="POST" onsubmit="loadDescription()">
     <fieldset>
       <div class='form-group @hasErrors("name")'>
-        <label for="name">Namn</label>
+        <label for="name">@Messages("event.edit.name")</label>
         <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>
-        <span class="show-on-error">Fyll i ett namn på sammankomsten</span>
+        <span class="show-on-error">@Messages("event.edit.name.error")</span>
       </div>
 
-      <div class='form-group  @hasErrors("description")'>
+      <div class='form-group @hasErrors("description")'>
         @se.crisp.signup4.views.html.events.tags.editDescription(field("description"))
-        <span class="show-on-error">Beskrivning saknas</span>
+        <span class="show-on-error">@Messages("event.edit.description.error")</span>
       </div>
 
-      <div class='form-group  @hasErrors("venue")'>
-        <label for="venue">Plats</label>
+      <div class='form-group @hasErrors("venue")'>
+        <label for="venue">@Messages("event.edit.venue")</label>
         <input type="text" maxlength="127" class="form-control" id="venue" name="venue" value='@field("venue")'/>
-        <span class="show-on-error">Fyll i en plats där sammankomsten äger rum</span>
+        <span class="show-on-error">@Messages("event.edit.venue.error")</span>
       </div>
 
       <div class='form-group @hasErrors("start_date")'>
-        <label for="start_date">Dag</label>
+        <label for="start_date">@Messages("event.edit.date")</label>
         <input type="date" class="form-control" id="start_date" name="start_date"
         value='@field("start_date")' min="@today()" required=""/>
-        <div class="show-on-error">Ogiltigt datum eller klockslag</div>
+        <div class="show-on-error">@Messages("event.edit.date.error")</div>
       </div>
 
       <div class='form-inline form-group @hasErrors("start_time") @hasErrors("end_time")'>
-        <label for="start_time"> från kl</label>
+        <label for="start_time"> @Messages("event.edit.time.from")</label>
         <input type="time" class="form-control" id="start_time" name="start_time" value='@field("start_time")' required=""/>
 
-        <label for="end_time"> till kl</label>
+        <label for="end_time"> @Messages("event.edit.time.to")</label>
         <input type="time" class="form-control" id="end_time" name="end_time" value='@field("end_time")'
         required=""/>
-        <div class="show-on-error">Ogiltigt datum eller klockslag</div>
+        <div class="show-on-error">@Messages("event.edit.date.error")</div>
       </div>
 
-      <label class="space-berfore" for="same_day">Sista anmälning</label>
+      <label class="space-berfore" for="same_day">@Messages("event.edit.last")</label>
       <div class='form-inline form-group @hasErrors("last_signup_date")'>
         <div class="checkbox">
           <label>
             <input type="checkbox" id="same_day" name="same_day" value="true" @if(lastSignupIsSameDay()){checked=""}
             onclick='signupDate=document.getElementById("last_signup_date"); signupDate.disabled=this.checked; signupDate.required=!this.checked'/>
-            samma dag, eller
+            @Messages("event.edit.sameday")
           </label>
         </div>
         <input type="date" class="form-control" id="last_signup_date" name="last_signup_date"
                value='@field("last_signup_date")' min="@today()" @if(!lastSignupIsSameDay()){required=""} else {disabled=""}/>
-        <div class="show-on-error">Sista anmälningsdag får inte vara efter sammankomsten</div>
+        <div class="show-on-error">@Messages("event.edit.last.error")</div>
       </div>
 
-      <label class="space-berfore">Hantering av inbjudna</label>
+      <label class="space-berfore">@Messages("event.edit.invited")</label>
       <div class="radio">
         <label>
           <input type="radio"
@@ -102,7 +102,7 @@
             value="invited_only"
             @if((field("invited") equals "invited_only") || creatingNew) {checked}
             onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false' />
-          Bara inbjudna får komma
+          @Messages("event.edit.invitedonly")
         </label>
       </div>
       <div class="radio">
@@ -113,7 +113,7 @@
             value="allow_extra_friends"
             @if(field("invited") equals "allow_extra_friends") {checked}
             onclick='noField=document.getElementById("max_participants"); noField.disabled=true; noField.required=false'>
-          Inbjudna får ta med extra vänner
+          @Messages("event.edit.allowextrafriends")
         </label>
       </div>
       <div class="radio">
@@ -124,7 +124,7 @@
             value="max_number_of_participants_selected"
             @if(field("invited") equals "max_number_of_participants_selected") {checked}
             onclick='noField=document.getElementById("max_participants"); noField.disabled=false; noField.required=true'>
-          Max antal deltagare:
+          @Messages("event.edit.maxparticipants")
           <input type="number"
             class="form-control"
             id="max_participants"
@@ -140,32 +140,32 @@
       @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
         <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel</h4>
+          <h4 class="alert-heading">@Messages("event.edit.error")</h4>
 
           <p>@errors(eventForm).mkString(", ")</p>
         </div>
       }
 
       @if(creatingNew()) {
-        <label class="space-berfore" for="immediate_reminder">Påminnelse</label>
+        <label class="space-berfore" for="immediate_reminder">@Messages("event.edit.reminder")</label>
         <p>
-          Två påminnelser kommer att göras helt automatiskt med början @Reminder.firstReminderDays dagar innan sammankomsten.<br/>
-          Det går även att begära att ett utskick görs direkt när sammankomsten skapas:
+          @Messages("event.edit.reminder.description", Reminder.firstReminderDays) <br/>
+          @Messages("event.edit.reminder.immediately")
         </p>
         <div class="checkbox">
           <label>
             <input type="checkbox" id="immediate_reminder" name="immediate_reminder" value="true">
-            Skicka påminnelse/inbjudan till alla när jag sparar
+            @Messages("event.edit.reminder.checkbox")
           </label>
         </div>
       }
 
       <div class="form-group space-berfore">
         <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-          <span class="glyphicon glyphicon-ok"></span> Spara
+          <span class="glyphicon glyphicon-ok"></span> @Messages("button.save")
         </button>
         <button type="button" class="btn btn-default" id="cancel" onClick="history.go(-1)">
-          <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+          <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
         </button>
       </div>
     </fieldset>
