@@ -4,7 +4,7 @@ import play.api.libs.mailer._
 import se.crisp.signup4.models.Status._
 import se.crisp.signup4.models._
 import play.api.Logger
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 import play.twirl.api.Html
 import se.crisp.signup4.models.User
 import se.crisp.signup4.util.ThemeHelper._

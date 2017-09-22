@@ -3,11 +3,9 @@ package se.crisp.signup4.services
 import java.util.Date
 
 import akka.actor.{Actor, ActorRef, ActorSelection, Props}
-import se.crisp.signup4.models.{Event, User}
+import se.crisp.signup4.models.{Event, User, Reminder}
 import play.api.Logger
-import play.api.i18n.Lang
 import play.api.libs.concurrent.Akka
-import se.crisp.signup4.models.{Reminder, User}
 
 case class CheckEvents(loggedIn: User)
 case class RemindParticipant(event: Event, user: User, loggedIn: User)
