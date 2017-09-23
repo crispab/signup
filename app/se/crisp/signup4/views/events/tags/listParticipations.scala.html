@@ -38,8 +38,8 @@
         </a>
         @if(participation.isLateSignUp) {
             &nbsp;
-          <a id="warning_@{participation.id.get}" tabindex="0" role="button" rel="popover" data-toggle="popover" data-trigger="focus" data-placement="top" title="Sen anmälan" data-content="Anmälde sig @asDate(participation.signUpTime.get), vilket är efter sista anmälningsdag.">
-            <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")' alt="Sen anmälan"/>
+          <a id="warning_@{participation.id.get}" tabindex="0" role="button" rel="popover" data-toggle="popover" data-trigger="focus" data-placement="top" title='@Messages("event.late.heading")' data-content='@Messages("event.late.text", asDate(participation.signUpTime.get))'>
+            <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")' alt='@Messages("event.late.heading")'/>
           </a>
           <script type="text/javascript">
               $('#warning_@{participation.id.get}').popover()
@@ -61,24 +61,20 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                <h3 id="label_remove_participant_@participation.id">Vill du ta bort gästen?</h3>
+                <h3 id="label_remove_participant_@participation.id">@Messages("event.removeguest.heading")</h3>
               </div>
               <div class="modal-body">
-                <p>
-                  Du håller på att ta bort gästen <strong>@participation.user.firstName @participation.user.lastName</strong>
-                  från sammankomsten <strong>@participation.event.name</strong>.
-                </p>
-                <p>
-                  Vill du fortsätta?
-                </p>
+                <p>@Messages("event.removeguest.warning", participation.user.firstName, participation.user.lastName, participation.event.name)</p>
+                <p>@Messages("event.continue")</p>
               </div>
               <div class="modal-footer">
                 <form action="@se.crisp.signup4.controllers.routes.ParticipationsSecured.delete(participation.id.get)" method="POST">
                   <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                    <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                   </button>
-                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span>
-                    Ta bort</button>
+                  <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-trash"></span> @Messages("event.remove.action")
+                  </button>
                 </form>
               </div>
             </div>
