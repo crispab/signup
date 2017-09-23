@@ -49,7 +49,7 @@
     @if(isAdmin(loggedInUser)) {
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown" aria-expanded="false">
-          Messages("event.actions") <span class="caret"></span>
+          @Messages("event.actions") <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
@@ -57,24 +57,28 @@
         </ul>
       </div>
 
-      <div id="remove_event_@event.id" class="modal smaller-modal hide fade" style="display : none">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-          <h3 id="label_remove_event_@event.id">@Messages("event.remove.heading")</h3>
-        </div>
-        <div class="modal-body">
-          <p>@Messages("event.remove.warning", event.name)</p>
-          <p>@Messages("event.continue")</p>
-        </div>
-        <div class="modal-footer">
-          <form action="@se.crisp.signup4.controllers.routes.EventsSecured.delete(event.id.get)" method="POST">
-            <button type="button" class="btn btn-default" data-dismiss="modal">
-              <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
-            </button>
-            <button type="submit" class="btn btn-primary">
-              <span class="glyphicon glyphicon-trash"></span> @Messages("event.remove.action")
-            </button>
-          </form>
+      <div class="modal fade" id="remove_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_event_@event.id" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <h3 id="label_remove_event_@event.id">@Messages("event.remove.heading")</h3>
+            </div>
+            <div class="modal-body">
+              <p>@Messages("event.remove.warning", event.name)</p>
+              <p>@Messages("event.continue")</p>
+            </div>
+            <div class="modal-footer">
+              <form action="@se.crisp.signup4.controllers.routes.EventsSecured.delete(event.id.get)" method="POST">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-trash"></span> @Messages("event.remove.action")
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     }

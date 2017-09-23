@@ -1,17 +1,17 @@
 @import se.crisp.signup4.models._
 @import org.json.JSONObject._
-@(event: Event, participation: Participation, baseURL: String)
+@(event: Event, participation: Participation, baseURL: String)(implicit lang: Lang)
   {
      "attachments" : [
         {
-           "fallback" : @quote("Uppdaterad anmälan i sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
-           "pretext" : @quote("Uppdaterad anmälan i sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "fallback" : @quote(Messages("event.notify.updated") + " <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote(Messages("event.notify.updated") + " <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
            "color" : "#00759F",
            "fields" : [
               @if(participation.numberOfParticipants > 1) {
                 {
                    "title" : @quote(participation.user.name),
-                   "value" : @quote(se.crisp.signup4.util.StatusHelper.asMessage(participation.status) + " " + participation.numberOfParticipants + " i sällskapet"),
+                   "value" : @quote(se.crisp.signup4.util.StatusHelper.asMessage(participation.status) + " " + Messages("participation.people", participation.numberOfParticipants)),
                    "short" : false
                 }
               } else {
@@ -23,7 +23,7 @@
               }
               @if(!participation.comment.isEmpty) {
                 ,{
-                   "title" : "Kommentar",
+                   "title" : @quote(Messages("participation.comment")),
                    "value" : @quote(participation.comment),
                    "short" : false
                 }

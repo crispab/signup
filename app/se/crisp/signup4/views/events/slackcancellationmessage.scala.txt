@@ -1,21 +1,21 @@
 @import se.crisp.signup4.models._
 @import org.json.JSONObject._
-@(event: Event, baseURL: String)
+@(event: Event, baseURL: String)(implicit lang: Lang)
   {
      "attachments" : [
         {
-           "fallback" : @quote("Inställd sammankomst: <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
-           "pretext" : @quote("Inställd sammankomst: <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "fallback" : @quote(Messages("event.notify.cancelled") + " <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" :  @quote(Messages("event.notify.cancelled") + " <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
            "color" : "#EE3C0C",
            "fields" : [
               {
-                 "title" : "Tid",
+                 "title" : @quote(Messages("event.time")),
                  "value" : "@se.crisp.signup4.util.DateHelper.asDateTime(event.startTime)-@se.crisp.signup4.util.DateHelper.asTime(event.endTime)",
                  "short" : false
               },
               {
-                 "title" : "Orsak",
-                 "value" : @quote(event.cancellationReason.getOrElse("Ej angiven")),
+                 "title" : @quote(Messages("event.cancel.reason")),
+                 "value" : @quote(event.cancellationReason.getOrElse(Messages("event.cancel.reason.none"))),
                  "short" : false
               }
            ]

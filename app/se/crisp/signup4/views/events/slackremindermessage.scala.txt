@@ -1,11 +1,11 @@
 @import se.crisp.signup4.models._
 @import org.json.JSONObject._
-@(event: Event, baseURL: String)
+@(event: Event, baseURL: String)(implicit lang: Lang)
   {
      "attachments" : [
         {
-           "fallback" : @quote("Dags att anmäla sig till sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
-           "pretext" : @quote("Dags att anmäla sig till sammankomsten <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "fallback" : @quote(Messages("event.notify.reminder") + " <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
+           "pretext" : @quote(Messages("event.notify.reminder") + " <" + baseURL + se.crisp.signup4.controllers.routes.Events.show(event.id.get) + "|" + event.group.mailSubjectPrefix + ": " + event.name + ">!"),
            "color" : "#EE3C0C",
            "fields" : [
               {
@@ -14,18 +14,18 @@
                  "short" : false
               },
               {
-                 "title" : "Tid",
+                 "title" : @quote(Messages("event.time")),
                  "value" : "@se.crisp.signup4.util.DateHelper.asDateTime(event.startTime)-@se.crisp.signup4.util.DateHelper.asTime(event.endTime)",
                  "short" : false
               },
               {
-                 "title" : "Plats",
+                 "title" : @quote(Messages("event.venue")),
                  "value" : @quote(event.venue),
                  "short" : false
               }
               @if(!se.crisp.signup4.util.DateHelper.sameDay(event.startTime, event.lastSignUpDate)) {
                 ,{
-                   "title" : "Sista anmälningsdag",
+                   "title" : @quote(Messages("event.lastsignup")),
                    "value" : "@se.crisp.signup4.util.DateHelper.asDate(event.lastSignUpDate)",
                    "short" : false
                 }
