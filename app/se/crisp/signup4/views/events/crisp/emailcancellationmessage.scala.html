@@ -3,29 +3,25 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.ThemeHelper._
 
-@(event: Event, user: User, baseURL: String)
+@(event: Event, user: User, baseURL: String)(implicit lang: Lang)
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="@lang.code">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inställt: @event.group.name : @event.name</title>
+    <title>@Messages("event.notify.cancelled") @event.group.name : @event.name</title>
   </head>
   <body style="font-family: arial, verdana, sans-serif; font-size: small; margin: 1em;">
     <h3 style="font-family: expressway, arial, verdana, sans-serif; border-bottom: solid 3px #DB370B; margin-bottom: 0">@APPLICATION_NAME</h3>
     <div style="min-height: 10px; background-color: #00759F;"></div>
-    <h2 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@baseURL@se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)">Inställt i gruppen @event.group.name</a></h2>
-    <p>
-      Hej @{user.firstName}!
-    </p>
-    <p>
-      Tyvärr har denna sammankomst blivit inställd.
-    </p>
+    <h2 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@baseURL@se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)">@Messages("event.notify.cancelledingroup", event.group.name)</a></h2>
+    <p>@Messages("event.notify.hello", user.firstName)</p>
+    <p>@Messages("event.notify.cancelled.message")</p>
     <div style="background-color: #EFEAE5; padding: 1em; border-radius: 0.3em;">
-      <h3 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@baseURL@se.crisp.signup4.controllers.routes.Events.show(event.id.get)">Inställt: @event.name</a></h3>
+      <h3 style="font-family: expressway, arial, verdana, sans-serif;"><a style="color:#00759F; text-decoration:none" href="@baseURL@se.crisp.signup4.controllers.routes.Events.show(event.id.get)">@Messages("event.notify.cancelled") @event.name</a></h3>
       <p>@event.cancellationReason.getOrElse("")</p>
       <ul>
-        <li><strong>Tid:</strong> @asDateTime(event.startTime) - @asTime(event.endTime)</li>
+        <li><strong>@Messages("event.time")</strong> @asDateTime(event.startTime) - @asTime(event.endTime)</li>
       </ul>
     </div>
   </body>

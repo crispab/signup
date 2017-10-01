@@ -3,10 +3,10 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.ThemeHelper._
 
-@(event: Event, user: User, baseURL: String)
+@(event: Event, user: User, baseURL: String)(implicit lang: Lang)
 
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="@lang.code">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,27 +15,23 @@
   <body style="font-family: arial, helvetica, sans-serif; font-size: small; margin: 1em;">
     <h3 style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: normal; background-color: #930000; color: white;padding: 10px;">@APPLICATION_NAME</h3>
     <h2 style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: normal;"><a style="color: #995E00; text-decoration:none;" href="@baseURL@se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)">@event.group.name</a></h2>
-    <p>
-      Hej broder @{user.firstName}!
-    </p>
-    <p>
-      Nu är det dags att anmäla sig till nästa sammankomst.
-    </p>
+    <p>@Messages("event.notify.hello", user.firstName)</p>
+    <p>@Messages("event.notify.reminder.message")</p>
     <div style="background-color: #F4ECE1; padding: 1em; border-radius: 0.3em;">
       <h3 style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: normal;"><a style="color:#995E00; text-decoration:none" href="@baseURL@se.crisp.signup4.controllers.routes.Events.show(event.id.get)">@event.name</a></h3>
       <p>@Html(event.description)</p>
       <ul>
-        <li><strong>Tid:</strong> @asDateTime(event.startTime) - @asTime(event.endTime)</li>
-        <li><strong>Plats:</strong> @event.venue</li>
+        <li><strong>@Messages("event.time")</strong> @asDateTime(event.startTime) - @asTime(event.endTime)</li>
+        <li><strong>@Messages("event.venue")</strong>  @event.venue</li>
       </ul>
       @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-        <p>Sista anmälningsdag @asDate(event.lastSignUpDate)</p>
+        <p>@Messages("event.lastsignup") @asDate(event.lastSignUpDate)</p>
       }
 
     </div>
     <p style="margin-top: 2em; margin-bottom: 2em">
       <a style="background-color: #930000; color: white; padding: 1em; border-radius: 6px; border: solid 1px rgba(0, 0, 0, 0.0980392);font-weight: bold; text-decoration: none;"
-         href="@baseURL@se.crisp.signup4.controllers.routes.Participations.editForm(event.id.get, user.id.get)">Till anmälningssidan &rarr;</a>
+      href="@baseURL@se.crisp.signup4.controllers.routes.Participations.editForm(event.id.get, user.id.get)">@Messages("event.notify.reminder.signup")</a>
     </p>
   </body>
 </html>
