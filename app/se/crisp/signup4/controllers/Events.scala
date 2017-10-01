@@ -69,7 +69,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
   }
 
 
-  def asEmailReminder(eventId: Long, userId: Long) = Action {
+  def asEmailReminder(eventId: Long, userId: Long) = Action { implicit request =>
     val event = Event.find(eventId)
     val user = User.find(userId)
     import play.api.Play.current
@@ -84,7 +84,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
   }
 
 
-  def asEmailCancellation(eventId: Long, userId: Long) = Action {
+  def asEmailCancellation(eventId: Long, userId: Long) = Action { implicit request =>
     val event = Event.find(eventId)
     val user = User.find(userId)
     import play.api.Play.current

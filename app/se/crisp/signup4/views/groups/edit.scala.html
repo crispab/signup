@@ -3,7 +3,7 @@
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
 
-@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User])
+@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], lang: Lang)
 
 @field(fieldName: String) = @{
   groupForm(fieldName).value.getOrElse("")
@@ -27,13 +27,13 @@
   }
 }
 
-@se.crisp.signup4.views.html.page("Redigera grupp " + field("name"), section = Groups) {
+@se.crisp.signup4.views.html.page(Messages("group.edit", field("name")), section = Groups) {
   @if(creatingNew()) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list()),
-      "Ny")
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list()),
+      Messages("edit.new"))
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), field("name") -> se.crisp.signup4.controllers.routes.Groups.show(idToUpdate.get)),
-      "Redigera")
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), field("name") -> se.crisp.signup4.controllers.routes.Groups.show(idToUpdate.get)),
+      Messages("edit.edit"))
   }
 
 
@@ -41,46 +41,46 @@
 
   <form action="@theAction()" method="POST">
     <div class='form-group @hasErrors("name")'>
-      <label for="name">Namn</label>
+      <label for="name">@Messages("group.edit.name")</label>
       <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>
-      <span class="show-on-error">Fyll i ett namn på gruppen</span>
+      <span class="show-on-error">@Messages("group.edit.name.error")</span>
     </div>
 
     <div class='form-group  @hasErrors("description")'>
-      <label for="description">Beskrivning</label>
+      <label for="description">@Messages("group.edit.description")</label>
       <textarea maxlength="127" class="form-control" id="description" name="description" rows="3">@field("description")</textarea>
-      <span class="show-on-error">Det här var en underlig beskrivning</span>
+      <span class="show-on-error">@Messages("group.edit.description.error")</span>
     </div>
 
     <fieldset>
-      <legend>Konfigurering av epost från gruppen</legend>
+      <legend>@Messages("group.edit.email.title")</legend>
 
       <div class='form-group @hasErrors("mail_from")'>
-        <label for="mail_from">Avsändare</label>
+        <label for="mail_from">@Messages("group.edit.email.sender")</label>
         <input type="email" maxlength="127" class="form-control" id="mail_from" name="mail_from" value='@field("mail_from")' required=""/>
-        <span class="show-on-error">Fyll i adressen till den som skall stå som avsändare</span>
+        <span class="show-on-error">@Messages("group.edit.email.sender.error")</span>
       </div>
 
       <div class='form-group @hasErrors("mail_subject_prefix")'>
-        <label for="mail_subject_prefix">Rubrikprefix</label>
+        <label for="mail_subject_prefix">@Messages("group.edit.email.subjectprefix")</label>
         <input type="text" maxlength="127" class="form-control" id="mail_subject_prefix" name="mail_subject_prefix" value='@field("mail_subject_prefix")' required=""/>
-        <span class="show-on-error">Fyll i vad mailrubriker skall börja med</span>
+        <span class="show-on-error">@Messages("group.edit.email.subjectprefix.error")</span>
       </div>
     </fieldset>
 
     @if(groupForm.hasErrors || groupForm.hasGlobalErrors) {
       <div class="alert alert-danger">
         <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">Inmatningsfel</h4>
+        <h4 class="alert-heading">@Messages("edit.error")</h4>
         <p>@errors(groupForm).mkString(", ")</p>
       </div>
     }
 
     <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-      <span class="glyphicon glyphicon-ok"></span> Spara
+      <span class="glyphicon glyphicon-ok"></span> @Messages("button.save")
     </button>
     <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'>
-      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+      <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
     </button>
   </form>
 }

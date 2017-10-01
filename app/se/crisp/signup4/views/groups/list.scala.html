@@ -3,13 +3,13 @@
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.util.Section._
 
-@(groups: Seq[Group])(implicit loggedInUser: Option[User])
+@(groups: Seq[Group])(implicit loggedInUser: Option[User], lang: Lang)
 
-@se.crisp.signup4.views.html.page("Grupper", section = Groups) {
+@se.crisp.signup4.views.html.page(Messages("navigation.groups"), section = Groups) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(), "Grupper")
+  @se.crisp.signup4.views.html.breadcrumb(Seq(), Messages("navigation.groups"))
 
-  <h2>Grupper</h2>
+  <h2>@Messages("navigation.groups")</h2>
 
   @groups.map { group =>
     <div class="list-row">
@@ -21,7 +21,7 @@
   @if(isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
-        Ny grupp</a>
+        @Messages("group.addgroup")</a>
     </div>
   }
 }

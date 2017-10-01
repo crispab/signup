@@ -53,7 +53,7 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a data-toggle="modal" href="#remove_event_@event.id"><span class="glyphicon glyphicon-trash"></span>
-            @Messages("event.remove")</a></li>
+            @Messages("edit.remove")</a></li>
         </ul>
       </div>
 
@@ -66,7 +66,7 @@
             </div>
             <div class="modal-body">
               <p>@Messages("event.remove.warning", event.name)</p>
-              <p>@Messages("event.continue")</p>
+              <p>@Messages("edit.continue")</p>
             </div>
             <div class="modal-footer">
               <form action="@se.crisp.signup4.controllers.routes.EventsSecured.delete(event.id.get)" method="POST">
@@ -74,7 +74,7 @@
                   <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
                 <button type="submit" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-trash"></span> @Messages("event.remove.action")
+                  <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
                 </button>
               </form>
             </div>

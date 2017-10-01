@@ -7,11 +7,11 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User])
+@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], lang: Lang)
 
 @se.crisp.signup4.views.html.page(group.name, section = Groups) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list()), group.name)
+  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list()), group.name)
 
   <h2>@group.name</h2>
 
@@ -19,10 +19,10 @@
     <p>@group.description</p>
     @if(isAdmin(loggedInUser)) {
       <a href="@se.crisp.signup4.controllers.routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default">
-        <span class="glyphicon glyphicon-pencil"></span> Redigera
+        <span class="glyphicon glyphicon-pencil"></span> @Messages("edit.edit")
       </a>
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_group_@group.id">
-        <span class="glyphicon glyphicon-trash"></span> Ta bort
+        <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
       </button>
 
       <div class="modal fade" id="remove_group_@group.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_group_@group.id" aria-hidden="true">
@@ -30,19 +30,19 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-              <h3 id="label_remove_group_@group.id">Vill du ta bort gruppen?</h3>
+              <h3 id="label_remove_group_@group.id">@Messages("group.remove.heading")</h3>
             </div>
             <div class="modal-body">
-              <p>Du håller på att ta bort gruppen <strong>@group.name</strong>.</p>
-              <p>Vill du fortsätta?</p>
+              <p>@Messages("group.remove.warning", group.name)</p>
+              <p>@Messages("edit.continue")</p>
             </div>
             <div class="modal-footer">
               <form action="@se.crisp.signup4.controllers.routes.GroupsSecured.delete(group.id.get)" method="POST">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                  <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                  <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
                 <button type="submit" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-trash"></span> Ta bort
+                  <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
                 </button>
               </form>
             </div>
@@ -52,25 +52,25 @@
     }
   </div>
 
-  <h3>Sammankomster</h3>
+  <h3>@Messages("navigation.events")</h3>
   @if(showingAll) {
-    <a href="@se.crisp.signup4.controllers.routes.Groups.show(group.id.get)">Visa bara framtida</a>
+    <a href="@se.crisp.signup4.controllers.routes.Groups.show(group.id.get)">@Messages("group.events.showfuture")</a>
   } else {
-    <a href="@se.crisp.signup4.controllers.routes.Groups.show(group.id.get, showAll = true)">Visa alla</a>
+    <a href="@se.crisp.signup4.controllers.routes.Groups.show(group.id.get, showAll = true)">@Messages("group.events.showall")</a>
   }
 
   @events.map { event =>
     <div class="list-row">
       <h4>
         @if(event.isCancelled) {
-          Inställt:
+          @Messages("group.event.cancelled")
         }
       <a href="@se.crisp.signup4.controllers.routes.Events.show(event.id.get)">@event.name</a>
       <small class="pull-right"><strong>@asDate(event.startTime), </strong>
         @asTime(event.startTime)-@asTime(event.endTime)</small>
       </h4>
       @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-        <p class="text-muted"><em>Sista anmälningsdag: @asDate(event.lastSignUpDate)</em></p>
+        <p class="text-muted"><em>@Messages("event.edit.last"): @asDate(event.lastSignUpDate)</em></p>
       }
     </div>
   }
@@ -78,14 +78,14 @@
   @if(isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
-        Ny sammankomst</a>
+        @Messages("event.new")</a>
     </div>
   }
 
   <a href="javascript:;" class="toggle" data-toggle="collapse" data-target="#to_toggle">
     <h3>
-      Medlemmar
-      <small>(@members.size st)</small>
+      @Messages("group.members")
+      <small>@Messages("group.members.count", members.size)</small>
       <span id="toggle_icon" class="glyphicon glyphicon-triangle-right"></span>
     </h3>
   </a>
@@ -112,7 +112,7 @@
       @if(isAdmin(loggedInUser)) {
         <div class="media-right">
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_member_@membership.id">
-            <span class="glyphicon glyphicon-trash"></span> Ta bort
+            <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
           </button>
 
           <div class="modal fade" id="remove_member_@membership.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_member_@membership.id" aria-hidden="true">
@@ -120,24 +120,19 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
-                  <h3 id="label_remove_member_@membership.id">Vill du ta bort medlemmen?</h3>
+                  <h3 id="label_remove_member_@membership.id">@Messages("group.member.remove.heading")</h3>
                 </div>
                 <div class="modal-body">
-                  <p>
-                    Du håller på att ta bort medlemmen <strong>@membership.user.firstName @membership.user.lastName</strong>
-                    från gruppen <strong>@group.name</strong>.
-                  </p>
-                  <p>
-                    Vill du fortsätta?
-                  </p>
+                  <p>@Messages("group.member.remove.warning", membership.user.firstName, membership.user.lastName)</p>
+                  <p>@Messages("edit.continue")</p>
                 </div>
                 <div class="modal-footer">
                   <form action="@se.crisp.signup4.controllers.routes.Memberships.delete(membership.id.get)" method="POST">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
-                      <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+                      <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                     </button>
                     <button type="submit" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-trash"></span> Ta bort</button>
+                      <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")</button>
                   </form>
                 </div>
               </div>
@@ -159,7 +154,7 @@
   @if(isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.Memberships.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
-        Ny medlem</a>
+        @Messages("group.addmember")</a>
     </div>
   }
 }

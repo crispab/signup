@@ -33,10 +33,10 @@
 @se.crisp.signup4.views.html.page(Messages("event.edit.title", field("name")), section = Groups){
 
   @if(creatingNew()) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
       Messages("edit.new"))
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
       Messages("edit.edit"))
   }
 
@@ -140,7 +140,7 @@
       @if(eventForm.hasErrors || eventForm.hasGlobalErrors) {
         <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">@Messages("event.edit.error")</h4>
+          <h4 class="alert-heading">@Messages("edit.error")</h4>
 
           <p>@errors(eventForm).mkString(", ")</p>
         </div>
