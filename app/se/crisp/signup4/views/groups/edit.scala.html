@@ -37,7 +37,7 @@
   }
 
 
-  <h2>@if(creatingNew()) {Nytt} else {Redigera} Grupp</h2>
+  <h2>@if(creatingNew()) {@Messages("group.new")} else {@Messages("group.edit")}</h2>
 
   <form action="@theAction()" method="POST">
     <div class='form-group @hasErrors("name")'>
