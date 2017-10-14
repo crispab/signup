@@ -243,3 +243,6 @@ participation.reminder.warning=You will send an email to {0} {1} reminding about
 participation.error.attendance=Choose if you are coming or not
 participation.participants=Number of participants:
 participation.save=Save
+participation.guest.heading=New guest to {0}
+navigation.guest=New guest
+participation.guest.error=Select a user as guest

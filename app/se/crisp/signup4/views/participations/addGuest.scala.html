@@ -7,7 +7,7 @@
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
 
-@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User])
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], lang: Lang)
 
 @field(fieldName: String) = @{
   participationForm(fieldName).value.getOrElse("")
@@ -22,22 +22,24 @@
 
 @se.crisp.signup4.views.html.page("Gäst till " + event.name, section = Groups) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq("Grupper" -> se.crisp.signup4.controllers.routes.Groups.list(), event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get), event.name -> se.crisp.signup4.controllers.routes.Events.show(event.id.get)),
-    "Ny Gäst")
+  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
+    event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get),
+    event.name -> se.crisp.signup4.controllers.routes.Events.show(event.id.get)),
+    Messages("navigation.guest"))
 
-  <h2>Ny gäst till @event.name</h2>
+  <h2>@Messages("participation.guest.heading", event.name)</h2>
 
   <form action="@se.crisp.signup4.controllers.routes.ParticipationsSecured.createGuest()" method="POST">
     <fieldset>
       <div class='form-group @hasErrors("userId")'>
-        <label for="userId">Befintlig användare</label>
+        <label for="userId">@Messages("membership.existinguser")e</label>
         <select class="form-control" id="userId" name="userId" required="">
-          <option>Ingen vald</option>
+          <option>@Messages("option.noperson")</option>
           @nonGuests.map { user =>
             <option value='@user.id.get' @if(user.id.get.toString.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, isLoggedIn(loggedInUser)) )</option>
           }
         </select>
-        <span class="show-on-error">Välj en användare som medlem</span>
+        <span class="show-on-error">@Messages("participation.guest.error")</span>
       </div>
 
       <input type="hidden" id="eventId" name="eventId" value="@event.id.get"/>
@@ -48,20 +50,20 @@
       @if(participationForm.hasErrors || participationForm.hasGlobalErrors) {
         <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <h4 class="alert-heading">Inmatningsfel</h4>
+          <h4 class="alert-heading">@Messages("edit.error")</h4>
           <p>@errors(participationForm).mkString(", ")</p>
         </div>
       }
     </fieldset>
     <fieldset class="space-berfore">
       <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-        <span class="glyphicon glyphicon-ok"></span> Lägg till
+        <span class="glyphicon glyphicon-ok"></span> @Messages("membership.add")
       </button>
       <button type="button" class="btn btn-default" id="create" onClick='window.location.assign ("@se.crisp.signup4.controllers.routes.UsersSecured.createGuestForm(event.id.get)")'>
-        <span class="glyphicon glyphicon-plus"></span> Ny användare
+        <span class="glyphicon glyphicon-plus"></span> @Messages("membership.new")
       </button>
       <button type="button" class="btn btn-default" id="cancel" onClick='window.location.assign ("@se.crisp.signup4.controllers.routes.Events.show(event.id.get)")'>
-        <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+        <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
       </button>
     </fieldset>
   </form>

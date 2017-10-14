@@ -105,7 +105,7 @@
     <fieldset>
       <div class='form-group  @hasErrors("status")'>
         <label class="radio-inline">
-          <input type="radio" name="status" id="on" value="On" @if((field("status") == Status.On.toString)) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
+          <input type="radio" name="status" id="on" value="On" @if(field("status") == Status.On.toString) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
           <span class="label label-default participation-on">@Messages("status.on")</span>
         </label>
         <label class="radio-inline">

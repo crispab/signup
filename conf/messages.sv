@@ -238,3 +238,6 @@ participation.reminder.warning=Du håller på att skicka en påminnelse via e-po
 participation.error.attendance=Välj om du kommer eller inte
 participation.participants=Antal deltagare:
 participation.save=Anmäl
+participation.guest.heading=Ny gäst till {0}
+navigation.guest=Ny gäst
+participation.guest.error=Välj en användare som gäst
