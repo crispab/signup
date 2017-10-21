@@ -76,7 +76,7 @@
 
     @if(isAdmin(loggedInUser)) {
       <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown">
           @Messages("event.actions") <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -92,11 +92,11 @@
         </ul>
       </div>
 
-      <div class="modal fade" id="notify_participants_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_notify_participants_@event.id" aria-hidden="true">
+      <div class="modal fade" id="notify_participants_@event.id" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <button type="button" class="close" data-dismiss="modal" ><span>&times;</span></button>
               <h3 id="label_notify_participants_@event.id">@Messages("event.reminder.heading")</h3>
             </div>
             <div class="modal-body">
@@ -117,12 +117,12 @@
         </div>
       </div>
 
-      <div class="modal fade" id="cancel_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_cancel_event_@event.id" aria-hidden="true">
+      <div class="modal fade" id="cancel_event_@event.id" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <form action="@se.crisp.signup4.controllers.routes.EventsSecured.cancel(event.id.get)" method="POST">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" ><span>&times;</span></button>
                 <h3 id="label_cancel_event_@event.id">@Messages("event.cancel.heading")</h3>
               </div>
               <div class="modal-body">
@@ -145,11 +145,11 @@
         </div>
       </div>
 
-      <div class="modal fade" id="remove_event_@event.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_event_@event.id" aria-hidden="true">
+      <div class="modal fade" id="remove_event_@event.id" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+              <button type="button" class="close" data-dismiss="modal" ><span>&times;</span></button>
               <h3 id="label_remove_event_@event.id">@Messages("event.remove.heading")</h3>
             </div>
             <div class="modal-body">

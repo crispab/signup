@@ -56,11 +56,11 @@
           <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
         </button>
 
-        <div class="modal fade" id="remove_user_@user.id" tabindex="-1" role="dialog" aria-labelledby="label_remove_user_@user.id" aria-hidden="true">
+        <div class="modal fade" id="remove_user_@user.id" tabindex="-1" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Avbryt"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" ><span>&times;</span></button>
                 <h3 id="label_remove_user_@user.id">@Messages("user.remove.heading")</h3>
               </div>
               <div class="modal-body">
@@ -90,7 +90,7 @@
   @Event.findFutureEventsByUser(user).map { event =>
     <div class="list-row">
       <h4>
-        @if(event.isCancelled) {Inställt:}
+        @if(event.isCancelled) {@Messages("group.event.cancelled")}
       <a href="@se.crisp.signup4.controllers.routes.Participations.editForm(event.id.get, user.id.get)">@event.name</a>
       <small class="pull-right"><strong>@asDate(event.startTime), </strong>
         @asTime(event.startTime)-@asTime(event.endTime)</small>

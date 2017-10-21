@@ -19,7 +19,7 @@
 }
 
 
-@se.crisp.signup4.views.html.page("Ny medlem i " + group.name, section = Groups) {
+@se.crisp.signup4.views.html.page(Messages("membership.heading", group.name), section = Groups) {
 
   @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
     group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),

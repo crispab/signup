@@ -20,7 +20,7 @@
 }
 
 
-@se.crisp.signup4.views.html.page("Gäst till " + event.name, section = Groups) {
+@se.crisp.signup4.views.html.page(Messages("participation.guest.heading", event.name), section = Groups) {
 
   @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
     event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get),

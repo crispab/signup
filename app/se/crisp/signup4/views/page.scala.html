@@ -52,7 +52,7 @@
               @if(isLoggedIn(loggedInUser)) {
                 <ul class="nav navbar-nav navbar-right">
                   <li class="dropdown @sectionClass(se.crisp.signup4.util.Section.Login.toString)">
-                    <a id="logged_in_user" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <a id="logged_in_user" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                       <img class="login-thumb thumb-background16" src="@ImageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
                       @loggedInUser.get.firstName @loggedInUser.get.lastName
                       <span class="caret"></span>

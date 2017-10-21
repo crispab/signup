@@ -4,13 +4,13 @@
 
 @(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User], lang: Lang)
 
-@se.crisp.signup4.views.html.page("Byt bild för " + user.firstName + " " + user.lastName, section = Users) {
+@se.crisp.signup4.views.html.page(Messages("user.updateimage", user.firstName, user.lastName), section = Users) {
 
   @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list(),
     user.firstName + " " + user.lastName -> se.crisp.signup4.controllers.routes.Users.show(user.id.get)),
     Messages("navigation.updateimage"))
 
-  <h2>@Messages("navigation.updateimage")</h2>
+  <h2>@Messages("user.updateimage", user.firstName, user.lastName)</h2>
 
   <div class="input-group maxwidth">
     <img class="upload-thumb thumb-background80" src="@GravatarUrl.url(user, 80)" onerror='imgError(this);'/>
