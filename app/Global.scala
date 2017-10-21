@@ -8,7 +8,7 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import se.crisp.signup4.models.User
 import se.crisp.signup4.services.{CheckEvents, EventReminderActor}
-import se.crisp.signup4.util.LocaleHelper
+import se.crisp.signup4.util.{LocaleHelper, ThemeHelper}
 
 import scala.concurrent.Future
 
@@ -19,6 +19,10 @@ object Global extends GlobalSettings {
     Logger.debug("onStart called")
 
     setTimeZoneAndLocaleToAppDefault()
+
+    Logger.info("Application name is " + ThemeHelper.APPLICATION_NAME)
+    Logger.info("Application name is " + ThemeHelper.APPLICATION_NAME2)
+
     startCheckingForRemindersToSend()
   }
 
@@ -48,10 +52,10 @@ object Global extends GlobalSettings {
   def setTimeZoneAndLocaleToAppDefault() {
     // not so pretty, but convenient since Heroku servers may run in another time zone and locale
     TimeZone.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredTimeZone)
-
-    se.crisp.signup4.util.LocaleHelper.logLocales()
-
     Locale.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredLocale)
+
+    Logger.info("TimeZone = " + TimeZone.getDefault)
+    Logger.info("Locale = " + Locale.getDefault)
   }
 
 

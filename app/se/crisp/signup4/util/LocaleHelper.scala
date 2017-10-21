@@ -27,9 +27,4 @@ object LocaleHelper {
   def getConfiguredLocale: Locale = LocaleUtils.toLocale(LocaleHelper.LC_NAME)
   def getConfiguredTimeZone: TimeZone = TimeZone.getTimeZone(se.crisp.signup4.util.LocaleHelper.TZ_NAME)
   def getLang(request: RequestHeader): Lang = Lang.preferred(request.acceptLanguages)
-
-  def logLocales(): Unit = {
-    val locales = LocaleUtils.availableLocaleList
-    locales.toList.foreach{ l => Logger.debug(l.toString)}
-  }
 }
