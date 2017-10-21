@@ -48,6 +48,9 @@ object Global extends GlobalSettings {
   def setTimeZoneAndLocaleToAppDefault() {
     // not so pretty, but convenient since Heroku servers may run in another time zone and locale
     TimeZone.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredTimeZone)
+
+    se.crisp.signup4.util.LocaleHelper.logLocales()
+
     Locale.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredLocale)
   }
 

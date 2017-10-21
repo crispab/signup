@@ -3,8 +3,11 @@ package se.crisp.signup4.util
 import java.util.{Locale, TimeZone}
 
 import org.apache.commons.lang.LocaleUtils
+import play.Logger
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.RequestHeader
+
+import scala.collection.JavaConversions._
 
 
 object LocaleHelper {
@@ -24,4 +27,9 @@ object LocaleHelper {
   def getConfiguredLocale: Locale = LocaleUtils.toLocale(LocaleHelper.LC_NAME)
   def getConfiguredTimeZone: TimeZone = TimeZone.getTimeZone(se.crisp.signup4.util.LocaleHelper.TZ_NAME)
   def getLang(request: RequestHeader): Lang = Lang.preferred(request.acceptLanguages)
+
+  def logLocales(): Unit = {
+    val locales = LocaleUtils.availableLocaleList
+    locales.toList.foreach{ l => Logger.debug(l.toString)}
+  }
 }
