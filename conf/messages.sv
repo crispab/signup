@@ -5,6 +5,7 @@
 # Default messages in Play translated to Swedish
 
 # --- Constraints
+user.updateimage.standard.heading=Standardbild
 constraint.required=Obligatorisk
 constraint.min=Minvärde: {0}
 constraint.max=Maxvärde: {0}
@@ -256,8 +257,15 @@ user.edit.description.error=Va?? Skum beskrivning.
 user.edit.password=Lösenord
 user.edit.password.error=Du måste ange ett lösenord på minst 8 tecken
 user.edit.adminperm=Har administratörsbehörighet
-user.updateimage=Byt bild
 user.edit.role=Roll
 user.role.administrator=Administratör
 user.remove.heading=Vill du ta bort användaren?
 user.remove.warning=Du håller på att ta bort användaren {0} {1}.
+button.use=Använd
+navigation.updateimage=Byt bild
+user.updateimage.standard.row1=Om du har registrerat dig på 
+user.updateimage.standard.row2=och kopplat en bild till din epostadress visas den bilden.
+user.updateimage.standard.row3=Annars visas en anonym bild.
+user.updateimage.own.heading=Egen bild
+user.updateimage.own.row1=Välj en bild på datorn och använd den som profilbild.
+user.updateimage.own.row2=Bilden kommer automatiskt att zoomas in på ansiktet, beskäras och skalas om.

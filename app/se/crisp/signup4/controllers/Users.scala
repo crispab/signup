@@ -3,6 +3,7 @@ package se.crisp.signup4.controllers
 import cloudinary.model.CloudinaryResource
 import com.cloudinary.parameters.UploadParameters
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
+import play.api.Logger
 import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.models.{Event, Membership, Participation, User}
 import play.api.data.Form
@@ -161,7 +162,8 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
           User.updateInfo(id, CloudinaryUrl.identifier, Some(cloudinaryFileVersion))
           Redirect(routes.Users.show(id))
       } recover {
-        case _: Exception =>
+        case ex: Exception =>
+          Logger.error("Failed uploading image to Cloudinary", ex)
           BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.error"))))
       }
     }
