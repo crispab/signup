@@ -23,6 +23,9 @@
           @participation.user.firstName @participation.user.lastName
         </a>
       </h4>
+      @if(participation.user.comment.nonEmpty) {
+        <p class="text-muted small-space-berfore">@participation.user.comment</p>
+      }
       @if(isLoggedIn(loggedInUser)) {
         <p class="text-muted small-space-berfore"><em>@participation.user.email</em></p>
       }

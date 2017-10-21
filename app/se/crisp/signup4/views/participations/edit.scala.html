@@ -95,13 +95,17 @@
     }
   </div>
 
+  <div class="media">
+    <div class="media-left">
+      <img class="media-object thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
+    </div>
+    <div class="media-body">
+      <h3 class="media-heading">@user.firstName @user.lastName</h3>
+      @user.comment
+    </div>
+  </div>
 
-  <h3>
-    <img class="thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
-    @user.firstName @user.lastName
-  </h3>
-
-  <form action="@se.crisp.signup4.controllers.routes.Participations.createOrUpdate()" method="POST">
+  <form class="small-space-berfore" action="@se.crisp.signup4.controllers.routes.Participations.createOrUpdate()" method="POST">
     <fieldset>
       <div class='form-group  @hasErrors("status")'>
         <label class="radio-inline">

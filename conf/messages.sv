@@ -270,3 +270,4 @@ user.updateimage.own.heading=Egen bild
 user.updateimage.own.row1=Välj en bild på datorn och använd den som profilbild.
 user.updateimage.own.row2=Bilden kommer automatiskt att zoomas in på ansiktet, beskäras och skalas om.
 user.updateimage=Byt bild för {0} {1} 
+excel.description=Beskrivning

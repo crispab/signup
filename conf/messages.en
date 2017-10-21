@@ -275,3 +275,4 @@ user.updateimage.own.heading=Your own photo
 user.updateimage.own.row1=Select a photo on your computer and use it as your profile photo.
 user.updateimage.own.row2=The picture will be automatically zoomed in on your face, cropped and resized.
 user.updateimage=Change photo for {0} {1} 
+excel.description=Description
