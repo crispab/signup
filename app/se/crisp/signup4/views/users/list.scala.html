@@ -3,15 +3,15 @@
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(users: Seq[User])(implicit loggedInUser: Option[User])
+@(users: Seq[User])(implicit loggedInUser: Option[User], lang: Lang)
 
-@se.crisp.signup4.views.html.page("Användare", section = Users) {
+@se.crisp.signup4.views.html.page(Messages("navigation.users"), section = Users) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(), "Användare")
+  @se.crisp.signup4.views.html.breadcrumb(Seq(), Messages("navigation.users"))
 
   <div class="row">
     <div class="col-md-5">
-      <h2>Användare</h2>
+      <h2>@Messages("navigation.users")</h2>
     </div>
   </div>
 

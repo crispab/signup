@@ -7,12 +7,12 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
 
-@(user: User)(implicit loggedInUser: Option[User])
+@(user: User)(implicit loggedInUser: Option[User], lang: Lang)
 
 @se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
 
   @if(isAdmin(loggedInUser)) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list()),
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list()),
       user.firstName + " " + user.lastName)
   } else {
     @se.crisp.signup4.views.html.breadcrumb(Seq(), user.firstName + " " + user.lastName)

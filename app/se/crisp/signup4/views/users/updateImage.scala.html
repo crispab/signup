@@ -2,11 +2,11 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.GravatarUrl
 
-@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User])
+@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User], lang: Lang)
 
 @se.crisp.signup4.views.html.page("Byt bild för " + user.firstName + " " + user.lastName, section = Users) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list(),
+  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list(),
     user.firstName + " " + user.lastName -> se.crisp.signup4.controllers.routes.Users.show(user.id.get)),
     "Byt bild")
 
@@ -44,6 +44,6 @@
 
   <p>
     <a href="@se.crisp.signup4.controllers.routes.Users.show(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-ban-circle"></span>
-      Avbryt</a>
+      @Messages("button.cancel")</a>
   </p>
 }

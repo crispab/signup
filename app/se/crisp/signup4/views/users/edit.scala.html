@@ -37,65 +37,67 @@
 }
 
 
-@se.crisp.signup4.views.html.page("Redigera användare" +  field("firstName") + field("lastName"), section = Users) {
+@se.crisp.signup4.views.html.page(Messages("user.edit", field("firstName"), field("lastName")), section = Users) {
 
   @if(updating()) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list(), field("firstName") + " " + field("lastName") -> se.crisp.signup4.controllers.routes.Users.show(idToUpdate.get)),
-      "Redigera")
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list(),
+      field("firstName") + " " + field("lastName") -> se.crisp.signup4.controllers.routes.Users.show(idToUpdate.get)),
+      Messages("edit.edit"))
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq("Användare" -> se.crisp.signup4.controllers.routes.UsersSecured.list()), "Ny")
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list()),
+      Messages("edit.new"))
   }
 
-  <h2>@if(updating()) {Redigera} else {Ny} Användare</h2>
+  <h2>@if(updating()) {@Messages("user.edit", "", "")} else {@Messages("user.new")}</h2>
 
   <form action="@theAction()" method="POST">
     <fieldset>
 
       <div class='form-group @hasErrors("firstName")'>
-        <label for="firstName">Förnamn</label>
+        <label for="firstName">@Messages("user.edit.firstname")</label>
         <input type="text" maxlength="127" class="form-control" id="firstName" name="firstName" value='@field("firstName")' required="" />
-        <span class="show-on-error">Fyll i ett förnamn</span>
+        <span class="show-on-error">@Messages("user.edit.firstname.error")</span>
       </div>
 
       <div class='form-group @hasErrors("lastName")'>
-        <label for="lastName">Efternamn</label>
+        <label for="lastName">@Messages("user.edit.lastname")</label>
         <input type="text" maxlength="127" class="form-control" id="lastName" name="lastName" value='@field("lastName")' required="" />
-        <span class="show-on-error">Fyll i ett efternamn</span>
+        <span class="show-on-error">@Messages("user.edit.lastname.error")</span>
       </div>
 
       <div class='form-group @hasErrors("email")'>
-        <label for="email">Epost</label>
+        <label for="email">@Messages("user.edit.email")</label>
         <input type="email" maxlength="127" class="form-control" id="email" name="email" value='@field("email")' required="" />
-        <span class="show-on-error">Fyll i en korrekt epostadress</span>
+        <span class="show-on-error">@Messages("user.edit.email.error")</span>
       </div>
 
       <div class='form-group @hasErrors("phone")'>
-        <label for="phone">Telefon</label>
+        <label for="phone">@Messages("user.edit.phone")</label>
         <input type="tel" maxlength="127" class="form-control" id="phone" name="phone" value='@field("phone")' />
-        <span class="show-on-error">Ogiltigt telefonnummer</span>
+        <span class="show-on-error">@Messages("user.edit.phone.error")</span>
       </div>
 
       <div class='form-group @hasErrors("comment")'>
-        <label for="comment">Kommentar</label>
+        <label for="comment">@Messages("user.edit.description")</label>
         <textarea maxlength="127" class="form-control" id="comment" name="comment" rows="3">@field("comment")</textarea>
-        <span class="show-on-error">Det här var en skum kommentar</span>
+        <span class="show-on-error">@Messages("user.edit.description.error")</span>
       </div>
 
       <div class='form-group @hasErrors("password")'>
-        <label for="password">Lösenord</label>
+        <label for="password">@Messages("user.edit.password")</label>
         @if(updating()) {
           <input type="password" maxlength="127" class="form-control" id="password" name="password" value='@field("password")' required>
         } else {
           <input type="password" maxlength="127" class="form-control" id="password" name="password" value="@randomPassword" required>
         }
-        <span class="show-on-error">Du måste ange ett lösenord på minst 8 tecken</span>
+        <span class="show-on-error">@Messages("user.edit.password.error")</span>
       </div>
 
       @if(isAdmin(loggedInUser)) {
         <div class='checkbox @hasErrors("administrator")'>
           <label>
             <input type="checkbox" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}>
-            Har administratörsbehörighet
+            @Messages("user.edit.adminperm")
           </label>
         </div>
       }
@@ -103,7 +105,7 @@
       @if(userForm.hasErrors || userForm.hasGlobalErrors) {
       <div class="alert alert-danger">
         <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">Inmatningsfel</h4>
+        <h4 class="alert-heading">@Messages("edit.error")</h4>
         <p>@errors(userForm).mkString(", ")</p>
       </div>
       }
@@ -116,10 +118,10 @@
 
     <fieldset class="space-berfore">
       <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
-        <span class="glyphicon glyphicon-ok"></span> Spara
+        <span class="glyphicon glyphicon-ok"></span> @Messages("button.save")
       </button>
       <button type="button" class="btn btn-default" id="cancel" onClick='history.go(-1)'>
-        <span class="glyphicon glyphicon-ban-circle"></span> Avbryt
+        <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
       </button>
     </fieldset>
   </form>
