@@ -37,7 +37,7 @@
   @if(isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.UsersSecured.createForm()" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus"></span> Ny användare
+        <span class="glyphicon glyphicon-plus"></span> @Messages("user.new")
       </a>
     </div>
   }
