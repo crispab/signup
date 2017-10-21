@@ -25,6 +25,6 @@ heroku config:set \
     TZ="Europe/Stockholm" \
     LANG="sv_SE" \
     DATABASE_DRIVER=org.postgresql.Driver \
-    JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 \
-    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops" \
+    JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
+    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8" \
     $*

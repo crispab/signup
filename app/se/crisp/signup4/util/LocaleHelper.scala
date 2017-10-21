@@ -3,11 +3,8 @@ package se.crisp.signup4.util
 import java.util.{Locale, TimeZone}
 
 import org.apache.commons.lang.LocaleUtils
-import play.Logger
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.RequestHeader
-
-import scala.collection.JavaConversions._
 
 
 object LocaleHelper {

@@ -21,7 +21,6 @@ object Global extends GlobalSettings {
     setTimeZoneAndLocaleToAppDefault()
 
     Logger.info("Application name is " + ThemeHelper.APPLICATION_NAME)
-    Logger.debug("Some Swedish characters: ÅÄÖåäö.")
 
     startCheckingForRemindersToSend()
   }
