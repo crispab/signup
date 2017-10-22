@@ -6,6 +6,7 @@ import play.api.i18n.Messages
 import play.api.libs.concurrent.Akka
 import play.api.mvc.Results._
 import play.api.mvc._
+import se.crisp.signup4.controllers.Application
 import se.crisp.signup4.models.User
 import se.crisp.signup4.services.{CheckEvents, EventReminderActor}
 import se.crisp.signup4.util.{LocaleHelper, ThemeHelper}
@@ -81,4 +82,15 @@ object Global extends GlobalSettings {
     ))
   }
 
+  override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+    request.headers.get("x-forwarded-proto") match {
+      case Some(protocol) =>
+        if (!"https".equals(protocol)) {
+          Some(Application.redirectToHttps)
+        } else {
+          super.onRouteRequest(request)
+        }
+      case None => super.onRouteRequest(request)
+    }
+  }
 }

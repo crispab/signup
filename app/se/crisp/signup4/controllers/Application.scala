@@ -13,13 +13,13 @@ import se.crisp.signup4.util.AuthHelper
 import scala.concurrent.{ExecutionContext, Future}
 import ExecutionContext.Implicits.global
 
-object Application extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with Https {
+object Application extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
 
   def index: Action[AnyContent] = StackAction { implicit request =>
     Ok(se.crisp.signup4.views.html.index())
   }
 
-  def loginForm: Action[AnyContent] = httpsAction { implicit request =>
+  def loginForm: Action[AnyContent] = Action { implicit request =>
     if (request.session.get("access_uri").isEmpty && request.headers.get(REFERER).isDefined) {
       Logger.debug("Using REFERER URL: " + request.headers.get(REFERER).get)
       Ok(se.crisp.signup4.views.html.login(loginDataForm)).withSession("access_uri" -> request.headers.get(REFERER).get)
@@ -62,4 +62,9 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
       "success" -> Messages("application.logout")
     ))
   }
+
+  def redirectToHttps: Action[AnyContent] = Action { implicit request =>
+    MovedPermanently("https://" + request.host + request.uri)
+  }
+
 }
