@@ -55,8 +55,6 @@ object Application extends Controller with LoginLogout with OptionalAuthElement 
     }
   }
 
-  case class LoginDataForm(email : String, password : String)
-
   def logout: Action[AnyContent] = Action.async { implicit request =>
     gotoLogoutSucceeded.map(_.flashing(
       "success" -> Messages("application.logout")

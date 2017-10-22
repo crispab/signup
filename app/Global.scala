@@ -83,6 +83,10 @@ object Global extends GlobalSettings {
   }
 
   override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+    ensureHttpsOnHeroku(request)
+  }
+
+  private def ensureHttpsOnHeroku(request: RequestHeader) = {
     request.headers.get("x-forwarded-proto") match {
       case Some(protocol) =>
         if (!"https".equals(protocol)) {
