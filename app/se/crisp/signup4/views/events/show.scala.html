@@ -198,7 +198,7 @@
 
     @reminders.map { reminder =>
       <div class="list-row">
-        @Messages("event.reminder.future")
+        @Messages("event.reminder.future", asDate(reminder.date))
       </div>
     }
   }
