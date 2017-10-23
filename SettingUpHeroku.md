@@ -91,6 +91,13 @@ packs are not installed by default. The Locale build pack can install language p
 file in the root of the project.
 
     $ heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-locale
+    
+Add the Scala build pack
+------
+
+The Scala build pack automatically detects Play apps.
+
+    $ heroku buildpacks:add https://github.com/heroku/heroku-buildpack-scala
 
 Connect your local Git repository to Heroku's Git repository
 ------
