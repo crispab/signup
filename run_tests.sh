@@ -6,6 +6,6 @@ export APPLICATION_BASE_URL=http://localhost:3333
 
 export LANG=sv_SE
 
-activator 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
+sbt 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
 #activator 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.*'
 #activator 'test-only se.crisp.signup4.acceptance.*'
