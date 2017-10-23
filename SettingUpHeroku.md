@@ -172,7 +172,7 @@ Finally run `heroku_config_current.sh` (it contains an Heroku toolbelt command t
 Note 1) Default values mentioned here are "snapshot values" valid when this documentation was last updated. 
 Checking `application.conf` is always the best source of information for default values.
 
-Push the source code to Heroku and whitness the automatic deploy
+Push the source code to Heroku and witness the automatic deploy
 ------
 
 Push the source code (master branch) to Heroku for build and deploy:
