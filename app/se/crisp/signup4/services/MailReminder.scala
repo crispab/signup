@@ -1,17 +1,16 @@
 package se.crisp.signup4.services
 
-import play.api.libs.mailer._
-import se.crisp.signup4.models.Status._
-import se.crisp.signup4.models._
 import play.api.Logger
 import play.api.i18n.Messages
+import play.api.libs.mailer._
 import play.twirl.api.Html
-import se.crisp.signup4.models.User
+import se.crisp.signup4.models.Status._
+import se.crisp.signup4.models.{User, _}
 import se.crisp.signup4.util.ThemeHelper._
 
 
 object MailReminder {
-  def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User) {
+  def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User,  messages: Messages) {
     Logger.debug("Sending messages for: " + event.name)
     receivers foreach { receiver =>
       sendMessage(event, receiver, createMessage)
@@ -19,7 +18,7 @@ object MailReminder {
     LogEntry.create(event, Messages("mail.sentreminders", loggedIn.name, receivers.size))
   }
 
-  private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html) {
+  private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html)(implicit  messages: Messages) {
     val emailMessage = createMessage(event, receiver)
     val email = Email(
       subject = event.group.mailSubjectPrefix + ": " + event.name,
@@ -50,7 +49,7 @@ object MailReminder {
     unregisteredMembers union unregisteredGuests union maybeMembers union maybeGuests
   }
 
-  private def createReminderMessage(event: Event, user: User): Html = {
+  private def createReminderMessage(event: Event, user: User)(implicit  messages: Messages): Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
 
@@ -63,11 +62,11 @@ object MailReminder {
   }
 
 
-  def sendReminderMessages(event: Event)(implicit loggedIn: User) {
+  def sendReminderMessages(event: Event)(implicit loggedIn: User,  messages: Messages) {
     sendMessages(event, findReceiversToRemind(event), createReminderMessage)
   }
 
-  def sendReminderMessage(event: Event, user: User)(implicit loggedIn: User) {
+  def sendReminderMessage(event: Event, user: User)(implicit loggedIn: User,  messages: Messages) {
     sendMessage(event, user, createReminderMessage)
     LogEntry.create(event, Messages("mail.sentonereminder", loggedIn.name, user.name))
   }
@@ -79,7 +78,7 @@ object MailReminder {
     members union guests
   }
 
-  private def createCancellationMessage(event: Event, user: User): Html = {
+  private def createCancellationMessage(event: Event, user: User) (implicit messages: Messages): Html = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
 
@@ -91,7 +90,7 @@ object MailReminder {
     }
   }
 
-  def sendCancellationMessage(event: Event)(implicit loggedIn: User) {
+  def sendCancellationMessage(event: Event)(implicit loggedIn: User, messages: Messages) {
     sendMessages(event, findReceiversToCancel(event), createCancellationMessage)
   }
 }

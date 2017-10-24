@@ -14,7 +14,7 @@ object LocaleHelper {
 
   private def isKey(s: String) = s.startsWith("error.")
 
-  def errMsg(keyOrMessage: String)(implicit lang: Lang): String = {
+  def errMsg(keyOrMessage: String)(implicit messages: Messages): String = {
     if(isKey(keyOrMessage))
       Messages(keyOrMessage)
     else

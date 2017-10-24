@@ -1,11 +1,11 @@
 package se.crisp.signup4.util
 
+import play.api.i18n.Messages
 import se.crisp.signup4.models.Status
-import play.api.i18n.{Lang, Messages}
 
 object StatusHelper {
 
-  def asMessage(status: se.crisp.signup4.models.Status.Value)(implicit lang: Lang): String = {
+  def asMessage(status: se.crisp.signup4.models.Status.Value)(implicit messages: Messages): String = {
     status match {
       case Status.On => Messages("status.on")
       case Status.Maybe => Messages("status.maybe")

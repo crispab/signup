@@ -7,7 +7,7 @@
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
 
-@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], lang: Lang)
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages)
 
 @field(fieldName: String) = @{
   participationForm(fieldName).value.getOrElse("")

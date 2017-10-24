@@ -5,7 +5,7 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.Section._
 
-@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, lang: Lang, loggedInUser: Option[User])
+@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User])
 
 @se.crisp.signup4.views.html.page(event.name, section = Groups) {
 

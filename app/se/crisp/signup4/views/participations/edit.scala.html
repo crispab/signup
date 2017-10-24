@@ -8,7 +8,7 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], lang: Lang)
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages)
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 

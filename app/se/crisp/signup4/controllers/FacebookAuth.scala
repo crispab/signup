@@ -1,8 +1,10 @@
 package se.crisp.signup4.controllers
 
+import javax.inject.Inject
+
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import org.apache.commons.codec.digest.DigestUtils
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}
 import se.crisp.signup4.models.User
@@ -15,7 +17,7 @@ import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 
-object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
+class FacebookAuth @Inject()( val messagesApi: MessagesApi) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   private val FACEBOOK_AUTHENTICATION_URL = "https://graph.facebook.com/oauth/authorize"
   private val FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v2.8/oauth/access_token"
@@ -23,10 +25,6 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
 
   import play.api.Play.current
 
-  private lazy val FACEBOOK_CLIENT_ID = play.api.Play.configuration.getString("facebook.client.id")
-  private lazy val FACEBOOK_CLIENT_SECRET = play.api.Play.configuration.getString("facebook.client.secret")
-
-  def isConfigured: Boolean = FACEBOOK_CLIENT_ID.isDefined && FACEBOOK_CLIENT_SECRET.isDefined
 
   def authenticate = Action { implicit request =>
     val randomString = DigestUtils.md5Hex(Math.random().toString)
@@ -35,7 +33,7 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
     import com.netaporter.uri.dsl._
     val requestAuthenticationTokenUrl = FACEBOOK_AUTHENTICATION_URL.addParams(
       "response_type" -> "code" ::
-        "client_id" -> FACEBOOK_CLIENT_ID.get ::
+        "client_id" -> FacebookAuth.FACEBOOK_CLIENT_ID.get ::
         "redirect_uri" -> callbackUrl ::
         "state" -> randomString ::
         "scope" -> "email" :: Nil
@@ -72,8 +70,8 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
   private def requestAccessToken(code: String, callbackUrl: String): String = {
     val callToFacebook = WS.url(FACEBOOK_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(
       "code" -> Seq(code),
-      "client_id" -> Seq(FACEBOOK_CLIENT_ID.get),
-      "client_secret" -> Seq(FACEBOOK_CLIENT_SECRET.get),
+      "client_id" -> Seq(FacebookAuth.FACEBOOK_CLIENT_ID.get),
+      "client_secret" -> Seq(FacebookAuth.FACEBOOK_CLIENT_SECRET.get),
       "redirect_uri" -> Seq(callbackUrl),
       "grant_type" -> Seq("authorization_code"),
       "scope" -> Seq("email")
@@ -99,4 +97,14 @@ object FacebookAuth extends Controller with LoginLogout with OptionalAuthElement
 
     Await.result(callToFacebook, 60 seconds)
   }
+}
+
+object FacebookAuth {
+  import play.api.Play.current
+
+  private lazy val FACEBOOK_CLIENT_ID = play.api.Play.configuration.getString("facebook.client.id")
+  private lazy val FACEBOOK_CLIENT_SECRET = play.api.Play.configuration.getString("facebook.client.secret")
+
+  def isConfigured: Boolean = FACEBOOK_CLIENT_ID.isDefined && FACEBOOK_CLIENT_SECRET.isDefined
+
 }

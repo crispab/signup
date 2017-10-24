@@ -6,7 +6,7 @@
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
 
-@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User], lang: Lang)
+@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User], messages: Messages)
 
 @field(fieldName: String) = @{
   membershipForm(fieldName).value.getOrElse("")

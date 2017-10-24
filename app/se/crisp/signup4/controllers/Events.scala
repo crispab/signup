@@ -1,29 +1,29 @@
 package se.crisp.signup4.controllers
 
 import java.text.SimpleDateFormat
-
-import se.crisp.signup4.models._
-import play.api.libs.json.{JsValue, Json}
-import se.crisp.signup4.util.AuthHelper._
-import se.crisp.signup4.util.DateHelper._
-import se.crisp.signup4.util.ThemeHelper._
-import se.crisp.signup4.util.ExcelHelper
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.libs.iteratee.Enumerator
-import play.api.mvc._
 import java.util.Date
+import javax.inject.Inject
 
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import jp.t2v.lab.play2.stackc.RequestWithAttributes
-import se.crisp.signup4.models.security.Administrator
-import play.api.i18n.Messages
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.concurrent.Akka
+import play.api.libs.iteratee.Enumerator
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc._
+import se.crisp.signup4.models._
+import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.{EventReminderActor, MailReminder, RemindAllParticipants, SlackReminder}
+import se.crisp.signup4.util.AuthHelper._
+import se.crisp.signup4.util.DateHelper._
+import se.crisp.signup4.util.ExcelHelper
+import se.crisp.signup4.util.ThemeHelper._
 
 import scala.concurrent.ExecutionContext
 
-object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
+class Events @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(id)
@@ -122,7 +122,7 @@ object Events extends Controller with OptionalAuthElement with AuthConfigImpl {
 
 }
 
-object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
+class EventsSecured @Inject()( val messagesApi: MessagesApi) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
 
   def remindParticipants(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
@@ -210,6 +210,7 @@ object EventsSecured extends Controller with AuthElement with AuthConfigImpl {
 
     import play.api.Play.current
     import play.api.libs.concurrent.Execution.Implicits._
+
     import scala.concurrent.duration._
     Akka.system.scheduler.scheduleOnce(1.second) {
       val cancelledEvent = Event.find(id)

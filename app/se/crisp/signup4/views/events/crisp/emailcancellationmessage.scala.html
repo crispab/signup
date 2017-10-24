@@ -3,9 +3,9 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.ThemeHelper._
 
-@(event: Event, user: User, baseURL: String)(implicit lang: Lang)
+@(event: Event, user: User, baseURL: String)(implicit messages: Messages)
 <!DOCTYPE html>
-<html lang="@lang.code">
+<html lang="@messages.lang.code">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -1,5 +1,7 @@
 package se.crisp.signup4.controllers
 
+import javax.inject.Inject
+
 import cloudinary.model.CloudinaryResource
 import com.cloudinary.parameters.UploadParameters
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
@@ -8,7 +10,7 @@ import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.models.{Event, Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import se.crisp.signup4
 import se.crisp.signup4.services.{CloudinaryUrl, EventReminderActor, GravatarUrl, RemindParticipant}
@@ -16,7 +18,7 @@ import se.crisp.signup4.util.AuthHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
+class Users @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val userToShow = User.find(id)
@@ -24,7 +26,7 @@ object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
   }
 }
 
-object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
+class UsersSecured @Inject()( val messagesApi: MessagesApi) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
 
   def list: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator))  { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)

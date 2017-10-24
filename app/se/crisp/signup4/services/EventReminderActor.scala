@@ -1,17 +1,19 @@
 package se.crisp.signup4.services
 
 import java.util.Date
+import javax.inject.Inject
 
 import akka.actor.{Actor, ActorRef, ActorSelection, Props}
-import se.crisp.signup4.models.{Event, User, Reminder}
+import se.crisp.signup4.models.{Event, Reminder, User}
 import play.api.Logger
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.concurrent.Akka
 
 case class CheckEvents(loggedIn: User)
 case class RemindParticipant(event: Event, user: User, loggedIn: User)
 case class RemindAllParticipants(event: Event, loggedIn: User)
 
-class EventReminderActor extends Actor {
+class EventReminderActor @Inject()( val messagesApi: MessagesApi) extends Actor with I18nSupport{
 
   override def preStart() {Logger.debug("my path is: " + context.self.path)}
 

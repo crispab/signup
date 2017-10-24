@@ -1,6 +1,6 @@
 @import se.crisp.signup4.models.User
 
-@(errorMessage: String, details: String)(implicit loggedInUser: Option[User] = None, lang: Lang)
+@(errorMessage: String, details: String)(implicit loggedInUser: Option[User] = None, messages: Messages)
 
 @se.crisp.signup4.views.html.page(title = Messages("errorpage.title"), section = se.crisp.signup4.util.Section.Other, showLogin = false) {
 

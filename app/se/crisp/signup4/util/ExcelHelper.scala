@@ -1,15 +1,14 @@
 package se.crisp.signup4.util
 
+import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
+import play.api.i18n.Messages
 import se.crisp.signup4.models.Participation
 import se.crisp.signup4.models.Status._
-import StatusHelper._
-import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
-import play.Logger
-import play.api.i18n.{Lang, Messages}
+import se.crisp.signup4.util.StatusHelper._
 
 object ExcelHelper {
 
-  def createWorkbook(guests: Seq[Participation], members: Seq[Participation])(implicit lang: Lang): XSSFWorkbook = {
+  def createWorkbook(guests: Seq[Participation], members: Seq[Participation])(implicit messages: Messages): XSSFWorkbook = {
     val workbook = new XSSFWorkbook()
     val sheet = workbook.createSheet(Messages("excel.signups"))
     createHeading(workbook, sheet)
@@ -19,7 +18,7 @@ object ExcelHelper {
     workbook
   }
 
-  private def createHeading(workbook: XSSFWorkbook, sheet: XSSFSheet)(implicit lang: Lang) {
+  private def createHeading(workbook: XSSFWorkbook, sheet: XSSFSheet)(implicit messages: Messages) {
     val heading = sheet.createRow(0)
     heading.createCell(0).setCellValue(Messages("excel.firsname"))
     heading.createCell(1).setCellValue(Messages("excel.lastname"))
@@ -42,7 +41,7 @@ object ExcelHelper {
     }
   }
 
-  private def populateWithInvitedStatus(sheet: XSSFSheet, invited: Seq[Participation], startRow: Int = 1, areGuests: Boolean = false)(implicit lang: Lang) {
+  private def populateWithInvitedStatus(sheet: XSSFSheet, invited: Seq[Participation], startRow: Int = 1, areGuests: Boolean = false)(implicit messages: Messages) {
     var rowNumber = startRow
 
     val workbook = sheet.getWorkbook
@@ -74,7 +73,7 @@ object ExcelHelper {
     }
   }
 
-  private def autosizeAllColumns(sheet: XSSFSheet)(implicit lang: Lang) {
+  private def autosizeAllColumns(sheet: XSSFSheet)(implicit messages: Messages) {
     for (i <- 0 to 9) {
       sheet.autoSizeColumn(i)
     }

@@ -3,7 +3,7 @@
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.util.Section._
 
-@(groups: Seq[Group])(implicit loggedInUser: Option[User], lang: Lang)
+@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages)
 
 @se.crisp.signup4.views.html.page(Messages("navigation.groups"), section = Groups) {
 

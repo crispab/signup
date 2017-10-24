@@ -5,7 +5,7 @@
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
 
-@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit lang: Lang, loggedInUser: Option[User])
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User])
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 

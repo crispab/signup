@@ -3,13 +3,13 @@
 @import se.crisp.signup4.util.ThemeHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(title: String, section: se.crisp.signup4.util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User], lang: Lang)
+@(title: String, section: se.crisp.signup4.util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User], messages: Messages)
 
 <!DOCTYPE html>
 
   @sectionClass(sectionToCheck: String) = @{ if(sectionToCheck.equals(section.toString)){"active"} else {""} }
 
-  <html lang="sv">
+  <html lang="@messages.lang.code">
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">

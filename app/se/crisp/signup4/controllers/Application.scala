@@ -1,10 +1,12 @@
 package se.crisp.signup4.controllers
 
+import javax.inject.Inject
+
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import se.crisp.signup4.models
 import se.crisp.signup4.models.User
@@ -13,7 +15,7 @@ import se.crisp.signup4.util.AuthHelper
 import scala.concurrent.{ExecutionContext, Future}
 import ExecutionContext.Implicits.global
 
-object Application extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
+class Application @Inject() (val messagesApi: MessagesApi) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
 
   def index: Action[AnyContent] = StackAction { implicit request =>
     Ok(se.crisp.signup4.views.html.index())

@@ -5,7 +5,7 @@
 @import se.crisp.signup4.util.StatusHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User],  lang: Lang)
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User],  messages: Messages)
 
 @participations.map { participation =>
 
