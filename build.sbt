@@ -10,7 +10,7 @@ scalaVersion := "2.11.11"
 libraryDependencies ++= Seq(
   "org.apache.httpcomponents" %  "httpclient"            % "4.5.3",
   "org.apache.httpcomponents" %  "httpcore"              % "4.4.8",
-  "postgresql"                %  "postgresql"            % "9.2-1002.jdbc4",
+  "org.postgresql"            %  "postgresql"            % "42.1.4",
   "jp.t2v"                    %% "stackable-controller"  % "0.6.0",
   "jp.t2v"                    %% "play2-auth"            % "0.14.2",
   "com.typesafe.play"         %% "play-mailer"           % "4.0.0",
