@@ -1,5 +1,8 @@
 package se.crisp.signup4.services
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.libs.mailer._
@@ -8,8 +11,8 @@ import se.crisp.signup4.models.Status._
 import se.crisp.signup4.models.{User, _}
 import se.crisp.signup4.util.ThemeHelper._
 
-
-object MailReminder {
+@Singleton
+class MailReminder @Inject() (mailerClient: MailerClient) {
   def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User,  messages: Messages) {
     Logger.debug("Sending messages for: " + event.name)
     receivers foreach { receiver =>
@@ -30,8 +33,7 @@ object MailReminder {
 
     try {
       Logger.debug("Sending email for " + event.name + " to " + receiver)
-      import play.api.Play.current
-      MailerPlugin.send(email)
+      mailerClient.send(email)
       Logger.info("DONE sending email for " + event.name + " to " + receiver)
     } catch {
       case ex: Exception =>

@@ -2,15 +2,16 @@ package se.crisp.signup4.util
 
 import java.util.{Locale, TimeZone}
 
-import org.apache.commons.lang.LocaleUtils
+import org.apache.commons.lang3.LocaleUtils
+import play.api.Play.configuration
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.RequestHeader
 
 
 object LocaleHelper {
   import play.api.Play.current
-  val LC_NAME: String = play.api.Play.configuration.getString("application.locale").getOrElse("sv_SE")
-  val TZ_NAME: String = play.api.Play.configuration.getString("application.timezone").getOrElse("Europe/Stockholm")
+  val LC_NAME: String = configuration.getString("application.locale").getOrElse("sv_SE")
+  val TZ_NAME: String = configuration.getString("application.timezone").getOrElse("Europe/Stockholm")
 
   private def isKey(s: String) = s.startsWith("error.")
 

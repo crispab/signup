@@ -2,7 +2,6 @@ package se.crisp.signup4.integration.util
 
 import java.util.Locale
 
-import org.apache.commons.lang.LocaleUtils
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import se.crisp.signup4.util.LocaleHelper
 
