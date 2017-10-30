@@ -3,7 +3,7 @@
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
 
-@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], lang: Lang)
+@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], messages: Messages)
 
 @field(fieldName: String) = @{
   groupForm(fieldName).value.getOrElse("")

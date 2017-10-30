@@ -1,22 +1,25 @@
 package se.crisp.signup4.controllers
 
-import cloudinary.model.CloudinaryResource
+import javax.inject.{Inject, Named}
+
+import akka.actor.ActorRef
+import cloudinary.model.CloudinaryResourceBuilder
 import com.cloudinary.parameters.UploadParameters
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import play.api.Logger
-import se.crisp.signup4.models.security.{Administrator, NormalUser}
-import se.crisp.signup4.models.{Event, Membership, Participation, User}
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import se.crisp.signup4
-import se.crisp.signup4.services.{CloudinaryUrl, EventReminderActor, GravatarUrl, RemindParticipant}
+import se.crisp.signup4.models.security.{Administrator, NormalUser}
+import se.crisp.signup4.models.{Event, Membership, Participation, User}
+import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, RemindParticipant}
 import se.crisp.signup4.util.AuthHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
+class Users @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val userToShow = User.find(id)
@@ -24,7 +27,8 @@ object Users extends Controller with OptionalAuthElement with AuthConfigImpl {
   }
 }
 
-object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
+class UsersSecured @Inject()( val messagesApi: MessagesApi, cloudinaryResourceBuilder: CloudinaryResourceBuilder, @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
+  implicit val cld:com.cloudinary.Cloudinary = cloudinaryResourceBuilder.cld
 
   def list: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator))  { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
@@ -92,7 +96,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     val user = User.find(id)
     val event = Event.find(eventId)
     if(!event.isCancelled) {
-      EventReminderActor.instance() ! RemindParticipant(event, user, loggedIn)
+      eventReminderActor ! RemindParticipant(event, user, loggedIn)
       Redirect(routes.Events.show(eventId)).flashing("success" -> Messages("user.reminder", user.name))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("event.cancelled.noreminders"))
@@ -153,7 +157,7 @@ object UsersSecured extends Controller with AuthElement with AuthConfigImpl {
     if (resourceFile.isEmpty) {
       Future(BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.nofile")))))
     } else {
-      CloudinaryResource.upload(resourceFile.get.ref.file, UploadParameters()
+      cloudinaryResourceBuilder.upload(resourceFile.get.ref.file, UploadParameters()
                                                             .publicId(CloudinaryUrl.publicId(userToUpdate))
                                                             .format("png")
                                                             .overwrite(value = true)).map {

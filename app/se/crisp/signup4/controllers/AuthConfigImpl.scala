@@ -2,11 +2,9 @@ package se.crisp.signup4.controllers
 
 import jp.t2v.lab.play2.auth.AuthConfig
 import play.api.Logger
-import play.api.i18n.Messages
 import play.api.mvc.Results._
 import play.api.mvc._
 import se.crisp.signup4.models
-import se.crisp.signup4.util.LocaleHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect._
@@ -40,7 +38,7 @@ trait AuthConfigImpl extends AuthConfig {
    * A function that returns a `User` object from an `Id`.
    * You can alter the procedure to suit your application.
    */
-  def resolveUser(id: Id)(implicit ctx: ExecutionContext): Future[Option[User]] =  {
+  override def resolveUser(id: Id)(implicit ctx: ExecutionContext): Future[Option[User]] =  {
     Future(Option(models.User.find(id)))
   }
 
@@ -48,7 +46,7 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * Where to redirect the user after a successful login.
    */
-  def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
+  override def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     val uri = request.session.get("access_uri").getOrElse(routes.Application.index().url.toString)
     Logger.debug("Login succeeded. Redirecting to uri " + uri)
     Future.successful(Redirect(uri).withSession(request.session - "access_uri"))
@@ -57,27 +55,32 @@ trait AuthConfigImpl extends AuthConfig {
   /**
    * Where to redirect the user after logging out
    */
-  def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
+  override def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     Future.successful(Redirect(routes.Application.index()))
   }
 
   /**
    * If the user is not logged in and tries to access a protected resource then redirct them as follows:
    */
-  def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
+  override def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
     Future.successful(
       Redirect(routes.Application.loginForm())
       .withSession("access_uri" -> request.uri)
-      .flashing(("error" , Messages("application.authfail")(lang = LocaleHelper.getLang(request))))
+      .flashing(("error" , "application.authfail"))
+      // TODO: Fix this
+//      .flashing(("error" , Messages("application.authfail")))
     )
   }
 
   /**
    * If authorization failed (usually incorrect password) redirect the user as follows:
    */
-  def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
-    Future.successful(Forbidden(Messages("application.authfail")(lang = LocaleHelper.getLang(request))))
+  override def authorizationFailed(request: RequestHeader, user: User, authority: Option[User => Future[Boolean]])(implicit context: ExecutionContext): Future[Result] = {
+    Future.successful(Forbidden("application.authfail"))
+    // TODO: Fix this
+//    Future.successful(Forbidden(Messages("application.authfail")))
   }
+
 
   /**
    * A type that is defined by every action for authorization.

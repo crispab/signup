@@ -1,26 +1,28 @@
 package se.crisp.signup4.controllers
 
+import javax.inject.Inject
+
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.models.{Event, LogEntry, Participation, User}
 import se.crisp.signup4.models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.libs.concurrent.Akka
 import play.api.mvc._
 import se.crisp.signup4.services.SlackReminder
 import se.crisp.signup4.util.AuthHelper._
 import se.crisp.signup4.util.StatusHelper
 
-object Participations extends Controller with OptionalAuthElement with AuthConfigImpl {
+class Participations @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def editForm(eventId: Long, userId: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(eventId)
     if (!event.isCancelled) {
       val userToAttend = User.find(userId)
       val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = Unregistered, user = userToAttend, event = event))
-      Ok(se.crisp.signup4.views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
+      Ok(se.crisp.signup4.views.html.participations.edit(Participations.participationForm.fill(participation), userToAttend, event))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("error.signup.eventcancelled"))
     }
@@ -42,7 +44,7 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
   }
 
   def createOrUpdate: Action[AnyContent] = StackAction { implicit request =>
-    participationForm.bindFromRequest.fold(
+    Participations.participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = Event.find(formWithErrors("eventId").value.get.toLong)
         val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
@@ -71,6 +73,12 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     )
   }
 
+
+
+
+}
+
+object Participations{
   val participationForm: Form[Participation] =
     Form(
       mapping(
@@ -83,6 +91,9 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
       )(toParticipation)(fromParticipation)
         .verifying("error.signup.eventcancelled", participation => !participation.event.isCancelled)
     )
+  def fromParticipation(participation: Participation): Option[(Option[Long], String, Int, String, Long, Long)] = {
+    Option((participation.id, participation.status.toString, participation.numberOfParticipants, participation.comment, participation.user.id.get, participation.event.id.get))
+  }
 
   def toParticipation(
                        id: Option[Long],
@@ -102,13 +113,9 @@ object Participations extends Controller with OptionalAuthElement with AuthConfi
     )
   }
 
-  def fromParticipation(participation: Participation): Option[(Option[Long], String, Int, String, Long, Long)] = {
-    Option((participation.id, participation.status.toString, participation.numberOfParticipants, participation.comment, participation.user.id.get, participation.event.id.get))
-  }
 }
 
-
-object ParticipationsSecured extends Controller with AuthElement with AuthConfigImpl {
+class ParticipationsSecured @Inject()( val messagesApi: MessagesApi) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
   def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(eventId)

@@ -1,7 +1,7 @@
 package se.crisp.signup4.util
 
+import play.api.i18n.Messages
 import se.crisp.signup4.models.Event
-import play.api.i18n.{Lang, Messages}
 
 
 object HtmlHelper {
@@ -26,7 +26,7 @@ object HtmlHelper {
       description
   }
 
-  def calendarDescriptionAsText(event: Event, url: String, maxlength: Int)(implicit lang: Lang): String = {
+  def calendarDescriptionAsText(event: Event, url: String, maxlength: Int)(implicit messages: Messages): String = {
     import play.api.Play.current
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     truncatedTextFromHtml("<p>" + Messages("calendar.event", baseUrl + url) + "</p>" + event.description, maxlength)

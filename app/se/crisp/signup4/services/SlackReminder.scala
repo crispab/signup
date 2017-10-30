@@ -13,7 +13,7 @@ object SlackReminder {
 
   private val ANONYMOUS = new User(firstName = "John", lastName = "Doe", email = "")
 
-  private def sendMessage(event: Event, message: JsValue)(implicit loggedIn: User)  {
+  private def sendMessage(event: Event, message: JsValue)(implicit loggedIn: User, messages: Messages)  {
     val slackChannelURL = play.api.Play.configuration.getString("slack.channel.url")
     if(slackChannelURL.isDefined) {
       try {
@@ -30,31 +30,31 @@ object SlackReminder {
     }
   }
 
-  private def createReminderMessage(event: Event) = {
+  private def createReminderMessage(event: Event)(implicit  messages: Messages) = {
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     Json.parse(se.crisp.signup4.views.txt.events.slackremindermessage(event, baseUrl).toString())
   }
 
-  def sendReminderMessage(event: Event)(implicit loggedIn: User)  {
+  def sendReminderMessage(event: Event)(implicit loggedIn: User, messages: Messages)  {
     sendMessage(event, createReminderMessage(event))
   }
 
-  private def createCancellationMessage(event: Event) = {
+  private def createCancellationMessage(event: Event)(implicit  messages: Messages) = {
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     Json.parse(se.crisp.signup4.views.txt.events.slackcancellationmessage(event, baseUrl).toString())
   }
 
-  def sendCancellationMessage(event: Event)(implicit loggedIn: User) {
+  def sendCancellationMessage(event: Event)(implicit loggedIn: User, messages: Messages) {
     sendMessage(event, createCancellationMessage(event))
   }
 
-  private def createUpdatedParticipationMessage(participation: Participation) = {
+  private def createUpdatedParticipationMessage(participation: Participation)(implicit  messages: Messages) = {
     val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     Json.parse(se.crisp.signup4.views.txt.events.slackupdatedparticipationmessage(participation.event, participation, baseUrl).toString())
   }
 
-  def sendUpdatedParticipationMessage(participation: Participation) {
-    sendMessage(participation.event, createUpdatedParticipationMessage(participation))(loggedIn = ANONYMOUS)
+  def sendUpdatedParticipationMessage(participation: Participation)(implicit  messages: Messages) {
+    sendMessage(participation.event, createUpdatedParticipationMessage(participation))(loggedIn = ANONYMOUS, messages)
   }
 
 }

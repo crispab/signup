@@ -1,17 +1,18 @@
 package se.crisp.signup4.services
 
 import java.util.Date
+import javax.inject.Inject
 
-import akka.actor.{Actor, ActorRef, ActorSelection, Props}
-import se.crisp.signup4.models.{Event, User, Reminder}
+import akka.actor.Actor
 import play.api.Logger
-import play.api.libs.concurrent.Akka
+import play.api.i18n.{I18nSupport, MessagesApi}
+import se.crisp.signup4.models.{Event, Reminder, User}
 
 case class CheckEvents(loggedIn: User)
 case class RemindParticipant(event: Event, user: User, loggedIn: User)
 case class RemindAllParticipants(event: Event, loggedIn: User)
 
-class EventReminderActor extends Actor {
+class EventReminderActor @Inject()( val messagesApi: MessagesApi, mailReminder:MailReminder) extends Actor with I18nSupport{
 
   override def preStart() {Logger.debug("my path is: " + context.self.path)}
 
@@ -47,29 +48,13 @@ class EventReminderActor extends Actor {
 
   private def remindParticipant(event: Event, user: User, loggedInUser: User) {
     implicit val loggedIn: User = loggedInUser
-    MailReminder.sendReminderMessage(event, user)
+    mailReminder.sendReminderMessage(event, user)
   }
 
   private def remindParticipants(event: Event, loggedInUser: User) {
     implicit val loggedIn: User = loggedInUser
-    MailReminder.sendReminderMessages(event)
+    mailReminder.sendReminderMessages(event)
     SlackReminder.sendReminderMessage(event)
   }
 
-}
-
-
-object EventReminderActor {
-
-  val ACTOR_NAME = "EventReminder"
-
-  def create(): ActorRef = {
-    import play.api.Play.current
-    Akka.system.actorOf(Props[EventReminderActor], name = ACTOR_NAME)
-  }
-
-  def instance(): ActorSelection = {
-    import play.api.Play.current
-    Akka.system.actorSelection(path = "akka://application/user/" + ACTOR_NAME)
-  }
 }

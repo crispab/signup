@@ -1,6 +1,5 @@
 import java.util.{Locale, TimeZone}
 
-import org.apache.commons.lang.exception.ExceptionUtils
 import play.api._
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Akka
@@ -16,6 +15,7 @@ import scala.concurrent.Future
 
 object Global extends GlobalSettings {
 
+/*
   override def onStart(app: play.api.Application) {
     Logger.debug("onStart called")
 
@@ -57,9 +57,10 @@ object Global extends GlobalSettings {
     Logger.info("TimeZone = " + TimeZone.getDefault)
     Logger.info("Locale = " + Locale.getDefault)
   }
+*/
 
 
-  override def onError(request: RequestHeader, ex: Throwable): Future[Result] = {
+  /*override def onError(request: RequestHeader, ex: Throwable): Future[Result] = {
     val cause = ExceptionUtils.getCause(ex)
     val stackTrace = ExceptionUtils.getStackTrace(cause)
     val lang = LocaleHelper.getLang(request)
@@ -73,16 +74,17 @@ object Global extends GlobalSettings {
     Future.successful(NotFound(
       se.crisp.signup4.views.html.error(Messages("http.notfound")(lang = lang), request.uri)(lang = lang)
     ))
-  }
+  }*/
 
-  override def onBadRequest(request: RequestHeader, error: String): Future[Result] = {
+  /*override def onBadRequest(request: RequestHeader, error: String): Future[Result] = {
     val lang = LocaleHelper.getLang(request)
     Future.successful(BadRequest(
       se.crisp.signup4.views.html.error(Messages("http.badrequest")(lang = lang), error)(lang = lang)
     ))
-  }
+  }*/
 
-  override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+  /*override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+  TODO: Behöver vi kolla detta fortfarande?
     ensureHttpsOnHeroku(request)
   }
 
@@ -96,5 +98,5 @@ object Global extends GlobalSettings {
         }
       case None => super.onRouteRequest(request)
     }
-  }
+  }*/
 }

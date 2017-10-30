@@ -1,9 +1,11 @@
 package se.crisp.signup4.controllers
 
+import javax.inject.Inject
+
 import com.nimbusds.jose.JWSObject
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import org.apache.commons.codec.digest.DigestUtils
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}
@@ -17,17 +19,13 @@ import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 
-object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl {
+class GoogleAuth @Inject()( val messagesApi: MessagesApi) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport {
 
   private val GOOGLE_AUTHENTICATION_URL = "https://accounts.google.com/o/oauth2/auth"
   private val GOOGLE_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
 
   import play.api.Play.current
 
-  private lazy val GOOGLE_CLIENT_ID = play.api.Play.configuration.getString("google.client.id")
-  private lazy val GOOGLE_CLIENT_SECRET = play.api.Play.configuration.getString("google.client.secret")
-
-  def isConfigured: Boolean = GOOGLE_CLIENT_ID.isDefined && GOOGLE_CLIENT_SECRET.isDefined
 
   def authenticate = Action { implicit request =>
     val randomString = DigestUtils.md5Hex(Math.random().toString)
@@ -36,7 +34,7 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
     import com.netaporter.uri.dsl._
     val requestAuthenticationTokenUrl = GOOGLE_AUTHENTICATION_URL.addParams(
       "response_type" -> "code" ::
-        "client_id" -> GOOGLE_CLIENT_ID.get ::
+        "client_id" -> GoogleAuth.GOOGLE_CLIENT_ID.get ::
         "redirect_uri" -> callbackUrl ::
         "state" -> randomString ::
         "prompt" -> "select_account" ::
@@ -51,8 +49,8 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
       val callbackUrl = routes.GoogleAuth.callback().absoluteURL()
       val callToGoogle = WS.url(GOOGLE_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(
         "code" -> Seq(code.get),
-        "client_id" -> Seq(GOOGLE_CLIENT_ID.get),
-        "client_secret" -> Seq(GOOGLE_CLIENT_SECRET.get),
+        "client_id" -> Seq(GoogleAuth.GOOGLE_CLIENT_ID.get),
+        "client_secret" -> Seq(GoogleAuth.GOOGLE_CLIENT_SECRET.get),
         "redirect_uri" -> Seq(callbackUrl),
         "grant_type" -> Seq("authorization_code")
       )).map { response =>
@@ -82,5 +80,14 @@ object GoogleAuth extends Controller with LoginLogout with OptionalAuthElement w
       )
     }
   }
+
+}
+
+object GoogleAuth {
+  import play.api.Play.current
+  private lazy val GOOGLE_CLIENT_ID = play.api.Play.configuration.getString("google.client.id")
+  private lazy val GOOGLE_CLIENT_SECRET = play.api.Play.configuration.getString("google.client.secret")
+
+  def isConfigured: Boolean = GOOGLE_CLIENT_ID.isDefined && GOOGLE_CLIENT_SECRET.isDefined
 
 }

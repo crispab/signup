@@ -4,7 +4,7 @@
 @import se.crisp.signup4.controllers.GoogleAuth
 @import se.crisp.signup4.controllers.FacebookAuth
 
-@(loginForm: Form[Option[User]])(implicit flash: Flash, lang: Lang)
+@(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages)
 
 @field(fieldName: String) = @{
   loginForm(fieldName).value.getOrElse("")
@@ -70,6 +70,6 @@
     </fieldset>
   }
 
-}(loggedInUser = None, lang = lang)
+}(loggedInUser = None, messages = messages)
 
 

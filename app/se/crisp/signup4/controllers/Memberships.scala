@@ -1,14 +1,17 @@
 package se.crisp.signup4.controllers
 
+import javax.inject.Inject
+
 import jp.t2v.lab.play2.auth.AuthElement
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.security.Administrator
 import play.api.data.Form
 import play.api.data.Forms.{ignored, longNumber, mapping}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import se.crisp.signup4.util.AuthHelper._
 
-object Memberships extends Controller with AuthElement with AuthConfigImpl {
+class Memberships @Inject() (val messagesApi: MessagesApi) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
 
   def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)

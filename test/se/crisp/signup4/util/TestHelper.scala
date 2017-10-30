@@ -18,12 +18,12 @@ object TestHelper {
   private val POSTGRESSION_URL = "http://api.postgression.com"
   private val POSTGRESSION_SSL_CONF = "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"
 
-  lazy val postgressionDb = getNewPostgressionDb
+  lazy val postgressionDb: String = getNewPostgressionDb
 
   /**
    * Requests a temporary (30 minutes) se.crisp.signup4.integration test database to be created at http://www.postgression.com
    */
-  def getNewPostgressionDb = {
+  def getNewPostgressionDb: String = {
     /*
      * Can't use Play's own WS API since it requires an implicit Application object to be present
      * and this method is called during test setup while the FakeApplication object is being created.
@@ -79,7 +79,7 @@ object TestHelper {
       }
       propertyValue
     }
-    catch {case e: IOException => ""}
+    catch {case _: IOException => ""}
   }
 
   private def environmentVariableName(value: String): String = {
@@ -98,7 +98,7 @@ object TestHelper {
     line.trim.startsWith(propertyName)
   }
 
-  lazy val testId = Random.alphanumeric.take(8).mkString
+  lazy val testId: String = Random.alphanumeric.take(8).mkString
 
   def withTestId(string: String): String = {testId + string}
 
