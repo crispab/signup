@@ -75,11 +75,11 @@ class Application @Inject() (val messagesApi: MessagesApi, @Named("event-reminde
   }
 
   private def initialize(): Unit = {
-    Logger.debug("onStart called")
+    Logger.debug("initialize called")
 
     setTimeZoneAndLocaleToAppDefault()
 
-    Logger.info("Application name is " + ThemeHelper.APPLICATION_NAME)
+    Logger.info("Application name = " + ThemeHelper.APPLICATION_NAME)
 
     startCheckingForRemindersToSend()
   }

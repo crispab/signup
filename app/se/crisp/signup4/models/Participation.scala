@@ -108,7 +108,7 @@ object Participation {
           'comment -> "",
           'user -> userId,
           'event -> eventId,
-          'signup_time -> None
+          'signup_time -> Option.empty[Date]
         ).executeInsert()
     } match {
       case Some(primaryKey: Long) => primaryKey

@@ -3,6 +3,7 @@
 @import se.crisp.signup4.util.ThemeHelper._
 @import se.crisp.signup4.controllers.GoogleAuth
 @import se.crisp.signup4.controllers.FacebookAuth
+@import se.crisp.signup4.util.LocaleHelper._
 
 @(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages)
 
@@ -29,7 +30,7 @@
   @if(flash.get("error").isDefined) {
     <div class="alert alert-danger">
       <button type="button" class="close" data-dismiss="alert">×</button>
-      @flash.get("error")
+      @errMsg(flash.get("error").getOrElse(""))
     </div>
   }
   @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {

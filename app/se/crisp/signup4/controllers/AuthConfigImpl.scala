@@ -66,9 +66,7 @@ trait AuthConfigImpl extends AuthConfig {
     Future.successful(
       Redirect(routes.Application.loginForm())
       .withSession("access_uri" -> request.uri)
-      .flashing(("error" , "application.authfail"))
-      // TODO: Fix this
-//      .flashing(("error" , Messages("application.authfail")))
+      .flashing(("error" , "error.application.authfail"))
     )
   }
 
@@ -76,9 +74,7 @@ trait AuthConfigImpl extends AuthConfig {
    * If authorization failed (usually incorrect password) redirect the user as follows:
    */
   override def authorizationFailed(request: RequestHeader, user: User, authority: Option[User => Future[Boolean]])(implicit context: ExecutionContext): Future[Result] = {
-    Future.successful(Forbidden("application.authfail"))
-    // TODO: Fix this
-//    Future.successful(Forbidden(Messages("application.authfail")))
+    Future.successful(Forbidden("error.application.authfail"))
   }
 
 
