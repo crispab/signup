@@ -171,8 +171,8 @@ This will give you the latest version of the source code.
 In this solution, Play Framework is installed and run in you normal host operating system. Download and install 
 Play from https://www.playframework.com
 
-SignUp is created with Play Framework version 2.3 so it's recommended you get that version. Later versions might work, 
-but Play is known to introduce breaking changes between minor versions so there is no guarantee that version 2.4 or 
+SignUp is created with Play Framework version 2.4 so it's recommended you get that version. Later versions might work, 
+but Play is known to introduce breaking changes between minor versions so there is no guarantee that version 2.5 or 
 later will work.
 
 ### Set up Docker ###
