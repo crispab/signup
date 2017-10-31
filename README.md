@@ -10,10 +10,9 @@ This is the fourth version of the SignUp Service.
 - Heroku is used for deployment
 
 ### Play Framework ###
-- Activator 1.3.5 (that's how you get the Play Framework these days) - http://www.playframework.org/
-- Play 2.3.7 (comes with Activator) - http://www.playframework.org/
-- Scala 2.11.4 - http://www.scala-lang.org/
-- Anorm (part of Play) - http://www.playframework.com/documentation/2.3.x/ScalaAnorm
+- Play 2.4.11 - http://www.playframework.org/
+- Scala 2.11.11 - http://www.scala-lang.org/
+- Anorm 2.4.0 - https://www.playframework.com/documentation/2.4.x/Anorm
 
 ### Presentation ###
 - Bootstrap 3.3.4 - http://getbootstrap.com/
@@ -23,8 +22,8 @@ This is the fourth version of the SignUp Service.
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play plugins ###
-- Play2.x module for Authentication and Authorization 0.13 - https://github.com/t2v/play2-auth
-- Emailer Plugin 2.3.x - http://github.com/typesafehub/play-plugins/tree/master/mailer
+- Play2.x module for Authentication and Authorization 0.14 - https://github.com/t2v/play2-auth
+- Emailer Plugin 4.0.0 - https://github.com/playframework/play-mailer
 
 ### Run-time environment ###
 - Heroku (general app server environment) - http://heroku.com
