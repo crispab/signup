@@ -3,31 +3,21 @@ package se.crisp.signup4.http
 import javax.inject.{Inject, Singleton}
 
 import play.api.http._
-import play.api.mvc.{Handler, RequestHeader}
+import play.api.mvc.Results.MovedPermanently
+import play.api.mvc.{Action, Handler, RequestHeader}
 import play.api.routing.Router
-import se.crisp.signup4.controllers.Application
 
 @Singleton
-class SignupHttpRequestHandler @Inject()(router: Router,
-                                         errorHandler: HttpErrorHandler,
-                                         configuration: HttpConfiguration,
-                                         filters: HttpFilters,
-                                         application: Application)
-  extends DefaultHttpRequestHandler(router, errorHandler, configuration, filters) {
+class SignupHttpRequestHandler @Inject()(router: Router, errorHandler: HttpErrorHandler,
+                                         configuration: HttpConfiguration, filters: HttpFilters
+                                        ) extends DefaultHttpRequestHandler(router, errorHandler, configuration, filters) {
 
   override def routeRequest(request: RequestHeader): Option[Handler] = {
-    super.routeRequest(request)
-  }
-
-  private def ensureHttpsOnHeroku(request: RequestHeader) = {
-    request.headers.get("x-forwarded-proto") match {
-      case Some(protocol) =>
-        if (!"https".equals(protocol)) {
-          Some(application.redirectToHttps)
-        } else {
-          super.routeRequest(request)
-        }
-      case None => super.routeRequest(request)
+    (request.method, request.headers.get("X-Forwarded-Proto")) match {
+      case ("GET", Some(protocol)) if protocol != "https" => Some(Action {
+        MovedPermanently("https://" + request.host + request.uri)
+      })
+      case (_, _) => super.routeRequest(request)
     }
   }
 
