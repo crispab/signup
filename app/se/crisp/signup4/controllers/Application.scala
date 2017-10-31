@@ -70,10 +70,6 @@ class Application @Inject() (val messagesApi: MessagesApi, @Named("event-reminde
     ))
   }
 
-  def redirectToHttps: Action[AnyContent] = Action { implicit request =>
-    MovedPermanently("https://" + request.host + request.uri)
-  }
-
   private def initialize(): Unit = {
     Logger.debug("initialize called")
 
