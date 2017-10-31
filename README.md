@@ -65,7 +65,7 @@ The test cases that do exist are divided into three categories: unit, integratio
 #### Unit tests ####
 To execute the unit tests:
 ```
-activator 'test-only unit.*'
+sbt 'test-only unit.*'
 ```
 
 #### Integration tests ####
@@ -73,7 +73,7 @@ These tests mainly do database related tests.
 
 To execute the integration tests:
 ```
-activator 'test-only integration.*'
+sbt 'test-only integration.*'
 ```
 
 #### Acceptance tests ####
@@ -81,7 +81,7 @@ The acceptance tests (step functions) are actually written in Java (and not Scal
 
 To execute the acceptance tests:
 ```
-activator 'test-only acceptance.*'
+sbt 'test-only acceptance.*'
 ```
 
 #### Continuous integration ####
@@ -143,7 +143,7 @@ SignUp from inside the virtual machine:
 
     $ vagrant ssh
     vagrant@vagrant-ubuntu-trusty-64:~$ cd /vagrant
-    vagrant@vagrant-ubuntu-trusty-64:~$ activator run
+    vagrant@vagrant-ubuntu-trusty-64:~$ sbt run
 
 And then point your browser on your local computer to [http://localhost:19000](http://localhost:19000)
 
@@ -185,10 +185,10 @@ To install Docker, follow the instructions in https://www.docker.com/. Although 
 there are official solutions for running Docker on Mac OS X and in Windows as well.
 
 ### Run SignUp ###
-Once you have the development database running in a Docker container you can launch Play using activator:
+Once you have the development database running in a Docker container you can launch Play using sbt:
 
     $ cd signup
-    $ activator run
+    $ sbt run
 
 And then point your browser on your local computer to [http://localhost:9000](http://localhost:9000)
 
