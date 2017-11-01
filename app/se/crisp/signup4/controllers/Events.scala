@@ -16,7 +16,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.services.{MailReminder, RemindAllParticipants, SlackReminder}
+import se.crisp.signup4.services.{ImageUrl, MailReminder, RemindAllParticipants, SlackReminder}
 import se.crisp.signup4.util.AuthHelper._
 import se.crisp.signup4.util.DateHelper._
 import se.crisp.signup4.util.ExcelHelper
@@ -24,7 +24,7 @@ import se.crisp.signup4.util.ThemeHelper._
 
 import scala.concurrent.ExecutionContext
 
-class Events @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
+class Events @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(id)
@@ -123,7 +123,7 @@ class Events @Inject()( val messagesApi: MessagesApi) extends Controller with Op
 
 }
 
-class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailReminder,@Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
+class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailReminder,@Named("event-reminder-actor") eventReminderActor: ActorRef, implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
 
   def remindParticipants(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)

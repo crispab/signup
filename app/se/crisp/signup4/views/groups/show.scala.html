@@ -7,7 +7,7 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages)
+@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @se.crisp.signup4.views.html.page(group.name, section = Groups) {
 
@@ -96,7 +96,7 @@
     <div class="media list-row">
       <div class="media-left">
         <a href="@se.crisp.signup4.controllers.routes.Users.show(membership.user.id.get)">
-          <img class="thumb thumb-background60 pull-left" src="@ImageUrl(membership.user, 60)" onerror="imgError(this);"/>
+          <img class="thumb thumb-background60 pull-left" src="@imageUrl(membership.user, 60)" onerror="imgError(this);"/>
         </a>
       </div>
       <div class="media-body">

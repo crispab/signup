@@ -14,12 +14,12 @@ import play.api.mvc._
 import se.crisp.signup4
 import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.models.{Event, Membership, Participation, User}
-import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, RemindParticipant}
+import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, ImageUrl, RemindParticipant}
 import se.crisp.signup4.util.AuthHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Users @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+class Users @Inject()(val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val userToShow = User.find(id)
@@ -27,8 +27,12 @@ class Users @Inject()( val messagesApi: MessagesApi) extends Controller with Opt
   }
 }
 
-class UsersSecured @Inject()( val messagesApi: MessagesApi, cloudinaryResourceBuilder: CloudinaryResourceBuilder, @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
-  implicit val cld:com.cloudinary.Cloudinary = cloudinaryResourceBuilder.cld
+class UsersSecured @Inject()(val messagesApi: MessagesApi,
+                             cloudinaryResourceBuilder: CloudinaryResourceBuilder,
+                             cloudinaryUrl: CloudinaryUrl,
+                             implicit val gravatarUrl: GravatarUrl,
+                             implicit val imageUrl: ImageUrl,
+                             @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
 
   def list: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator))  { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
@@ -158,7 +162,7 @@ class UsersSecured @Inject()( val messagesApi: MessagesApi, cloudinaryResourceBu
       Future(BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.nofile")))))
     } else {
       cloudinaryResourceBuilder.upload(resourceFile.get.ref.file, UploadParameters()
-                                                            .publicId(CloudinaryUrl.publicId(userToUpdate))
+                                                            .publicId(cloudinaryUrl.publicId(userToUpdate))
                                                             .format("png")
                                                             .overwrite(value = true)).map {
         cr =>

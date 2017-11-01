@@ -2,8 +2,9 @@
 @import se.crisp.signup4.models.Group
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.services.ImageUrl
 
-@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages)
+@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @se.crisp.signup4.views.html.page(Messages("navigation.groups"), section = Groups) {
 

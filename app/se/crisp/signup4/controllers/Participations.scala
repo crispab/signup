@@ -11,11 +11,11 @@ import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.libs.concurrent.Akka
 import play.api.mvc._
-import se.crisp.signup4.services.SlackReminder
+import se.crisp.signup4.services.{ImageUrl, SlackReminder}
 import se.crisp.signup4.util.AuthHelper._
 import se.crisp.signup4.util.StatusHelper
 
-class Participations @Inject()( val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+class Participations @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def editForm(eventId: Long, userId: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(eventId)
@@ -115,7 +115,7 @@ object Participations{
 
 }
 
-class ParticipationsSecured @Inject()( val messagesApi: MessagesApi) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
+class ParticipationsSecured @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
   def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(eventId)

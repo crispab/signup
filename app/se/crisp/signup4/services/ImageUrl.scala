@@ -1,20 +1,22 @@
 package se.crisp.signup4.services
 
-import cloudinary.plugin.CloudinaryPlugin
+import javax.inject.Inject
+import javax.inject.Singleton
+
+import cloudinary.model.CloudinaryResourceBuilder
 import com.cloudinary.{Cloudinary, Transformation}
 import org.apache.commons.codec.digest.DigestUtils
-import play.api.Play
 import se.crisp.signup4.models.User
 
 
-trait ImageUrl {
+trait ImageProvider {
   def url(user: User, size: Int): String
   def identifier: String
 }
 
 
-
-object GravatarUrl extends ImageUrl {
+@Singleton
+class GravatarUrl extends ImageProvider {
   lazy val GRAVATAR_BASE_URL = "https://secure.gravatar.com/avatar/"
   lazy val  GRAVATAR_DEFAULT_SIZE = 80
   lazy val  GRAVATAR_NOT_FOUND_IMAGE_TYPE = "?default=blank"
@@ -31,17 +33,19 @@ object GravatarUrl extends ImageUrl {
     GRAVATAR_BASE_URL + DigestUtils.md5Hex(user.email.trim.toLowerCase) + ".jpg" + GRAVATAR_NOT_FOUND_IMAGE_TYPE + sizeParam(size)
   }
 
-  override def identifier = "Gravatar"
+  override def identifier: String = GravatarUrl.identifier
+}
+
+object GravatarUrl {
+  def identifier = "Gravatar"
 }
 
 
-
-object CloudinaryUrl extends ImageUrl {
+@Singleton
+class CloudinaryUrl @Inject() (cloudinaryResourceBuilder: CloudinaryResourceBuilder) extends ImageProvider {
   import play.api.Play.current
   lazy val CLOUDINARY_FOLDER: String = play.api.Play.configuration.getString("cloudinary.folder").getOrElse("signup")
-  lazy val cloudinary: Cloudinary = Play.application.plugin[CloudinaryPlugin]
-    .getOrElse(throw new RuntimeException("MyPlugin not loaded"))
-    .cloudinary
+  lazy val cloudinary: Cloudinary = cloudinaryResourceBuilder.cld
 
 
   override def url(user: User, size: Int): String = {
@@ -52,22 +56,26 @@ object CloudinaryUrl extends ImageUrl {
     CLOUDINARY_FOLDER + "/" + user.id.get.toString
   }
 
-  override def identifier = "Cloudinary"
+  override def identifier: String = CloudinaryUrl.identifier
 
+}
+
+object CloudinaryUrl {
+  def identifier = "Cloudinary"
 }
 
 
 
-object ImageUrl {
+class ImageUrl @Inject() (gravatarUrl: GravatarUrl, cloudinaryUrl: CloudinaryUrl) {
   def apply(user: User, size: Int): String = {
     provider(user.imageProvider).url(user, size)
   }
 
-  private def provider(providerName: String): ImageUrl = {
-    if(providerName.toLowerCase.contains(CloudinaryUrl.identifier.toLowerCase)) {
-      CloudinaryUrl
+  private def provider(providerName: String): ImageProvider = {
+    if(providerName.toLowerCase.contains(cloudinaryUrl.identifier.toLowerCase)) {
+      cloudinaryUrl
     } else {
-      GravatarUrl
+      gravatarUrl
     }
   }
 }

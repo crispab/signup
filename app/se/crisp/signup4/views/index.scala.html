@@ -2,8 +2,10 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.util.ThemeHelper._
+@import se.crisp.signup4.services.ImageUrl
 
-@()(implicit flash: Flash, messages: Messages, loggedInUser: Option[User])
+
+@()(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl)
 
 @se.crisp.signup4.views.html.page(title = APPLICATION_NAME, section = Other) {
 

@@ -13,14 +13,14 @@ import play.api.libs.concurrent.Akka
 import play.api.mvc._
 import se.crisp.signup4.models
 import se.crisp.signup4.models.User
-import se.crisp.signup4.services.CheckEvents
+import se.crisp.signup4.services.{CheckEvents, ImageUrl}
 import se.crisp.signup4.util.{AuthHelper, ThemeHelper}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class Application @Inject() (val messagesApi: MessagesApi, @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
+class Application @Inject() (val messagesApi: MessagesApi, @Named("event-reminder-actor") eventReminderActor: ActorRef, implicit val imageUrl: ImageUrl) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
 
   initialize()
 

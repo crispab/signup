@@ -6,8 +6,9 @@
 @import se.crisp.signup4.util.EmailHelper._
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.services.ImageUrl
 
-@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages)
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @field(fieldName: String) = @{
   participationForm(fieldName).value.getOrElse("")

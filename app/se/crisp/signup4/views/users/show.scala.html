@@ -7,7 +7,7 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
 
-@(user: User)(implicit loggedInUser: Option[User], messages: Messages)
+@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
 
@@ -18,7 +18,7 @@
     @se.crisp.signup4.views.html.breadcrumb(Seq(), user.firstName + " " + user.lastName)
   }
 
-  <img class="big-thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
+  <img class="big-thumb thumb-background80" src="@imageUrl(user, size = 80)" onerror="imgError(this);"/>
   @if(isAdminOrSelf(loggedInUser, user)) {
     <a href="@se.crisp.signup4.controllers.routes.UsersSecured.updateImageForm(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span>
       @Messages("navigation.updateimage")</a>

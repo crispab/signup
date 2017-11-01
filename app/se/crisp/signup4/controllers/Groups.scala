@@ -9,9 +9,10 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
+import se.crisp.signup4.services.ImageUrl
 import se.crisp.signup4.util.AuthHelper._
 
-class Groups @Inject() (val messagesApi: MessagesApi) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+class Groups @Inject() (val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def list: Action[AnyContent] = StackAction { implicit request =>
     val groups = Group.findAll()
@@ -30,7 +31,7 @@ class Groups @Inject() (val messagesApi: MessagesApi) extends Controller with Op
 }
 
 
-class GroupsSecured @Inject() (val messagesApi: MessagesApi) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
+class GroupsSecured @Inject() (val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
 
 
   def createForm: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>

@@ -4,8 +4,9 @@
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.services.ImageUrl
 
-@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User])
+@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl)
 
 @se.crisp.signup4.views.html.page(event.name, section = Groups) {
 

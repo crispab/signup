@@ -5,7 +5,7 @@
 @import se.crisp.signup4.util.StatusHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User],  messages: Messages)
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @participations.map { participation =>
 
@@ -13,7 +13,7 @@
 
     <div class="media-left">
       <a href="@se.crisp.signup4.controllers.routes.Participations.editForm(participation.event.id.get, participation.user.id.get)">
-        <img class="thumb thumb-background60" src="@ImageUrl(participation.user, 60)" onerror="imgError(this);"/>
+        <img class="thumb thumb-background60" src="@imageUrl(participation.user, 60)" onerror="imgError(this);"/>
       </a>
     </div>
 

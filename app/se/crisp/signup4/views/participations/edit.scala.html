@@ -8,7 +8,7 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages)
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
@@ -97,7 +97,7 @@
 
   <div class="media">
     <div class="media-left">
-      <img class="media-object thumb thumb-background80" src="@ImageUrl(user, size = 80)" onerror="imgError(this);"/>
+      <img class="media-object thumb thumb-background80" src="@imageUrl(user, size = 80)" onerror="imgError(this);"/>
     </div>
     <div class="media-body">
       <h3 class="media-heading">@user.firstName @user.lastName</h3>

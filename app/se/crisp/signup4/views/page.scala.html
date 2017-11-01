@@ -3,7 +3,7 @@
 @import se.crisp.signup4.util.ThemeHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(title: String, section: se.crisp.signup4.util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User], messages: Messages)
+@(title: String, section: se.crisp.signup4.util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 <!DOCTYPE html>
 
@@ -53,7 +53,7 @@
                 <ul class="nav navbar-nav navbar-right">
                   <li class="dropdown @sectionClass(se.crisp.signup4.util.Section.Login.toString)">
                     <a id="logged_in_user" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                      <img class="login-thumb thumb-background16" src="@ImageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
+                      <img class="login-thumb thumb-background16" src="@imageUrl(loggedInUser.get, size = 16)" onerror="imgError(this);"/>
                       @loggedInUser.get.firstName @loggedInUser.get.lastName
                       <span class="caret"></span>
                     </a>

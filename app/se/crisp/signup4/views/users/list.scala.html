@@ -3,7 +3,7 @@
 @import se.crisp.signup4.util.AuthHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(users: Seq[User])(implicit loggedInUser: Option[User], messages: Messages)
+@(users: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @se.crisp.signup4.views.html.page(Messages("navigation.users"), section = Users) {
 
@@ -19,7 +19,7 @@
     <div class="media list-row">
       <div class="media-left">
         <a href="@se.crisp.signup4.controllers.routes.Users.show(user.id.get)">
-          <img class="thumb thumb-background60 pull-left" src="@ImageUrl(user, 60)" onerror="imgError(this);"/>
+          <img class="thumb thumb-background60 pull-left" src="@imageUrl(user, 60)" onerror="imgError(this);"/>
         </a>
       </div>
       <div class="media-body">

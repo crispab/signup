@@ -2,8 +2,9 @@
 @import se.crisp.signup4.models.Group
 @import se.crisp.signup4.util.FormHelper._
 @import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.services.ImageUrl
 
-@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], messages: Messages)
+@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
 
 @field(fieldName: String) = @{
   groupForm(fieldName).value.getOrElse("")
