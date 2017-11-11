@@ -3,9 +3,9 @@ package se.crisp.signup4.controllers
 import java.util.{Locale, TimeZone}
 import javax.inject.{Inject, Named, Singleton}
 
-import akka.actor.ActorRef
+import akka.actor.{ActorRef, ActorSystem}
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
-import play.api.Logger
+import play.api.{Configuration, Environment, Logger}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -20,7 +20,11 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class Application @Inject() (val messagesApi: MessagesApi, @Named("event-reminder-actor") eventReminderActor: ActorRef, implicit val imageUrl: ImageUrl) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
+class Application @Inject() (val messagesApi: MessagesApi,
+                             val actorSystem: ActorSystem,
+                             @Named("event-reminder-actor") eventReminderActor: ActorRef,
+                             val configuration: Configuration,
+                             implicit val imageUrl: ImageUrl) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
 
   initialize()
 
@@ -90,16 +94,12 @@ class Application @Inject() (val messagesApi: MessagesApi, @Named("event-reminde
   }
 
   private def startCheckingForRemindersToSend() {
-    import play.api.Play.current
-
-    import scala.concurrent.ExecutionContext.Implicits.global
     import scala.concurrent.duration._
-    Akka.system.scheduler.schedule(firstRun, 24.hours, eventReminderActor, CheckEvents(loggedIn = User.system))
+    actorSystem.scheduler.schedule(firstRun, 24.hours, eventReminderActor, CheckEvents(loggedIn = User.system))
   }
 
   private def firstRun = {
-    import play.api.Play.current
-    val sendTimeProperty = play.api.Play.configuration.getString("event.reminder.send.time").getOrElse("01:00")
+    val sendTimeProperty = configuration.getString("event.reminder.send.time").getOrElse("01:00")
 
     var startTime = new org.joda.time.LocalTime(sendTimeProperty).toDateTimeToday
     if(startTime.isBeforeNow) {

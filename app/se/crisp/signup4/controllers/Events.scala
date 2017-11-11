@@ -7,6 +7,7 @@ import javax.inject.{Inject, Named}
 import akka.actor.ActorRef
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import jp.t2v.lab.play2.stackc.RequestWithAttributes
+import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -24,7 +25,9 @@ import se.crisp.signup4.util.ThemeHelper._
 
 import scala.concurrent.ExecutionContext
 
-class Events @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
+class Events @Inject()(val messagesApi: MessagesApi,
+                       val configuration: Configuration,
+                       implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(id)
@@ -73,8 +76,7 @@ class Events @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: Ima
   def asEmailReminder(eventId: Long, userId: Long) = Action { implicit request =>
     val event = Event.find(eventId)
     val user = User.find(userId)
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.getString("application.base.url").getOrElse("")
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if (THEME == "b73") {
@@ -88,8 +90,7 @@ class Events @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: Ima
   def asEmailCancellation(eventId: Long, userId: Long) = Action { implicit request =>
     val event = Event.find(eventId)
     val user = User.find(userId)
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.getString("application.base.url").getOrElse("")
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if (THEME == "b73") {
@@ -103,8 +104,7 @@ class Events @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: Ima
   def asSlackReminder(id: Long) = Action { implicit request =>
     val event = Event.find(id)
 
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.getString("application.base.url").getOrElse("")
     val message: JsValue = Json.parse(se.crisp.signup4.views.txt.events.slackremindermessage(event, baseUrl).toString())
 
     Ok(message)
@@ -113,8 +113,7 @@ class Events @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: Ima
   def asSlackCancellation(id: Long) = Action { implicit request =>
     val event = Event.find(id)
 
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.getString("application.base.url").getOrElse("")
     val message: JsValue = Json.parse(se.crisp.signup4.views.txt.events.slackcancellationmessage(event, baseUrl).toString())
 
     Ok(message)

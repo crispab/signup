@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}

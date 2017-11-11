@@ -1,5 +1,6 @@
 package se.crisp.signup4.util
 
+import play.api.Configuration
 import play.api.i18n.Messages
 import se.crisp.signup4.models.Event
 
