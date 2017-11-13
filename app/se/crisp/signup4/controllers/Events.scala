@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.{Inject, Named}
 
-import akka.actor.ActorRef
+import akka.actor.{ActorRef, ActorSystem}
+import akka.stream.scaladsl.{Source, StreamConverters}
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import jp.t2v.lab.play2.stackc.RequestWithAttributes
 import play.api.Configuration
@@ -14,6 +15,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.concurrent.Akka
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.streams.Streams
 import play.api.mvc._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao._
@@ -25,7 +27,7 @@ import se.crisp.signup4.util._
 import scala.concurrent.ExecutionContext
 
 class Events @Inject()(val messagesApi: MessagesApi,
-                       val configuration: Configuration,
+                       implicit val configuration: Configuration,
                        implicit val authHelper: AuthHelper,
                        implicit val localeHelper: LocaleHelper,
                        implicit val themeHelper: ThemeHelper,
@@ -58,7 +60,9 @@ class Events @Inject()(val messagesApi: MessagesApi,
       outputStream.close()
     }
 
-    Ok.chunked(enumerator >>> Enumerator.eof).withHeaders(
+    val source = Source.fromPublisher(Streams.enumeratorToPublisher(enumerator))
+
+    Ok.chunked(source).withHeaders(
       "Content-Type" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "Content-Disposition" -> ("attachment; filename=" + event.name + ".xlsx")
     )
@@ -132,6 +136,7 @@ class Events @Inject()(val messagesApi: MessagesApi,
 }
 
 class EventsSecured @Inject()(val messagesApi: MessagesApi,
+                              val actorSystem: ActorSystem,
                               val mailReminder: MailReminder,
                               @Named("event-reminder-actor") val eventReminderActor: ActorRef,
                               implicit val authHelper: AuthHelper,
@@ -230,11 +235,9 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
     eventDAO.cancel(id, reason)
     logEntryDAO.create(event, Messages("event.cancelledby", loggedIn.name, reason.getOrElse("ej angiven")))
 
-    import play.api.Play.current
     import play.api.libs.concurrent.Execution.Implicits._
-
     import scala.concurrent.duration._
-    Akka.system.scheduler.scheduleOnce(1.second) {
+    actorSystem.scheduler.scheduleOnce(1.second) {
       val cancelledEvent = eventDAO.find(id)
       mailReminder.sendCancellationMessage(cancelledEvent)
       slackReminder.sendCancellationMessage(cancelledEvent)

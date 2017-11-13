@@ -1,15 +1,15 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.util.HtmlHelper
 @import se.crisp.signup4.util.LocaleHelper
-@import play.api.Play.current
+@import play.api.Configuration
 
-@(event: Event)(implicit messages: Messages, htmlHelper: HtmlHelper, localeHelper: LocaleHelper)
+@(event: Event)(implicit messages: Messages, htmlHelper: HtmlHelper, localeHelper: LocaleHelper, configuration: Configuration)
 
 <script type="text/javascript" src="https://addthisevent.com/libs/1.6.0/ate.min.js"></script>
 
 <script type="text/javascript">
   addthisevent.settings ({
-    license : '@play.api.Play.configuration.getString("addthisevent.license").getOrElse("")',
+    license : '@configuration.getString("addthisevent.license").getOrElse("")',
     mouse : false,
     css : false,
     google     : {show:true, text:"<i class='fa fa-google fa-fw'></i> @Messages("calendar.google") <small><em>@Messages("calendar.online")</em></small>"},

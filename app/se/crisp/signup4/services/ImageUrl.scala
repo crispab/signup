@@ -6,6 +6,7 @@ import javax.inject.Singleton
 import cloudinary.model.CloudinaryResourceBuilder
 import com.cloudinary.{Cloudinary, Transformation}
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.Configuration
 import se.crisp.signup4.models.User
 
 
@@ -42,9 +43,9 @@ object GravatarUrl {
 
 
 @Singleton
-class CloudinaryUrl @Inject() (cloudinaryResourceBuilder: CloudinaryResourceBuilder) extends ImageProvider {
-  import play.api.Play.current
-  lazy val CLOUDINARY_FOLDER: String = play.api.Play.configuration.getString("cloudinary.folder").getOrElse("signup")
+class CloudinaryUrl @Inject() (val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
+                               val configuration: Configuration) extends ImageProvider {
+  lazy val CLOUDINARY_FOLDER: String = configuration.getString("cloudinary.folder").getOrElse("signup")
   lazy val cloudinary: Cloudinary = cloudinaryResourceBuilder.cld
 
 

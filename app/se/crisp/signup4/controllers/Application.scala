@@ -26,6 +26,8 @@ class Application @Inject() (val messagesApi: MessagesApi,
                              implicit val authHelper: AuthHelper,
                              implicit val localeHelper: LocaleHelper,
                              implicit val themeHelper: ThemeHelper,
+                             implicit val facebookAuth: FacebookAuth,
+                             implicit val googleAuth: GoogleAuth,
                              val userDAO: UserDAO,
                              implicit val imageUrl: ImageUrl) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
 

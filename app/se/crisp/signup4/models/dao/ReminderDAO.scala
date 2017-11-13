@@ -6,13 +6,14 @@ import javax.inject.{Inject, Singleton}
 import anorm.SqlParser.get
 import anorm.{RowParser, SQL, ~}
 import org.joda.time.LocalDate
-import play.api.Play.current
+import play.api.Configuration
 import play.api.db.Database
 import se.crisp.signup4.models.{Event, Reminder}
 import se.crisp.signup4.util.DateHelper.sameDay
 
 @Singleton
 class ReminderDAO @Inject() (val database: Database,
+                             val configuration: Configuration,
                              val eventDAO: EventDAO) {
   import scala.language.postfixOps
   val parser: RowParser[Reminder] = {
@@ -41,7 +42,7 @@ class ReminderDAO @Inject() (val database: Database,
     }
   }
 
-  def firstReminderDays: Int = play.api.Play.configuration.getInt("event.reminder.first.days").getOrElse(7)
+  def firstReminderDays: Int = configuration.getInt("event.reminder.first.days").getOrElse(7)
 
   def lastReminderDays(event: Event): Int = {
     if(sameDay(event.startTime, event.lastSignUpDate))

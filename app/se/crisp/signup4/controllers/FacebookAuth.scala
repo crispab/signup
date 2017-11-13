@@ -1,11 +1,12 @@
 package se.crisp.signup4.controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import org.apache.commons.codec.digest.DigestUtils
+import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.libs.ws.WS
+import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, AnyContent, Controller}
 import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.util.ThemeHelper
@@ -17,15 +18,16 @@ import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 
+@Singleton
 class FacebookAuth @Inject()(val messagesApi: MessagesApi,
+                             val configuration: Configuration,
+                             val wSClient: WSClient,
                              val themeHelper: ThemeHelper,
                              val userDAO: UserDAO) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   private val FACEBOOK_AUTHENTICATION_URL = "https://graph.facebook.com/oauth/authorize"
   private val FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v2.8/oauth/access_token"
   private val FACEBOOK_GET_EMAIL_URL = "https://graph.facebook.com/me"
-
-  import play.api.Play.current
 
 
   def authenticate = Action { implicit request =>
@@ -35,7 +37,7 @@ class FacebookAuth @Inject()(val messagesApi: MessagesApi,
     import com.netaporter.uri.dsl._
     val requestAuthenticationTokenUrl = FACEBOOK_AUTHENTICATION_URL.addParams(
       "response_type" -> "code" ::
-        "client_id" -> FacebookAuth.FACEBOOK_CLIENT_ID.get ::
+        "client_id" -> FACEBOOK_CLIENT_ID.get ::
         "redirect_uri" -> callbackUrl ::
         "state" -> randomString ::
         "scope" -> "email" :: Nil
@@ -70,10 +72,10 @@ class FacebookAuth @Inject()(val messagesApi: MessagesApi,
   }
 
   private def requestAccessToken(code: String, callbackUrl: String): String = {
-    val callToFacebook = WS.url(FACEBOOK_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(
+    val callToFacebook = wSClient.url(FACEBOOK_TOKEN_URL).withHeaders("Accept" -> "application/json").post(Map(
       "code" -> Seq(code),
-      "client_id" -> Seq(FacebookAuth.FACEBOOK_CLIENT_ID.get),
-      "client_secret" -> Seq(FacebookAuth.FACEBOOK_CLIENT_SECRET.get),
+      "client_id" -> Seq(FACEBOOK_CLIENT_ID.get),
+      "client_secret" -> Seq(FACEBOOK_CLIENT_SECRET.get),
       "redirect_uri" -> Seq(callbackUrl),
       "grant_type" -> Seq("authorization_code"),
       "scope" -> Seq("email")
@@ -87,7 +89,7 @@ class FacebookAuth @Inject()(val messagesApi: MessagesApi,
   }
 
   private def getEmailAddress(access_token: String): String = {
-    val callToFacebook = WS.url(FACEBOOK_GET_EMAIL_URL).withHeaders("Accept" -> "application/json").withQueryString(
+    val callToFacebook = wSClient.url(FACEBOOK_GET_EMAIL_URL).withHeaders("Accept" -> "application/json").withQueryString(
       "fields" -> "email",
       "return_ssl_resources" -> "",
       "access_token" -> access_token
@@ -99,14 +101,9 @@ class FacebookAuth @Inject()(val messagesApi: MessagesApi,
 
     Await.result(callToFacebook, 60 seconds)
   }
-}
 
-object FacebookAuth {
-  import play.api.Play.current
-
-  private lazy val FACEBOOK_CLIENT_ID = play.api.Play.configuration.getString("facebook.client.id")
-  private lazy val FACEBOOK_CLIENT_SECRET = play.api.Play.configuration.getString("facebook.client.secret")
+  private val FACEBOOK_CLIENT_ID = configuration.getString("facebook.client.id")
+  private val FACEBOOK_CLIENT_SECRET = configuration.getString("facebook.client.secret")
 
   def isConfigured: Boolean = FACEBOOK_CLIENT_ID.isDefined && FACEBOOK_CLIENT_SECRET.isDefined
-
 }

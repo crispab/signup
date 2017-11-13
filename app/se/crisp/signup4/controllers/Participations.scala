@@ -2,7 +2,9 @@ package se.crisp.signup4.controllers
 
 import javax.inject.{Inject, Singleton}
 
+import akka.actor.ActorSystem
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
+import play.api.Configuration
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.Status._
@@ -17,6 +19,8 @@ import se.crisp.signup4.util._
 
 @Singleton
 class Participations @Inject()(val messagesApi: MessagesApi,
+                               val actorSystem: ActorSystem,
+                               implicit val configuration: Configuration,
                                implicit val authHelper: AuthHelper,
                                implicit val localeHelper: LocaleHelper,
                                implicit val themeHelper: ThemeHelper,
@@ -72,10 +76,9 @@ class Participations @Inject()(val messagesApi: MessagesApi,
           val updatedParticipation = participationDAO.find(existingParticipation.get.id.get)
           logEntryDAO.create(updatedParticipation.event, asLogMessage(updatedParticipation))
 
-          import play.api.Play.current
           import play.api.libs.concurrent.Execution.Implicits._
           import scala.concurrent.duration._
-          Akka.system.scheduler.scheduleOnce(1.second) {
+          actorSystem.scheduler.scheduleOnce(1.second) {
             slackReminder.sendUpdatedParticipationMessage(updatedParticipation)
           }
 

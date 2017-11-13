@@ -7,7 +7,7 @@
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.AuthHelper
 
-@(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper)
+@(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper, facebookAuth: FacebookAuth, googleAuth: GoogleAuth)
 
 @field(fieldName: String) = @{
   loginForm(fieldName).value.getOrElse("")
@@ -56,16 +56,16 @@
     </fieldset>
   </form>
 
-  @if(GoogleAuth.isConfigured || FacebookAuth.isConfigured) {
+  @if(googleAuth.isConfigured || facebookAuth.isConfigured) {
     <fieldset class="xlarge-space-berfore">
       <legend>@Messages("login.with.social")</legend>
-      @if(GoogleAuth.isConfigured) {
+      @if(googleAuth.isConfigured) {
         <p class="text-left">
           <a href="@se.crisp.signup4.controllers.routes.GoogleAuth.authenticate()" class="btn-google">@Messages("login.google")</a>
         </p>
       }
 
-      @if(FacebookAuth.isConfigured) {
+      @if(facebookAuth.isConfigured) {
         <p class="text-left large-space-berfore">
           <a href="@se.crisp.signup4.controllers.routes.FacebookAuth.authenticate()" class="btn-facebook">@Messages("login.facebook")</a>
         </p>

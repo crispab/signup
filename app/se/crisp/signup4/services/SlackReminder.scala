@@ -2,27 +2,27 @@ package se.crisp.signup4.services
 
 import javax.inject.{Inject, Singleton}
 
-import se.crisp.signup4.models._
-import play.api.Logger
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.WS
-import play.api.Play.current
 import play.api.i18n.Messages
-import se.crisp.signup4.models.User
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.WSClient
+import play.api.{Configuration, Logger}
 import se.crisp.signup4.models.dao.LogEntryDAO
+import se.crisp.signup4.models.{User, _}
 import se.crisp.signup4.util.HtmlHelper
 
 
 @Singleton
-class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO) (implicit val htmlHelper: HtmlHelper) {
+class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO,
+                               val configuration: Configuration,
+                               val wSClient: WSClient) (implicit val htmlHelper: HtmlHelper) {
 
   private val ANONYMOUS = User(firstName = "John", lastName = "Doe", email = "")
 
   private def sendMessage(event: Event, message: JsValue)(implicit loggedIn: User, messages: Messages)  {
-    val slackChannelURL = play.api.Play.configuration.getString("slack.channel.url")
+    val slackChannelURL = configuration.getString("slack.channel.url")
     if(slackChannelURL.isDefined) {
       try {
-        WS.url(slackChannelURL.get).post(message)
+        wSClient.url(slackChannelURL.get).post(message)
       } catch {
         case ex: Exception =>
           Logger.error("FAILED sending Slack message: " + message, ex)
