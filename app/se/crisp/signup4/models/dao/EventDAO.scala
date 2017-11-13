@@ -3,15 +3,15 @@ package se.crisp.signup4.models.dao
 import java.util
 import javax.inject.{Inject, Singleton}
 
-import play.api.Play.current
 import anorm.SqlParser.{get, scalar}
 import anorm.{RowParser, SQL, ~}
 import org.joda.time.DateTime
-import play.api.db.DB
+import play.api.db.Database
 import se.crisp.signup4.models._
 
 @Singleton
-class EventDAO @Inject() (val groupDAO: GroupDAO){
+class EventDAO @Inject() (val database: Database,
+                          val groupDAO: GroupDAO){
   import scala.language.postfixOps
   val parser: RowParser[Event] = {
     get[Option[Long]]("id") ~
@@ -45,14 +45,14 @@ class EventDAO @Inject() (val groupDAO: GroupDAO){
   }
 
   def findAll(): Seq[Event] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM events ORDER BY start_time DESC").as(parser *)
     }
   }
 
   def findFutureEventsByUser(user: User): Seq[Event] = {
-    DB.withTransaction {
+    database.withTransaction {
       val today = new DateTime().withTimeAtStartOfDay().toDate
       implicit connection =>
         SQL("""
@@ -69,7 +69,7 @@ class EventDAO @Inject() (val groupDAO: GroupDAO){
   }
 
   def findFutureEventsByGroup(group: Group): Seq[Event] = {
-    DB.withTransaction {
+    database.withTransaction {
       val today = new DateTime().withTimeAtStartOfDay().toDate
       implicit connection =>
         SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} AND e.start_time >= {today} AND e.event_status != 'Cancelled' ORDER BY e.last_signup_date ASC").on('groupId -> group.id.get, 'today -> today).as(parser *)
@@ -77,21 +77,21 @@ class EventDAO @Inject() (val groupDAO: GroupDAO){
   }
 
   def findAllEventsByGroup(group: Group): Seq[Event] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT e.* FROM events e WHERE e.groupx={groupId} ORDER BY e.start_time DESC").on('groupId -> group.id.get).as(parser *)
     }
   }
 
   def find(id: Long): Event = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM events e WHERE e.id={id}").on('id -> id).as(parser single)
     }
   }
 
   def create(event: Event): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'name -> event.name,
@@ -143,7 +143,7 @@ INSERT INTO events (
     """
 
   def update(id: Long, event: Event) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,
@@ -182,7 +182,7 @@ WHERE id = {id}
 
 
   def cancel(id: Long, reason: Option[String]) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("UPDATE events SET event_status = 'Cancelled', cancellation_reason = {cancellation_reason} WHERE id = {id}").on('id -> id, 'cancellation_reason -> reason).executeUpdate()
         SQL("DELETE FROM reminders r WHERE r.event={id}").on('id -> id).executeUpdate()
@@ -191,7 +191,7 @@ WHERE id = {id}
 
 
   def delete(id: Long) {
-    DB.withTransaction() {
+    database.withTransaction {
       implicit connection =>
         SQL("DELETE FROM participations p WHERE p.event={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM log_entries l WHERE l.event={id}").on('id -> id).executeUpdate()
@@ -201,7 +201,7 @@ WHERE id = {id}
   }
 
   def hasSeatsAvailable(id: Long): Boolean = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(hasSeatsAvailableQueryString).on('eventId -> id).as(scalar[Option[Boolean]].single).get
     }

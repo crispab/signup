@@ -2,14 +2,14 @@ package se.crisp.signup4.models.dao
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.Play.current
 import anorm.SqlParser.get
 import anorm.{RowParser, SQL, ~}
-import play.api.db.DB
+import play.api.db.Database
 import se.crisp.signup4.models.{Group, Membership}
 
 @Singleton
-class MembershipDAO @Inject() (val userDAO: UserDAO,
+class MembershipDAO @Inject() (val database: Database,
+                               val userDAO: UserDAO,
                                val groupDAO: GroupDAO) {
   import scala.language.postfixOps
 
@@ -18,7 +18,7 @@ class MembershipDAO @Inject() (val userDAO: UserDAO,
   }
 
   def create(groupId: Long, userId: Long): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'group -> groupId,
@@ -55,28 +55,28 @@ INSERT INTO memberships (
   }
 
   def find(id: Long): Membership = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM memberships WHERE id={id}").on('id -> id).as(parser single)
     }
   }
 
   def findAll(): Seq[Membership] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM memberships").as(parser *).sorted
     }
   }
 
   def findMembers(group: Group): Seq[Membership] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT m.* FROM memberships m, users u WHERE m.userx=u.id AND m.groupx={groupId}").on('groupId -> group.id.get).as(parser *).sorted
     }
   }
 
   def delete(id: Long) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection => {
         SQL("DELETE FROM memberships m WHERE m.id={id}").on('id -> id).executeUpdate()
       }

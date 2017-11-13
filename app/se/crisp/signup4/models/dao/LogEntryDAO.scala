@@ -3,14 +3,14 @@ package se.crisp.signup4.models.dao
 import java.util.Date
 import javax.inject.{Inject, Singleton}
 
-import play.api.Play.current
 import anorm.SqlParser.get
 import anorm.{RowParser, SQL, ~}
-import play.api.db.DB
+import play.api.db.Database
 import se.crisp.signup4.models.{Event, LogEntry}
 
 @Singleton
-class LogEntryDAO @Inject() (val eventDAO: EventDAO) {
+class LogEntryDAO @Inject() (val database: Database,
+                             val eventDAO: EventDAO) {
   import scala.language.postfixOps
   val parser: RowParser[LogEntry] = {
     get[Option[Long]]("id") ~
@@ -28,14 +28,14 @@ class LogEntryDAO @Inject() (val eventDAO: EventDAO) {
   }
 
   def findByEvent(event: Event): Seq[LogEntry] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM log_entries l WHERE l.event={eventId} ORDER BY l.id DESC").on('eventId -> event.id).as(parser *)
     }
   }
 
   def create(logEntry: LogEntry): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'event -> logEntry.event.id,
@@ -49,7 +49,7 @@ class LogEntryDAO @Inject() (val eventDAO: EventDAO) {
   }
 
   def create(eventId: Long, message: String, when: Date): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'event -> eventId,

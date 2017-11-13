@@ -3,15 +3,16 @@ package se.crisp.signup4.models.dao
 import java.util.Date
 import javax.inject.{Inject, Singleton}
 
-import play.api.Play.current
 import anorm.SqlParser.{get, scalar}
 import anorm.{RowParser, SQL, ~}
-import play.api.db.DB
+import play.api.db.Database
 import se.crisp.signup4.models.Status._
 import se.crisp.signup4.models._
 
 @Singleton
-class ParticipationDAO @Inject() (val eventDAO: EventDAO) (userDAO: UserDAO){
+class ParticipationDAO @Inject() (val database: Database,
+                                  val eventDAO: EventDAO,
+                                  val userDAO: UserDAO){
 
   import scala.language.postfixOps
 
@@ -37,7 +38,7 @@ class ParticipationDAO @Inject() (val eventDAO: EventDAO) (userDAO: UserDAO){
   }
 
   def create(participation: Participation): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'status -> participation.status.toString,
@@ -54,7 +55,7 @@ class ParticipationDAO @Inject() (val eventDAO: EventDAO) (userDAO: UserDAO){
   }
 
   def createGuest(eventId: Long, userId: Long): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'status -> Status.Unregistered.toString,
@@ -94,7 +95,7 @@ INSERT INTO participations (
   def update(id: Long, newParticipation: Participation) {
     val oldParticipation = find(id)
     val signUpTime = calculateNewSignUpTime(oldParticipation, newParticipation)
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,
@@ -125,21 +126,21 @@ WHERE id = {id}
 
 
   def find(id: Long): Participation = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(parser single)
     }
   }
 
   def findByEventAndUser(eventId: Long, userId: Long): Option[Participation] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM participations WHERE event={eventId} AND userx={userId}").on('eventId -> eventId, 'userId -> userId).as(parser singleOpt)
     }
   }
 
   def findGuestsByStatus(status: Status, event: Event): Seq[Participation] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(findGuestsByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id.get).as(parser *).sorted
     }
@@ -159,7 +160,7 @@ WHERE p.event={eventId}
     """
 
   def findGuests(event: Event): ParticipationLists = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         ParticipationLists(event,
           on = findGuestsByStatus(On, event),
@@ -170,7 +171,7 @@ WHERE p.event={eventId}
   }
 
   def findAll(): Seq[Participation] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM participations").as(parser *).sorted
     }
@@ -178,7 +179,7 @@ WHERE p.event={eventId}
 
   def findMembersByStatus(status: Status, event: Event): Seq[Participation] = {
     if (status != Unregistered) {
-      DB.withTransaction {
+      database.withTransaction {
         implicit connection =>
           SQL(findMembersByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id).as(parser *).sorted
       }
@@ -202,7 +203,7 @@ WHERE p.event={eventId}
 
 
   def findMembers(event: Event): ParticipationLists = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         ParticipationLists(event,
           on = findMembersByStatus(On, event),
@@ -214,7 +215,7 @@ WHERE p.event={eventId}
 
 
   def delete(id: Long) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection => {
         SQL("DELETE FROM participations p WHERE p.id={id}").on('id -> id).executeUpdate()
       }
@@ -223,7 +224,7 @@ WHERE p.event={eventId}
 
 
   def findStatus(user: User, event: Event): Status = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         val statusStr = SQL("""
           SELECT p.status

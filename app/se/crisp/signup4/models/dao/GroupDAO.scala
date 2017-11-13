@@ -2,15 +2,14 @@ package se.crisp.signup4.models.dao
 
 import javax.inject.Singleton
 
-import play.api.Play.current
 import anorm.SqlParser.get
 import anorm.{RowParser, SQL, ~}
 import com.google.inject.Inject
-import play.api.db.DB
+import play.api.db.Database
 import se.crisp.signup4.models.Group
 
 @Singleton
-class GroupDAO @Inject() () {
+class GroupDAO @Inject() (val database: Database) {
   import scala.language.postfixOps
   val parser: RowParser[Group] = {
     get[Option[Long]]("id") ~
@@ -30,14 +29,14 @@ class GroupDAO @Inject() () {
   }
 
   def findAll(): Seq[Group] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM groups ORDER BY name ASC").as(parser *)
     }
   }
 
   def find(id: Long): Group = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM groups g WHERE g.id={id}").on('id -> id).as(parser single)
     }
@@ -45,7 +44,7 @@ class GroupDAO @Inject() () {
 
 
   def findByName(name: String): Option[Group] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("SELECT * FROM groups g WHERE g.name={name}").on('name -> name).as(parser singleOpt)
     }
@@ -53,7 +52,7 @@ class GroupDAO @Inject() () {
 
 
   def create(group: Group): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(insertQueryString).on(
           'name -> group.name,
@@ -85,7 +84,7 @@ INSERT INTO groups (
 
 
   def update(id: Long, group: Group) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(updateQueryString).on(
           'id -> id,
@@ -109,7 +108,7 @@ WHERE id = {id}
 
 
   def delete(id: Long) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection => {
         SQL("DELETE FROM memberships m WHERE m.groupx={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM participations p WHERE p.event IN (SELECT id FROM events WHERE groupx={id})").on('id -> id).executeUpdate()

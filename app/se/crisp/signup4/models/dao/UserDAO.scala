@@ -2,16 +2,16 @@ package se.crisp.signup4.models.dao
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.Play.current
 import anorm.SqlParser.get
 import anorm.{RowParser, SQL, ~}
-import play.api.db.DB
+import play.api.db.Database
 import se.crisp.signup4.models.security.Permission
 import se.crisp.signup4.models.{Event, User}
 import se.crisp.signup4.util.AuthHelper
 
 @Singleton
-class UserDAO @Inject() (authHelper: AuthHelper){
+class UserDAO @Inject() (val database: Database,
+                         val authHelper: AuthHelper){
 
   def system = User(firstName = "Systemet", lastName = "", email = "")
 
@@ -47,7 +47,7 @@ class UserDAO @Inject() (authHelper: AuthHelper){
   }
 
   def find(id: Long): User = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("select * from users where id={id}").on('id -> id).as(parser single)
     }
@@ -55,14 +55,14 @@ class UserDAO @Inject() (authHelper: AuthHelper){
 
 
   def findByEmail(email: String): Option[User] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("select * from users where lower(email)={email}").on('email -> email.toLowerCase).as(parser singleOpt)
     }
   }
 
   def findByFirstName(firstName: String): Seq[User] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("select * from users where first_name={first_name}").on('first_name -> firstName).as(parser *)
     }
@@ -70,7 +70,7 @@ class UserDAO @Inject() (authHelper: AuthHelper){
 
 
   def findUnregisteredMembers(event: Event): Seq[User] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(findUnregisteredMembersQueryString).on('event_id -> event.id, 'group_id -> event.group.id).as(parser *).sorted
     }
@@ -87,7 +87,7 @@ ORDER BY u.first_name, u.last_name
     """
 
   def findNonMembers(groupId: Long): Seq[User] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(findNonMembersQueryString).on('group_id -> groupId).as(parser *).sorted
     }
@@ -101,7 +101,7 @@ WHERE u.id NOT IN (SELECT m.userx FROM memberships m WHERE m.groupx = {group_id}
     """
 
   def findNonGuests(eventId: Long): Seq[User] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(findNonGuestsQueryString).on('eventId -> eventId).as(parser *).sorted
     }
@@ -116,14 +116,14 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
     """
 
   def findAll(): Seq[User] = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("select * from users u ORDER BY u.first_name, u.last_name").as(parser *).sorted
     }
   }
 
   def create(user: User): Long = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         val password = user.password match {
           case NOT_CHANGED_PASSWORD => "*"
@@ -182,7 +182,7 @@ INSERT INTO users (
   }
 
   private def updatePropertiesWithoutPassword(id: Long, user: User) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(updateWithoutPasswordQueryString).on(
           'id -> id,
@@ -209,7 +209,7 @@ WHERE id = {id}
     """
 
   private def updatePropertiesWithPassword(id: Long, user: User) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL(updateWithPasswordQueryString).on(
           'id -> id,
@@ -238,7 +238,7 @@ WHERE id = {id}
     """
 
   def updateInfo(id: Long, imageProvider: String, imageVersion: Option[String] = None): Int = {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection =>
         SQL("UPDATE users SET image_provider = {imageProvider}, image_version = {imageVersion} WHERE id = {id}").on(
           'id -> id,
@@ -249,7 +249,7 @@ WHERE id = {id}
   }
 
   def delete(id: Long) {
-    DB.withTransaction {
+    database.withTransaction {
       implicit connection => {
         SQL("DELETE FROM participations p WHERE p.userx={id}").on('id -> id).executeUpdate()
         SQL("DELETE FROM memberships m WHERE m.userx={id}").on('id -> id).executeUpdate()
