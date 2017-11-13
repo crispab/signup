@@ -4,12 +4,11 @@ import javax.inject.Inject
 
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 import org.apache.commons.codec.digest.DigestUtils
-import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}
-import se.crisp.signup4.models.User
-import se.crisp.signup4.util.ThemeHelper._
+import se.crisp.signup4.models.UserDAO
+import se.crisp.signup4.util.ThemeHelper
 import se.crisp.signup4.util.WsHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -18,7 +17,9 @@ import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 
-class FacebookAuth @Inject()( val messagesApi: MessagesApi) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+class FacebookAuth @Inject()(val messagesApi: MessagesApi,
+                             val themeHelper: ThemeHelper,
+                             val userDAO: UserDAO) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   private val FACEBOOK_AUTHENTICATION_URL = "https://graph.facebook.com/oauth/authorize"
   private val FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v2.8/oauth/access_token"
@@ -50,11 +51,11 @@ class FacebookAuth @Inject()( val messagesApi: MessagesApi) extends Controller w
 
       val email = getEmailAddress(access_token)
 
-      val user = User.findByEmail(email)
+      val user = userDAO.findByEmail(email)
       if (user.isDefined) {
         gotoLoginSucceeded(user.get.id.get)
       } else {
-        val errorMessage = Messages("login.nonexistentemail", email, APPLICATION_NAME)
+        val errorMessage = Messages("login.nonexistentemail", email, themeHelper.APPLICATION_NAME)
         Future.successful(
           Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
         )

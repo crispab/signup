@@ -5,11 +5,14 @@ import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
 import se.crisp.signup4.models
+import se.crisp.signup4.models.UserDAO
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect._
 
 trait AuthConfigImpl extends AuthConfig {
+
+  def userDAO: UserDAO
 
   /**
    * A type that is used to identify a user.
@@ -39,7 +42,7 @@ trait AuthConfigImpl extends AuthConfig {
    * You can alter the procedure to suit your application.
    */
   override def resolveUser(id: Id)(implicit ctx: ExecutionContext): Future[Option[User]] =  {
-    Future(Option(models.User.find(id)))
+    Future(Option(userDAO.find(id)))
   }
 
 

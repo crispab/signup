@@ -9,10 +9,15 @@ import play.api.libs.mailer._
 import play.twirl.api.Html
 import se.crisp.signup4.models.Status._
 import se.crisp.signup4.models.{User, _}
-import se.crisp.signup4.util.ThemeHelper._
+import se.crisp.signup4.util.{HtmlHelper, ThemeHelper}
 
 @Singleton
-class MailReminder @Inject() (mailerClient: MailerClient) {
+class MailReminder @Inject() (val mailerClient: MailerClient,
+                              val userDAO: UserDAO,
+                              val membershipDAO: MembershipDAO,
+                              val participationDAO: ParticipationDAO,
+                              val htmlHelper: HtmlHelper,
+                              implicit val themeHelper: ThemeHelper) {
   def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User,  messages: Messages) {
     Logger.debug("Sending messages for: " + event.name)
     receivers foreach { receiver =>
@@ -43,23 +48,20 @@ class MailReminder @Inject() (mailerClient: MailerClient) {
   }
 
   private def findReceiversToRemind(event: Event): Seq[User] = {
-    val unregisteredMembers = User.findUnregisteredMembers(event)
-    val unregisteredGuests = Participation.findGuestsByStatus(Unregistered, event) map {_.user}
-    val maybeMembers = Participation.findMembersByStatus(Maybe, event) map {_.user}
-    val maybeGuests = Participation.findGuestsByStatus(Maybe, event) map {_.user}
+    val unregisteredMembers = userDAO.findUnregisteredMembers(event)
+    val unregisteredGuests = participationDAO.findGuestsByStatus(Unregistered, event) map {_.user}
+    val maybeMembers = participationDAO.findMembersByStatus(Maybe, event) map {_.user}
+    val maybeGuests = participationDAO.findGuestsByStatus(Maybe, event) map {_.user}
 
     unregisteredMembers union unregisteredGuests union maybeMembers union maybeGuests
   }
 
   private def createReminderMessage(event: Event, user: User)(implicit  messages: Messages): Html = {
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-
     // TODO: get rid of this by using SendGrid mail templates instead
-    if (THEME == "b73") {
-      se.crisp.signup4.views.html.events.b73.emailremindermessage(event, user, baseUrl)
+    if (themeHelper.THEME == "b73") {
+      se.crisp.signup4.views.html.events.b73.emailremindermessage(event, user, htmlHelper.baseUrl)
     } else {
-      se.crisp.signup4.views.html.events.crisp.emailremindermessage(event, user, baseUrl)
+      se.crisp.signup4.views.html.events.crisp.emailremindermessage(event, user, htmlHelper.baseUrl)
     }
   }
 
@@ -74,21 +76,18 @@ class MailReminder @Inject() (mailerClient: MailerClient) {
   }
 
   private def findReceiversToCancel(event: Event): Seq[User] = {
-    val guestLists = Participation.findGuests(event)
+    val guestLists = participationDAO.findGuests(event)
     val guests = (guestLists.on map {_.user}) union (guestLists.maybe map {_.user}) union (guestLists.off map {_.user}) union (guestLists.unregistered map {_.user})
-    val members = Membership.findMembers(event.group) map {_.user}
+    val members = membershipDAO.findMembers(event.group) map {_.user}
     members union guests
   }
 
   private def createCancellationMessage(event: Event, user: User) (implicit messages: Messages): Html = {
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
-
     // TODO: get rid of this by using SendGrid mail templates instead
-    if (THEME == "b73") {
-      se.crisp.signup4.views.html.events.b73.emailcancellationmessage(event, user, baseUrl)
+    if (themeHelper.THEME == "b73") {
+      se.crisp.signup4.views.html.events.b73.emailcancellationmessage(event, user, htmlHelper.baseUrl)
     } else {
-      se.crisp.signup4.views.html.events.crisp.emailcancellationmessage(event, user, baseUrl)
+      se.crisp.signup4.views.html.events.crisp.emailcancellationmessage(event, user, htmlHelper.baseUrl)
     }
   }
 

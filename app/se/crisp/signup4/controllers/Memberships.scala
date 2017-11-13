@@ -10,33 +10,40 @@ import play.api.data.Forms.{ignored, longNumber, mapping}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import se.crisp.signup4.services.ImageUrl
-import se.crisp.signup4.util.AuthHelper._
+import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
-class Memberships @Inject() (val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
+class Memberships @Inject() (val messagesApi: MessagesApi,
+                             implicit val authHelper: AuthHelper,
+                             implicit val localeHelper: LocaleHelper,
+                             implicit val themeHelper: ThemeHelper,
+                             implicit val formHelper: FormHelper,
+                             val userDAO: UserDAO,
+                             val membershipDAO: MembershipDAO,
+                             implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
 
-  def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
-    Ok(se.crisp.signup4.views.html.memberships.edit(membershipForm, Group.find(groupId), User.findNonMembers(groupId)))
+    Ok(se.crisp.signup4.views.html.memberships.edit(membershipForm, Group.find(groupId), userDAO.findNonMembers(groupId)))
   }
 
-  def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def create: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
       membershipForm.bindFromRequest.fold(
         formWithErrors => {
           val group = Group.find(formWithErrors("groupId").value.get.toLong)
-          val nonMembers = User.findNonMembers(group.id.get)
+          val nonMembers = userDAO.findNonMembers(group.id.get)
           BadRequest(se.crisp.signup4.views.html.memberships.edit(formWithErrors, group, nonMembers))
         },
         membership => {
-          Membership.create(membership)
+          membershipDAO.create(membership)
           Redirect(routes.Groups.show(membership.group.id.get))
         }
       )
   }
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    val membership = Membership.find(id)
-    Membership.delete(id)
+  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+    val membership = membershipDAO.find(id)
+    membershipDAO.delete(id)
     Redirect(routes.Groups.show(membership.group.id.get))
   }
 
@@ -44,7 +51,7 @@ class Memberships @Inject() (val messagesApi: MessagesApi, implicit val imageUrl
     Membership(
       id = id,
       group = Group.find(groupId),
-      user = User.find(userId)
+      user = userDAO.find(userId)
     )
   }
 

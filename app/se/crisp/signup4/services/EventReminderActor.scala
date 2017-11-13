@@ -12,7 +12,9 @@ case class CheckEvents(loggedIn: User)
 case class RemindParticipant(event: Event, user: User, loggedIn: User)
 case class RemindAllParticipants(event: Event, loggedIn: User)
 
-class EventReminderActor @Inject()( val messagesApi: MessagesApi, mailReminder:MailReminder) extends Actor with I18nSupport{
+class EventReminderActor @Inject()(val messagesApi: MessagesApi,
+                                   slackReminder: SlackReminder,
+                                   mailReminder:MailReminder) extends Actor with I18nSupport{
 
   override def preStart() {Logger.debug("my path is: " + context.self.path)}
 
@@ -54,7 +56,7 @@ class EventReminderActor @Inject()( val messagesApi: MessagesApi, mailReminder:M
   private def remindParticipants(event: Event, loggedInUser: User) {
     implicit val loggedIn: User = loggedInUser
     mailReminder.sendReminderMessages(event)
-    SlackReminder.sendReminderMessage(event)
+    slackReminder.sendReminderMessage(event)
   }
 
 }

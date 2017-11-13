@@ -1,9 +1,9 @@
 @import se.crisp.signup4.models.Event
-@import se.crisp.signup4.util.HtmlHelper._
-@import se.crisp.signup4.util.LocaleHelper._
+@import se.crisp.signup4.util.HtmlHelper
+@import se.crisp.signup4.util.LocaleHelper
 @import play.api.Play.current
 
-@(event: Event)(implicit messages: Messages)
+@(event: Event)(implicit messages: Messages, htmlHelper: HtmlHelper, localeHelper: LocaleHelper)
 
 <script type="text/javascript" src="https://addthisevent.com/libs/1.6.0/ate.min.js"></script>
 
@@ -26,9 +26,9 @@
   <span class="glyphicon glyphicon-calendar"></span> @Messages("calendar.add") <span class="caret"></span>
   <span class="start">@se.crisp.signup4.util.DateHelper.asUsDate(event.startTime) @se.crisp.signup4.util.DateHelper.asTime(event.startTime)</span>
   <span class="end">@se.crisp.signup4.util.DateHelper.asUsDate(event.endTime) @se.crisp.signup4.util.DateHelper.asTime(event.endTime)</span>
-  <span class="timezone">@TZ_NAME</span>
+  <span class="timezone">@localeHelper.TZ_NAME</span>
   <span class="title">@event.name</span>
-  <span class="description">@calendarDescriptionAsText(event, se.crisp.signup4.controllers.routes.Events.show(event.id.get).url, 700)</span>
+  <span class="description">@htmlHelper.calendarDescriptionAsText(event, se.crisp.signup4.controllers.routes.Events.show(event.id.get).url, 700)</span>
   <span class="location">@event.venue</span>
   <span class="organizer">@event.group.name</span>
   <span class="all_day_event">false</span>

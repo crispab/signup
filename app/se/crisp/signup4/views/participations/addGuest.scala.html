@@ -2,13 +2,14 @@
 @import se.crisp.signup4.models.Status
 @import se.crisp.signup4.models.Participation
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.EmailHelper._
-@import se.crisp.signup4.util.FormHelper._
+@import se.crisp.signup4.util.FormHelper
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper)
 
 @field(fieldName: String) = @{
   participationForm(fieldName).value.getOrElse("")
@@ -37,7 +38,7 @@
         <select class="form-control" id="userId" name="userId" required="">
           <option>@Messages("option.noperson")</option>
           @nonGuests.map { user =>
-            <option value='@user.id.get' @if(user.id.get.toString.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, isLoggedIn(loggedInUser)) )</option>
+            <option value='@user.id.get' @if(user.id.get.toString.equals(field("userId"))) {selected=""}>@user.firstName @user.lastName ( @abbreviated(user.email, authHelper.isLoggedIn(loggedInUser)) )</option>
           }
         </select>
         <span class="show-on-error">@Messages("participation.guest.error")</span>
@@ -52,7 +53,7 @@
         <div class="alert alert-danger">
           <a class="close" data-dismiss="alert" href="#">×</a>
           <h4 class="alert-heading">@Messages("edit.error")</h4>
-          <p>@errors(participationForm).mkString(", ")</p>
+          <p>@formHelper.errors(participationForm).mkString(", ")</p>
         </div>
       }
     </fieldset>

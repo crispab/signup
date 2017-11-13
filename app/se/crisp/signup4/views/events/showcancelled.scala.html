@@ -1,12 +1,13 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.LogEntry
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.ThemeHelper
 
-@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl)
+@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
 
 @se.crisp.signup4.views.html.page(event.name, section = Groups) {
 
@@ -47,7 +48,7 @@
     }
 
 
-    @if(isAdmin(loggedInUser)) {
+    @if(authHelper.isAdmin(loggedInUser)) {
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown">
           @Messages("event.actions") <span class="caret"></span>

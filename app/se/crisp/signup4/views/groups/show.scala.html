@@ -2,12 +2,13 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.Membership
 @import se.crisp.signup4.models.Group
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
+@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
 
 @se.crisp.signup4.views.html.page(group.name, section = Groups) {
 
@@ -17,7 +18,7 @@
 
   <div class="well">
     <p>@group.description</p>
-    @if(isAdmin(loggedInUser)) {
+    @if(authHelper.isAdmin(loggedInUser)) {
       <a href="@se.crisp.signup4.controllers.routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default">
         <span class="glyphicon glyphicon-pencil"></span> @Messages("edit.edit")
       </a>
@@ -75,7 +76,7 @@
     </div>
   }
 
-  @if(isAdmin(loggedInUser)) {
+  @if(authHelper.isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
         @Messages("event.new")</a>
@@ -103,13 +104,13 @@
         <h4 class="media-heading">
           <a href="@se.crisp.signup4.controllers.routes.Users.show(membership.user.id.get)">@membership.user.firstName @membership.user.lastName</a>
         </h4>
-        @if(isLoggedIn(loggedInUser)) {
+        @if(authHelper.isLoggedIn(loggedInUser)) {
           <p class="text-muted small-space-berfore"><em>@membership.user.email</em></p>
         }
         <p>@membership.user.comment</p>
       </div>
 
-      @if(isAdmin(loggedInUser)) {
+      @if(authHelper.isAdmin(loggedInUser)) {
         <div class="media-right">
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_member_@membership.id">
             <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
@@ -151,7 +152,7 @@
       });
   </script>
 
-  @if(isAdmin(loggedInUser)) {
+  @if(authHelper.isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.Memberships.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
         @Messages("group.addmember")</a>

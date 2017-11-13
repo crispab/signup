@@ -1,12 +1,15 @@
 package se.crisp.signup4.integration.models
 
 import java.util.Date
+import javax.inject.Inject
 
 import se.crisp.signup4.models._
 import org.scalatestplus.play._
 import se.crisp.signup4.util.TestHelper._
 
-class EventCrudTest extends PlaySpec with OneAppPerSuite {
+class EventCrudTest @Inject() (val membershipDAO: MembershipDAO,
+                               val participationDAO: ParticipationDAO,
+                               val userDAO: UserDAO) extends PlaySpec with OneAppPerSuite {
 
   "Event object " must {
     "be able to be read from DB" in {
@@ -40,9 +43,9 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
       Event.hasSeatsAvailable(eventId) must be (true)
 
-      User.findUnregisteredMembers(newEvent) map { member =>
+      userDAO.findUnregisteredMembers(newEvent) map { member =>
         val participation = new Participation(user = member, event = newEvent, signUpTime = Option(new Date()))
-        Participation.create(participation)
+        participationDAO.create(participation)
       }
 
       Event.hasSeatsAvailable(eventId) must be (true)
@@ -52,7 +55,7 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
     "report seats available when fewer than max" in {
       val group = Group.findAll().head
-      val noOfMembers = Membership.findMembers(group).size
+      val noOfMembers = membershipDAO.findMembers(group).size
 
       noOfMembers must be > 1
 
@@ -62,9 +65,9 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
       Event.hasSeatsAvailable(eventId) must be (true)
 
-      User.findUnregisteredMembers(newEvent) map { member =>
+      userDAO.findUnregisteredMembers(newEvent) map { member =>
         val participation = new Participation(user = member, event = newEvent, signUpTime = Option(new Date()))
-        Participation.create(participation)
+        participationDAO.create(participation)
       }
 
       Event.hasSeatsAvailable(eventId) must be (true)
@@ -74,7 +77,7 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
     "report NO seats available when more than max" in {
       val group = Group.findAll().head
-      val noOfMembers = Membership.findMembers(group).size
+      val noOfMembers = membershipDAO.findMembers(group).size
 
       noOfMembers must be > 1
 
@@ -84,9 +87,9 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
       Event.hasSeatsAvailable(eventId) must be (true)
 
-      User.findUnregisteredMembers(newEvent) map { member =>
+      userDAO.findUnregisteredMembers(newEvent) map { member =>
         val participation = new Participation(user = member, event = newEvent, signUpTime = Option(new Date()))
-        Participation.create(participation)
+        participationDAO.create(participation)
       }
 
 
@@ -97,7 +100,7 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
     "report NO seats available when more than max including guests" in {
       val group = Group.findAll().head
-      val noOfMembers = Membership.findMembers(group).size
+      val noOfMembers = membershipDAO.findMembers(group).size
 
       noOfMembers must be > 1
 
@@ -107,9 +110,9 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
       Event.hasSeatsAvailable(eventId) must be (true)
 
-      User.findUnregisteredMembers(newEvent) map { member =>
+      userDAO.findUnregisteredMembers(newEvent) map { member =>
         val participation = new Participation(user = member, event = newEvent, signUpTime = Option(new Date()), numberOfParticipants = 2)
-        Participation.create(participation)
+        participationDAO.create(participation)
       }
 
 
@@ -120,7 +123,7 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
 
     "report NO seats available when equal to max" in {
       val group = Group.findAll().head
-      val noOfMembers = Membership.findMembers(group).size
+      val noOfMembers = membershipDAO.findMembers(group).size
 
       noOfMembers must be > 1
 
@@ -128,13 +131,13 @@ class EventCrudTest extends PlaySpec with OneAppPerSuite {
       val eventId = Event.create(event)
       val newEvent = Event.find(eventId)
 
-      val members = User.findUnregisteredMembers(newEvent)
+      val members = userDAO.findUnregisteredMembers(newEvent)
 
       Event.hasSeatsAvailable(eventId) must be (true)
 
       members map { member =>
         val participation = new Participation(user = member, event = newEvent, signUpTime = Option(new Date()))
-        Participation.create(participation)
+        participationDAO.create(participation)
       }
 
       Event.hasSeatsAvailable(eventId) must be (false)

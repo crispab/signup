@@ -1,11 +1,13 @@
 package se.crisp.signup4.util
 
+import javax.inject.{Inject, Singleton}
+
 import play.api.Configuration
 import play.api.i18n.Messages
 import se.crisp.signup4.models.Event
 
-
-object HtmlHelper {
+@Singleton
+class HtmlHelper @Inject() (configuration: Configuration){
   def NON_APLHA_AND_SOME_REGEXP = "[^a-z0-9\\-_]"
 
   def stripFromHtml(htmlString: String): String = {
@@ -27,9 +29,9 @@ object HtmlHelper {
       description
   }
 
+  def baseUrl: String = configuration.getString("application.base.url").getOrElse("")
+
   def calendarDescriptionAsText(event: Event, url: String, maxlength: Int)(implicit messages: Messages): String = {
-    import play.api.Play.current
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
     truncatedTextFromHtml("<p>" + Messages("calendar.event", baseUrl + url) + "</p>" + event.description, maxlength)
   }
 }

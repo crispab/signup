@@ -1,5 +1,7 @@
 package se.crisp.signup4.services
 
+import javax.inject.{Inject, Singleton}
+
 import se.crisp.signup4.models._
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
@@ -7,11 +9,13 @@ import play.api.libs.ws.WS
 import play.api.Play.current
 import play.api.i18n.Messages
 import se.crisp.signup4.models.User
+import se.crisp.signup4.util.HtmlHelper
 
 
-object SlackReminder {
+@Singleton
+class SlackReminder @Inject() (implicit val htmlHelper: HtmlHelper) {
 
-  private val ANONYMOUS = new User(firstName = "John", lastName = "Doe", email = "")
+  private val ANONYMOUS = User(firstName = "John", lastName = "Doe", email = "")
 
   private def sendMessage(event: Event, message: JsValue)(implicit loggedIn: User, messages: Messages)  {
     val slackChannelURL = play.api.Play.configuration.getString("slack.channel.url")
@@ -31,7 +35,7 @@ object SlackReminder {
   }
 
   private def createReminderMessage(event: Event)(implicit  messages: Messages) = {
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = htmlHelper.baseUrl
     Json.parse(se.crisp.signup4.views.txt.events.slackremindermessage(event, baseUrl).toString())
   }
 
@@ -40,7 +44,7 @@ object SlackReminder {
   }
 
   private def createCancellationMessage(event: Event)(implicit  messages: Messages) = {
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = htmlHelper.baseUrl
     Json.parse(se.crisp.signup4.views.txt.events.slackcancellationmessage(event, baseUrl).toString())
   }
 
@@ -49,7 +53,7 @@ object SlackReminder {
   }
 
   private def createUpdatedParticipationMessage(participation: Participation)(implicit  messages: Messages) = {
-    val baseUrl = play.api.Play.configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = htmlHelper.baseUrl
     Json.parse(se.crisp.signup4.views.txt.events.slackupdatedparticipationmessage(participation.event, participation, baseUrl).toString())
   }
 

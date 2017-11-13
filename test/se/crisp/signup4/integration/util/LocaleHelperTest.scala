@@ -1,25 +1,26 @@
 package se.crisp.signup4.integration.util
 
 import java.util.Locale
+import javax.inject.Inject
 
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import se.crisp.signup4.util.LocaleHelper
 
-class LocaleHelperTest extends PlaySpec with OneAppPerSuite {
+class LocaleHelperTest @Inject() (localeHelper: LocaleHelper) extends PlaySpec with OneAppPerSuite {
 
   "LocaleHelper" must {
 
     "give Locale name" in {
-      LocaleHelper.LC_NAME must equal ("sv_SE")
+      localeHelper.LC_NAME must equal ("sv_SE")
     }
 
     "give TimeZone name" in {
-      LocaleHelper.TZ_NAME must equal ("Europe/Stockholm")
+      localeHelper.TZ_NAME must equal ("Europe/Stockholm")
     }
 
     "be able to set default locale" in {
-      Locale.setDefault(LocaleHelper.getConfiguredLocale)
-      Locale.getDefault.toLanguageTag.replace('-','_') must equal (LocaleHelper.LC_NAME)
+      Locale.setDefault(localeHelper.getConfiguredLocale)
+      Locale.getDefault.toLanguageTag.replace('-','_') must equal (localeHelper.LC_NAME)
     }
 
   }

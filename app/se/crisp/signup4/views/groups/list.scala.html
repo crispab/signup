@@ -1,10 +1,11 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.Group
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
+@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
 
 @se.crisp.signup4.views.html.page(Messages("navigation.groups"), section = Groups) {
 
@@ -19,7 +20,7 @@
     </div>
   }
 
-  @if(isAdmin(loggedInUser)) {
+  @if(authHelper.isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.GroupsSecured.createForm()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
         @Messages("group.addgroup")</a>

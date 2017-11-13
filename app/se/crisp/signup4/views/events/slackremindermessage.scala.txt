@@ -1,6 +1,7 @@
 @import se.crisp.signup4.models._
 @import org.json.JSONObject._
-@(event: Event, baseURL: String)(implicit messages: Messages)
+@import se.crisp.signup4.util.HtmlHelper
+@(event: Event, baseURL: String)(implicit messages: Messages, htmlHelper: HtmlHelper)
   {
      "attachments" : [
         {
@@ -10,7 +11,7 @@
            "fields" : [
               {
                  "title" : @quote(event.group.mailSubjectPrefix + ": " + event.name),
-                 "value" : @quote(se.crisp.signup4.util.HtmlHelper.stripFromHtml(event.description)),
+                 "value" : @quote(htmlHelper.stripFromHtml(event.description)),
                  "short" : false
               },
               {

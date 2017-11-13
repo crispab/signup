@@ -1,10 +1,10 @@
 package se.crisp.signup4.controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
 import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.models.{Event, LogEntry, Participation, User}
+import se.crisp.signup4.models._
 import se.crisp.signup4.models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -12,17 +12,26 @@ import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.libs.concurrent.Akka
 import play.api.mvc._
 import se.crisp.signup4.services.{ImageUrl, SlackReminder}
-import se.crisp.signup4.util.AuthHelper._
-import se.crisp.signup4.util.StatusHelper
+import se.crisp.signup4.util._
 
-class Participations @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+@Singleton
+class Participations @Inject()(val messagesApi: MessagesApi,
+                               implicit val authHelper: AuthHelper,
+                               implicit val localeHelper: LocaleHelper,
+                               implicit val themeHelper: ThemeHelper,
+                               implicit val formHelper: FormHelper,
+                               implicit val htmlHelper: HtmlHelper,
+                               slackReminder: SlackReminder,
+                               val userDAO: UserDAO,
+                               val participationDAO: ParticipationDAO,
+                               implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def editForm(eventId: Long, userId: Long): Action[AnyContent] = StackAction { implicit request =>
     val event = Event.find(eventId)
     if (!event.isCancelled) {
-      val userToAttend = User.find(userId)
-      val participation = Participation.findByEventAndUser(eventId, userId).getOrElse(Participation(status = Unregistered, user = userToAttend, event = event))
-      Ok(se.crisp.signup4.views.html.participations.edit(Participations.participationForm.fill(participation), userToAttend, event))
+      val userToAttend = userDAO.find(userId)
+      val participation = participationDAO.findByEventAndUser(eventId, userId).getOrElse(new Participation(status = Unregistered, user = userToAttend, event = event))
+      Ok(se.crisp.signup4.views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("error.signup.eventcancelled"))
     }
@@ -44,27 +53,27 @@ class Participations @Inject()( val messagesApi: MessagesApi, implicit val image
   }
 
   def createOrUpdate: Action[AnyContent] = StackAction { implicit request =>
-    Participations.participationForm.bindFromRequest.fold(
+    participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = Event.find(formWithErrors("eventId").value.get.toLong)
-        val userToAttend = User.find(formWithErrors("userId").value.get.toLong)
+        val userToAttend = userDAO.find(formWithErrors("userId").value.get.toLong)
         BadRequest(se.crisp.signup4.views.html.participations.edit(formWithErrors, userToAttend, event))
       },
       participation => {
-        val existingParticipation = Participation.findByEventAndUser(participation.event.id.get, participation.user.id.get)
+        val existingParticipation = participationDAO.findByEventAndUser(participation.event.id.get, participation.user.id.get)
         if (existingParticipation.isEmpty) {
-          Participation.create(participation)
+          participationDAO.create(participation)
         } else {
           // TODO: only do this if there actually is a change, to avoid unneccessary log messages
-          Participation.update(existingParticipation.get.id.get, participation)
-          val updatedParticipation = Participation.find(existingParticipation.get.id.get)
+          participationDAO.update(existingParticipation.get.id.get, participation)
+          val updatedParticipation = participationDAO.find(existingParticipation.get.id.get)
           LogEntry.create(updatedParticipation.event, asLogMessage(updatedParticipation))
 
           import play.api.Play.current
           import play.api.libs.concurrent.Execution.Implicits._
           import scala.concurrent.duration._
           Akka.system.scheduler.scheduleOnce(1.second) {
-            SlackReminder.sendUpdatedParticipationMessage(updatedParticipation)
+            slackReminder.sendUpdatedParticipationMessage(updatedParticipation)
           }
 
         }
@@ -74,11 +83,6 @@ class Participations @Inject()( val messagesApi: MessagesApi, implicit val image
   }
 
 
-
-
-}
-
-object Participations{
   val participationForm: Form[Participation] =
     Form(
       mapping(
@@ -103,43 +107,51 @@ object Participations{
                        userId: Long,
                        eventId: Long): Participation = {
 
-    Participation(
+    new Participation(
       id = id,
       status = se.crisp.signup4.models.Status.withName(status),
       numberOfParticipants = numberOfParticipants,
       comment = comment,
-      user = User.find(userId),
+      user = userDAO.find(userId),
       event = Event.find(eventId)
     )
   }
-
 }
 
-class ParticipationsSecured @Inject()( val messagesApi: MessagesApi, implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
-  def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+
+class ParticipationsSecured @Inject()(val participations: Participations,
+                                      val messagesApi: MessagesApi,
+                                      implicit val authHelper: AuthHelper,
+                                      implicit val localeHelper: LocaleHelper,
+                                      implicit val themeHelper: ThemeHelper,
+                                      implicit val formHelper: FormHelper,
+                                      val userDAO: UserDAO,
+                                      val participationDAO: ParticipationDAO,
+                                      implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
+  def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(eventId)
-    Ok(se.crisp.signup4.views.html.participations.addGuest(Participations.participationForm, event, User.findNonGuests(event.id.get)))
+    Ok(se.crisp.signup4.views.html.participations.addGuest(participations.participationForm, event, userDAO.findNonGuests(event.id.get)))
   }
 
-  def createGuest: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createGuest: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
-    Participations.participationForm.bindFromRequest.fold(
+    participations.participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = Event.find(formWithErrors("eventId").value.get.toLong)
-        BadRequest(se.crisp.signup4.views.html.participations.addGuest(formWithErrors, event, User.findNonGuests(event.id.get)))
+        BadRequest(se.crisp.signup4.views.html.participations.addGuest(formWithErrors, event, userDAO.findNonGuests(event.id.get)))
       },
       participation => {
-        Participation.createGuest(participation.event.id.get, participation.user.id.get)
+        participationDAO.createGuest(participation.event.id.get, participation.user.id.get)
         Redirect(routes.Events.show(participation.event.id.get))
       }
     )
   }
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
-    val participation = Participation.find(id)
+  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+    val participation = participationDAO.find(id)
     val event = participation.event
-    Participation.delete(participation.id.get)
+    participationDAO.delete(participation.id.get)
     Redirect(routes.Events.show(event.id.get))
   }
 }

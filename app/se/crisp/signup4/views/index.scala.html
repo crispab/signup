@@ -1,13 +1,13 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.util.AuthHelper._
-@import se.crisp.signup4.util.ThemeHelper._
+@import se.crisp.signup4.util.AuthHelper
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.services.ImageUrl
 
 
-@()(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl)
+@()(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
 
-@se.crisp.signup4.views.html.page(title = APPLICATION_NAME, section = Other) {
+@se.crisp.signup4.views.html.page(title = themeHelper.APPLICATION_NAME, section = Other) {
 
   @se.crisp.signup4.views.html.breadcrumb(Seq(), "")
 
@@ -18,13 +18,13 @@
     </div>
   }
 
-  <h2>@Messages("index.welcome", APPLICATION_NAME)</h2>
-  <p>@Messages("index.description.1", APPLICATION_NAME)</p>
-  <p>@Messages("index.description.2", APPLICATION_NAME)</p>
-  <p>@Messages("index.description.3", APPLICATION_NAME)</p>
+  <h2>@Messages("index.welcome", themeHelper.APPLICATION_NAME)</h2>
+  <p>@Messages("index.description.1", themeHelper.APPLICATION_NAME)</p>
+  <p>@Messages("index.description.2", themeHelper.APPLICATION_NAME)</p>
+  <p>@Messages("index.description.3", themeHelper.APPLICATION_NAME)</p>
   <p><a href="@se.crisp.signup4.controllers.routes.Groups.list()">@Messages("navigation.groups")</a></p>
 
-  @if(isAdmin(loggedInUser)) {
+  @if(authHelper.isAdmin(loggedInUser)) {
     <p><a href="@se.crisp.signup4.controllers.routes.UsersSecured.list()">@Messages("navigation.users")</a></p>
   }
 }

@@ -1,12 +1,13 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.util.ThemeHelper._
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.controllers.GoogleAuth
 @import se.crisp.signup4.controllers.FacebookAuth
-@import se.crisp.signup4.util.LocaleHelper._
+@import se.crisp.signup4.util.LocaleHelper
 @import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.AuthHelper
 
-@(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl)
+@(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper)
 
 @field(fieldName: String) = @{
   loginForm(fieldName).value.getOrElse("")
@@ -18,7 +19,7 @@
   }
 }
 
-@se.crisp.signup4.views.html.page(title = APPLICATION_NAME, section = Login) {
+@se.crisp.signup4.views.html.page(title = themeHelper.APPLICATION_NAME, section = Login) {
 
   @se.crisp.signup4.views.html.breadcrumb(Seq(), Messages("login.login"))
 
@@ -31,7 +32,7 @@
   @if(flash.get("error").isDefined) {
     <div class="alert alert-danger">
       <button type="button" class="close" data-dismiss="alert">×</button>
-      @errMsg(flash.get("error").getOrElse(""))
+      @localeHelper.errMsg(flash.get("error").getOrElse(""))
     </div>
   }
   @if(loginForm.hasErrors || loginForm.hasGlobalErrors) {
@@ -72,6 +73,6 @@
     </fieldset>
   }
 
-}(loggedInUser = None, messages = messages, imageUrl = imageUrl)
+}(loggedInUser = None, messages = messages, imageUrl = imageUrl, authHelper = authHelper, themeHelper = themeHelper)
 
 

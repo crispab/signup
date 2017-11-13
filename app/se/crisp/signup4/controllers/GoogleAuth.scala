@@ -9,8 +9,8 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}
-import se.crisp.signup4.models.User
-import se.crisp.signup4.util.ThemeHelper._
+import se.crisp.signup4.models.UserDAO
+import se.crisp.signup4.util.ThemeHelper
 import se.crisp.signup4.util.WsHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,7 +19,9 @@ import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 
-class GoogleAuth @Inject()( val messagesApi: MessagesApi) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport {
+class GoogleAuth @Inject()(val messagesApi: MessagesApi,
+                           val themeHelper: ThemeHelper,
+                           val userDAO: UserDAO) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl with I18nSupport {
 
   private val GOOGLE_AUTHENTICATION_URL = "https://accounts.google.com/o/oauth2/auth"
   private val GOOGLE_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
@@ -63,11 +65,11 @@ class GoogleAuth @Inject()( val messagesApi: MessagesApi) extends Controller wit
       }
 
       val email = Await.result(callToGoogle, 60 seconds)
-      val user = User.findByEmail(email)
+      val user = userDAO.findByEmail(email)
       if (user.isDefined) {
         gotoLoginSucceeded(user.get.id.get)
       } else {
-        val errorMessage = Messages("login.nonexistentemail", email, APPLICATION_NAME)
+        val errorMessage = Messages("login.nonexistentemail", email, themeHelper.APPLICATION_NAME)
         Future.successful(
           Redirect(routes.Application.loginForm()).flashing(("error", errorMessage))
         )

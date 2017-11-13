@@ -1,10 +1,11 @@
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.AuthHelper._
-@import se.crisp.signup4.util.FormHelper._
+@import se.crisp.signup4.util.AuthHelper
+@import se.crisp.signup4.util.FormHelper
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 
-@(userForm: Form[User], idToUpdate: Option[Long] = None, groupId: Option[Long] = None, eventId: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl)
+@(userForm: Form[User], idToUpdate: Option[Long] = None, groupId: Option[Long] = None, eventId: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper)
 
 @field(fieldName: String) = @{ userForm(fieldName).value.getOrElse("") }
 
@@ -89,12 +90,12 @@
         @if(updating()) {
           <input type="password" maxlength="127" class="form-control" id="password" name="password" value='@field("password")' required>
         } else {
-          <input type="password" maxlength="127" class="form-control" id="password" name="password" value="@randomPassword" required>
+          <input type="password" maxlength="127" class="form-control" id="password" name="password" value="@authHelper.randomPassword" required>
         }
         <span class="show-on-error">@Messages("user.edit.password.error")</span>
       </div>
 
-      @if(isAdmin(loggedInUser)) {
+      @if(authHelper.isAdmin(loggedInUser)) {
         <div class='checkbox @hasErrors("administrator")'>
           <label>
             <input type="checkbox" id="administrator" name="administrator" value="true" @if(userIsAdmin()){checked=""}>
@@ -107,7 +108,7 @@
       <div class="alert alert-danger">
         <a class="close" data-dismiss="alert" href="#">×</a>
         <h4 class="alert-heading">@Messages("edit.error")</h4>
-        <p>@errors(userForm).mkString(", ")</p>
+        <p>@formHelper.errors(userForm).mkString(", ")</p>
       </div>
       }
 

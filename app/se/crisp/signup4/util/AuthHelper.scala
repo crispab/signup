@@ -1,14 +1,17 @@
 package se.crisp.signup4.util
 
 import java.security.MessageDigest
+import javax.inject.{Inject, Singleton}
 
+import play.api.Configuration
 import se.crisp.signup4.models.security.{Administrator, Permission}
 import se.crisp.signup4.models.User
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
-object AuthHelper {
+@Singleton
+class AuthHelper @Inject() (configuration: Configuration) {
 
   import ExecutionContext.Implicits.global
   def hasPermission(permission: Permission)(loggedInUser: User): Future[Boolean]
@@ -57,8 +60,7 @@ object AuthHelper {
     hash
   }
 
-  import play.api.Play.current
-  private def salt = play.api.Play.configuration.getString("password.salt").getOrElse("")
+  private def salt = configuration.getString("password.salt").getOrElse("")
 
   def randomPassword: String = Random.alphanumeric.take(12).mkString
 

@@ -1,5 +1,7 @@
 package se.crisp.signup4.models
 
+import javax.inject.{Inject, Singleton}
+
 import anorm.SqlParser._
 import anorm._
 import se.crisp.signup4.models.security.{NormalUser, Permission}
@@ -31,7 +33,8 @@ case class User(
   def name: String = firstName + " " + lastName
 }
 
-object User {
+@Singleton
+class UserDAO @Inject() (authHelper: AuthHelper){
 
   def system = User(firstName = "Systemet", lastName = "", email = "")
 
@@ -69,7 +72,7 @@ object User {
   def find(id: Long): User = {
     DB.withTransaction {
       implicit connection =>
-        SQL("select * from users where id={id}").on('id -> id).as(User.parser single)
+        SQL("select * from users where id={id}").on('id -> id).as(parser single)
     }
   }
 
@@ -77,14 +80,14 @@ object User {
   def findByEmail(email: String): Option[User] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("select * from users where lower(email)={email}").on('email -> email.toLowerCase).as(User.parser singleOpt)
+        SQL("select * from users where lower(email)={email}").on('email -> email.toLowerCase).as(parser singleOpt)
     }
   }
 
   def findByFirstName(firstName: String): Seq[User] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("select * from users where first_name={first_name}").on('first_name -> firstName).as(User.parser *)
+        SQL("select * from users where first_name={first_name}").on('first_name -> firstName).as(parser *)
     }
   }
 
@@ -138,7 +141,7 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
   def findAll(): Seq[User] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("select * from users u ORDER BY u.first_name, u.last_name").as(User.parser *).sorted
+        SQL("select * from users u ORDER BY u.first_name, u.last_name").as(parser *).sorted
     }
   }
 
@@ -146,9 +149,9 @@ WHERE u.id NOT IN ((SELECT m.userx FROM memberships m, events e WHERE m.groupx =
     DB.withTransaction {
       implicit connection =>
         val password = user.password match {
-          case User.NOT_CHANGED_PASSWORD => "*"
+          case NOT_CHANGED_PASSWORD => "*"
           case "*" => "*"
-          case _ => AuthHelper.calculateHash(user.password)
+          case _ => authHelper.calculateHash(user.password)
         }
         SQL(insertQueryString).on(
           'firstName -> user.firstName,
@@ -239,7 +242,7 @@ WHERE id = {id}
           'phone -> user.phone,
           'comment -> user.comment,
           'permission -> user.permission.toString,
-          'pwd -> AuthHelper.calculateHash(user.password)
+          'pwd -> authHelper.calculateHash(user.password)
         ).executeUpdate()
     }
   }
@@ -279,7 +282,7 @@ WHERE id = {id}
   }
 
   def verifyUniqueEmail(userToVerify: User): Boolean = {
-    val userInDb = User.findByEmail(userToVerify.email)
+    val userInDb = findByEmail(userToVerify.email)
     userInDb.isEmpty || userToVerify.id.isDefined && (userInDb.get.id == userToVerify.id)
   }
 }

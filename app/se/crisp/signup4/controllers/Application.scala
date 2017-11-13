@@ -5,25 +5,28 @@ import javax.inject.{Inject, Named, Singleton}
 
 import akka.actor.{ActorRef, ActorSystem}
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
-import play.api.{Configuration, Environment, Logger}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.libs.concurrent.Akka
 import play.api.mvc._
+import play.api.{Configuration, Logger}
 import se.crisp.signup4.models
-import se.crisp.signup4.models.User
+import se.crisp.signup4.models.UserDAO
 import se.crisp.signup4.services.{CheckEvents, ImageUrl}
-import se.crisp.signup4.util.{AuthHelper, ThemeHelper}
+import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
 class Application @Inject() (val messagesApi: MessagesApi,
                              val actorSystem: ActorSystem,
                              @Named("event-reminder-actor") eventReminderActor: ActorRef,
                              val configuration: Configuration,
+                             implicit val authHelper: AuthHelper,
+                             implicit val localeHelper: LocaleHelper,
+                             implicit val themeHelper: ThemeHelper,
+                             val userDAO: UserDAO,
                              implicit val imageUrl: ImageUrl) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
 
   initialize()
@@ -56,8 +59,8 @@ class Application @Inject() (val messagesApi: MessagesApi,
   }
 
   def toUser(email: String, password: String): Option[models.User] = {
-    val user = User.findByEmail(email.trim)
-    AuthHelper.checkPassword(user, password)
+    val user = userDAO.findByEmail(email.trim)
+    authHelper.checkPassword(user, password)
   }
 
   def fromUser(user: Option[models.User]): Option[(String, String)] = {
@@ -79,15 +82,15 @@ class Application @Inject() (val messagesApi: MessagesApi,
 
     setTimeZoneAndLocaleToAppDefault()
 
-    Logger.info("Application name = " + ThemeHelper.APPLICATION_NAME)
+    Logger.info("Application name = " + themeHelper.APPLICATION_NAME)
 
     startCheckingForRemindersToSend()
   }
 
   private def setTimeZoneAndLocaleToAppDefault() {
     // not so pretty, but convenient since Heroku servers may run in another time zone and locale
-    TimeZone.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredTimeZone)
-    Locale.setDefault(se.crisp.signup4.util.LocaleHelper.getConfiguredLocale)
+    TimeZone.setDefault(localeHelper.getConfiguredTimeZone)
+    Locale.setDefault(localeHelper.getConfiguredLocale)
 
     Logger.info("TimeZone = " + TimeZone.getDefault)
     Logger.info("Locale = " + Locale.getDefault)
@@ -95,7 +98,7 @@ class Application @Inject() (val messagesApi: MessagesApi,
 
   private def startCheckingForRemindersToSend() {
     import scala.concurrent.duration._
-    actorSystem.scheduler.schedule(firstRun, 24.hours, eventReminderActor, CheckEvents(loggedIn = User.system))
+    actorSystem.scheduler.schedule(firstRun, 24.hours, eventReminderActor, CheckEvents(loggedIn = userDAO.system))
   }
 
   private def firstRun = {

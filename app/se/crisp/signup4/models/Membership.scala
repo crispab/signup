@@ -1,9 +1,11 @@
 package se.crisp.signup4.models
 
+import javax.inject.{Inject, Singleton}
+
 import anorm.SqlParser._
 import anorm._
-import play.api.Play.current
 import play.api.db.DB
+import play.api.Play.current
 
 case class Membership(id: Option[Long] = None,
                       group: Group,
@@ -13,7 +15,9 @@ case class Membership(id: Option[Long] = None,
   }
 }
 
-  object Membership {
+
+@Singleton
+class MembershipDAO @Inject() (userDAO: UserDAO) {
   import scala.language.postfixOps
 
   def create(membership: Membership): Long = {
@@ -52,7 +56,7 @@ INSERT INTO memberships (
         Membership(
           id = id,
           group = Group.find(groupx),
-          user = User.find(userx)
+          user = userDAO.find(userx)
         )
     }
   }
@@ -60,7 +64,7 @@ INSERT INTO memberships (
   def find(id: Long): Membership = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT * FROM memberships WHERE id={id}").on('id -> id).as(Membership.parser single)
+        SQL("SELECT * FROM memberships WHERE id={id}").on('id -> id).as(parser single)
     }
   }
 

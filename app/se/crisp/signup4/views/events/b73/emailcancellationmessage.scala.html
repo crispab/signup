@@ -1,9 +1,9 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.util.DateHelper._
-@import se.crisp.signup4.util.ThemeHelper._
+@import se.crisp.signup4.util.ThemeHelper
 
-@(event: Event, user: User, baseURL: String)(implicit messages: Messages)
+@(event: Event, user: User, baseURL: String)(implicit messages: Messages, themeHelper: ThemeHelper)
 <!DOCTYPE html>
 <html lang="@messages.lang.code">
   <head>
@@ -12,7 +12,7 @@
     <title>@Messages("event.notify.cancelled") @event.group.name : @event.name</title>
   </head>
   <body style="font-family: arial, helvetica, sans-serif; font-size: small; margin: 1em;">
-    <h3 style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: normal; background-color: #930000; color: white;padding: 10px;">@APPLICATION_NAME</h3>
+    <h3 style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: normal; background-color: #930000; color: white;padding: 10px;">@themeHelper.APPLICATION_NAME</h3>
     <h2 style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: normal;"><a style="color: #995E00; text-decoration:none;" href="@baseURL@se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)">@Messages("event.notify.cancelledingroup", event.group.name)</a></h2>
     <p>@Messages("event.notify.hello", user.firstName)</p>
     <p>@Messages("event.notify.cancelled.message")</p>

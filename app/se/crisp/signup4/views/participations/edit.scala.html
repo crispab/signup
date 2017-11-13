@@ -2,13 +2,16 @@
 @import se.crisp.signup4.models.Status
 @import se.crisp.signup4.models.Participation
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
-@import se.crisp.signup4.util.FormHelper._
+@import se.crisp.signup4.util.FormHelper
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.HtmlHelper
+@import se.crisp.signup4.util.LocaleHelper
 
-@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, htmlHelper: HtmlHelper, localeHelper: LocaleHelper)
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
@@ -64,7 +67,7 @@
 
     @se.crisp.signup4.views.html.events.tags.addToCalendarButton(event)
 
-    @if(isAdmin(loggedInUser)) {
+    @if(authHelper.isAdmin(loggedInUser)) {
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#notify_participant">
         <span class="glyphicon glyphicon-envelope"></span> @Messages("participation.remind")
       </button>
@@ -144,7 +147,7 @@
       <div class="alert alert-danger">
         <a class="close" data-dismiss="alert" href="#">×</a>
         <h4 class="alert-heading">@Messages("edit.error")</h4>
-        <p>@errors(participationForm).mkString(", ")</p>
+        <p>@formHelper.errors(participationForm).mkString(", ")</p>
       </div>
       }
 

@@ -1,17 +1,18 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.models.Participation
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.models.ParticipationDAO
+@import se.crisp.signup4.util.AuthHelper
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
 
-@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
+@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper, participationDAO: ParticipationDAO)
 
 @se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
 
-  @if(isAdmin(loggedInUser)) {
+  @if(authHelper.isAdmin(loggedInUser)) {
     @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list()),
       user.firstName + " " + user.lastName)
   } else {
@@ -19,7 +20,7 @@
   }
 
   <img class="big-thumb thumb-background80" src="@imageUrl(user, size = 80)" onerror="imgError(this);"/>
-  @if(isAdminOrSelf(loggedInUser, user)) {
+  @if(authHelper.isAdminOrSelf(loggedInUser, user)) {
     <a href="@se.crisp.signup4.controllers.routes.UsersSecured.updateImageForm(user.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span>
       @Messages("navigation.updateimage")</a>
   }
@@ -27,7 +28,7 @@
 
 
   <dl class="dl-horizontal">
-    @if(isLoggedIn(loggedInUser)) {
+    @if(authHelper.isLoggedIn(loggedInUser)) {
       <dt>@Messages("user.edit.email")</dt>
       <dd>@user.email &nbsp;</dd>
 
@@ -45,13 +46,13 @@
   </dl>
 
 
-  @if(isAdminOrSelf(loggedInUser, user)) {
+  @if(authHelper.isAdminOrSelf(loggedInUser, user)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.UsersSecured.updateForm(user.id.get)" class="btn btn-primary">
         <span class="glyphicon glyphicon-pencil"></span> @Messages("edit.edit")
       </a>
 
-      @if(isAdmin(loggedInUser)) {
+      @if(authHelper.isAdmin(loggedInUser)) {
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_user_@user.id">
           <span class="glyphicon glyphicon-trash"></span> @Messages("edit.remove")
         </button>
@@ -98,8 +99,8 @@
       <p>
         <a href="@se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)">@event.group.name</a>
         <a href="@se.crisp.signup4.controllers.routes.Participations.editForm(event.id.get, user.id.get)" class="pull-right">
-          <span class="label label-default @asCssClass(Participation.findStatus(user, event))">
-            @asMessage(Participation.findStatus(user, event))
+          <span class="label label-default @asCssClass(participationDAO.findStatus(user, event))">
+            @asMessage(participationDAO.findStatus(user, event))
           </span>
         </a>
         <br/>

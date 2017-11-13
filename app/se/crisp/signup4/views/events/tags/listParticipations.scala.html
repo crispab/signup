@@ -1,11 +1,11 @@
 @import se.crisp.signup4.models.Participation
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
 @import se.crisp.signup4.services.ImageUrl
 
-@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl)
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper)
 
 @participations.map { participation =>
 
@@ -26,7 +26,7 @@
       @if(participation.user.comment.nonEmpty) {
         <p class="text-muted small-space-berfore">@participation.user.comment</p>
       }
-      @if(isLoggedIn(loggedInUser)) {
+      @if(authHelper.isLoggedIn(loggedInUser)) {
         <p class="text-muted small-space-berfore"><em>@participation.user.email</em></p>
       }
       <p>@participation.comment</p>
@@ -54,7 +54,7 @@
         <p>@{participation.numberOfParticipants}st</p>
       }
 
-      @if(withRemoveButton && isAdmin(loggedInUser)) {
+      @if(withRemoveButton && authHelper.isAdmin(loggedInUser)) {
         <button type="button" class="btn btn-default pull-right small-space-berfore" data-toggle="modal" data-target="#remove_participant_@participation.id">
           <span class="glyphicon glyphicon-trash"></span>
         </button>

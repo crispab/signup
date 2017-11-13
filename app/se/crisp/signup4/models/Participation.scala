@@ -1,6 +1,7 @@
 package se.crisp.signup4.models
 
 import java.util.Date
+import javax.inject.{Inject, Singleton}
 
 import anorm.SqlParser._
 import anorm._
@@ -24,6 +25,15 @@ case class Participation(id: Option[Long] = None,
                          event: Event,
                          signUpTime: Option[Date]) extends Ordered[Participation] {
 
+  def this(id: Option[Long],
+            status: Status,
+            numberOfParticipants: Int,
+            comment: String,
+            user: User,
+            event: Event) = this(id, status, numberOfParticipants, comment, user, event, signUpTime = Some(new Date()))
+
+  def this(status: Status, user: User, event: Event) = this(None, status, 1, "", user, event, Some(new Date()))
+
   def compare(that: Participation): Int = this.user.compare(that.user)
 
   def participantsComing: Int = {
@@ -45,22 +55,12 @@ case class Participation(id: Option[Long] = None,
   }
 }
 
-object Participation {
 
-  def apply(id: Option[Long],
-            status: Status,
-            numberOfParticipants: Int,
-            comment: String,
-            user: User,
-            event: Event): Participation = {
-
-    new Participation(id, status, numberOfParticipants, comment, user, event, signUpTime = Some(new Date()))
-  }
-
-  def apply(status: Status, user: User, event: Event): Participation = apply(id = None, status, numberOfParticipants = 1, comment = "", user, event)
-
+@Singleton
+class ParticipationDAO @Inject() (userDAO: UserDAO){
 
   import scala.language.postfixOps
+
   val parser: RowParser[Participation] = {
     get[Option[Long]]("id") ~
       get[String]("status") ~
@@ -75,7 +75,7 @@ object Participation {
           status = Status.withName(status),
           numberOfParticipants = number_of_participants,
           comment = comment,
-          user = User.find(userx),
+          user = userDAO.find(userx),
           event = Event.find(event),
           signUpTime = signup_time
         )
@@ -173,14 +173,14 @@ WHERE id = {id}
   def find(id: Long): Participation = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(Participation.parser single)
+        SQL("SELECT * FROM participations WHERE id={id}").on('id -> id).as(parser single)
     }
   }
 
   def findByEventAndUser(eventId: Long, userId: Long): Option[Participation] = {
     DB.withTransaction {
       implicit connection =>
-        SQL("SELECT * FROM participations WHERE event={eventId} AND userx={userId}").on('eventId -> eventId, 'userId -> userId).as(Participation.parser singleOpt)
+        SQL("SELECT * FROM participations WHERE event={eventId} AND userx={userId}").on('eventId -> eventId, 'userId -> userId).as(parser singleOpt)
     }
   }
 
@@ -229,7 +229,7 @@ WHERE p.event={eventId}
           SQL(findMembersByStatusQueryString).on('eventId -> event.id, 'status -> status.toString, 'groupId -> event.group.id).as(parser *).sorted
       }
     } else {
-      User.findUnregisteredMembers(event) map { user => Participation(status = Unregistered, user = user, event = event, signUpTime = None) }
+      userDAO.findUnregisteredMembers(event) map { user => Participation(status = Unregistered, user = user, event = event, signUpTime = None) }
     }
   }
 

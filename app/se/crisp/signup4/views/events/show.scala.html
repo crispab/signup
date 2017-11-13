@@ -4,13 +4,16 @@
 @import se.crisp.signup4.models.LogEntry
 @import se.crisp.signup4.models.Reminder
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.AuthHelper._
+@import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.HtmlHelper
+@import se.crisp.signup4.util.ThemeHelper
+@import se.crisp.signup4.util.LocaleHelper
 
-@(event: Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl)
+@(event: Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, htmlHelper: HtmlHelper, themeHelper: ThemeHelper, localeHelper: LocaleHelper)
 
 @se.crisp.signup4.views.html.page(event.name, section = Groups) {
 
@@ -75,7 +78,7 @@
 
     @se.crisp.signup4.views.html.events.tags.addToCalendarButton(event)
 
-    @if(isAdmin(loggedInUser)) {
+    @if(authHelper.isAdmin(loggedInUser)) {
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle action-button" data-toggle="dropdown">
           @Messages("event.actions") <span class="caret"></span>
@@ -194,7 +197,7 @@
     <img src="@routes.Assets.at("images/icon-spreadsheet.png")" class="signup-icon"/> @Messages("event.excel")
   </a></p>
 
-  @if(isAdmin(loggedInUser) && reminders.nonEmpty) {
+  @if(authHelper.isAdmin(loggedInUser) && reminders.nonEmpty) {
     <h3>@Messages("event.reminders")</h3>
 
     @reminders.map { reminder =>
@@ -241,7 +244,7 @@
     @se.crisp.signup4.views.html.events.tags.listParticipations(guests.unregistered, withRemoveButton = true)
   }
 
-  @if(isAdmin(loggedInUser)) {
+  @if(authHelper.isAdmin(loggedInUser)) {
     <div class="btn-row">
       <a href="@se.crisp.signup4.controllers.routes.ParticipationsSecured.createGuestForm(event.id.get)" class="btn btn-default">
         <span class="glyphicon glyphicon-plus"></span> @Messages("event.addguest")</a>

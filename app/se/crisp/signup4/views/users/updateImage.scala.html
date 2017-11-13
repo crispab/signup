@@ -1,9 +1,11 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.services.GravatarUrl
-
 @import se.crisp.signup4.services.ImageUrl
-@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, gravatarUrl: GravatarUrl)
+@import se.crisp.signup4.util.AuthHelper
+
+@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, gravatarUrl: GravatarUrl, themeHelper: ThemeHelper, authHelper: AuthHelper)
 
 @se.crisp.signup4.views.html.page(Messages("user.updateimage", user.firstName, user.lastName), section = Users) {
 

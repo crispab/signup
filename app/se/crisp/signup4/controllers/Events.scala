@@ -18,15 +18,20 @@ import play.api.mvc._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.{ImageUrl, MailReminder, RemindAllParticipants, SlackReminder}
-import se.crisp.signup4.util.AuthHelper._
 import se.crisp.signup4.util.DateHelper._
-import se.crisp.signup4.util.ExcelHelper
-import se.crisp.signup4.util.ThemeHelper._
+import se.crisp.signup4.util._
 
 import scala.concurrent.ExecutionContext
 
 class Events @Inject()(val messagesApi: MessagesApi,
                        val configuration: Configuration,
+                       implicit val authHelper: AuthHelper,
+                       implicit val localeHelper: LocaleHelper,
+                       implicit val themeHelper: ThemeHelper,
+                       implicit val formHelper: FormHelper,
+                       implicit val htmlHelper: HtmlHelper,
+                       val userDAO: UserDAO,
+                       val participationDAO: ParticipationDAO,
                        implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
@@ -34,7 +39,7 @@ class Events @Inject()(val messagesApi: MessagesApi,
     if (event.isCancelled) {
       Ok(se.crisp.signup4.views.html.events.showcancelled(event, LogEntry.findByEvent(event)))
     } else {
-      Ok(se.crisp.signup4.views.html.events.show(event, Participation.findMembers(event), Participation.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
+      Ok(se.crisp.signup4.views.html.events.show(event, participationDAO.findMembers(event), participationDAO.findGuests(event), LogEntry.findByEvent(event), Reminder.findByEvent(event)))
     }
   }
 
@@ -57,7 +62,7 @@ class Events @Inject()(val messagesApi: MessagesApi,
 
 
   private def allGuests(event: Event) = {
-    val guestParticipations = Participation.findGuests(event)
+    val guestParticipations = participationDAO.findGuests(event)
     (guestParticipations.on
       union guestParticipations.maybe
       union guestParticipations.off
@@ -65,7 +70,7 @@ class Events @Inject()(val messagesApi: MessagesApi,
   }
 
   private def allMembers(event: Event) = {
-    val memberParticipations = Participation.findMembers(event)
+    val memberParticipations = participationDAO.findMembers(event)
     (memberParticipations.on
       union memberParticipations.maybe
       union memberParticipations.off
@@ -75,11 +80,11 @@ class Events @Inject()(val messagesApi: MessagesApi,
 
   def asEmailReminder(eventId: Long, userId: Long) = Action { implicit request =>
     val event = Event.find(eventId)
-    val user = User.find(userId)
+    val user = userDAO.find(userId)
     val baseUrl = configuration.getString("application.base.url").getOrElse("")
 
     // TODO: get rid of this by using SendGrid mail templates instead
-    if (THEME == "b73") {
+    if (themeHelper.THEME == "b73") {
       Ok(se.crisp.signup4.views.html.events.b73.emailremindermessage(event, user, baseUrl))
     } else {
       Ok(se.crisp.signup4.views.html.events.crisp.emailremindermessage(event, user, baseUrl))
@@ -89,11 +94,11 @@ class Events @Inject()(val messagesApi: MessagesApi,
 
   def asEmailCancellation(eventId: Long, userId: Long) = Action { implicit request =>
     val event = Event.find(eventId)
-    val user = User.find(userId)
+    val user = userDAO.find(userId)
     val baseUrl = configuration.getString("application.base.url").getOrElse("")
 
     // TODO: get rid of this by using SendGrid mail templates instead
-    if (THEME == "b73") {
+    if (themeHelper.THEME == "b73") {
       Ok(se.crisp.signup4.views.html.events.b73.emailcancellationmessage(event, user, baseUrl))
     } else {
       Ok(se.crisp.signup4.views.html.events.crisp.emailcancellationmessage(event, user, baseUrl))
@@ -122,9 +127,18 @@ class Events @Inject()(val messagesApi: MessagesApi,
 
 }
 
-class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailReminder,@Named("event-reminder-actor") eventReminderActor: ActorRef, implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
+class EventsSecured @Inject()(val messagesApi: MessagesApi,
+                              val mailReminder: MailReminder,
+                              @Named("event-reminder-actor") val eventReminderActor: ActorRef,
+                              implicit val authHelper: AuthHelper,
+                              implicit val localeHelper: LocaleHelper,
+                              implicit val themeHelper: ThemeHelper,
+                              implicit val formHelper: FormHelper,
+                              val slackReminder: SlackReminder,
+                              val userDAO: UserDAO,
+                              implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
 
-  def remindParticipants(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def remindParticipants(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     if (!event.isCancelled) {
       eventReminderActor ! RemindAllParticipants(event, loggedIn)
@@ -134,13 +148,13 @@ class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailRe
     }
   }
 
-  def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val group = Group.find(groupId)
     Ok(se.crisp.signup4.views.html.events.edit(eventForm, group))
   }
 
-  def create: Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def create: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     eventForm.bindFromRequest.fold(
       formWithErrors => {
@@ -170,7 +184,7 @@ class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailRe
   }
 
 
-  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(id)
     if (!event.isCancelled) {
@@ -180,7 +194,7 @@ class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailRe
     }
   }
 
-  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val event = Event.find(id)
     if (!event.isCancelled) {
@@ -201,7 +215,7 @@ class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailRe
   }
 
 
-  def cancel(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def cancel(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
 
     val reason = Option(request.body.asFormUrlEncoded.get.get("reason").head.head).filter(_.trim.nonEmpty)
@@ -215,14 +229,14 @@ class EventsSecured @Inject()( val messagesApi: MessagesApi, mailReminder:MailRe
     Akka.system.scheduler.scheduleOnce(1.second) {
       val cancelledEvent = Event.find(id)
       mailReminder.sendCancellationMessage(cancelledEvent)
-      SlackReminder.sendCancellationMessage(cancelledEvent)
+      slackReminder.sendCancellationMessage(cancelledEvent)
     }
 
     Redirect(routes.Events.show(id))
   }
 
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     val event = Event.find(id)
     val groupId = event.group.id.get
     Event.delete(id)
