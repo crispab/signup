@@ -8,6 +8,7 @@ import play.api.i18n.Messages
 import play.api.libs.mailer._
 import play.twirl.api.Html
 import se.crisp.signup4.models.Status._
+import se.crisp.signup4.models.dao.{LogEntryDAO, MembershipDAO, ParticipationDAO, UserDAO}
 import se.crisp.signup4.models.{User, _}
 import se.crisp.signup4.util.{HtmlHelper, ThemeHelper}
 
@@ -17,13 +18,14 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
                               val membershipDAO: MembershipDAO,
                               val participationDAO: ParticipationDAO,
                               val htmlHelper: HtmlHelper,
+                              val logEntryDAO: LogEntryDAO,
                               implicit val themeHelper: ThemeHelper) {
   def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User,  messages: Messages) {
     Logger.debug("Sending messages for: " + event.name)
     receivers foreach { receiver =>
       sendMessage(event, receiver, createMessage)
     }
-    LogEntry.create(event, Messages("mail.sentreminders", loggedIn.name, receivers.size))
+    logEntryDAO.create(event, Messages("mail.sentreminders", loggedIn.name, receivers.size))
   }
 
   private def sendMessage(event: Event, receiver: User, createMessage: (Event, User) => Html)(implicit  messages: Messages) {
@@ -43,7 +45,7 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
     } catch {
       case ex: Exception =>
         Logger.error("FAILED sending email for " + event.name + " to " + receiver, ex)
-        LogEntry.create(event, Messages("mail.failedreminder", receiver.email, ex.getClass.getSimpleName, ex.getMessage))
+        logEntryDAO.create(event, Messages("mail.failedreminder", receiver.email, ex.getClass.getSimpleName, ex.getMessage))
     }
   }
 
@@ -72,7 +74,7 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
 
   def sendReminderMessage(event: Event, user: User)(implicit loggedIn: User,  messages: Messages) {
     sendMessage(event, user, createReminderMessage)
-    LogEntry.create(event, Messages("mail.sentonereminder", loggedIn.name, user.name))
+    logEntryDAO.create(event, Messages("mail.sentonereminder", loggedIn.name, user.name))
   }
 
   private def findReceiversToCancel(event: Event): Seq[User] = {

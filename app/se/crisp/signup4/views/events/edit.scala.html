@@ -2,13 +2,13 @@
 @import se.crisp.signup4.models.Group
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.Reminder
+@import se.crisp.signup4.models.dao.ReminderDAO
 @import se.crisp.signup4.util.FormHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.ThemeHelper
-
-@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, formHelper: FormHelper, authHelper: AuthHelper, themeHelper: ThemeHelper)
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, formHelper: FormHelper, authHelper: AuthHelper, themeHelper: ThemeHelper, reminderDAO: ReminderDAO)
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
@@ -152,7 +152,7 @@
       @if(creatingNew()) {
         <label class="space-berfore" for="immediate_reminder">@Messages("event.edit.reminder")</label>
         <p>
-          @Messages("event.edit.reminder.description", Reminder.firstReminderDays) <br/>
+          @Messages("event.edit.reminder.description", reminderDAO.firstReminderDays) <br/>
           @Messages("event.edit.reminder.immediately")
         </p>
         <div class="checkbox">

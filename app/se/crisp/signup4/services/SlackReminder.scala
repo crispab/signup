@@ -9,11 +9,12 @@ import play.api.libs.ws.WS
 import play.api.Play.current
 import play.api.i18n.Messages
 import se.crisp.signup4.models.User
+import se.crisp.signup4.models.dao.LogEntryDAO
 import se.crisp.signup4.util.HtmlHelper
 
 
 @Singleton
-class SlackReminder @Inject() (implicit val htmlHelper: HtmlHelper) {
+class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO) (implicit val htmlHelper: HtmlHelper) {
 
   private val ANONYMOUS = User(firstName = "John", lastName = "Doe", email = "")
 
@@ -25,11 +26,11 @@ class SlackReminder @Inject() (implicit val htmlHelper: HtmlHelper) {
       } catch {
         case ex: Exception =>
           Logger.error("FAILED sending Slack message: " + message, ex)
-          LogEntry.create(event, Messages("slack.failedreminder", ex.getClass.getSimpleName, ex.getMessage))
+          logEntryDAO.create(event, Messages("slack.failedreminder", ex.getClass.getSimpleName, ex.getMessage))
 
       }
       if(loggedIn != ANONYMOUS) {
-        LogEntry.create(event, Messages("slack.sentreminders", loggedIn.name))
+        logEntryDAO.create(event, Messages("slack.sentreminders", loggedIn.name))
       }
     }
   }

@@ -11,7 +11,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.api.{Configuration, Logger}
 import se.crisp.signup4.models
-import se.crisp.signup4.models.UserDAO
+import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.services.{CheckEvents, ImageUrl}
 import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
 

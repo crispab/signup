@@ -2,6 +2,7 @@
 @import se.crisp.signup4.models.Status
 @import se.crisp.signup4.models.Participation
 @import se.crisp.signup4.models.User
+@import se.crisp.signup4.models.dao.EventDAO
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.FormHelper
@@ -10,8 +11,7 @@
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.HtmlHelper
 @import se.crisp.signup4.util.LocaleHelper
-
-@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, htmlHelper: HtmlHelper, localeHelper: LocaleHelper)
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, htmlHelper: HtmlHelper, localeHelper: LocaleHelper, eventDAO: EventDAO)
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
@@ -41,7 +41,7 @@
         @Messages("event.signupdatepassed")
       </div>
     }
-    case ev if(Event.isFullyBooked(ev)) => {
+    case ev if(eventDAO.isFullyBooked(ev)) => {
       <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
         @Messages("event.full")
@@ -57,7 +57,7 @@
       <li><strong>@Messages("event.venue")</strong> @event.venue</li>
       @if(event.maxParticipants.isDefined) {
         <li><strong>@Messages("event.maxparticipants")</strong> @event.maxParticipants
-          @if(Event.isFullyBooked(event)) {@Messages("event.fullybooked")}
+          @if(eventDAO.isFullyBooked(event)) {@Messages("event.fullybooked")}
         </li>
       }
     </ul>
@@ -112,7 +112,7 @@
     <fieldset>
       <div class='form-group  @hasErrors("status")'>
         <label class="radio-inline">
-          <input type="radio" name="status" id="on" value="On" @if(field("status") == Status.On.toString) {checked=""} @if(Event.isFullyBooked(event)) {disabled=""} />
+          <input type="radio" name="status" id="on" value="On" @if(field("status") == Status.On.toString) {checked=""} @if(eventDAO.isFullyBooked(event)) {disabled=""} />
           <span class="label label-default participation-on">@Messages("status.on")</span>
         </label>
         <label class="radio-inline">

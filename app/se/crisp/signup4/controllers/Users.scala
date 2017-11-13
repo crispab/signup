@@ -14,6 +14,7 @@ import play.api.mvc._
 import se.crisp.signup4
 import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.models._
+import se.crisp.signup4.models.dao.{EventDAO, MembershipDAO, ParticipationDAO, UserDAO}
 import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, ImageUrl, RemindParticipant}
 import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
@@ -26,6 +27,7 @@ class Users @Inject()(val messagesApi: MessagesApi,
                       implicit val formHelper: FormHelper,
                       val userDAO: UserDAO,
                       implicit val participationDAO: ParticipationDAO,
+                      implicit val eventDAO: EventDAO,
                       implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
@@ -43,6 +45,7 @@ class UsersSecured @Inject()(val messagesApi: MessagesApi,
                              implicit val localeHelper: LocaleHelper,
                              implicit val themeHelper: ThemeHelper,
                              implicit val formHelper: FormHelper,
+                             val eventDAO: EventDAO,
                              val userDAO: UserDAO,
                              val membershipDAO: MembershipDAO,
                              val participationDAO: ParticipationDAO,
@@ -112,7 +115,7 @@ class UsersSecured @Inject()(val messagesApi: MessagesApi,
   def remindParticipant(id: Long, eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
     val user = userDAO.find(id)
-    val event = Event.find(eventId)
+    val event = eventDAO.find(eventId)
     if(!event.isCancelled) {
       eventReminderActor ! RemindParticipant(event, user, loggedIn)
       Redirect(routes.Events.show(eventId)).flashing("success" -> Messages("user.reminder", user.name))

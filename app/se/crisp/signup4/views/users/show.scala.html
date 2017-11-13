@@ -1,14 +1,13 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.models.ParticipationDAO
+@import se.crisp.signup4.models.dao.{EventDAO, ParticipationDAO}
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
-
-@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper, participationDAO: ParticipationDAO)
+@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper, participationDAO: ParticipationDAO, eventDAO: EventDAO)
 
 @se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
 
@@ -88,7 +87,7 @@
 
   <h3>@Messages("navigation.events")</h3>
 
-  @Event.findFutureEventsByUser(user).map { event =>
+  @eventDAO.findFutureEventsByUser(user).map { event =>
     <div class="list-row">
       <h4>
         @if(event.isCancelled) {@Messages("group.event.cancelled")}

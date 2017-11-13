@@ -5,7 +5,7 @@ import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
 import se.crisp.signup4.models
-import se.crisp.signup4.models.UserDAO
+import se.crisp.signup4.models.dao.UserDAO
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect._

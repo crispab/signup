@@ -1,10 +1,15 @@
 package se.crisp.signup4.integration.models
 
+import javax.inject.Inject
+
 import se.crisp.signup4.models._
 import org.scalatestplus.play._
+import se.crisp.signup4.models.dao.{EventDAO, LogEntryDAO, ReminderDAO}
 import se.crisp.signup4.util.TestHelper._
 
-class GroupCrudTest extends PlaySpec with OneAppPerSuite {
+class GroupCrudTest @Inject() (val eventDAO: EventDAO,
+                               val logEntryDAO: LogEntryDAO,
+                               val reminderDAO: ReminderDAO) extends PlaySpec with OneAppPerSuite {
 
   "Group object " must {
     "be able to be read from DB" in {
@@ -47,11 +52,11 @@ class GroupCrudTest extends PlaySpec with OneAppPerSuite {
       val newGroup = Group.find(groupId)
 
       val event = Event(group = newGroup, name = withTestId("Midsommardans"), startTime = morningStart, endTime = morningEnd, lastSignUpDate = morningStart)
-      val eventId = Event.create(event)
-      val newEvent = Event.find(eventId)
+      val eventId = eventDAO.create(event)
+      val newEvent = eventDAO.find(eventId)
 
-      Reminder.createRemindersForEvent(eventId, event)
-      LogEntry.create(event = newEvent, message = "Created!!")
+      reminderDAO.createRemindersForEvent(eventId, event)
+      logEntryDAO.create(event = newEvent, message = "Created!!")
 
       noException must be thrownBy Group.delete(groupId)
     }

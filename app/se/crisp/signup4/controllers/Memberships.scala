@@ -9,6 +9,7 @@ import play.api.data.Form
 import play.api.data.Forms.{ignored, longNumber, mapping}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
+import se.crisp.signup4.models.dao.{GroupDAO, MembershipDAO, UserDAO}
 import se.crisp.signup4.services.ImageUrl
 import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
@@ -18,19 +19,20 @@ class Memberships @Inject() (val messagesApi: MessagesApi,
                              implicit val themeHelper: ThemeHelper,
                              implicit val formHelper: FormHelper,
                              val userDAO: UserDAO,
+                             val groupDAO: GroupDAO,
                              val membershipDAO: MembershipDAO,
                              implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
 
   def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
-    Ok(se.crisp.signup4.views.html.memberships.edit(membershipForm, Group.find(groupId), userDAO.findNonMembers(groupId)))
+    Ok(se.crisp.signup4.views.html.memberships.edit(membershipForm, groupDAO.find(groupId), userDAO.findNonMembers(groupId)))
   }
 
   def create: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(loggedIn)
       membershipForm.bindFromRequest.fold(
         formWithErrors => {
-          val group = Group.find(formWithErrors("groupId").value.get.toLong)
+          val group = groupDAO.find(formWithErrors("groupId").value.get.toLong)
           val nonMembers = userDAO.findNonMembers(group.id.get)
           BadRequest(se.crisp.signup4.views.html.memberships.edit(formWithErrors, group, nonMembers))
         },
@@ -50,7 +52,7 @@ class Memberships @Inject() (val messagesApi: MessagesApi,
   def toMembership(id: Option[Long], groupId: Long, userId: Long): Membership = {
     Membership(
       id = id,
-      group = Group.find(groupId),
+      group = groupDAO.find(groupId),
       user = userDAO.find(userId)
     )
   }

@@ -9,7 +9,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.mvc.{Action, AnyContent, Controller}
-import se.crisp.signup4.models.UserDAO
+import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.util.ThemeHelper
 import se.crisp.signup4.util.WsHelper._
 

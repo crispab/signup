@@ -4,6 +4,7 @@
 @import se.crisp.signup4.models.LogEntry
 @import se.crisp.signup4.models.Reminder
 @import se.crisp.signup4.models.User
+@import se.crisp.signup4.models.dao.EventDAO
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
@@ -12,8 +13,7 @@
 @import se.crisp.signup4.util.HtmlHelper
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.LocaleHelper
-
-@(event: Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, htmlHelper: HtmlHelper, themeHelper: ThemeHelper, localeHelper: LocaleHelper)
+@(event: Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, htmlHelper: HtmlHelper, themeHelper: ThemeHelper, localeHelper: LocaleHelper, eventDAO: EventDAO)
 
 @se.crisp.signup4.views.html.page(event.name, section = Groups) {
 
@@ -37,7 +37,7 @@
         @Messages("event.signupdatepassed")
       </div>
     }
-    case ev if (Event.isFullyBooked(ev)) => {
+    case ev if (eventDAO.isFullyBooked(ev)) => {
       <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
         @Messages("event.full")
@@ -67,7 +67,7 @@
       <li><strong>@Messages("event.venue")</strong> @event.venue</li>
       @if(event.maxParticipants.isDefined) {
         <li><strong>@Messages("event.maxparticipants")</strong> @event.maxParticipants
-          @if(Event.isFullyBooked(event)) {@Messages("event.fullybooked")}
+          @if(eventDAO.isFullyBooked(event)) {@Messages("event.fullybooked")}
         </li>
       }
     </ul>
