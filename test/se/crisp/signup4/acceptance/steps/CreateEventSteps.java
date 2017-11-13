@@ -15,11 +15,16 @@ import cucumber.api.java.en.Given;
 import se.crisp.signup4.util.Inspect;
 import se.crisp.signup4.util.TearDown;
 
+import javax.inject.Inject;
 import java.util.Date;
 
 import static se.crisp.signup4.util.Conversion.*;
 
 public class CreateEventSteps {
+
+  @Inject Inspect inspect;
+  @Inject TearDown tearDown;
+
   private final LoginPage loginPage;
   private final CreateEventPage createEventPage;
   private final ErrorPage errorPage;
@@ -43,26 +48,26 @@ public class CreateEventSteps {
   @When("^The administrator creates the event$")
   public void createEvent() throws Throwable {
     loginPage.navigateTo().loginUsingPw("admin@crisp.se", "admin");
-    Group group = Inspect.getGroup(groupName);
+    Group group = inspect.getGroup(groupName);
     createEventPage.navigateTo(asLong(group.id())).submitForm(eventName, "Let's get together and fine dine!", "The Ritz", new DateTime(eventDateTime));
     Assert.assertFalse("Got an error page!!!", errorPage.isViewing());
   }
 
   @Then("^the event (\\S+) exists in the (\\S+) group$")
   public void verifyEventExists(String eventName, String groupName) throws Throwable {
-    Assert.assertTrue("Event " + eventName + " wasn't found for group " + groupName, Inspect.isEventAvailableForGroup(eventName, groupName));
+    Assert.assertTrue("Event " + eventName + " wasn't found for group " + groupName, inspect.isEventAvailableForGroup(eventName, groupName));
   }
 
   @Then("^nobody has signed up yet$")
   public void verifyNobodySignedUp() throws Throwable {
-    Event event = Inspect.getEvent(eventName, groupName);
-    Assert.assertEquals(0, Inspect.getNoOfOn(event));
+    Event event = inspect.getEvent(eventName, groupName);
+    Assert.assertEquals(0, inspect.getNoOfOn(event));
   }
 
   @After
   public void cleanUpScenario() {
     if (groupName != null) {
-      TearDown.removeGroupAndMembers(groupName);
+      tearDown.removeGroupAndMembers(groupName);
       groupName = null;
     }
   }

@@ -1,7 +1,7 @@
 package se.crisp.signup4.unit.util
 
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.mvc.Http.Status
 import se.crisp.signup4.util.WsHelper

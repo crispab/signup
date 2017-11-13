@@ -1,28 +1,31 @@
 package se.crisp.signup4.integration.models
 
-import javax.inject.Inject
-
-import se.crisp.signup4.models._
+import anorm.AnormException
 import org.scalatestplus.play._
-import se.crisp.signup4.models.dao.{EventDAO, LogEntryDAO, ReminderDAO}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import se.crisp.signup4.models._
+import se.crisp.signup4.models.dao.{EventDAO, GroupDAO, LogEntryDAO, ReminderDAO}
 import se.crisp.signup4.util.TestHelper._
 
-class GroupCrudTest @Inject() (val eventDAO: EventDAO,
-                               val logEntryDAO: LogEntryDAO,
-                               val reminderDAO: ReminderDAO) extends PlaySpec with OneAppPerSuite {
+class GroupCrudTest extends PlaySpec with GuiceOneAppPerSuite {
+
+  val groupDAO: GroupDAO = app.injector.instanceOf[GroupDAO]
+  val eventDAO: EventDAO = app.injector.instanceOf[EventDAO]
+  val logEntryDAO: LogEntryDAO = app.injector.instanceOf[LogEntryDAO]
+  val reminderDAO: ReminderDAO = app.injector.instanceOf[ReminderDAO]
 
   "Group object " must {
     "be able to be read from DB" in {
-      val groups = Group.findAll()
+      val groups = groupDAO.findAll()
       groups.size must be > 0
     }
 
     "be able to find by ID" in {
-      noException must be thrownBy Group.find(-1)
+      noException must be thrownBy groupDAO.find(-1)
     }
 
     "throw exception for non-existing group" in {
-      val thrown = the[RuntimeException] thrownBy Group.find(0)
+      val thrown = the[AnormException] thrownBy groupDAO.find(0)
       thrown.getMessage must equal("SqlMappingError(No rows when expecting a single one)")
     }
 
@@ -34,9 +37,9 @@ class GroupCrudTest @Inject() (val eventDAO: EventDAO,
         mailSubjectPrefix = "HaHa"
       )
 
-      val groupId = Group.create(group)
+      val groupId = groupDAO.create(group)
       groupId must not be 0
-      noException must be thrownBy Group.delete(groupId)
+      noException must be thrownBy groupDAO.delete(groupId)
     }
 
     "be able to remove group with an event" in {
@@ -47,9 +50,9 @@ class GroupCrudTest @Inject() (val eventDAO: EventDAO,
         mailSubjectPrefix = "HaPe"
       )
 
-      val groupId = Group.create(group)
+      val groupId = groupDAO.create(group)
       groupId must not be 0
-      val newGroup = Group.find(groupId)
+      val newGroup = groupDAO.find(groupId)
 
       val event = Event(group = newGroup, name = withTestId("Midsommardans"), startTime = morningStart, endTime = morningEnd, lastSignUpDate = morningStart)
       val eventId = eventDAO.create(event)
@@ -58,7 +61,7 @@ class GroupCrudTest @Inject() (val eventDAO: EventDAO,
       reminderDAO.createRemindersForEvent(eventId, event)
       logEntryDAO.create(event = newEvent, message = "Created!!")
 
-      noException must be thrownBy Group.delete(groupId)
+      noException must be thrownBy groupDAO.delete(groupId)
     }
 
   }

@@ -9,7 +9,12 @@ import se.crisp.signup4.models.User;
 import org.junit.Assert;
 import se.crisp.signup4.util.Inspect;
 
+import javax.inject.Inject;
+
 public class LoginLogoutSteps {
+
+  @Inject Inspect inspect;
+
 
   private final StartPage startPage;
   private final LoginPage loginPage;
@@ -22,7 +27,7 @@ public class LoginLogoutSteps {
 
   @Given("^the (\\S+) user exist$")
   public void verifyUserExists(String userName) throws Throwable {
-    User user = Inspect.getUser(userName);
+    User user = inspect.getUser(userName);
     Assert.assertNotNull(user);
     this.user = user;
   }

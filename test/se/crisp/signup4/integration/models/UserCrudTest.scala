@@ -1,23 +1,28 @@
 package se.crisp.signup4.integration.models
 
+import anorm.AnormException
 import org.scalatestplus.play._
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import se.crisp.signup4.models.User
+import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.util.TestHelper._
 
-class UserCrudTest extends PlaySpec with OneAppPerSuite {
+class UserCrudTest extends PlaySpec with GuiceOneAppPerSuite {
+
+  val userDAO: UserDAO = app.injector.instanceOf[UserDAO]
 
   "User object " must {
     "be able to be read from DB" in {
-      val users = User.findAll()
+      val users = userDAO.findAll()
       users.size must be > 0
     }
 
     "be able to find by ID" in {
-      noException must be thrownBy User.find(-2)
+      noException must be thrownBy userDAO.find(-2)
     }
 
     "throw exception for non-existing users" in {
-      val thrown = the[RuntimeException] thrownBy User.find(0)
+      val thrown = the[AnormException] thrownBy userDAO.find(0)
       thrown.getMessage must equal("SqlMappingError(No rows when expecting a single one)")
     }
 
@@ -28,9 +33,9 @@ class UserCrudTest extends PlaySpec with OneAppPerSuite {
         email = withTestId("rulle@mailinator.com")
       )
 
-      val userId = User.create(user)
+      val userId = userDAO.create(user)
       userId must not be 0
-      User.delete(userId)
+      userDAO.delete(userId)
     }
 
   }

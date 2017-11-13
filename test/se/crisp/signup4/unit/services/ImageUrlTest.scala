@@ -1,16 +1,24 @@
 package se.crisp.signup4.unit.services
 
-import javax.inject.Inject
+
+import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
 
 import org.scalatestplus.play._
 import se.crisp.signup4.models.User
-import se.crisp.signup4.services.{GravatarUrl, ImageUrl}
+import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, ImageUrl}
 
-class ImageUrlTest @Inject() (imageUrl: ImageUrl) extends PlaySpec {
+class ImageUrlTest extends PlaySpec with MockitoSugar {
+
+  val gravatarUrl = new GravatarUrl
+  val cloudinaryUrl = mock[CloudinaryUrl]
+  when(cloudinaryUrl.identifier) thenReturn "Cloudinary"
+
+  val imageUrl = new ImageUrl(gravatarUrl, cloudinaryUrl)
 
   def CORRECT_URL = "https://secure.gravatar.com/avatar/0bc83cb571cd1c50ba6f3e8a78ef1346.jpg?default=blank&size=40"
 
-  "ImageUrl object " must {
+  "ImageUrl instance " must {
 
     "handle simple case" in {
       val user = User(firstName = "Hari", lastName = "Seldon", email = "myemailaddress@example.com", imageProvider = GravatarUrl.identifier)

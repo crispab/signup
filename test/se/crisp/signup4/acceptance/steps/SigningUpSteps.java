@@ -13,11 +13,17 @@ import se.crisp.signup4.util.Inspect;
 import se.crisp.signup4.util.SetUp;
 import se.crisp.signup4.util.TearDown;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static se.crisp.signup4.util.Conversion.*;
 
 public class SigningUpSteps {
+
+  @Inject Inspect inspect;
+  @Inject SetUp setUp;
+  @Inject TearDown tearDown;
+
   private List<User> members = null;
   private Group group = null;
   private Event event = null;
@@ -37,15 +43,15 @@ public class SigningUpSteps {
 
   @Given("^the group (\\S+) exist with (.*)$")
   public void createGroup(String groupName, List<String> memberNames) throws Throwable {
-    group = SetUp.createGroup(groupName);
-    members = SetUp.createUsers(memberNames);
-    SetUp.addMembers(group, members);
+    group = setUp.createGroup(groupName);
+    members = setUp.createUsers(memberNames);
+    setUp.addMembers(group, members);
   }
 
   @Given("^the group (\\S+) has an event (\\S+)$")
   public void createEvent(String groupName, String eventName) throws Throwable {
     Assert.assertEquals(group.name(), groupName);
-    event = SetUp.createMorningEvent(group, eventName);
+    event = setUp.createMorningEvent(group, eventName);
   }
 
   @When("^(\\S+) navigates to his sign up page$")
@@ -65,23 +71,23 @@ public class SigningUpSteps {
 
   @Then("^the number of participants is (\\d+)$")
   public void verifyParticipants(int participants) throws Throwable {
-    Assert.assertEquals(participants, Inspect.getNoOfOn(event));
+    Assert.assertEquals(participants, inspect.getNoOfOn(event));
   }
 
   @Then("^the participation of (\\S+) is (\\S+)$")
   public void verifyStatus(String member, String status) throws Throwable {
-    Assert.assertEquals(status, Inspect.getStatus(findMember(member), event));
+    Assert.assertEquals(status, inspect.getStatus(findMember(member), event));
   }
 
   @Then("^the comment by (\\S+) is \"([^\"]*)\"$")
   public void verifyComment(String member, String comment) throws Throwable {
-    Assert.assertEquals(comment, Inspect.getComment(findMember(member), event));
+    Assert.assertEquals(comment, inspect.getComment(findMember(member), event));
   }
 
   @After
   public void cleanUpScenario() {
     if(group!= null) {
-      TearDown.removeGroupAndMembers(group.name());
+      tearDown.removeGroupAndMembers(group.name());
       group = null;
       event = null;
       members = null;

@@ -1,14 +1,19 @@
 package se.crisp.signup4.util
 
-import se.crisp.signup4.models.{Membership, Group, User}
+import javax.inject.{Inject, Singleton}
 
-object TearDown {
+import se.crisp.signup4.models.dao.{GroupDAO, MembershipDAO, UserDAO}
 
-  def removeGroupAndMembers(groupName: String) = {
-    val group = Group.findByName(groupName)
+@Singleton
+class TearDown @Inject() (val groupDAO: GroupDAO,
+                          val membershipDAO: MembershipDAO,
+                          val userDAO: UserDAO) {
+
+  def removeGroupAndMembers(groupName: String): Unit = {
+    val group = groupDAO.findByName(groupName)
     if(group.isDefined) {
-      Membership.findMembers(group = group.get) foreach {membership => User.delete(membership.user.id.get)}
-      Group.delete(group.get.id.get)
+      membershipDAO.findMembers(group = group.get) foreach {membership => userDAO.delete(membership.user.id.get)}
+      groupDAO.delete(group.get.id.get)
     }
   }
 }

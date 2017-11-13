@@ -34,7 +34,7 @@ public class SharedDriver extends EventFiringWebDriver {
     final WebDriver driver;
     switch (driverType.toLowerCase()) {
       case "htmlunit":
-        driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
+        driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
         break;
       case "firefox":
         driver = new FirefoxDriver();

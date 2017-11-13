@@ -5,16 +5,16 @@ import se.crisp.signup4.util.EmailHelper
 
 class EmailHelperTest extends PlaySpec {
 
-  def name = "kalle.anka"
+  private val name = "kalle.anka"
 
-  def domain = "ankeborg.se"
+  private val domain = "ankeborg.se"
 
-  def email = name + "@" + domain
+  private val email = name + "@" + domain
 
   "EmailHelper" must {
 
     "abbreviate when not logged" in {
-      EmailHelper.abbreviated(email, isLoggedIn = false) must equal("at " + domain)
+      EmailHelper.abbreviated(email) must equal("at " + domain)
     }
 
     "full address when logged" in {

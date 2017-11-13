@@ -1,17 +1,25 @@
 package se.crisp.signup4.integration.util
 
 import java.util.Locale
-import javax.inject.Inject
 
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import se.crisp.signup4.util.LocaleHelper
 
-class LocaleHelperTest @Inject() (localeHelper: LocaleHelper) extends PlaySpec with OneAppPerSuite {
+class LocaleHelperTest extends PlaySpec with GuiceOneAppPerSuite {
+
+  val localeHelper: LocaleHelper = app.injector.instanceOf[LocaleHelper]
+
+  def TEST_LOCALE = "en_US"
+
+  override def fakeApplication(): Application = new GuiceApplicationBuilder().configure(Map("application.locale" -> TEST_LOCALE)).build()
 
   "LocaleHelper" must {
 
     "give Locale name" in {
-      localeHelper.LC_NAME must equal ("sv_SE")
+      localeHelper.LC_NAME must equal (TEST_LOCALE)
     }
 
     "give TimeZone name" in {

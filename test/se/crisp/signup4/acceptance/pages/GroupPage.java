@@ -8,8 +8,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import se.crisp.signup4.util.Inspect;
 
+import javax.inject.Inject;
+
 public class GroupPage {
   private final SharedDriver driver;
+
+  @Inject Inspect inspect;
 
   public GroupPage(SharedDriver driver) {
     this.driver = driver;
@@ -29,7 +33,7 @@ public class GroupPage {
   }
 
   public GroupPage navigateTo(String groupName) {
-    Group group = Inspect.getGroup(groupName);
+    Group group = inspect.getGroup(groupName);
     driver.navigate().to(PlayContainer.getBaseUrl() + "/groups/" + group.id().get());
     Assert.assertTrue("Not viewing group " + groupName + "!", isViewing(groupName));
     return this;
