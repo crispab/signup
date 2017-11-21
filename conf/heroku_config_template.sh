@@ -17,11 +17,11 @@ heroku config:set \
     GOOGLE_CLIENT_SECRET="<to enable Google login - get from Google Dev Console>" \
     FACEBOOK_CLIENT_ID="<to enable Facebook login - get from Facebook's dev site>" \
     FACEBOOK_CLIENT_SECRET="<to enable Facebook login - get from Facebook's dev site>" \
-    SMTP_MOCK=false \
-    SMTP_HOST=smtp.sendgrid.net \
-    SMTP_PORT=587 \
-    SMTP_SSL=false \
-    SMTP_TLS=true \
+    PLAY_MAILER_MOCK=false \
+    PLAY_MAILER_HOST=smtp.sendgrid.net \
+    PLAY_MAILER_PORT=587 \
+    PLAY_MAILER_SSL=false \
+    PLAY_MAILER_TLS=true \
     TZ="Europe/Stockholm" \
     LANG="sv_SE" \
     DATABASE_DRIVER=org.postgresql.Driver \
