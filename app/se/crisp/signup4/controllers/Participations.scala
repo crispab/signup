@@ -49,7 +49,7 @@ class Participations @Inject()(val messagesApi: MessagesApi,
     message.append(Messages("participation.updated", participation.user.name, StatusHelper.asMessage(participation.status)))
 
     if(participation.numberOfParticipants > 1) {
-      message.append(Messages("participation.people", participation.numberOfParticipants))
+      message.append(" ").append(Messages("participation.people", participation.numberOfParticipants))
     }
 
     if(!participation.comment.isEmpty) {
