@@ -24,10 +24,10 @@
         </a>
       </h4>
       @if(participation.user.comment.nonEmpty) {
-        <p class="text-muted small-space-berfore">@participation.user.comment</p>
+        <p class="text-muted"><em>@participation.user.comment</em></p>
       }
       @if(authHelper.isLoggedIn(loggedInUser)) {
-        <p class="text-muted small-space-berfore"><em>@participation.user.email</em></p>
+        <p class="text-muted"><span class="glyphicon glyphicon-envelope"></span> @participation.user.email</p>
       }
       <p>@participation.comment</p>
     </div>
