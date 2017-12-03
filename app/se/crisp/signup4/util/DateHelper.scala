@@ -7,17 +7,20 @@ import java.util.Date
 object DateHelper {
 
   def DATE = "yyyy-MM-dd"
+  def DAY = "EEEE"
+  def TIME = "HH:mm"
+  def DATE_TIME: String = DAY + " " + DATE + ", " + TIME
+
   def US_DATE = "MM/dd/yyyy"
 
-  def TIME = "HH:mm"
-
-  def DATE_TIME: String = DATE + ", " + TIME
 
   private def formatted(date: Date, format: String): String = {
     new SimpleDateFormat(format).format(date)
   }
 
   def asDate(date: Date): String = formatted(date, DATE)
+
+  def asDayAndDate(date: Date): String = formatted(date, DAY + " " + DATE)
 
   def asUsDate(date: Date): String = formatted(date, US_DATE)
 

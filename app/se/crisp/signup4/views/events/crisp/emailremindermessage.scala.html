@@ -26,7 +26,7 @@
         <li><strong>@Messages("event.venue")</strong>  @event.venue</li>
       </ul>
       @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-        <p>@Messages("event.lastsignup", asDate(event.lastSignUpDate))</p>
+        <p>@Messages("event.lastsignup", asDayAndDate(event.lastSignUpDate))</p>
       }
 
     </div>

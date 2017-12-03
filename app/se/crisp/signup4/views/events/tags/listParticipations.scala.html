@@ -41,7 +41,7 @@
         </a>
         @if(participation.isLateSignUp) {
             &nbsp;
-          <a id="warning_@{participation.id.get}" tabindex="0" role="button" rel="popover" data-toggle="popover" data-trigger="focus" data-placement="top" title='@Messages("event.late.heading")' data-content='@Messages("event.late.text", asDate(participation.signUpTime.get))'>
+          <a id="warning_@{participation.id.get}" tabindex="0" role="button" rel="popover" data-toggle="popover" data-trigger="focus" data-placement="top" title='@Messages("event.late.heading")' data-content='@Messages("event.late.text", asDayAndDate(participation.signUpTime.get))'>
             <img class="warning-icon" src='@routes.Assets.at("images/icon-warning.png")' alt='@Messages("event.late.heading")'/>
           </a>
           <script type="text/javascript">

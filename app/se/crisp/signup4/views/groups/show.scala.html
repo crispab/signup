@@ -67,11 +67,11 @@
           @Messages("group.event.cancelled")
         }
       <a href="@se.crisp.signup4.controllers.routes.Events.show(event.id.get)">@event.name</a>
-      <small class="pull-right"><strong>@asDate(event.startTime), </strong>
+      <small class="pull-right"><strong>@asDayAndDate(event.startTime), </strong>
         @asTime(event.startTime)-@asTime(event.endTime)</small>
       </h4>
       @if(!sameDay(event.startTime, event.lastSignUpDate)) {
-        <p class="text-muted"><em>@Messages("event.edit.last"): @asDate(event.lastSignUpDate)</em></p>
+        <p class="text-muted"><em>@Messages("event.edit.last"): @asDayAndDate(event.lastSignUpDate)</em></p>
       }
     </div>
   }
