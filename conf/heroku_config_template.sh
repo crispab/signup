@@ -27,4 +27,10 @@ heroku config:set \
     DATABASE_DRIVER=org.postgresql.Driver \
     JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
     JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8" \
+    SBT_OPTS="-Dsbt.jse.engineType=Node" \
     $*
+
+heroku buildpacks:clear $*
+heroku buildpacks:add https://github.com/heroku/heroku-buildpack-locale $*
+heroku buildpacks:add heroku/nodejs $*
+heroku buildpacks:add heroku/scala $*
