@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
   evolutions,
   ws,
   cache,
-  "org.scalatestplus.play"    %% "scalatestplus-play"     % "2.0.+"       % "test",
+  "org.scalatestplus.play"    %% "scalatestplus-play"     % "2.0.1"       % "test",
   "junit"                     %  "junit"                  % "4.12"        % "test",
   "org.mockito"               %  "mockito-core"           % "2.11.0"      % "test",
   "info.cukes"                %  "cucumber-java"          % "1.2.5"       % "test",
