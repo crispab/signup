@@ -7,7 +7,7 @@ import org.scalatestplus.play.{ConfiguredBrowser, ConfiguredServer}
 import se.crisp.signup4.util.{Inspect, SetUp, TearDown}
 import se.crisp.signup4.web.pages.{AllGroupsPage, GroupPage, StartPage, UserPage}
 
-@DoNotDiscover class SimpleNavigation
+@DoNotDiscover class SimpleNavigationFeature
   extends FeatureSpec
     with Matchers
     with OptionValues
