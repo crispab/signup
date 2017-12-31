@@ -10,7 +10,7 @@ class AllGroupsPage(baseUrl: String, driver: WebDriver) extends Page(baseUrl, dr
     driver.findElement(By.xpath("//a[contains(., '" + groupName + "')]"))
     true
   } catch {
-    case ex: NoSuchElementException =>
+    case _: NoSuchElementException =>
       false
   }
 

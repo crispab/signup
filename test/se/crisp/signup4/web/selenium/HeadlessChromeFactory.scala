@@ -1,9 +1,9 @@
-package se.crisp.signup4.util
+package se.crisp.signup4.web.selenium
 
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 import org.scalatestplus.play.BrowserFactory.UnavailableDriver
-import org.scalatestplus.play.{ChromeFactory, Resources}
+import org.scalatestplus.play.ChromeFactory
 
 trait HeadlessChromeFactory extends ChromeFactory {
   override def createWebDriver(): WebDriver =

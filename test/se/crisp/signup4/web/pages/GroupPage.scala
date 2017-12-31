@@ -34,8 +34,8 @@ class GroupPage(baseUrl: String, driver: WebDriver, inspect: Inspect) extends Pa
     waitForAnimationToComplete()
   }
 
-  private def waitForAnimationToComplete(): Unit = {
-    driver.manage.timeouts.implicitlyWait(1, TimeUnit.SECONDS)
+  private def waitForAnimationToComplete() {
+    waitForSeconds(1)
   }
 
 }

@@ -30,18 +30,14 @@ import se.crisp.signup4.web.pages._
     lazy val inspect = app.injector.instanceOf[Inspect]
 
     lazy val baseUrl = "http://localhost:19001"
-    lazy val startPage = new StartPage(baseUrl, webDriver)
-    lazy val allGroupsPage = new AllGroupsPage(baseUrl, webDriver)
-    lazy val groupPage = new GroupPage(baseUrl, webDriver, inspect)
-    lazy val userPage = new UserPage(baseUrl, webDriver)
     lazy val signUpPage = new SignUpPage(baseUrl, webDriver)
 
     val examplesTom =
       Table(
         ("coming", "participants", "status"),
-        ("On", 1, "On"),
-        ("Off", 0, "Off"),
-        ("Maybe", 0, "Maybe")
+        ("On",     1,              "On"),
+        ("Off",    0,              "Off"),
+        ("Maybe",  0,              "Maybe")
       )
     for ((coming, participants, status) <- examplesTom) {
       scenario(s"Tom responds to an invite with $coming") {
