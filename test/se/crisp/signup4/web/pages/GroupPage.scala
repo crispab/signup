@@ -7,7 +7,7 @@ import se.crisp.signup4.util.Inspect
 
 
 
-class GroupPage(baseUrl: String, driver: WebDriver, inspect: Inspect) extends SignUpPage(baseUrl, driver) {
+class GroupPage(baseUrl: String, driver: WebDriver, inspect: Inspect) extends Page(baseUrl, driver) {
 
   def isViewing(groupName: String): Boolean = groupName == driver.findElement(By.id("page_name")).getText
 

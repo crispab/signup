@@ -1,14 +1,24 @@
 package se.crisp.signup4.web.pages
-import org.openqa.selenium.{JavascriptExecutor, WebDriver}
-import org.openqa.selenium.support.ui.{ExpectedCondition, WebDriverWait}
 
-class SignUpPage(baseUrl: String, driver: WebDriver) {
+import org.openqa.selenium.{By, WebDriver}
 
-  protected def waitForCompletePageLoad() {
-    val pageLoadCondition = new ExpectedCondition[Boolean]() {
-      override def apply(driver: WebDriver): Boolean = driver.asInstanceOf[JavascriptExecutor].executeScript("return document.readyState") == "complete"
-    }
-    val wait = new WebDriverWait(driver, 30)
-    wait.until(pageLoadCondition)
+class SignUpPage(baseUrl: String, driver: WebDriver) extends Page(baseUrl, driver) {
+
+  def navigateTo(userId: Long, eventId: Long) {
+    driver.navigate.to(baseUrl + "/participations/edit?eventId=" + eventId + "&userId=" + userId)
+    waitForCompletePageLoad()
+  }
+
+  def setStatus(status: String) {
+    driver.findElement(By.id(status.toLowerCase)).click()
+  }
+
+  def save() {
+    driver.findElement(By.id("action")).submit()
+    waitForCompletePageLoad()
+  }
+
+  def addComment(comment: String) {
+    driver.findElement(By.id("comment")).sendKeys(comment)
   }
 }

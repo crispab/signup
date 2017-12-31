@@ -2,7 +2,7 @@ package se.crisp.signup4.web.pages
 
 import org.openqa.selenium.{By, WebDriver}
 
-class StartPage(baseUrl: String, driver:WebDriver) extends SignUpPage(baseUrl, driver) {
+class StartPage(baseUrl: String, driver:WebDriver) extends Page(baseUrl, driver) {
 
   def navigateTo() {
     driver.navigate.to(baseUrl)

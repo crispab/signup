@@ -5,7 +5,7 @@ import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import se.crisp.signup4.util.HeadlessChromeFactory
 
-class MasterSuite extends Suites(new LoginFeature, new SimpleNavigationFeature)
+class MasterSuite extends Suites(new SimpleNavigationFeature, new LoginFeature, new SignUpForAnEventFeature)
   with TestSuite
   with GuiceOneServerPerSuite
   with OneBrowserPerSuite

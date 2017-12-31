@@ -2,7 +2,7 @@ package se.crisp.signup4.web.pages
 
 import org.openqa.selenium.{By, WebDriver}
 
-class AllGroupsPage(baseUrl: String, driver: WebDriver) extends SignUpPage(baseUrl, driver) {
+class AllGroupsPage(baseUrl: String, driver: WebDriver) extends Page(baseUrl, driver) {
 
   def isViewing: Boolean = "Grupper" == driver.findElement(By.id("page_name")).getText
 
