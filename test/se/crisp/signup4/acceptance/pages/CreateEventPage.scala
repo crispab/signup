@@ -1,4 +1,4 @@
-package se.crisp.signup4.web.pages
+package se.crisp.signup4.acceptance.pages
 
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat

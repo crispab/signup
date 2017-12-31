@@ -1,9 +1,9 @@
-package se.crisp.signup4.web
+package se.crisp.signup4.acceptance
 
 import org.scalatest._
 import org.scalatestplus.play.{ConfiguredBrowser, ConfiguredServer}
 import se.crisp.signup4.util.{Inspect, TearDown}
-import se.crisp.signup4.web.pages._
+import se.crisp.signup4.acceptance.pages._
 
 @DoNotDiscover class LoginFeature
   extends FeatureSpec

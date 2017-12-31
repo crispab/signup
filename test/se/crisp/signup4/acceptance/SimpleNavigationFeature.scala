@@ -1,11 +1,11 @@
-package se.crisp.signup4.web
+package se.crisp.signup4.acceptance
 
 import java.util
 
 import org.scalatest._
 import org.scalatestplus.play.{ConfiguredBrowser, ConfiguredServer}
 import se.crisp.signup4.util.{Inspect, SetUp, TearDown}
-import se.crisp.signup4.web.pages.{AllGroupsPage, GroupPage, StartPage, UserPage}
+import se.crisp.signup4.acceptance.pages.{AllGroupsPage, GroupPage, StartPage, UserPage}
 
 @DoNotDiscover class SimpleNavigationFeature
   extends FeatureSpec

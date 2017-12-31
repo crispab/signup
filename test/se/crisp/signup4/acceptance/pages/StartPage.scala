@@ -1,4 +1,4 @@
-package se.crisp.signup4.web.pages
+package se.crisp.signup4.acceptance.pages
 
 import org.openqa.selenium.{By, WebDriver}
 

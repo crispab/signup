@@ -1,4 +1,4 @@
-package se.crisp.signup4.web.selenium
+package se.crisp.signup4.acceptance.selenium
 
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
