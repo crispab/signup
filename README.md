@@ -10,9 +10,9 @@ This is the fourth version of the SignUp Service.
 - Heroku is used for deployment
 
 ### Play Framework ###
-- Play 2.4.11 - http://www.playframework.org/
+- Play 2.5.18 - http://www.playframework.org/
 - Scala 2.11.11 - http://www.scala-lang.org/
-- Anorm 2.4.0 - https://www.playframework.com/documentation/2.4.x/Anorm
+- Anorm 2.5.3 - https://www.playframework.com/documentation/2.5.x/Anorm
 
 ### Presentation ###
 - Bootstrap 3.3.4 - http://getbootstrap.com/
@@ -22,8 +22,8 @@ This is the fourth version of the SignUp Service.
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play plugins ###
-- Play2.x module for Authentication and Authorization 0.14 - https://github.com/t2v/play2-auth
-- Emailer Plugin 4.0.0 - https://github.com/playframework/play-mailer
+- Play2.x module for Authentication and Authorization 0.14.2 - https://github.com/t2v/play2-auth
+- Emailer Plugin 5.0.0 - https://github.com/playframework/play-mailer
 
 ### Run-time environment ###
 - Heroku (general app server environment) - http://heroku.com
@@ -37,15 +37,11 @@ This is the fourth version of the SignUp Service.
 ### Test environment ###
 Libraries:
 - ScalaTest + Play (unit test framework) - http://www.scalatest.org/plus/play
-- JUnit 4.12 (unit test framework in Java)
-- Cucumber Java 1.2 (BDD style acceptance test framework)
-- Selenium Web Driver 2.45 (web bowser driven tests)
-- PhantomJS (WebKit based headless web browser) - http://phantomjs.org
-- phantomjsdriver 1.2.1 (glue between Selenium Web Driver and PhantomJS)
+- Selenium Web Driver (included with ScalaTest + Play)
+- Chromedriver 2.34 (actually a binary) - https://sites.google.com/a/chromium.org/chromedriver/home
 
 Services:
 - Postgression (test database on demand) - http://www.postgression.com
-- Relish (documentaion) - http://www.relishapp.com/crisp/signup/docs
 - Mailinator (temporary mail boxes on demand) - https://mailinator.com
 - Travis CI (CI server) - https://travis-ci.org/crispab/signup
 
@@ -77,7 +73,8 @@ sbt 'test-only integration.*'
 ```
 
 #### Acceptance tests ####
-The acceptance tests (step functions) are actually written in Java (and not Scala).
+The acceptance tests arr made BDD style in ScalaTst using Selenium and headless Chrome. They require the binaries 
+Chrome and ChromeDriver to be installed in the test environemnt.
 
 To execute the acceptance tests:
 ```
