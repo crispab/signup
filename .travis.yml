@@ -2,7 +2,7 @@ sudo: false
 
 language: scala
 scala:
-  - 2.11.4
+  - 2.11.11
 jdk:
   - oraclejdk8
 
@@ -23,15 +23,28 @@ addons:
       - language-pack-en
       - language-pack-sv
 
+addons: # get google-chrome-stable
+  chrome: stable
+
+install: # Install ChromeDriver (64bits; replace 64 with 32 for 32bits).
+  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
+  - unzip ~/chromedriver_linux64.zip -d ~/
+  - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/share/
+  - sudo chmod +x /usr/local/share/chromedriver
+  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+
 before_script:
   - psql -c "create database signup;" -U postgres
   - psql signup -c "create user signup4 password 's7p2+';" -U postgres
   - psql signup -c "grant all privileges on database signup to signup4;" -U postgres
 
-env: WEB_DRIVER_TYPE=phantomjs APPLICATION_BASE_URL=http://127.0.0.1:3333 LANG=sv_SE TZ=Europe/Stockholm
+env: APPLICATION_BASE_URL=http://127.0.0.1:19001 LANG=sv_SE TZ=Europe/Stockholm
 
 script:
-  - sbt 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
+  - whereis google-chrome-stable
+  - whereis chromedriver
+  - sbt -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
 
 deploy:
   provider: heroku
