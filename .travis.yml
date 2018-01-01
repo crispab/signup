@@ -23,11 +23,11 @@ addons:
       - language-pack-en
       - language-pack-sv
 
-addons: # get google-chrome-stable
+addons:
   chrome: stable
 
-install: # Install ChromeDriver (64bits; replace 64 with 32 for 32bits).
-  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
+install:
+  - wget -N http://chromedriver.storage.googleapis.com/2.34/chromedriver_linux64.zip -P ~/
   - unzip ~/chromedriver_linux64.zip -d ~/
   - rm ~/chromedriver_linux64.zip
   - sudo mv -f ~/chromedriver /usr/local/share/
