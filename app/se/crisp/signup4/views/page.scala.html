@@ -2,6 +2,7 @@
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.BuildInfo
 
 @(title: String, section: se.crisp.signup4.util.Section.Section, showLogin: Boolean = true)(body: Html)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
 
@@ -84,7 +85,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <div class="footer-logo"></div>
+              <div class="footer-logo">@BuildInfo.name-@BuildInfo.version</div>
             </div>
           </div>
         </div>

@@ -1,9 +1,12 @@
 name := """signup"""
+version := "4.5.2"
 
-version := "4.1.0-SNAPSHOT"
 
-
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).
+  enablePlugins(PlayScala, BuildInfoPlugin).settings(
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := "se.crisp.signup4"
+  )
 
 scalaVersion := "2.11.11"
 
