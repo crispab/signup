@@ -30,6 +30,7 @@ libraryDependencies ++= Seq(
   "org.webjars"               %  "font-awesome"          % "4.3.0-2",
   "com.typesafe.play"         %% "anorm"                 % "2.5.3",
   "io.codekvast"              %  "codekvast-agent"       % "0.22.1",
+  "org.codehaus.groovy"       %  "groovy-all"            % "2.4.13",
 
   jdbc,
   evolutions,
