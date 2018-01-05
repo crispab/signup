@@ -29,18 +29,21 @@ libraryDependencies ++= Seq(
   "org.webjars"               %  "bootstrap"             % "3.3.4",
   "org.webjars"               %  "font-awesome"          % "4.3.0-2",
   "com.typesafe.play"         %% "anorm"                 % "2.5.3",
+  "io.codekvast"              %  "codekvast-agent"       % "0.22.1",
 
   jdbc,
   evolutions,
   ws,
   cache,
+
   "org.scalatestplus.play"    %% "scalatestplus-play"     % "2.0.1"       % "test",
   "org.mockito"               %  "mockito-core"           % "2.11.0"      % "test",
   "org.ocpsoft.prettytime"    %  "prettytime-nlp"         % "4.0.0.Final" % "test"
 )
 
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("releases")
+  Resolver.sonatypeRepo("releases"),
+  Resolver.jcenterRepo
 )
 
 routesGenerator := InjectedRoutesGenerator
