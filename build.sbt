@@ -11,19 +11,19 @@ lazy val root = (project in file(".")).
 scalaVersion := "2.11.11"
 
 libraryDependencies ++= Seq(
-  "org.apache.httpcomponents" %  "httpclient"            % "4.5.3",
+  "org.apache.httpcomponents" %  "httpclient"            % "4.5.4",
   "org.apache.httpcomponents" %  "httpcore"              % "4.4.8",
   "org.postgresql"            %  "postgresql"            % "42.1.4",
   "jp.t2v"                    %% "stackable-controller"  % "0.6.0",
   "jp.t2v"                    %% "play2-auth"            % "0.14.2",
   "com.typesafe.play"         %% "play-mailer"           % "5.0.0",
-  "org.apache.commons"        %  "commons-lang3"         % "3.6",
+  "org.apache.commons"        %  "commons-lang3"         % "3.7",
   "com.cloudinary"            %% "cloudinary-scala-play" % "1.2.1",
   "org.json"                  %  "json"                  % "20171018",
   "org.apache.poi"            %  "poi"                   % "3.17",
   "org.apache.poi"            %  "poi-ooxml"             % "3.17",
-  "com.netaporter"            %% "scala-uri"             % "0.4.16",
-  "com.nimbusds"              %  "nimbus-jose-jwt"       % "5.1",
+  "io.lemonlabs"              %% "scala-uri"             % "0.5.1",
+  "com.nimbusds"              %  "nimbus-jose-jwt"       % "5.3",
   "org.webjars"               %% "webjars-play"          % "2.5.0",
   "org.webjars"               %  "jquery"                % "2.1.4",
   "org.webjars"               %  "bootstrap"             % "3.3.4",
@@ -37,7 +37,7 @@ libraryDependencies ++= Seq(
   cache,
 
   "org.scalatestplus.play"    %% "scalatestplus-play"     % "2.0.1"       % "test",
-  "org.mockito"               %  "mockito-core"           % "2.11.0"      % "test",
+  "org.mockito"               %  "mockito-core"           % "2.13.0"      % "test",
   "org.ocpsoft.prettytime"    %  "prettytime-nlp"         % "4.0.0.Final" % "test"
 )
 
