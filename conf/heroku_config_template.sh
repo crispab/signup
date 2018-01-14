@@ -26,7 +26,7 @@ heroku config:set \
     LANG="sv_SE" \
     DATABASE_DRIVER=org.postgresql.Driver \
     JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
-    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8" \
+    JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8 -javaagent:/app/target/universal/stage/lib/io.codekvast.codekvast-agent-0.22.1.jar" \
     SBT_OPTS="-Dsbt.jse.engineType=Node" \
     SBT_CLEAN="true" \
     $*
