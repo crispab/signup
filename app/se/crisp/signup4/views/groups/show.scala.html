@@ -19,7 +19,7 @@
   <div class="well">
     <p>@group.description</p>
     @if(authHelper.isAdmin(loggedInUser)) {
-      <a href="@se.crisp.signup4.controllers.routes.GroupsSecured.updateForm(group.id.get)" class="btn btn-default">
+      <a href="@se.crisp.signup4.controllers.routes.Groups.updateForm(group.id.get)" class="btn btn-default">
         <span class="glyphicon glyphicon-pencil"></span> @Messages("edit.edit")
       </a>
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#remove_group_@group.id">
@@ -38,7 +38,7 @@
               <p>@Messages("edit.continue")</p>
             </div>
             <div class="modal-footer">
-              <form action="@se.crisp.signup4.controllers.routes.GroupsSecured.delete(group.id.get)" method="POST">
+              <form action="@se.crisp.signup4.controllers.routes.Groups.delete(group.id.get)" method="POST">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>

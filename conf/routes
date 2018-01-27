@@ -28,11 +28,11 @@ GET         /users/:id                        @se.crisp.signup4.controllers.User
 
 
 # Groups
-GET         /groups/new                       @se.crisp.signup4.controllers.GroupsSecured.createForm
-GET         /groups/:id/edit                  @se.crisp.signup4.controllers.GroupsSecured.updateForm(id: Long)
-POST        /groups                           @se.crisp.signup4.controllers.GroupsSecured.create
-POST        /groups/:id                       @se.crisp.signup4.controllers.GroupsSecured.update(id: Long)
-POST        /groups/:id/delete                @se.crisp.signup4.controllers.GroupsSecured.delete(id: Long)
+GET         /groups/new                       @se.crisp.signup4.controllers.Groups.createForm
+GET         /groups/:id/edit                  @se.crisp.signup4.controllers.Groups.updateForm(id: Long)
+POST        /groups                           @se.crisp.signup4.controllers.Groups.create
+POST        /groups/:id                       @se.crisp.signup4.controllers.Groups.update(id: Long)
+POST        /groups/:id/delete                @se.crisp.signup4.controllers.Groups.delete(id: Long)
 GET         /groups                           @se.crisp.signup4.controllers.Groups.list
 GET         /groups/:id                       @se.crisp.signup4.controllers.Groups.show(id: Long, showAll: Boolean ?= false)
 

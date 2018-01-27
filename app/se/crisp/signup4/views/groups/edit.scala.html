@@ -24,9 +24,9 @@
 
 @theAction() = @{
   if(creatingNew()) {
-    se.crisp.signup4.controllers.routes.GroupsSecured.create()
+    se.crisp.signup4.controllers.routes.Groups.create()
   } else {
-    se.crisp.signup4.controllers.routes.GroupsSecured.update(idToUpdate.get)
+    se.crisp.signup4.controllers.routes.Groups.update(idToUpdate.get)
   }
 }
 
