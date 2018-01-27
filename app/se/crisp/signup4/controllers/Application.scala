@@ -15,7 +15,7 @@ import play.api.{Configuration, Logger}
 import se.crisp.signup4.models.User
 import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.services.{CheckEvents, ImageUrl}
-import se.crisp.signup4.silhouette.{DefaultEnv, SignInForm, UserService}
+import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
 import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global

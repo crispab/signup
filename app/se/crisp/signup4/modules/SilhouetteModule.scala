@@ -21,7 +21,7 @@ import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.ws.WSClient
 import se.crisp.signup4.services.UserServiceImpl
-import se.crisp.signup4.silhouette.{ErrorHandler, DefaultEnv, UserService}
+import se.crisp.signup4.silhouette._
 
 /**
   * The Guice module which wires all Silhouette dependencies.

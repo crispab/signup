@@ -1,4 +1,4 @@
-package se.crisp.signup4.modules
+package se.crisp.signup4.silhouette
 
 import javax.inject.Inject
 
