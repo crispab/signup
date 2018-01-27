@@ -23,9 +23,9 @@
 
 @theAction() = @{
   if(creatingNew()) {
-    se.crisp.signup4.controllers.routes.EventsSecured.create()
+    se.crisp.signup4.controllers.routes.Events.create()
   } else {
-    se.crisp.signup4.controllers.routes.EventsSecured.update(idToUpdate.get)
+    se.crisp.signup4.controllers.routes.Events.update(idToUpdate.get)
   }
 }
 

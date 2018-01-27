@@ -57,13 +57,13 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
           userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
-              val uri = request.session.get("access_uri").getOrElse(routes.Application.index().url.toString)
-              val result = Redirect(uri).withSession(request.session - "access_uri")
-              Logger.debug("Login succeeded. Redirecting to uri " + uri)
+              val onMyWayTo = request.session.get("on_my_way_to").getOrElse(routes.Application.index().url.toString)
+              val redirect = Redirect(onMyWayTo).withSession(request.session - "on_my_way_to")
+              Logger.debug("Login succeeded. Redirecting to uri " + onMyWayTo)
               silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
                 silhouette.env.eventBus.publish(LoginEvent(user, request))
                 silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
-                  silhouette.env.authenticatorService.embed(v, result)
+                  silhouette.env.authenticatorService.embed(v, redirect)
                 }
               }
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))

@@ -78,7 +78,7 @@
 
   @if(authHelper.isAdmin(loggedInUser)) {
     <div class="btn-row">
-      <a href="@se.crisp.signup4.controllers.routes.EventsSecured.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
+      <a href="@se.crisp.signup4.controllers.routes.Events.createForm(group.id.get)" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>
         @Messages("event.new")</a>
     </div>
   }

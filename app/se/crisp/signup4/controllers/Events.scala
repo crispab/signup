@@ -21,7 +21,7 @@ import se.crisp.signup4.models.dao._
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.{ImageUrl, MailReminder, RemindAllParticipants, SlackReminder}
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
-import se.crisp.signup4.util.DateHelper._
+import se.crisp.signup4.util.DateHelper.{sameDay, _}
 import se.crisp.signup4.util._
 
 import scala.concurrent.ExecutionContext
@@ -38,8 +38,14 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
                        val userDAO: UserDAO,
                        val participationDAO: ParticipationDAO,
                        val logEntryDAO: LogEntryDAO,
-                       val reminderDAO: ReminderDAO,
-                       implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport  {
+                       implicit val reminderDAO: ReminderDAO,
+                       implicit val imageUrl: ImageUrl,
+                       val actorSystem: ActorSystem,
+                       val mailReminder: MailReminder,
+                       @Named("event-reminder-actor") val eventReminderActor: ActorRef,
+                       val slackReminder: SlackReminder,
+                       val groupDAO: GroupDAO
+                      ) extends Controller  with I18nSupport  {
 
   def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
     implicit val user: Option[User] =  request.identity
@@ -133,26 +139,6 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
 
     Ok(message)
   }
-
-
-}
-
-class EventsSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
-                              val messagesApi: MessagesApi,
-                              val actorSystem: ActorSystem,
-                              val mailReminder: MailReminder,
-                              @Named("event-reminder-actor") val eventReminderActor: ActorRef,
-                              implicit val authHelper: AuthHelper,
-                              implicit val localeHelper: LocaleHelper,
-                              implicit val themeHelper: ThemeHelper,
-                              implicit val formHelper: FormHelper,
-                              val slackReminder: SlackReminder,
-                              val eventDAO: EventDAO,
-                              val groupDAO: GroupDAO,
-                              val userDAO: UserDAO,
-                              val logEntryDAO: LogEntryDAO,
-                              implicit val reminderDAO: ReminderDAO,
-                              implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport {
 
   def remindParticipants(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     val event = eventDAO.find(id)
@@ -337,4 +323,6 @@ class EventsSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
     )
   }
 }
+
+
 

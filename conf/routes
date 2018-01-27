@@ -44,13 +44,13 @@ POST        /memberships/:id/delete           @se.crisp.signup4.controllers.Memb
 
 
 # Events
-GET         /events/new                       @se.crisp.signup4.controllers.EventsSecured.createForm(groupId: Long)
-GET         /events/:id/edit                  @se.crisp.signup4.controllers.EventsSecured.updateForm(id: Long)
-POST        /events                           @se.crisp.signup4.controllers.EventsSecured.create
-POST        /events/:id                       @se.crisp.signup4.controllers.EventsSecured.update(id: Long)
-POST        /events/:id/cancel                @se.crisp.signup4.controllers.EventsSecured.cancel(id: Long)
-POST        /events/:id/delete                @se.crisp.signup4.controllers.EventsSecured.delete(id: Long)
-POST        /events/:id/remind                @se.crisp.signup4.controllers.EventsSecured.remindParticipants(id: Long)
+GET         /events/new                       @se.crisp.signup4.controllers.Events.createForm(groupId: Long)
+GET         /events/:id/edit                  @se.crisp.signup4.controllers.Events.updateForm(id: Long)
+POST        /events                           @se.crisp.signup4.controllers.Events.create
+POST        /events/:id                       @se.crisp.signup4.controllers.Events.update(id: Long)
+POST        /events/:id/cancel                @se.crisp.signup4.controllers.Events.cancel(id: Long)
+POST        /events/:id/delete                @se.crisp.signup4.controllers.Events.delete(id: Long)
+POST        /events/:id/remind                @se.crisp.signup4.controllers.Events.remindParticipants(id: Long)
 GET         /events/:id                       @se.crisp.signup4.controllers.Events.show(id: Long)
 GET         /events/:id/excel                 @se.crisp.signup4.controllers.Events.asExcel(id: Long)
 GET         /events/:id/remind/email          @se.crisp.signup4.controllers.Events.asEmailReminder(id: Long, userId: Long)
