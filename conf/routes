@@ -4,7 +4,7 @@
 
 # Home page
 GET         /                                 @se.crisp.signup4.controllers.Application.index
-GET         /login                            @se.crisp.signup4.controllers.Application.loginForm
+GET         /login                            @se.crisp.signup4.controllers.Application.showLoginForm
 POST        /login                            @se.crisp.signup4.controllers.Application.authenticate
 GET         /logout                           @se.crisp.signup4.controllers.Application.logout
 

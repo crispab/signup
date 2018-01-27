@@ -9,6 +9,8 @@ import com.mohiva.play.silhouette.api.util.Credentials
 import com.mohiva.play.silhouette.api.{LoginEvent, LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.api.{Configuration, Logger}
@@ -20,6 +22,7 @@ import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
 
 @Singleton
 class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
@@ -45,12 +48,19 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
     Ok(se.crisp.signup4.views.html.index())
   }
 
-  def loginForm: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
-    Future.successful(Ok(se.crisp.signup4.views.html.login(SignInForm.form)))
+  val loginForm = Form(
+    mapping(
+      "email" -> email,
+      "password" -> nonEmptyText
+    )(Application.LoginFields.apply)(Application.LoginFields.unapply)
+  )
+
+  def showLoginForm: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
+    Future.successful(Ok(se.crisp.signup4.views.html.login(loginForm)))
   }
 
   def authenticate: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
-    SignInForm.form.bindFromRequest.fold(
+    loginForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(se.crisp.signup4.views.html.login(form))),
       data => {
         val credentials = Credentials(data.email, data.password)
@@ -70,7 +80,7 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
           }
         }.recover {
           case e: ProviderException =>
-            Redirect(routes.Application.loginForm()).flashing("error" -> Messages("login.failed"))
+            Redirect(routes.Application.showLoginForm()).flashing("error" -> Messages("login.failed"))
         }
       }
     )
@@ -119,4 +129,8 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
     scala.concurrent.duration.FiniteDuration(untilFirstRun.getStandardSeconds, java.util.concurrent.TimeUnit.SECONDS)
   }
 
+}
+
+object Application {
+  case class LoginFields(email: String, password: String)
 }

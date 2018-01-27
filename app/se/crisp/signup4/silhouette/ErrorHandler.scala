@@ -33,7 +33,7 @@ class ErrorHandler @Inject()(val env: Environment,
   override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = {
     val lang = localeHelper.getLang(request)
     Logger.info("Not authorized to access: " + request.uri)
-    Future.successful(Redirect(se.crisp.signup4.controllers.routes.Application.loginForm()).flashing("error" -> Messages("error.application.authfail")).withSession("on_my_way_to" -> request.uri))
+    Future.successful(Redirect(se.crisp.signup4.controllers.routes.Application.showLoginForm()).flashing("error" -> Messages("error.application.authfail")).withSession("on_my_way_to" -> request.uri))
   }
 
   override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = {
