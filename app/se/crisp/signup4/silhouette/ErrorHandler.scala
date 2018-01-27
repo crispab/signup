@@ -4,7 +4,7 @@ import javax.inject.{Inject, Provider, Singleton}
 
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import org.apache.commons.lang3.exception.ExceptionUtils
-import play.api.{Configuration, Environment, OptionalSourceMapper, UsefulException}
+import play.api._
 import play.api.http.DefaultHttpErrorHandler
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{RequestHeader, Result, Results}
@@ -32,7 +32,8 @@ class ErrorHandler @Inject()(val env: Environment,
 
   override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = {
     val lang = localeHelper.getLang(request)
-    Future.successful(Redirect(se.crisp.signup4.controllers.routes.Application.loginForm()).flashing("error" -> Messages("error.application.authfaild")))
+    Logger.info("Not authorized to access: " + request.uri)
+    Future.successful(Redirect(se.crisp.signup4.controllers.routes.Application.loginForm()).flashing("error" -> Messages("error.application.authfail")).withSession("access_uri" -> request.uri))
   }
 
   override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = {

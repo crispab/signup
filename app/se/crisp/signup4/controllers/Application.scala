@@ -55,9 +55,11 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(routes.Application.index())
           userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
+              val uri = request.session.get("access_uri").getOrElse(routes.Application.index().url.toString)
+              val result = Redirect(uri).withSession(request.session - "access_uri")
+              Logger.debug("Login succeeded. Redirecting to uri " + uri)
               silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
                 silhouette.env.eventBus.publish(LoginEvent(user, request))
                 silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
@@ -68,7 +70,7 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
           }
         }.recover {
           case e: ProviderException =>
-            Redirect(routes.Application.loginForm()).flashing("error" -> Messages("invalid.credentials"))
+            Redirect(routes.Application.loginForm()).flashing("error" -> Messages("login.failed"))
         }
       }
     )
