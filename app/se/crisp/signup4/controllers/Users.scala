@@ -21,39 +21,28 @@ import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+
 class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
                       val messagesApi: MessagesApi,
+                      val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
+                      val cloudinaryUrl: CloudinaryUrl,
+                      implicit val gravatarUrl: GravatarUrl,
+                      implicit val imageUrl: ImageUrl,
                       implicit val authHelper: AuthHelper,
                       implicit val localeHelper: LocaleHelper,
                       implicit val themeHelper: ThemeHelper,
                       implicit val formHelper: FormHelper,
-                      val userDAO: UserDAO,
-                      implicit val participationDAO: ParticipationDAO,
                       implicit val eventDAO: EventDAO,
-                      implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport{
+                      val userDAO: UserDAO,
+                      val membershipDAO: MembershipDAO,
+                      implicit val participationDAO: ParticipationDAO,
+                      @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller  with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
     implicit val user: Option[User] = request.identity
     val userToShow = userDAO.find(id)
     Ok(se.crisp.signup4.views.html.users.show(userToShow))
   }
-}
-
-class UsersSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
-                             val messagesApi: MessagesApi,
-                             val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
-                             val cloudinaryUrl: CloudinaryUrl,
-                             implicit val gravatarUrl: GravatarUrl,
-                             implicit val imageUrl: ImageUrl,
-                             implicit val authHelper: AuthHelper,
-                             implicit val localeHelper: LocaleHelper,
-                             implicit val themeHelper: ThemeHelper,
-                             implicit val formHelper: FormHelper,
-                             val eventDAO: EventDAO,
-                             val userDAO: UserDAO,
-                             val membershipDAO: MembershipDAO,
-                             val participationDAO: ParticipationDAO,
-                             @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller  with I18nSupport{
 
   def list: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator))  { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
@@ -89,7 +78,7 @@ class UsersSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
           userDAO.create(user)
-          Redirect(routes.UsersSecured.list())
+          Redirect(routes.Users.list())
         }
       )
   }
@@ -200,7 +189,7 @@ class UsersSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
 
   def delete(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     userDAO.delete(id)
-    Redirect(routes.UsersSecured.list())
+    Redirect(routes.Users.list())
   }
 
 

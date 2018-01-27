@@ -10,20 +10,20 @@ GET         /logout                           @se.crisp.signup4.controllers.Appl
 
 
 # Users
-GET         /users/new                        @se.crisp.signup4.controllers.UsersSecured.createForm
-GET         /users/newMember                  @se.crisp.signup4.controllers.UsersSecured.createMemberForm(groupId: Long)
-GET         /users/newGuest                   @se.crisp.signup4.controllers.UsersSecured.createGuestForm(eventId: Long)
-GET         /users/:id/edit                   @se.crisp.signup4.controllers.UsersSecured.updateForm(id: Long)
-GET         /users/:id/updateImage            @se.crisp.signup4.controllers.UsersSecured.updateImageForm(id: Long)
-POST        /users/:id/resetImage             @se.crisp.signup4.controllers.UsersSecured.resetImage(id: Long)
-POST        /users/:id/uploadImage            @se.crisp.signup4.controllers.UsersSecured.uploadImage(id: Long)
-POST        /users                            @se.crisp.signup4.controllers.UsersSecured.create
-POST        /users/newMember/:groupId         @se.crisp.signup4.controllers.UsersSecured.createMember(groupId: Long)
-POST        /users/newGuest/:eventId          @se.crisp.signup4.controllers.UsersSecured.createGuest(eventId: Long)
-POST        /users/:id                        @se.crisp.signup4.controllers.UsersSecured.update(id: Long)
-POST        /users/:id/delete                 @se.crisp.signup4.controllers.UsersSecured.delete(id: Long)
-POST        /users/:id/remind                 @se.crisp.signup4.controllers.UsersSecured.remindParticipant(id: Long, eventId: Long)
-GET         /users                            @se.crisp.signup4.controllers.UsersSecured.list
+GET         /users/new                        @se.crisp.signup4.controllers.Users.createForm
+GET         /users/newMember                  @se.crisp.signup4.controllers.Users.createMemberForm(groupId: Long)
+GET         /users/newGuest                   @se.crisp.signup4.controllers.Users.createGuestForm(eventId: Long)
+GET         /users/:id/edit                   @se.crisp.signup4.controllers.Users.updateForm(id: Long)
+GET         /users/:id/updateImage            @se.crisp.signup4.controllers.Users.updateImageForm(id: Long)
+POST        /users/:id/resetImage             @se.crisp.signup4.controllers.Users.resetImage(id: Long)
+POST        /users/:id/uploadImage            @se.crisp.signup4.controllers.Users.uploadImage(id: Long)
+POST        /users                            @se.crisp.signup4.controllers.Users.create
+POST        /users/newMember/:groupId         @se.crisp.signup4.controllers.Users.createMember(groupId: Long)
+POST        /users/newGuest/:eventId          @se.crisp.signup4.controllers.Users.createGuest(eventId: Long)
+POST        /users/:id                        @se.crisp.signup4.controllers.Users.update(id: Long)
+POST        /users/:id/delete                 @se.crisp.signup4.controllers.Users.delete(id: Long)
+POST        /users/:id/remind                 @se.crisp.signup4.controllers.Users.remindParticipant(id: Long, eventId: Long)
+GET         /users                            @se.crisp.signup4.controllers.Users.list
 GET         /users/:id                        @se.crisp.signup4.controllers.Users.show(id: Long)
 
 
