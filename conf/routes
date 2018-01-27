@@ -60,9 +60,9 @@ GET         /events/:id/cancel/slack          @se.crisp.signup4.controllers.Even
 
 
 # Participations
-GET         /participations/newGuest          @se.crisp.signup4.controllers.ParticipationsSecured.createGuestForm(eventId: Long)
-POST        /participations/newGuest          @se.crisp.signup4.controllers.ParticipationsSecured.createGuest
-POST        /participations/:id/delete        @se.crisp.signup4.controllers.ParticipationsSecured.delete(id: Long)
+GET         /participations/newGuest          @se.crisp.signup4.controllers.Participations.createGuestForm(eventId: Long)
+POST        /participations/newGuest          @se.crisp.signup4.controllers.Participations.createGuest
+POST        /participations/:id/delete        @se.crisp.signup4.controllers.Participations.delete(id: Long)
 GET         /participations/edit              @se.crisp.signup4.controllers.Participations.editForm(eventId: Long, userId: Long)
 POST        /participations                   @se.crisp.signup4.controllers.Participations.createOrUpdate
 
