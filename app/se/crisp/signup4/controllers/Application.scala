@@ -22,7 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class Application @Inject()(silhouette: Silhouette[DefaultEnv],
+class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
                             val messagesApi: MessagesApi,
                             val actorSystem: ActorSystem,
                             @Named("event-reminder-actor") eventReminderActor: ActorRef,

@@ -3,7 +3,7 @@ package se.crisp.signup4.controllers
 import javax.inject.{Inject, Singleton}
 
 import akka.actor.ActorSystem
-import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
+import com.mohiva.play.silhouette.api.Silhouette
 import play.api.Configuration
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.models._
@@ -15,10 +15,12 @@ import play.api.libs.concurrent.Akka
 import play.api.mvc._
 import se.crisp.signup4.models.dao.{EventDAO, LogEntryDAO, ParticipationDAO, UserDAO}
 import se.crisp.signup4.services.{ImageUrl, SlackReminder}
+import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util._
 
 @Singleton
-class Participations @Inject()(val messagesApi: MessagesApi,
+class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
+                               val messagesApi: MessagesApi,
                                val actorSystem: ActorSystem,
                                implicit val configuration: Configuration,
                                implicit val authHelper: AuthHelper,
@@ -31,9 +33,10 @@ class Participations @Inject()(val messagesApi: MessagesApi,
                                val userDAO: UserDAO,
                                val participationDAO: ParticipationDAO,
                                val logEntryDAO: LogEntryDAO,
-                               implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+                               implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport{
 
-  def editForm(eventId: Long, userId: Long): Action[AnyContent] = StackAction { implicit request =>
+  def editForm(eventId: Long, userId: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
+    implicit val user: Option[User] = request.identity
     val event = eventDAO.find(eventId)
     if (!event.isCancelled) {
       val userToAttend = userDAO.find(userId)
@@ -59,7 +62,8 @@ class Participations @Inject()(val messagesApi: MessagesApi,
     message.toString
   }
 
-  def createOrUpdate: Action[AnyContent] = StackAction { implicit request =>
+  def createOrUpdate: Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
+    implicit val user: Option[User] = request.identity
     participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = eventDAO.find(formWithErrors("eventId").value.get.toLong)
@@ -125,7 +129,8 @@ class Participations @Inject()(val messagesApi: MessagesApi,
 }
 
 
-class ParticipationsSecured @Inject()(val participations: Participations,
+class ParticipationsSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
+                                      val participations: Participations,
                                       val messagesApi: MessagesApi,
                                       implicit val authHelper: AuthHelper,
                                       implicit val localeHelper: LocaleHelper,
@@ -134,15 +139,15 @@ class ParticipationsSecured @Inject()(val participations: Participations,
                                       val eventDAO: EventDAO,
                                       val userDAO: UserDAO,
                                       val participationDAO: ParticipationDAO,
-                                      implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
-  def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+                                      implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport {
+  def createGuestForm(eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val event = eventDAO.find(eventId)
     Ok(se.crisp.signup4.views.html.participations.addGuest(participations.participationForm, event, userDAO.findNonGuests(event.id.get)))
   }
 
-  def createGuest: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createGuest: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     participations.participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = eventDAO.find(formWithErrors("eventId").value.get.toLong)
@@ -155,7 +160,7 @@ class ParticipationsSecured @Inject()(val participations: Participations,
     )
   }
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     val participation = participationDAO.find(id)
     val event = participation.event
     participationDAO.delete(participation.id.get)

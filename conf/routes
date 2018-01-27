@@ -7,10 +7,6 @@ GET         /                                 @se.crisp.signup4.controllers.Appl
 GET         /login                            @se.crisp.signup4.controllers.Application.loginForm
 POST        /login                            @se.crisp.signup4.controllers.Application.authenticate
 GET         /logout                           @se.crisp.signup4.controllers.Application.logout
-GET         /google/authenticate              @se.crisp.signup4.controllers.GoogleAuth.authenticate
-GET         /google/callback                  @se.crisp.signup4.controllers.GoogleAuth.callback(error: Option[String] ?= None, state: Option[String] ?= None, code: Option[String] ?= None)
-GET         /facebook/authenticate            @se.crisp.signup4.controllers.FacebookAuth.authenticate
-GET         /facebook/callback                @se.crisp.signup4.controllers.FacebookAuth.callback(error: Option[String] ?= None, state: Option[String] ?= None, code: Option[String] ?= None)
 
 
 # Users

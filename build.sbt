@@ -17,8 +17,6 @@ libraryDependencies ++= Seq(
   "com.mohiva"                %% "play-silhouette-persistence" % "4.0.0",
   "com.mohiva"                %% "play-silhouette-crypto-jca"  % "4.0.0",
   "org.postgresql"            %  "postgresql"                  % "42.2.0",
-  "jp.t2v"                    %% "stackable-controller"        % "0.6.0",
-  "jp.t2v"                    %% "play2-auth"                  % "0.14.2",
   "com.typesafe.play"         %% "play-mailer"                 % "5.0.0",
   "org.apache.commons"        %  "commons-lang3"               % "3.7",
   "com.cloudinary"            %% "cloudinary-scala-play"       % "1.2.1",

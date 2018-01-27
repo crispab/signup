@@ -5,14 +5,13 @@ import java.util.Date
 import javax.inject.{Inject, Named}
 
 import akka.actor.{ActorRef, ActorSystem}
-import akka.stream.scaladsl.{Source, StreamConverters}
-import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
-import jp.t2v.lab.play2.stackc.RequestWithAttributes
+import akka.stream.scaladsl.Source
+import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.libs.concurrent.Akka
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.streams.Streams
@@ -21,12 +20,14 @@ import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao._
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.{ImageUrl, MailReminder, RemindAllParticipants, SlackReminder}
+import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util.DateHelper._
 import se.crisp.signup4.util._
 
 import scala.concurrent.ExecutionContext
 
-class Events @Inject()(val messagesApi: MessagesApi,
+class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
+                       val messagesApi: MessagesApi,
                        implicit val configuration: Configuration,
                        implicit val authHelper: AuthHelper,
                        implicit val localeHelper: LocaleHelper,
@@ -38,9 +39,10 @@ class Events @Inject()(val messagesApi: MessagesApi,
                        val participationDAO: ParticipationDAO,
                        val logEntryDAO: LogEntryDAO,
                        val reminderDAO: ReminderDAO,
-                       implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport  {
+                       implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport  {
 
-  def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
+  def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
+    implicit val user: Option[User] =  request.identity
     val event = eventDAO.find(id)
     if (event.isCancelled) {
       Ok(se.crisp.signup4.views.html.events.showcancelled(event, logEntryDAO.findByEvent(event)))
@@ -49,7 +51,7 @@ class Events @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def asExcel(id: Long): Action[AnyContent] = StackAction { implicit request =>
+  def asExcel(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
 
     val event = eventDAO.find(id)
     val workbook = ExcelHelper.createWorkbook(allGuests(event), allMembers(event))
@@ -135,7 +137,8 @@ class Events @Inject()(val messagesApi: MessagesApi,
 
 }
 
-class EventsSecured @Inject()(val messagesApi: MessagesApi,
+class EventsSecured @Inject()(val silhouette: Silhouette[DefaultEnv],
+                              val messagesApi: MessagesApi,
                               val actorSystem: ActorSystem,
                               val mailReminder: MailReminder,
                               @Named("event-reminder-actor") val eventReminderActor: ActorRef,
@@ -149,26 +152,27 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
                               val userDAO: UserDAO,
                               val logEntryDAO: LogEntryDAO,
                               implicit val reminderDAO: ReminderDAO,
-                              implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport {
+                              implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport {
 
-  def remindParticipants(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+  def remindParticipants(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     val event = eventDAO.find(id)
     if (!event.isCancelled) {
-      eventReminderActor ! RemindAllParticipants(event, loggedIn)
+      eventReminderActor ! RemindAllParticipants(event, request.identity)
       Redirect(routes.Events.show(id)).flashing("success" -> Messages("event.remindersent"))
     } else {
       Redirect(routes.Events.show(id)).flashing("error" -> Messages("event.cancelled.noreminders"))
     }
   }
 
-  def createForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createForm(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val group = groupDAO.find(groupId)
     Ok(se.crisp.signup4.views.html.events.edit(eventForm, group))
   }
 
-  def create: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+
+  def create: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     eventForm.bindFromRequest.fold(
       formWithErrors => {
         val groupId = formWithErrors("groupId").value.get.toLong
@@ -178,11 +182,11 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
       event => {
         val eventId = eventDAO.create(event)
         reminderDAO.createRemindersForEvent(eventId, event)
-        logEntryDAO.create(eventId, Messages("event.createdby", loggedIn.name))
+        logEntryDAO.create(eventId, Messages("event.createdby", request.identity.name))
 
         if (isReminderToBeSent(request)) {
           val storedEvent = eventDAO.find(eventId)
-          eventReminderActor ! RemindAllParticipants(storedEvent, loggedIn)
+          eventReminderActor ! RemindAllParticipants(storedEvent, request.identity)
           Redirect(routes.Events.show(storedEvent.id.get)).flashing("success" -> Messages("event.remindersent.all"))
         } else {
           Redirect(routes.Events.show(eventId))
@@ -191,14 +195,14 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
     )
   }
 
-  private def isReminderToBeSent(request: RequestWithAttributes[AnyContent]) = {
+  private def isReminderToBeSent(request: SecuredRequest[DefaultEnv, AnyContent]) = {
     val immediateReminderParameter = request.body.asFormUrlEncoded.get.get("immediate_reminder")
     immediateReminderParameter.isDefined && immediateReminderParameter.head.head.equals("true")
   }
 
 
-  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def updateForm(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val event = eventDAO.find(id)
     if (!event.isCancelled) {
       Ok(se.crisp.signup4.views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
@@ -207,8 +211,8 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def update(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val event = eventDAO.find(id)
     if (!event.isCancelled) {
       eventForm.bindFromRequest.fold(
@@ -228,14 +232,16 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
   }
 
 
-  def cancel(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+  def cancel(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val user: User =  request.identity
     val event = eventDAO.find(id)
 
     val reason = Option(request.body.asFormUrlEncoded.get.get("reason").head.head).filter(_.trim.nonEmpty)
     eventDAO.cancel(id, reason)
-    logEntryDAO.create(event, Messages("event.cancelledby", loggedIn.name, reason.getOrElse("ej angiven")))
+    logEntryDAO.create(event, Messages("event.cancelledby", request.identity.name, reason.getOrElse("ej angiven")))
 
     import play.api.libs.concurrent.Execution.Implicits._
+
     import scala.concurrent.duration._
     actorSystem.scheduler.scheduleOnce(1.second) {
       val cancelledEvent = eventDAO.find(id)
@@ -247,7 +253,7 @@ class EventsSecured @Inject()(val messagesApi: MessagesApi,
   }
 
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     val event = eventDAO.find(id)
     val groupId = event.group.id.get
     eventDAO.delete(id)

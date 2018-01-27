@@ -2,18 +2,20 @@ package se.crisp.signup4.controllers
 
 import javax.inject.Inject
 
-import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
-import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.models._
+import com.mohiva.play.silhouette.api.Silhouette
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
+import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{EventDAO, GroupDAO, MembershipDAO, UserDAO}
+import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.ImageUrl
+import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
-class Groups @Inject() (val messagesApi: MessagesApi,
+class Groups @Inject() (val silhouette: Silhouette[DefaultEnv],
+                        val messagesApi: MessagesApi,
                         implicit val authHelper: AuthHelper,
                         implicit val localeHelper: LocaleHelper,
                         implicit val themeHelper: ThemeHelper,
@@ -22,14 +24,16 @@ class Groups @Inject() (val messagesApi: MessagesApi,
                         val eventDAO: EventDAO,
                         val userDAO: UserDAO,
                         val membershipDAO: MembershipDAO,
-                        implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+                        implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport{
 
-  def list: Action[AnyContent] = StackAction { implicit request =>
+  def list: Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
+    implicit val user: Option[User] = request.identity
     val groups = groupDAO.findAll()
     Ok(se.crisp.signup4.views.html.groups.list(groups))
   }
 
-  def show(id: Long, showAll: Boolean): Action[AnyContent] = StackAction { implicit request =>
+  def show(id: Long, showAll: Boolean): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
+    implicit val user: Option[User] = request.identity
     val group = groupDAO.find(id)
     val members = membershipDAO.findMembers(group)
     if(showAll) {
@@ -41,29 +45,30 @@ class Groups @Inject() (val messagesApi: MessagesApi,
 }
 
 
-class GroupsSecured @Inject() (val messagesApi: MessagesApi,
+class GroupsSecured @Inject() (val silhouette: Silhouette[DefaultEnv],
+                               val messagesApi: MessagesApi,
                                implicit val authHelper: AuthHelper,
                                implicit val localeHelper: LocaleHelper,
                                implicit val themeHelper: ThemeHelper,
                                implicit val formHelper: FormHelper,
                                val groupDAO: GroupDAO,
                                val userDAO: UserDAO,
-                               implicit val imageUrl: ImageUrl) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
+                               implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport{
 
 
-  def createForm: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createForm: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     Ok(se.crisp.signup4.views.html.groups.edit(groupForm))
   }
 
-  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def updateForm(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val group = groupDAO.find(id)
     Ok(se.crisp.signup4.views.html.groups.edit(groupForm.fill(group), Option(id)))
   }
 
-  def create: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def create: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.groups.edit(formWithErrors)),
         group => {
@@ -73,8 +78,8 @@ class GroupsSecured @Inject() (val messagesApi: MessagesApi,
       )
   }
 
-  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def update(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
       groupForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.groups.edit(formWithErrors, Option(id))),
         group => {
@@ -84,8 +89,8 @@ class GroupsSecured @Inject() (val messagesApi: MessagesApi,
       )
   }
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def delete(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     groupDAO.delete(id)
     Redirect(routes.Groups.list())
 
