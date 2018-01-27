@@ -1,0 +1,77 @@
+package se.crisp.signup4.silhouette
+
+import javax.inject.{Inject, Provider, Singleton}
+
+import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
+import org.apache.commons.lang3.exception.ExceptionUtils
+import play.api.{Configuration, Environment, OptionalSourceMapper, UsefulException}
+import play.api.http.DefaultHttpErrorHandler
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.mvc.{RequestHeader, Result, Results}
+import play.api.mvc.Results._
+import play.api.routing.Router
+import se.crisp.signup4.services.ImageUrl
+import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
+
+import scala.concurrent.Future
+
+@Singleton
+class ErrorHandler @Inject()(val env: Environment,
+                             val config: Configuration,
+                             val sourceMapper: OptionalSourceMapper,
+                             val router: Provider[Router],
+                             val messagesApi: MessagesApi,
+                             val localeHelper: LocaleHelper,
+                             implicit val imageUrl: ImageUrl,
+                             implicit val themeHelper: ThemeHelper,
+                             implicit val authHelper: AuthHelper)
+  extends DefaultHttpErrorHandler(env, config, sourceMapper, router)
+    with SecuredErrorHandler
+    with UnsecuredErrorHandler
+    with I18nSupport {
+
+  override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = {
+    val lang = localeHelper.getLang(request)
+    Future.successful(Redirect(se.crisp.signup4.controllers.routes.Application.loginForm()).flashing("error" -> Messages("error.application.authfaild")))
+  }
+
+  override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = {
+    onNotAuthorized(request)
+  }
+
+  override protected def onForbidden(request: RequestHeader, message: String): Future[Result] = {
+    onNotAuthorized(request)
+  }
+
+  override protected def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
+    val lang = localeHelper.getLang(request)
+    Future.successful(BadRequest(se.crisp.signup4.views.html.error(Messages("http.badrequest"), message)))
+  }
+
+  override protected def onNotFound(request: RequestHeader, message: String): Future[Result] = {
+    val lang = localeHelper.getLang(request)
+    Future.successful(NotFound(se.crisp.signup4.views.html.error(Messages("http.notfound"), message)))
+  }
+
+  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
+    val cause = Option(exception.getCause).getOrElse(exception)
+    val stackTrace = ExceptionUtils.getStackTrace(cause)
+    val lang = localeHelper.getLang(request)
+    Future.successful(InternalServerError(se.crisp.signup4.views.html.error(Messages("http.error"), cause.getLocalizedMessage + "\n" + stackTrace)))
+  }
+
+  override protected def onProdServerError(request: RequestHeader, exception: UsefulException): Future[Result] = {
+    val stackTrace = ExceptionUtils.getStackTrace(exception.getCause)
+    Future.successful(InternalServerError(se.crisp.signup4.views.html.error(Messages("http.error"),
+      exception.title + "\n" + exception.description +  "\n" + exception.getLocalizedMessage + "\n" + stackTrace)))
+  }
+
+  override protected def onDevServerError(request: RequestHeader, exception: UsefulException): Future[Result] = {
+    onProdServerError(request, exception)
+  }
+
+  override protected def onOtherClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
+    Future.successful(Results.Status(statusCode)(se.crisp.signup4.views.html.error(Messages("http.badrequest"), message)))
+  }
+
+}

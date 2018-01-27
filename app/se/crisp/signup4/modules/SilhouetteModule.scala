@@ -2,6 +2,7 @@ package se.crisp.signup4.modules
 
 import com.google.inject.name.Named
 import com.google.inject.{AbstractModule, Provides}
+import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.api.crypto._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services._
@@ -20,7 +21,7 @@ import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.ws.WSClient
 import se.crisp.signup4.services.UserServiceImpl
-import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
+import se.crisp.signup4.silhouette.{ErrorHandler, DefaultEnv, UserService}
 
 /**
   * The Guice module which wires all Silhouette dependencies.
@@ -32,8 +33,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     */
   def configure() {
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
-    //bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
-    //bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
+    bind[SecuredErrorHandler].to[ErrorHandler]
+    bind[UnsecuredErrorHandler].to[ErrorHandler]
     bind[UserService].to[UserServiceImpl]
     //bind[UserDAO].to[UserDAOImpl]
     //bind[CacheLayer].to[PlayCacheLayer]
