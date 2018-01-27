@@ -4,6 +4,9 @@
 
 # Home page
 GET         /                                 @se.crisp.signup4.controllers.Application.index
+GET         /silhouette                       @se.crisp.signup4.controllers.SilhouetteApplication.index
+GET         /view                             @se.crisp.signup4.controllers.SilhouetteApplication.view
+POST        /submit                           @se.crisp.signup4.controllers.SilhouetteApplication.submit
 GET         /login                            @se.crisp.signup4.controllers.Application.loginForm
 POST        /login                            @se.crisp.signup4.controllers.Application.authenticate
 GET         /logout                           @se.crisp.signup4.controllers.Application.logout
