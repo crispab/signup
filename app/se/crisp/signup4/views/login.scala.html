@@ -54,7 +54,11 @@
     </fieldset>
   </form>
 
-
+  <fieldset class="xlarge-space-berfore">
+    <legend>@Messages("login.with.social")</legend>
+      <p class="text-left">
+        <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("google")' class="btn-google">@Messages("login.google")</a>
+      </p>
 
 }(loggedInUser = None, messages = messages, imageUrl = imageUrl, authHelper = authHelper, themeHelper = themeHelper)
 

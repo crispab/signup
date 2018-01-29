@@ -8,6 +8,7 @@ GET         /login                            @se.crisp.signup4.controllers.Appl
 POST        /login                            @se.crisp.signup4.controllers.Application.authenticate
 GET         /logout                           @se.crisp.signup4.controllers.Application.logout
 
+GET         /sociallogin/:provider            @se.crisp.signup4.controllers.SocialLogin.authenticate(provider)
 
 # Users
 GET         /users/new                        @se.crisp.signup4.controllers.Users.createForm
