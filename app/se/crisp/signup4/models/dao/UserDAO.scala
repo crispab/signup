@@ -29,8 +29,10 @@ class UserDAO @Inject() (val database: Database,
       get[String]("permission") ~
       get[String]("pwd") ~
       get[String]("image_provider") ~
-      get[Option[String]]("image_version") map {
-      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd ~ image_provider ~ image_version =>
+      get[Option[String]]("image_version") ~
+      get[Option[String]]("provider_key") ~
+      get[Option[String]]("auth_info") map {
+      case id ~ firstName ~ lastName ~ email ~ phone ~ comment ~ permission ~ pwd ~ image_provider ~ image_version ~ provider_key ~ auth_info =>
         User(
           id = id,
           firstName = firstName,
@@ -41,7 +43,9 @@ class UserDAO @Inject() (val database: Database,
           permission = Permission.withName(permission),
           password = pwd,
           imageProvider = image_provider,
-          imageVersion = image_version
+          imageVersion = image_version,
+          providerKey = provider_key,
+          authInfo = auth_info
         )
     }
   }
@@ -58,6 +62,13 @@ class UserDAO @Inject() (val database: Database,
     database.withTransaction {
       implicit connection =>
         SQL("select * from users where lower(email)={email}").on('email -> email.toLowerCase).as(parser singleOpt)
+    }
+  }
+
+  def findByProviderKey(providerKey: String) : Option[User] = {
+    database.withTransaction {
+      implicit connection =>
+        SQL("select * from users where provider_key={providerKey}").on('providerKey -> providerKey).as(parser singleOpt)
     }
   }
 
@@ -247,6 +258,27 @@ WHERE id = {id}
         ).executeUpdate()
     }
   }
+
+  def updateAuthInfo(providerKey: String, authInfo: String): Int = {
+    database.withTransaction {
+      implicit connection =>
+        SQL("UPDATE users SET auth_info = {authInfo} WHERE provider_key = {providerKey}").on(
+          'providerKey -> providerKey,
+          'authInfo -> authInfo
+        ).executeUpdate()
+    }
+  }
+
+  def updateProviderKey(email:String, providerKey: String): Int = {
+    database.withTransaction {
+      implicit connection =>
+        SQL("UPDATE users SET provider_key = {providerKey} WHERE email = {email}").on(
+          'providerKey -> providerKey,
+          'email -> email
+        ).executeUpdate()
+    }
+  }
+
 
   def delete(id: Long) {
     database.withTransaction {

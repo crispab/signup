@@ -4,79 +4,89 @@ import java.util.{Locale, TimeZone}
 import javax.inject.{Inject, Named, Singleton}
 
 import akka.actor.{ActorRef, ActorSystem}
-import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
+import com.mohiva.play.silhouette.api.exceptions.ProviderException
+import com.mohiva.play.silhouette.api.util.Credentials
+import com.mohiva.play.silhouette.api.{LoginEvent, LogoutEvent, Silhouette}
+import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.api.{Configuration, Logger}
-import se.crisp.signup4.models
+import se.crisp.signup4.models.User
 import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.services.{CheckEvents, ImageUrl}
+import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
 import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+
 @Singleton
-class Application @Inject() (val messagesApi: MessagesApi,
-                             val actorSystem: ActorSystem,
-                             @Named("event-reminder-actor") eventReminderActor: ActorRef,
-                             val configuration: Configuration,
-                             implicit val authHelper: AuthHelper,
-                             implicit val localeHelper: LocaleHelper,
-                             implicit val themeHelper: ThemeHelper,
-                             implicit val facebookAuth: FacebookAuth,
-                             implicit val googleAuth: GoogleAuth,
-                             val userDAO: UserDAO,
-                             implicit val imageUrl: ImageUrl) extends Controller with LoginLogout with OptionalAuthElement with AuthConfigImpl  with I18nSupport{
+class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
+                            val messagesApi: MessagesApi,
+                            val actorSystem: ActorSystem,
+                            @Named("event-reminder-actor") eventReminderActor: ActorRef,
+                            val configuration: Configuration,
+                            implicit val authHelper: AuthHelper,
+                            implicit val localeHelper: LocaleHelper,
+                            implicit val themeHelper: ThemeHelper,
+                            val credentialsProvider: CredentialsProvider,
+                            val userService: UserService,
+                            val userDAO: UserDAO,
+                            implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport {
 
   initialize()
 
-  val loginDataForm: Form[Option[User]] = Form(
+  def index: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
+    implicit val user: Option[User] = request.identity
+    Future.successful(Ok(se.crisp.signup4.views.html.index()))
+  }
+
+  val loginForm = Form(
     mapping(
-      "email" -> nonEmptyText,
+      "email" -> email,
       "password" -> nonEmptyText
-    )(toUser)(fromUser).verifying(user => user.isDefined)
+    )(Application.LoginFields.apply)(Application.LoginFields.unapply)
   )
 
-  def index: Action[AnyContent] = StackAction { implicit request =>
-    Ok(se.crisp.signup4.views.html.index())
+  def showLoginForm: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
+    Future.successful(Ok(se.crisp.signup4.views.html.login(loginForm)))
   }
 
-  def loginForm: Action[AnyContent] = Action { implicit request =>
-    if (request.session.get("access_uri").isEmpty && request.headers.get(REFERER).isDefined) {
-      Logger.debug("Using REFERER URL: " + request.headers.get(REFERER).get)
-      Ok(se.crisp.signup4.views.html.login(loginDataForm)).withSession("access_uri" -> request.headers.get(REFERER).get)
-    } else {
-      Ok(se.crisp.signup4.views.html.login(loginDataForm))
-    }
-  }
-
-  def authenticate: Action[AnyContent] = Action.async { implicit request =>
-    loginDataForm.bindFromRequest.fold(
-      formWithErrors => Future.successful(BadRequest(se.crisp.signup4.views.html.login(formWithErrors))),
-      user => gotoLoginSucceeded(user.get.id.get)
+  def authenticate: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
+    loginForm.bindFromRequest.fold(
+      form => Future.successful(BadRequest(se.crisp.signup4.views.html.login(form))),
+      data => {
+        val credentials = Credentials(data.email, data.password)
+        credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
+          userService.retrieve(loginInfo).flatMap {
+            case Some(user) =>
+              val onMyWayTo = request.session.get("on_my_way_to").getOrElse(routes.Application.index().url.toString)
+              val redirect = Redirect(onMyWayTo).withSession(request.session - "on_my_way_to")
+              Logger.debug("Login succeeded. Redirecting to uri " + onMyWayTo)
+              silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
+                silhouette.env.eventBus.publish(LoginEvent(user, request))
+                silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
+                  silhouette.env.authenticatorService.embed(v, redirect)
+                }
+              }
+            case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
+          }
+        }.recover {
+          case _: ProviderException =>
+            Redirect(routes.Application.showLoginForm()).flashing("error" -> Messages("login.failed"))
+        }
+      }
     )
   }
 
-  def toUser(email: String, password: String): Option[models.User] = {
-    val user = userDAO.findByEmail(email.trim)
-    authHelper.checkPassword(user, password)
-  }
-
-  def fromUser(user: Option[models.User]): Option[(String, String)] = {
-    if(user.isDefined) {
-      Option((user.get.email, ""))
-    } else {
-      Option.empty
-    }
-  }
-
-  def logout: Action[AnyContent] = Action.async { implicit request =>
-    gotoLogoutSucceeded.map(_.flashing(
-      "success" -> Messages("application.logout")
-    ))
+  def logout: Action[AnyContent] = silhouette.SecuredAction.async { implicit request =>
+    val result = Redirect(routes.Application.index())
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
 
   private def initialize(): Unit = {
@@ -116,4 +126,8 @@ class Application @Inject() (val messagesApi: MessagesApi,
     scala.concurrent.duration.FiniteDuration(untilFirstRun.getStandardSeconds, java.util.concurrent.TimeUnit.SECONDS)
   }
 
+}
+
+object Application {
+  case class LoginFields(email: String, password: String)
 }

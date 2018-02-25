@@ -5,7 +5,7 @@ import javax.inject.{Inject, Named}
 import akka.actor.ActorRef
 import cloudinary.model.CloudinaryResourceBuilder
 import com.cloudinary.parameters.UploadParameters
-import jp.t2v.lab.play2.auth.{AuthElement, OptionalAuthElement}
+import com.mohiva.play.silhouette.api.Silhouette
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
@@ -16,82 +16,75 @@ import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{EventDAO, MembershipDAO, ParticipationDAO, UserDAO}
 import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, ImageUrl, RemindParticipant}
+import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Users @Inject()(val messagesApi: MessagesApi,
+
+class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
+                      val messagesApi: MessagesApi,
+                      val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
+                      val cloudinaryUrl: CloudinaryUrl,
+                      implicit val gravatarUrl: GravatarUrl,
+                      implicit val imageUrl: ImageUrl,
                       implicit val authHelper: AuthHelper,
                       implicit val localeHelper: LocaleHelper,
                       implicit val themeHelper: ThemeHelper,
                       implicit val formHelper: FormHelper,
-                      val userDAO: UserDAO,
-                      implicit val participationDAO: ParticipationDAO,
                       implicit val eventDAO: EventDAO,
-                      implicit val imageUrl: ImageUrl) extends Controller with OptionalAuthElement with AuthConfigImpl with I18nSupport{
+                      val userDAO: UserDAO,
+                      val membershipDAO: MembershipDAO,
+                      implicit val participationDAO: ParticipationDAO,
+                      @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller  with I18nSupport{
 
-  def show(id: Long): Action[AnyContent] = StackAction { implicit request =>
+  def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
+    implicit val user: Option[User] = request.identity
     val userToShow = userDAO.find(id)
     Ok(se.crisp.signup4.views.html.users.show(userToShow))
   }
-}
 
-class UsersSecured @Inject()(val messagesApi: MessagesApi,
-                             val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
-                             val cloudinaryUrl: CloudinaryUrl,
-                             implicit val gravatarUrl: GravatarUrl,
-                             implicit val imageUrl: ImageUrl,
-                             implicit val authHelper: AuthHelper,
-                             implicit val localeHelper: LocaleHelper,
-                             implicit val themeHelper: ThemeHelper,
-                             implicit val formHelper: FormHelper,
-                             val eventDAO: EventDAO,
-                             val userDAO: UserDAO,
-                             val membershipDAO: MembershipDAO,
-                             val participationDAO: ParticipationDAO,
-                             @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller with AuthElement with AuthConfigImpl with I18nSupport{
-
-  def list: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator))  { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def list: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator))  { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val usersToList = userDAO.findAll()
     Ok(se.crisp.signup4.views.html.users.list(usersToList))
   }
 
-  def createForm: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createForm: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     Ok(se.crisp.signup4.views.html.users.edit(userCreateForm))
   }
 
-  def createMemberForm(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createMemberForm(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     Ok(se.crisp.signup4.views.html.users.edit(userCreateForm, groupId = Option(groupId)))
   }
 
-  def createGuestForm(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createGuestForm(eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     Ok(se.crisp.signup4.views.html.users.edit(userCreateForm, eventId = Option(eventId)))
   }
 
 
-  def updateForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def updateForm(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val userToUpdate = userDAO.find(id)
     Ok(se.crisp.signup4.views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
-  def create: Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def create: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
           userDAO.create(user)
-          Redirect(routes.UsersSecured.list())
+          Redirect(routes.Users.list())
         }
       )
   }
 
-  def createMember(groupId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createMember(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
@@ -101,8 +94,8 @@ class UsersSecured @Inject()(val messagesApi: MessagesApi,
       )
   }
 
-  def createGuest(eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def createGuest(eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
       userCreateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
         user => {
@@ -112,20 +105,20 @@ class UsersSecured @Inject()(val messagesApi: MessagesApi,
       )
   }
 
-  def remindParticipant(id: Long, eventId: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def remindParticipant(id: Long, eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val user = userDAO.find(id)
     val event = eventDAO.find(eventId)
     if(!event.isCancelled) {
-      eventReminderActor ! RemindParticipant(event, user, loggedIn)
+      eventReminderActor ! RemindParticipant(event, user, request.identity)
       Redirect(routes.Events.show(eventId)).flashing("success" -> Messages("user.reminder", user.name))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("event.cancelled.noreminders"))
     }
   }
 
-  def update(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def update(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     userUpdateForm.bindFromRequest.fold(
         formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors, Option(id))),
         user => {
@@ -153,22 +146,22 @@ class UsersSecured @Inject()(val messagesApi: MessagesApi,
     )
   }
 
-  def updateImageForm(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def updateImageForm(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val userToUpdate = userDAO.find(id)
     Ok(se.crisp.signup4.views.html.users.updateImage(userToUpdate))
   }
 
-  def resetImage(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def resetImage(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
 
     userDAO.updateInfo(id, GravatarUrl.identifier)
 
     Redirect(routes.Users.show(id))
   }
 
-  def uploadImage(id: Long): Action[AnyContent] = AsyncStack(AuthorityKey -> authHelper.hasPermissionOrSelf(Administrator, id)) { implicit request =>
-    implicit val loggedInUser: Option[User] = Option(loggedIn)
+  def uploadImage(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)).async { implicit request =>
+    implicit val loggedInUser: Option[User] = Option(request.identity)
     val userToUpdate = userDAO.find(id)
 
     import ExecutionContext.Implicits.global
@@ -194,9 +187,9 @@ class UsersSecured @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def delete(id: Long): Action[AnyContent] = StackAction(AuthorityKey -> authHelper.hasPermission(Administrator)) { implicit request =>
+  def delete(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     userDAO.delete(id)
-    Redirect(routes.UsersSecured.list())
+    Redirect(routes.Users.list())
   }
 
 

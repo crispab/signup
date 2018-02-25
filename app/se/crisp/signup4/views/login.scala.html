@@ -1,13 +1,11 @@
-@import se.crisp.signup4.models.User
+@import se.crisp.signup4.controllers.Application.LoginFields
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.util.ThemeHelper
-@import se.crisp.signup4.controllers.GoogleAuth
-@import se.crisp.signup4.controllers.FacebookAuth
 @import se.crisp.signup4.util.LocaleHelper
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.AuthHelper
 
-@(loginForm: Form[Option[User]])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper, facebookAuth: FacebookAuth, googleAuth: GoogleAuth)
+@(loginForm: Form[LoginFields])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper)
 
 @field(fieldName: String) = @{
   loginForm(fieldName).value.getOrElse("")
@@ -56,22 +54,11 @@
     </fieldset>
   </form>
 
-  @if(googleAuth.isConfigured || facebookAuth.isConfigured) {
-    <fieldset class="xlarge-space-berfore">
-      <legend>@Messages("login.with.social")</legend>
-      @if(googleAuth.isConfigured) {
-        <p class="text-left">
-          <a href="@se.crisp.signup4.controllers.routes.GoogleAuth.authenticate()" class="btn-google">@Messages("login.google")</a>
-        </p>
-      }
-
-      @if(facebookAuth.isConfigured) {
-        <p class="text-left large-space-berfore">
-          <a href="@se.crisp.signup4.controllers.routes.FacebookAuth.authenticate()" class="btn-facebook">@Messages("login.facebook")</a>
-        </p>
-      }
-    </fieldset>
-  }
+  <fieldset class="xlarge-space-berfore">
+    <legend>@Messages("login.with.social")</legend>
+      <p class="text-left">
+        <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("google")' class="btn-google">@Messages("login.google")</a>
+      </p>
 
 }(loggedInUser = None, messages = messages, imageUrl = imageUrl, authHelper = authHelper, themeHelper = themeHelper)
 

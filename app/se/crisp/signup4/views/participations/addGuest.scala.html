@@ -31,7 +31,7 @@
 
   <h2>@Messages("participation.guest.heading", event.name)</h2>
 
-  <form action="@se.crisp.signup4.controllers.routes.ParticipationsSecured.createGuest()" method="POST">
+  <form action="@se.crisp.signup4.controllers.routes.Participations.createGuest()" method="POST">
     <fieldset>
       <div class='form-group @hasErrors("userId")'>
         <label for="userId">@Messages("membership.existinguser")e</label>
@@ -61,7 +61,7 @@
       <button type="submit" class="btn btn-primary" id="action" name="action" value="save">
         <span class="glyphicon glyphicon-ok"></span> @Messages("membership.add")
       </button>
-      <button type="button" class="btn btn-default" id="create" onClick='window.location.assign ("@se.crisp.signup4.controllers.routes.UsersSecured.createGuestForm(event.id.get)")'>
+      <button type="button" class="btn btn-default" id="create" onClick='window.location.assign ("@se.crisp.signup4.controllers.routes.Users.createGuestForm(event.id.get)")'>
         <span class="glyphicon glyphicon-plus"></span> @Messages("membership.new")
       </button>
       <button type="button" class="btn btn-default" id="cancel" onClick='window.location.assign ("@se.crisp.signup4.controllers.routes.Events.show(event.id.get)")'>

@@ -9,7 +9,7 @@
 
 @se.crisp.signup4.views.html.page(Messages("user.updateimage", user.firstName, user.lastName), section = Users) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list(),
+  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list(),
     user.firstName + " " + user.lastName -> se.crisp.signup4.controllers.routes.Users.show(user.id.get)),
     Messages("navigation.updateimage"))
 
@@ -21,7 +21,7 @@
     <p>@Messages("user.updateimage.standard.row1") <a href="http://gravatar.com">gravatar.com</a>
       @Messages("user.updateimage.standard.row2") </p>
     <p>@Messages("user.updateimage.standard.row3")</p>
-    <form action="@se.crisp.signup4.controllers.routes.UsersSecured.resetImage(user.id.get)" method="POST">
+    <form action="@se.crisp.signup4.controllers.routes.Users.resetImage(user.id.get)" method="POST">
       <button type="submit" class="btn btn-primary">@Messages("button.use")</button>
     </form>
   </div>
@@ -31,7 +31,7 @@
     <h3>@Messages("user.updateimage.own.heading")</h3>
     <p>@Messages("user.updateimage.own.row1")</p>
     <p>@Messages("user.updateimage.own.row2")</p>
-    <form action="@se.crisp.signup4.controllers.routes.UsersSecured.uploadImage(user.id.get)" method="POST" enctype="multipart/form-data">
+    <form action="@se.crisp.signup4.controllers.routes.Users.uploadImage(user.id.get)" method="POST" enctype="multipart/form-data">
       <div class='form-group'>
         <input type="file" accept="image/*" id="image" name="image" >
       </div>

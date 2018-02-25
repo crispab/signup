@@ -86,7 +86,7 @@
           @Messages("event.actions") <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li><a href="@se.crisp.signup4.controllers.routes.EventsSecured.updateForm(event.id.get)"><span class="glyphicon glyphicon-pencil"></span>
+          <li><a href="@se.crisp.signup4.controllers.routes.Events.updateForm(event.id.get)"><span class="glyphicon glyphicon-pencil"></span>
             @Messages("edit.edit")</a></li>
           <li><a data-toggle="modal" data-target="#notify_participants_@event.id" href="#notify_participants_@event.id"><span class="glyphicon glyphicon-envelope"></span>
             @Messages("event.remind")</a></li>
@@ -110,7 +110,7 @@
               <p>@Messages("edit.continue")</p>
             </div>
             <div class="modal-footer">
-              <form action="@se.crisp.signup4.controllers.routes.EventsSecured.remindParticipants(event.id.get)" method="POST">
+              <form action="@se.crisp.signup4.controllers.routes.Events.remindParticipants(event.id.get)" method="POST">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
@@ -126,7 +126,7 @@
       <div class="modal fade" id="cancel_event_@event.id" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
-            <form action="@se.crisp.signup4.controllers.routes.EventsSecured.cancel(event.id.get)" method="POST">
+            <form action="@se.crisp.signup4.controllers.routes.Events.cancel(event.id.get)" method="POST">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" ><span>&times;</span></button>
                 <h3 id="label_cancel_event_@event.id">@Messages("event.cancel.heading")</h3>
@@ -163,7 +163,7 @@
               <p>@Messages("edit.continue")</p>
             </div>
             <div class="modal-footer">
-              <form action="@se.crisp.signup4.controllers.routes.EventsSecured.delete(event.id.get)" method="POST">
+              <form action="@se.crisp.signup4.controllers.routes.Events.delete(event.id.get)" method="POST">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
@@ -248,7 +248,7 @@
 
   @if(authHelper.isAdmin(loggedInUser)) {
     <div class="btn-row">
-      <a href="@se.crisp.signup4.controllers.routes.ParticipationsSecured.createGuestForm(event.id.get)" class="btn btn-default">
+      <a href="@se.crisp.signup4.controllers.routes.Participations.createGuestForm(event.id.get)" class="btn btn-default">
         <span class="glyphicon glyphicon-plus"></span> @Messages("event.addguest")</a>
     </div>
   }

@@ -28,13 +28,13 @@
 
 @theAction() = @{
   if(updating()) {
-    se.crisp.signup4.controllers.routes.UsersSecured.update(idToUpdate.get)
+    se.crisp.signup4.controllers.routes.Users.update(idToUpdate.get)
   } else if(creatingMember()) {
-    se.crisp.signup4.controllers.routes.UsersSecured.createMember(groupId.get)
+    se.crisp.signup4.controllers.routes.Users.createMember(groupId.get)
   } else if(creatingGuest()) {
-    se.crisp.signup4.controllers.routes.UsersSecured.createGuest(eventId.get)
+    se.crisp.signup4.controllers.routes.Users.createGuest(eventId.get)
   } else {
-    se.crisp.signup4.controllers.routes.UsersSecured.create()
+    se.crisp.signup4.controllers.routes.Users.create()
   }
 }
 
@@ -42,11 +42,11 @@
 @se.crisp.signup4.views.html.page(Messages("user.edit", field("firstName"), field("lastName")), section = Users) {
 
   @if(updating()) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list(),
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list(),
       field("firstName") + " " + field("lastName") -> se.crisp.signup4.controllers.routes.Users.show(idToUpdate.get)),
       Messages("edit.edit"))
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.UsersSecured.list()),
+    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list()),
       Messages("edit.new"))
   }
 
