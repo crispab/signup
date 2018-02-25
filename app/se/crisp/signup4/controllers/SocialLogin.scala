@@ -11,12 +11,13 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Action, AnyContent, Controller}
 import se.crisp.signup4.models.dao.UserDAO
-import se.crisp.signup4.silhouette.DefaultEnv
+import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
 
 import scala.concurrent.Future
 
 class SocialLogin @Inject()(val messagesApi: MessagesApi,
                             val silhouette: Silhouette[DefaultEnv],
+                            userService: UserService,
                             val authInfoRepository: AuthInfoRepository,
                             val socialProviderRegistry: SocialProviderRegistry,
                             val userDAO: UserDAO
@@ -30,8 +31,8 @@ class SocialLogin @Inject()(val messagesApi: MessagesApi,
           case Left(result) => Future.successful(result)
           case Right(authInfo) => for {
             profile <- p.retrieveProfile(authInfo)
-            user <- Future(userDAO.findByEmail(profile.email.getOrElse("")).get)
-            authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
+            user <- userService.save(profile)
+            _ <- authInfoRepository.save(profile.loginInfo, authInfo)
             authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)
             value <- silhouette.env.authenticatorService.init(authenticator)
 

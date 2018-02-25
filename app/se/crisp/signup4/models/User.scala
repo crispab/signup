@@ -13,7 +13,9 @@ case class User(
    permission: Permission = NormalUser,
    password: String = "*",
    imageProvider: String = "",
-   imageVersion: Option[String] = None) extends Identity with Ordered[User] {
+   imageVersion: Option[String] = None,
+   providerKey:Option[String] = None,
+   authInfo:Option[String] = None) extends Identity with Ordered[User] {
 
   def compare(that: User): Int = {
     val c = this.firstName.compare(that.firstName)

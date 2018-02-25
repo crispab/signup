@@ -40,12 +40,9 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
 
   initialize()
 
-  def index: Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
-    implicit val user: Option[User] = request.identity match {
-      case Some(identity) => Some(identity)
-      case None => None
-    }
-    Ok(se.crisp.signup4.views.html.index())
+  def index: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
+    implicit val user: Option[User] = request.identity
+    Future.successful(Ok(se.crisp.signup4.views.html.index()))
   }
 
   val loginForm = Form(
@@ -79,7 +76,7 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
         }.recover {
-          case e: ProviderException =>
+          case _: ProviderException =>
             Redirect(routes.Application.showLoginForm()).flashing("error" -> Messages("login.failed"))
         }
       }
