@@ -22,7 +22,7 @@ class LoginPage(baseUrl: String, driver: WebDriver) extends Page(baseUrl, driver
   }
 
   def isLoggedIn: Boolean = {
-    val cookie = driver.manage.getCookieNamed("PLAY2AUTH_SESS_ID")
+    val cookie = driver.manage.getCookieNamed("authenticator")
     cookie != null
   }
 
