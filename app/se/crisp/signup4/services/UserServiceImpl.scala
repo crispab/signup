@@ -3,7 +3,9 @@ package se.crisp.signup4.services
 import javax.inject.{Inject, Singleton}
 
 import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
+import play.api.Logger
 import se.crisp.signup4.models.User
 import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.silhouette.UserService
@@ -17,21 +19,15 @@ class UserServiceImpl @Inject()(val userDAO: UserDAO) extends UserService {
     case _ => userDAO.findByProviderKey(loginInfo.providerKey)
   })
 
-  /**
-    * Saves the social profile for a user.
-    *
-    * If a user exists for this profile then update the user, otherwise create a new user with the given profile.
-    *
-    * @param profile The social profile to save.
-    * @return The user for whom the profile was saved.
-    */
   def save(profile: CommonSocialProfile): Future[User] = {
-
-    userDAO.findByEmail(profile.email.getOrElse("")) match {
+    val emailAddress = profile.email.getOrElse("")
+    userDAO.findByEmail(emailAddress) match {
       case Some(user) =>
         userDAO.updateProviderKey(profile.email.getOrElse(""), profile.loginInfo.providerKey)
         Future.successful(user)
-      case None => Future.failed(new Exception())
+      case None =>
+        Logger.info("Could not find user with email: " + emailAddress)
+        Future.failed(new IdentityNotFoundException(profile.email.getOrElse("")))
     }
   }
 }
