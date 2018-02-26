@@ -11,7 +11,7 @@ This is the fourth version of the SignUp Service.
 
 ### Play Framework ###
 - Play 2.5.18 - http://www.playframework.org/
-- Scala 2.11.11 - http://www.scala-lang.org/
+- Scala 2.11.12 - http://www.scala-lang.org/
 - Anorm 2.5.3 - https://www.playframework.com/documentation/2.5.x/Anorm
 
 ### Presentation ###
@@ -21,8 +21,8 @@ This is the fourth version of the SignUp Service.
 - AddThisEvent 1.6.0 - http://addthisevent.com
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
-### Play plugins ###
-- Play2.x module for Authentication and Authorization 0.14.2 - https://github.com/t2v/play2-auth
+### Play 3rd party modules ###
+- Silhouette 4.0.0 authentication library - https://www.silhouette.rocks/s
 - Emailer Plugin 5.0.0 - https://github.com/playframework/play-mailer
 
 ### Run-time environment ###
