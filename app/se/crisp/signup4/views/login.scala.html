@@ -5,7 +5,8 @@
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.AuthHelper
 
-@(loginForm: Form[LoginFields])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper)
+@import se.crisp.signup4.util.SocialHelper
+@(loginForm: Form[LoginFields])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper, socialHelper: SocialHelper)
 
 @field(fieldName: String) = @{
   loginForm(fieldName).value.getOrElse("")
@@ -54,14 +55,20 @@
     </fieldset>
   </form>
 
-  <fieldset class="xlarge-space-berfore">
-    <legend>@Messages("login.with.social")</legend>
-      <p class="text-left">
-        <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("google")' class="btn-google">@Messages("login.google")</a>
-      </p>
-      <p class="text-left large-space-berfore">
-        <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("facebook")' class="btn-facebook">@Messages("login.facebook")</a>
-      </p>
-  </fieldset>
+  @if(socialHelper.socialConfigured) {
+    <fieldset class="xlarge-space-berfore">
+      <legend>@Messages("login.with.social")</legend>
+      @if(socialHelper.googleLoginConfigured) {
+        <p class="text-left">
+          <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("google")' class="btn-google">@Messages("login.google")</a>
+        </p>
+      }
+      @if(socialHelper.facebookLoginConfigured) {
+        <p class="text-left large-space-berfore">
+          <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("facebook")' class="btn-facebook">@Messages("login.facebook")</a>
+        </p>
+      }
+    </fieldset>
+  }
 
 }(loggedInUser = None, messages = messages, imageUrl = imageUrl, authHelper = authHelper, themeHelper = themeHelper)

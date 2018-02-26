@@ -18,7 +18,7 @@ import se.crisp.signup4.models.User
 import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.services.{CheckEvents, ImageUrl}
 import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
-import se.crisp.signup4.util.{AuthHelper, LocaleHelper, ThemeHelper}
+import se.crisp.signup4.util.{AuthHelper, LocaleHelper, SocialHelper, ThemeHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -28,11 +28,12 @@ import scala.concurrent.Future
 class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
                             val messagesApi: MessagesApi,
                             val actorSystem: ActorSystem,
-                            @Named("event-reminder-actor") eventReminderActor: ActorRef,
+                            @Named("event-reminder-actor") val eventReminderActor: ActorRef,
                             val configuration: Configuration,
                             implicit val authHelper: AuthHelper,
                             implicit val localeHelper: LocaleHelper,
                             implicit val themeHelper: ThemeHelper,
+                            implicit val socialHelper: SocialHelper,
                             val credentialsProvider: CredentialsProvider,
                             val userService: UserService,
                             val userDAO: UserDAO,
