@@ -26,6 +26,8 @@ class SocialLogin @Inject()(val messagesApi: MessagesApi,
   extends Controller with I18nSupport {
 
   def authenticate(provider: String): Action[AnyContent] = Action.async { implicit request =>
+    val onMyWayTo = request.session.get("on_my_way_to").getOrElse(routes.Application.index().url.toString)
+
     (socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
         p.authenticate().flatMap {
@@ -36,11 +38,10 @@ class SocialLogin @Inject()(val messagesApi: MessagesApi,
             _ <- authInfoRepository.save(profile.loginInfo, authInfo)
             authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)
             value <- silhouette.env.authenticatorService.init(authenticator)
-
-            // TODO: go to desired page (check request.session)
-            result <- silhouette.env.authenticatorService.embed(value, Redirect(routes.Application.index()))
+            result <- silhouette.env.authenticatorService.embed(value, Redirect(onMyWayTo).withSession(request.session - "on_my_way_to"))
           } yield {
             silhouette.env.eventBus.publish(LoginEvent(user, request))
+            Logger.debug("Login succeeded. Redirecting to uri " + onMyWayTo)
             result
           }
         }
