@@ -59,7 +59,9 @@
       <p class="text-left">
         <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("google")' class="btn-google">@Messages("login.google")</a>
       </p>
+      <p class="text-left large-space-berfore">
+        <a href='@se.crisp.signup4.controllers.routes.SocialLogin.authenticate("facebook")' class="btn-facebook">@Messages("login.facebook")</a>
+      </p>
+  </fieldset>
 
 }(loggedInUser = None, messages = messages, imageUrl = imageUrl, authHelper = authHelper, themeHelper = themeHelper)
-
-

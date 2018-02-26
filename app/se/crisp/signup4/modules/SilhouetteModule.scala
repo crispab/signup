@@ -11,7 +11,7 @@ import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, Silhou
 import com.mohiva.play.silhouette.crypto.{JcaCookieSigner, JcaCookieSignerSettings, JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers._
-import com.mohiva.play.silhouette.impl.providers.oauth2.GoogleProvider
+import com.mohiva.play.silhouette.impl.providers.oauth2.{FacebookProvider, GoogleProvider}
 import com.mohiva.play.silhouette.impl.providers.oauth2.state.{CookieStateProvider, CookieStateSettings}
 import com.mohiva.play.silhouette.impl.util._
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
@@ -116,10 +116,9 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
 
   @Provides
-  def provideOAuth2StateProvider(
-                                  idGenerator: IDGenerator,
-                                  @Named("oauth2-state-cookie-signer") cookieSigner: CookieSigner,
-                                  configuration: Configuration, clock: Clock): OAuth2StateProvider = {
+  def provideOAuth2StateProvider(idGenerator: IDGenerator,
+                                 @Named("oauth2-state-cookie-signer") cookieSigner: CookieSigner,
+                                 configuration: Configuration, clock: Clock): OAuth2StateProvider = {
 
     val settings = configuration.underlying.as[CookieStateSettings]("silhouette.oauth2StateProvider")
     new CookieStateProvider(settings, idGenerator, cookieSigner, clock)
@@ -134,9 +133,17 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   }
 
   @Provides
-  def provideSocialProviderRegistry(googleProvider: GoogleProvider): SocialProviderRegistry = {
+  def provideFacebookProvider(httpLayer: HTTPLayer,
+                              stateProvider: OAuth2StateProvider,
+                              configuration: Configuration): FacebookProvider = {
+
+    new FacebookProvider(httpLayer, stateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.facebook"))
+  }
+
+  @Provides
+  def provideSocialProviderRegistry(googleProvider: GoogleProvider, facebookProvider: FacebookProvider): SocialProviderRegistry = {
     SocialProviderRegistry(Seq(
-      googleProvider
+      googleProvider, facebookProvider
     ))
   }
 }

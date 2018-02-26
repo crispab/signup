@@ -13,8 +13,8 @@ import scala.concurrent.Future
 @Singleton
 class UserServiceImpl @Inject()(val userDAO: UserDAO) extends UserService {
   override def retrieve(loginInfo: LoginInfo): Future[Option[User]] = Future.successful(loginInfo.providerID match {
-    case "google" => userDAO.findByProviderKey(loginInfo.providerKey)
-    case _ => userDAO.findByEmail(loginInfo.providerKey)
+    case "credentials" => userDAO.findByEmail(loginInfo.providerKey)
+    case _ => userDAO.findByProviderKey(loginInfo.providerKey)
   })
 
   /**

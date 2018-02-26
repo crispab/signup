@@ -1,10 +1,9 @@
 package se.crisp.signup4.models.dao
 
-import javax.inject.Singleton
 
 import anorm.SqlParser.get
 import anorm.{RowParser, SQL, ~}
-import com.google.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.db.Database
 import se.crisp.signup4.models.Group
 
