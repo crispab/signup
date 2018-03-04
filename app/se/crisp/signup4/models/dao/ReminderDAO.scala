@@ -42,7 +42,7 @@ class ReminderDAO @Inject() (val database: Database,
     }
   }
 
-  def firstReminderDays: Int = configuration.getInt("event.reminder.first.days").getOrElse(7)
+  def firstReminderDays: Int = configuration.get[Int]("event.reminder.first.days")
 
   def lastReminderDays(event: Event): Int = {
     if(sameDay(event.startTime, event.lastSignUpDate))

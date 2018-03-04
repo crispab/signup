@@ -35,7 +35,7 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
       from = event.group.mailFrom,
       to = Seq(receiver.email),
       bodyHtml = Some(emailMessage.toString()),
-      replyTo = Some(event.group.mailFrom)
+      replyTo = Seq(event.group.mailFrom)
     )
 
     try {

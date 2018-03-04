@@ -29,7 +29,7 @@ class HtmlHelper @Inject() (configuration: Configuration){
       description
   }
 
-  def baseUrl: String = configuration.getString("application.base.url").getOrElse("")
+  def baseUrl: String = configuration.get[String]("application.base.url")
 
   def calendarDescriptionAsText(event: Event, url: String, maxlength: Int)(implicit messages: Messages): String = {
     truncatedTextFromHtml("<p>" + Messages("calendar.event", baseUrl + url) + "</p>" + event.description, maxlength)

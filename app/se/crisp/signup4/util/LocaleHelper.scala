@@ -11,8 +11,8 @@ import play.api.mvc.RequestHeader
 @Singleton
 class LocaleHelper @Inject() (val configuration: Configuration,
                               val langs: Langs) {
-  val LC_NAME: String = configuration.getString("application.locale").getOrElse("sv_SE")
-  val TZ_NAME: String = configuration.getString("application.timezone").getOrElse("Europe/Stockholm")
+  val LC_NAME: String = configuration.get[String]("application.locale")
+  val TZ_NAME: String = configuration.get[String]("application.timezone")
 
   private def isKey(s: String) = s.startsWith("error.")
 

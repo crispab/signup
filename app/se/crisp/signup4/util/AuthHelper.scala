@@ -60,7 +60,7 @@ class AuthHelper @Inject() (configuration: Configuration) {
     hash
   }
 
-  private def salt = configuration.getString("password.salt").getOrElse("")
+  private def salt = configuration.get[String]("password.salt")
 
   def randomPassword: String = Random.alphanumeric.take(12).mkString
 

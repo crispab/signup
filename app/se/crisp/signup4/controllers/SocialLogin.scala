@@ -8,22 +8,20 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
 import play.api.Logger
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.mvc.{Action, AnyContent, Controller}
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{Action, AnyContent, InjectedController}
 import se.crisp.signup4.models.dao.UserDAO
 import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class SocialLogin @Inject()(val messagesApi: MessagesApi,
-                            val silhouette: Silhouette[DefaultEnv],
+class SocialLogin @Inject()(val silhouette: Silhouette[DefaultEnv],
                             userService: UserService,
                             val authInfoRepository: AuthInfoRepository,
                             val socialProviderRegistry: SocialProviderRegistry,
-                            val userDAO: UserDAO
-                                     )
-  extends Controller with I18nSupport {
+                            val userDAO: UserDAO,
+                            implicit val ec: ExecutionContext    )
+  extends InjectedController with I18nSupport {
 
   def authenticate(provider: String): Action[AnyContent] = Action.async { implicit request =>
     val onMyWayTo = request.session.get("on_my_way_to").getOrElse(routes.Application.index().url.toString)

@@ -45,7 +45,7 @@ object GravatarUrl {
 @Singleton
 class CloudinaryUrl @Inject() (val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
                                val configuration: Configuration) extends ImageProvider {
-  lazy val CLOUDINARY_FOLDER: String = configuration.getString("cloudinary.folder").getOrElse("signup")
+  lazy val CLOUDINARY_FOLDER: String = configuration.get[String]("cloudinary.folder")
   lazy val cloudinary: Cloudinary = cloudinaryResourceBuilder.cld
 
 

@@ -21,5 +21,5 @@ class MD5PasswordHasher @Inject() (configuration: Configuration) extends Passwor
    MessageDigest.getInstance("MD5").digest((password + salt).getBytes).map("%02X".format(_)).mkString.toLowerCase
   }
 
-  private lazy val salt = configuration.getString("password.salt").getOrElse("")
+  private lazy val salt = configuration.get[String]("password.salt")
 }

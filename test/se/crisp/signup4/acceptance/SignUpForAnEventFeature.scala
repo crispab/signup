@@ -9,6 +9,8 @@ import se.crisp.signup4.models.User
 import se.crisp.signup4.util.{Inspect, SetUp, TearDown}
 import se.crisp.signup4.acceptance.pages._
 
+import scala.collection.JavaConverters
+
 
 @DoNotDiscover class SignUpForAnEventFeature
   extends FeatureSpec
@@ -105,8 +107,7 @@ import se.crisp.signup4.acceptance.pages._
   }
 
   private def findMember(memberName: String, members: util.List[User]): User = {
-    import scala.collection.JavaConversions._
-    for (member <- members) {
+    for (member <- JavaConverters.asScalaBuffer(members)) {
       if (member.firstName == memberName) return member
     }
     throw new IllegalArgumentException("Can't find member with name " + memberName)
