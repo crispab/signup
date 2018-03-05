@@ -44,7 +44,7 @@ env: APPLICATION_BASE_URL=http://127.0.0.1:19001 LANG=sv_SE TZ=Europe/Stockholm
 script:
   - whereis google-chrome-stable
   - whereis chromedriver
-  - sbt -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver 'test-only se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
+  - sbt -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver 'testOnly se.crisp.signup4.unit.* se.crisp.signup4.integration.* se.crisp.signup4.acceptance.*'
 
 deploy:
   provider: heroku
