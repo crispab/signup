@@ -5,8 +5,9 @@
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.AuthHelper
+@import helper._
 
-@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, formHelper: FormHelper, themeHelper: ThemeHelper, authHelper: AuthHelper)
+@(groupForm: Form[Group], idToUpdate: Option[Long] = None)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, formHelper: FormHelper, themeHelper: ThemeHelper, authHelper: AuthHelper,  request: RequestHeader)
 
 @field(fieldName: String) = @{
   groupForm(fieldName).value.getOrElse("")
@@ -43,6 +44,7 @@
   <h2>@if(creatingNew()) {@Messages("group.new")} else {@Messages("group.edit")}</h2>
 
   <form action="@theAction()" method="POST">
+    @CSRF.formField
     <div class='form-group @hasErrors("name")'>
       <label for="name">@Messages("group.edit.name")</label>
       <input type="text" maxlength="127" class="form-control" id="name" name="name" value='@field("name")' required=""/>

@@ -7,8 +7,9 @@
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
+@import helper._
 
-@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper)
+@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper,  request: RequestHeader)
 
 @field(fieldName: String) = @{
   membershipForm(fieldName).value.getOrElse("")
@@ -30,6 +31,7 @@
   <h2>@Messages("membership.heading", group.name)</h2>
 
   <form action="@se.crisp.signup4.controllers.routes.Memberships.create()" method="POST">
+    @CSRF.formField
     <fieldset>
       <div class='form-group @hasErrors("userId")'>
         <label for="userId">@Messages("membership.existinguser")</label>
