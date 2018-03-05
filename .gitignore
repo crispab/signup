@@ -20,7 +20,7 @@ phantomjsdriver.log
 *.class
 
 # Package Files #
-*.jar
+#*.jar
 !codekvast-javaagent-*.jar
 *.war
 *.ear
