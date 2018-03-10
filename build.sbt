@@ -47,7 +47,12 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play"    %% "scalatestplus-play"      % "3.1.2"       % "test",
   "org.mockito"               %  "mockito-core"            % "2.15.0"      % "test",
   "org.ocpsoft.prettytime"    %  "prettytime-nlp"          % "4.0.0.Final" % "test",
-  "com.mohiva"                %% "play-silhouette-testkit" % "5.0.3"       % "test"
+  "com.mohiva"                %% "play-silhouette-testkit" % "5.0.3"       % "test",
+
+  // Cloudinary stuff
+  "com.ning" % "async-http-client" % "1.9.40",
+  "org.json4s" %% "json4s-native" % "3.5.0",
+  "org.json4s" %% "json4s-ext" % "3.5.0"
 )
 
 resolvers ++= Seq(
