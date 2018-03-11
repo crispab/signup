@@ -15,7 +15,7 @@ cache:
   - $HOME/.ivy2
 
 addons:
-  postgresql: '9.1'
+  postgresql: '9.5'
 
 addons:
   apt:
@@ -27,7 +27,7 @@ addons:
   chrome: stable
 
 install:
-  - wget -N http://chromedriver.storage.googleapis.com/2.34/chromedriver_linux64.zip -P ~/
+  - wget -N http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip -P ~/
   - unzip ~/chromedriver_linux64.zip -d ~/
   - rm ~/chromedriver_linux64.zip
   - sudo mv -f ~/chromedriver /usr/local/share/
