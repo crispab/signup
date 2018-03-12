@@ -20,16 +20,19 @@ import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.ws.WSClient
 import play.api.mvc.CookieHeaderEncoding
 import se.crisp.signup4.services.UserServiceImpl
 import se.crisp.signup4.silhouette._
 
+import scala.concurrent.ExecutionContext
+
 
 class SilhouetteModule extends AbstractModule with ScalaModule {
 
   def configure() {
+    import play.api.libs.concurrent.Execution.Implicits._
+
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
     bind[SecuredErrorHandler].to[ErrorHandler]
     bind[UnsecuredErrorHandler].to[ErrorHandler]
@@ -46,13 +49,13 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
 
   @Provides
-  def provideHTTPLayer(client: WSClient): HTTPLayer = new PlayHTTPLayer(client)
+  def provideHTTPLayer(client: WSClient)(implicit executionContext: ExecutionContext): HTTPLayer = new PlayHTTPLayer(client)
 
 
   @Provides
   def provideEnvironment(userService: UserService,
                          authenticatorService: AuthenticatorService[CookieAuthenticator],
-                         eventBus: EventBus): Environment[DefaultEnv] = {
+                         eventBus: EventBus)(implicit executionContext: ExecutionContext): Environment[DefaultEnv] = {
     Environment[DefaultEnv](
       userService,
       authenticatorService,
@@ -72,7 +75,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
   @Provides
   def provideAuthInfoRepository(passwordInfoDAO: SignupPasswordInfoDAO,
-                                oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info]): AuthInfoRepository = {
+                                oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info])(implicit executionContext: ExecutionContext): AuthInfoRepository = {
     new DelegableAuthInfoRepository(passwordInfoDAO, oauth2InfoDAO)
   }
 
@@ -97,7 +100,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
                                   fingerprintGenerator: FingerprintGenerator,
                                   idGenerator: IDGenerator,
                                   configuration: Configuration,
-                                  clock: Clock): AuthenticatorService[CookieAuthenticator] = {
+                                  clock: Clock)(implicit executionContext: ExecutionContext): AuthenticatorService[CookieAuthenticator] = {
     val config = configuration.underlying.as[CookieAuthenticatorSettings]("silhouette.authenticator")
     val encoder = new CrypterAuthenticatorEncoder(crypter)
     new CookieAuthenticatorService(config, None, signer, cookieHeaderEncoding, encoder, fingerprintGenerator, idGenerator, clock)
@@ -108,7 +111,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
 
   @Provides
-  def provideCredentialsProvider(authInfoRepository: AuthInfoRepository, passwordHasherRegistry: PasswordHasherRegistry): CredentialsProvider =
+  def provideCredentialsProvider(authInfoRepository: AuthInfoRepository, passwordHasherRegistry: PasswordHasherRegistry)(implicit executionContext: ExecutionContext): CredentialsProvider =
     new CredentialsProvider(authInfoRepository, passwordHasherRegistry)
 
   /**
