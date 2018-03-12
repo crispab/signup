@@ -170,10 +170,11 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
     if (resourceFile.isEmpty) {
       Future(BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.nofile")))))
     } else {
-      cloudinaryResourceBuilder.upload(resourceFile.get.ref.file, UploadParameters()
-                                                            .publicId(cloudinaryUrl.publicId(userToUpdate))
-                                                            .format("png")
-                                                            .overwrite(value = true)).map {
+      cloudinaryResourceBuilder.upload(resourceFile.get.ref.path.toFile,
+        UploadParameters()
+          .publicId(cloudinaryUrl.publicId(userToUpdate))
+          .format("png")
+          .overwrite(value = true)).map {
         cr =>
           val cloudinaryFileVersion = cr.data.get.version
           userDAO.updateInfo(id, CloudinaryUrl.identifier, Some(cloudinaryFileVersion))
