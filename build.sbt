@@ -36,7 +36,7 @@ libraryDependencies ++= Seq(
   "io.codekvast"              %  "codekvast-agent"                 % "0.22.3",
   "org.codehaus.groovy"       %  "groovy-all"                      % "2.4.14",
   "com.iheart"                %% "ficus"                           % "1.4.3",
-  "net.codingwell"            %% "scala-guice"                     % "4.1.1",
+  "net.codingwell"            %% "scala-guice"                     % "4.2.0",
 
   jdbc,
   evolutions,

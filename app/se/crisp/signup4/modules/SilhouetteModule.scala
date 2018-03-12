@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 
 class SilhouetteModule extends AbstractModule with ScalaModule {
 
-  def configure() {
+  override def configure() {
     import play.api.libs.concurrent.Execution.Implicits._
 
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
