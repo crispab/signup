@@ -8,8 +8,9 @@
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
+@import helper._
 
-@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper)
+@(participationForm: Form[Participation], event: Event, nonGuests: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, request: RequestHeader)
 
 @field(fieldName: String) = @{
   participationForm(fieldName).value.getOrElse("")
@@ -32,6 +33,7 @@
   <h2>@Messages("participation.guest.heading", event.name)</h2>
 
   <form action="@se.crisp.signup4.controllers.routes.Participations.createGuest()" method="POST">
+    @CSRF.formField
     <fieldset>
       <div class='form-group @hasErrors("userId")'>
         <label for="userId">@Messages("membership.existinguser")e</label>

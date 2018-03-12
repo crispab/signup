@@ -11,23 +11,22 @@ import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.libs.iteratee.Enumerator
+import play.api.libs.iteratee.streams.IterateeStreams
 import play.api.libs.json.{JsValue, Json}
-import play.api.libs.streams.Streams
 import play.api.mvc._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao._
 import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.{ImageUrl, MailReminder, RemindAllParticipants, SlackReminder}
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
-import se.crisp.signup4.util.DateHelper.{sameDay, _}
+import se.crisp.signup4.util.DateHelper.sameDay
 import se.crisp.signup4.util._
 
 import scala.concurrent.ExecutionContext
 
 class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
-                       val messagesApi: MessagesApi,
                        implicit val configuration: Configuration,
                        implicit val authHelper: AuthHelper,
                        implicit val localeHelper: LocaleHelper,
@@ -44,8 +43,9 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
                        val mailReminder: MailReminder,
                        @Named("event-reminder-actor") val eventReminderActor: ActorRef,
                        val slackReminder: SlackReminder,
-                       val groupDAO: GroupDAO
-                      ) extends Controller  with I18nSupport  {
+                       val groupDAO: GroupDAO,
+                       implicit val ec: ExecutionContext
+                      ) extends InjectedController  with I18nSupport  {
 
   def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
     implicit val user: Option[User] =  request.identity
@@ -62,13 +62,12 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     val event = eventDAO.find(id)
     val workbook = ExcelHelper.createWorkbook(allGuests(event), allMembers(event))
 
-    import ExecutionContext.Implicits.global
     val enumerator = Enumerator.outputStream { outputStream =>
       workbook.write(outputStream)
       outputStream.close()
     }
 
-    val source = Source.fromPublisher(Streams.enumeratorToPublisher(enumerator))
+    val source = Source.fromPublisher(IterateeStreams.enumeratorToPublisher(enumerator))
 
     Ok.chunked(source).withHeaders(
       "Content-Type" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -97,7 +96,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
   def asEmailReminder(eventId: Long, userId: Long) = Action { implicit request =>
     val event = eventDAO.find(eventId)
     val user = userDAO.find(userId)
-    val baseUrl = configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.get[String]("application.base.url")
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if (themeHelper.THEME == "b73") {
@@ -111,7 +110,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
   def asEmailCancellation(eventId: Long, userId: Long) = Action { implicit request =>
     val event = eventDAO.find(eventId)
     val user = userDAO.find(userId)
-    val baseUrl = configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.get[String]("application.base.url")
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if (themeHelper.THEME == "b73") {
@@ -125,7 +124,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
   def asSlackReminder(id: Long) = Action { implicit request =>
     val event = eventDAO.find(id)
 
-    val baseUrl = configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.get[String]("application.base.url")
     val message: JsValue = Json.parse(se.crisp.signup4.views.txt.events.slackremindermessage(event, baseUrl).toString())
 
     Ok(message)
@@ -134,7 +133,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
   def asSlackCancellation(id: Long) = Action { implicit request =>
     val event = eventDAO.find(id)
 
-    val baseUrl = configuration.getString("application.base.url").getOrElse("")
+    val baseUrl = configuration.get[String]("application.base.url")
     val message: JsValue = Json.parse(se.crisp.signup4.views.txt.events.slackcancellationmessage(event, baseUrl).toString())
 
     Ok(message)
@@ -226,7 +225,6 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     eventDAO.cancel(id, reason)
     logEntryDAO.create(event, Messages("event.cancelledby", request.identity.name, reason.getOrElse("ej angiven")))
 
-    import play.api.libs.concurrent.Execution.Implicits._
 
     import scala.concurrent.duration._
     actorSystem.scheduler.scheduleOnce(1.second) {

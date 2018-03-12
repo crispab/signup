@@ -4,8 +4,9 @@
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
 @import se.crisp.signup4.services.ImageUrl
+@import helper._
 
-@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper)
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, request: RequestHeader)
 
 @participations.map { participation =>
 
@@ -72,6 +73,7 @@
               </div>
               <div class="modal-footer">
                 <form action="@se.crisp.signup4.controllers.routes.Participations.delete(participation.id.get)" method="POST">
+                  @CSRF.formField
                   <button type="button" class="btn btn-default" data-dismiss="modal">
                     <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                   </button>

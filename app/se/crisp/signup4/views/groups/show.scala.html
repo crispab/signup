@@ -7,8 +7,9 @@
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
+@import helper._
 
-@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
+@(group: Group, events: Seq[Event], members: Seq[Membership], showingAll: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper,  request: RequestHeader)
 
 @se.crisp.signup4.views.html.page(group.name, section = Groups) {
 
@@ -39,6 +40,7 @@
             </div>
             <div class="modal-footer">
               <form action="@se.crisp.signup4.controllers.routes.Groups.delete(group.id.get)" method="POST">
+                @CSRF.formField
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
@@ -129,6 +131,7 @@
                 </div>
                 <div class="modal-footer">
                   <form action="@se.crisp.signup4.controllers.routes.Memberships.delete(membership.id.get)" method="POST">
+                    @CSRF.formField
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                       <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                     </button>

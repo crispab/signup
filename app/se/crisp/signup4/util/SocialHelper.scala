@@ -6,7 +6,7 @@ import play.api.Configuration
 
 @Singleton
 class SocialHelper @Inject()(val configuration: Configuration) {
-  val googleLoginConfigured: Boolean = configuration.getString("silhouette.google.clientID").getOrElse("").trim.length > 0
-  val facebookLoginConfigured: Boolean = configuration.getString("silhouette.facebook.clientID").getOrElse("").trim.length > 0
+  val googleLoginConfigured: Boolean = configuration.get[String]("silhouette.google.clientID").trim.length > 0
+  val facebookLoginConfigured: Boolean = configuration.get[String]("silhouette.facebook.clientID").trim.length > 0
   def socialConfigured: Boolean = googleLoginConfigured || facebookLoginConfigured
 }

@@ -11,7 +11,7 @@ import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
 import play.api.{Configuration, Logger}
 import se.crisp.signup4.models.User
@@ -26,7 +26,6 @@ import scala.concurrent.Future
 
 @Singleton
 class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
-                            val messagesApi: MessagesApi,
                             val actorSystem: ActorSystem,
                             @Named("event-reminder-actor") val eventReminderActor: ActorRef,
                             val configuration: Configuration,
@@ -37,7 +36,7 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
                             val credentialsProvider: CredentialsProvider,
                             val userService: UserService,
                             val userDAO: UserDAO,
-                            implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport {
+                            implicit val imageUrl: ImageUrl) extends InjectedController  with I18nSupport {
 
   initialize()
 
@@ -115,7 +114,7 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
   }
 
   private def firstRun = {
-    val sendTimeProperty = configuration.getString("event.reminder.send.time").getOrElse("01:00")
+    val sendTimeProperty = configuration.get[String]("event.reminder.send.time")
 
     var startTime = new org.joda.time.LocalTime(sendTimeProperty).toDateTimeToday
     if(startTime.isBeforeNow) {

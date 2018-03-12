@@ -9,12 +9,12 @@ import com.mohiva.play.silhouette.api.Silhouette
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms.{boolean, ignored, longNumber, mapping, nonEmptyText, optional, text}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
 import se.crisp.signup4
-import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{EventDAO, MembershipDAO, ParticipationDAO, UserDAO}
+import se.crisp.signup4.models.security.{Administrator, NormalUser}
 import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, ImageUrl, RemindParticipant}
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
@@ -23,7 +23,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
-                      val messagesApi: MessagesApi,
                       val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
                       val cloudinaryUrl: CloudinaryUrl,
                       implicit val gravatarUrl: GravatarUrl,
@@ -36,7 +35,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
                       val userDAO: UserDAO,
                       val membershipDAO: MembershipDAO,
                       implicit val participationDAO: ParticipationDAO,
-                      @Named("event-reminder-actor") eventReminderActor: ActorRef) extends Controller  with I18nSupport{
+                      @Named("event-reminder-actor") eventReminderActor: ActorRef) extends InjectedController  with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
     implicit val user: Option[User] = request.identity

@@ -1,4 +1,3 @@
-@import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.dao.{EventDAO, ParticipationDAO}
 @import se.crisp.signup4.util.AuthHelper
@@ -7,7 +6,9 @@
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.DateHelper._
 @import se.crisp.signup4.util.StatusHelper._
-@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper, participationDAO: ParticipationDAO, eventDAO: EventDAO)
+@import helper._
+
+@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper, participationDAO: ParticipationDAO, eventDAO: EventDAO,  request: RequestHeader)
 
 @se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
 
@@ -69,6 +70,7 @@
               </div>
               <div class="modal-footer">
                 <form action="@se.crisp.signup4.controllers.routes.Users.delete(user.id.get)" method="POST">
+                  @CSRF.formField
                   <button type="button" class="btn btn-default" data-dismiss="modal">
                     <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                   </button>

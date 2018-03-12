@@ -1,14 +1,15 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.Group
 @import se.crisp.signup4.models.Event
-@import se.crisp.signup4.models.Reminder
 @import se.crisp.signup4.models.dao.ReminderDAO
 @import se.crisp.signup4.util.FormHelper
 @import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.ThemeHelper
-@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, formHelper: FormHelper, authHelper: AuthHelper, themeHelper: ThemeHelper, reminderDAO: ReminderDAO)
+@import helper._
+
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, formHelper: FormHelper, authHelper: AuthHelper, themeHelper: ThemeHelper, reminderDAO: ReminderDAO,  request: RequestHeader)
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
@@ -47,6 +48,7 @@
   <h2>@if(creatingNew()) {@Messages("event.new")} else {@Messages("event.edit")}</h2>
 
   <form class="form" id="editForm" action="@theAction()" method="POST" onsubmit="loadDescription()">
+    @CSRF.formField
     <fieldset>
       <div class='form-group @hasErrors("name")'>
         <label for="name">@Messages("event.edit.name")</label>

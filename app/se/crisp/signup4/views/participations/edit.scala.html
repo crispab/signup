@@ -12,8 +12,9 @@
 @import se.crisp.signup4.util.HtmlHelper
 @import se.crisp.signup4.util.LocaleHelper
 @import play.api.Configuration
+@import helper._
 
-@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, htmlHelper: HtmlHelper, localeHelper: LocaleHelper, eventDAO: EventDAO, configuration: Configuration)
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, htmlHelper: HtmlHelper, localeHelper: LocaleHelper, eventDAO: EventDAO, configuration: Configuration,  request: RequestHeader)
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
@@ -87,6 +88,7 @@
             </div>
             <div class="modal-footer">
               <form action="@se.crisp.signup4.controllers.routes.Users.remindParticipant(user.id.get, event.id.get)" method="POST">
+                @CSRF.formField
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   <span class="glyphicon glyphicon-ban-circle"></span> @Messages("button.cancel")
                 </button>
@@ -111,6 +113,7 @@
   </div>
 
   <form class="small-space-berfore" action="@se.crisp.signup4.controllers.routes.Participations.createOrUpdate()" method="POST">
+    @CSRF.formField
     <fieldset>
       <div class='form-group  @hasErrors("status")'>
         <label class="radio-inline">

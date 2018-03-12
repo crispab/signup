@@ -3,19 +3,18 @@ package se.crisp.signup4.controllers
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.Silhouette
-import se.crisp.signup4.models._
-import se.crisp.signup4.models.security.Administrator
 import play.api.data.Form
 import play.api.data.Forms.{ignored, longNumber, mapping}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
+import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{GroupDAO, MembershipDAO, UserDAO}
+import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.ImageUrl
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
 class Memberships @Inject() (val silhouette: Silhouette[DefaultEnv],
-                             val messagesApi: MessagesApi,
                              implicit val authHelper: AuthHelper,
                              implicit val localeHelper: LocaleHelper,
                              implicit val themeHelper: ThemeHelper,
@@ -23,7 +22,7 @@ class Memberships @Inject() (val silhouette: Silhouette[DefaultEnv],
                              val userDAO: UserDAO,
                              val groupDAO: GroupDAO,
                              val membershipDAO: MembershipDAO,
-                             implicit val imageUrl: ImageUrl) extends Controller with I18nSupport{
+                             implicit val imageUrl: ImageUrl) extends InjectedController with I18nSupport{
 
   def createForm(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)

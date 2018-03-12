@@ -7,7 +7,8 @@ import se.crisp.signup4.models.dao.{EventDAO, GroupDAO, MembershipDAO, UserDAO}
 import se.crisp.signup4.models.{Event, Group, User}
 import se.crisp.signup4.util.TestHelper._
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters
+
 
 @Singleton
 class SetUp @Inject() (val userDAO: UserDAO,
@@ -15,7 +16,7 @@ class SetUp @Inject() (val userDAO: UserDAO,
                        val membershipDAO: MembershipDAO,
                        val eventDAO: EventDAO) {
   def createUsers(userNames: util.List[String]): util.List[User] = {
-    userNames map (name => createUser(name))
+    JavaConverters.bufferAsJavaList(JavaConverters.asScalaBuffer(userNames) map (name => createUser(name)))
   }
 
   def createUser(userName: String): User = {
@@ -31,7 +32,7 @@ class SetUp @Inject() (val userDAO: UserDAO,
   }
 
   def addMembers(group: Group, members: util.List[User]): Unit = {
-    members foreach { member => membershipDAO.create(group.id.get, member.id.get)}
+    JavaConverters.asScalaBuffer(members) foreach { member => membershipDAO.create(group.id.get, member.id.get)}
   }
 
   def createMorningEvent(group: Group, eventName: String): Event = {

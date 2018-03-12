@@ -6,8 +6,8 @@ import play.api.Configuration
 
 @Singleton
 class ThemeHelper @Inject() (val configuration: Configuration) {
-  val THEME: String = configuration.getString("application.theme").getOrElse("crisp")
-  val APPLICATION_NAME: String = configuration.getString("application.name").getOrElse("SignUp")
+  val THEME: String = configuration.get[String]("application.theme")
+  val APPLICATION_NAME: String = configuration.get[String]("application.name")
 
   def forTheme(string: String): String = {
     string.replaceAll("\\[THEME\\]", THEME)

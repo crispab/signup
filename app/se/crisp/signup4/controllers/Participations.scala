@@ -5,21 +5,22 @@ import javax.inject.{Inject, Singleton}
 import akka.actor.ActorSystem
 import com.mohiva.play.silhouette.api.Silhouette
 import play.api.Configuration
-import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.models._
-import se.crisp.signup4.models.Status._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n._
 import play.api.mvc._
+import se.crisp.signup4.models.Status._
+import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{EventDAO, LogEntryDAO, ParticipationDAO, UserDAO}
+import se.crisp.signup4.models.security.Administrator
 import se.crisp.signup4.services.{ImageUrl, SlackReminder}
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util._
 
+import scala.concurrent.ExecutionContext
+
 @Singleton
 class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
-                               val messagesApi: MessagesApi,
                                val actorSystem: ActorSystem,
                                implicit val configuration: Configuration,
                                implicit val authHelper: AuthHelper,
@@ -32,7 +33,9 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
                                val userDAO: UserDAO,
                                val participationDAO: ParticipationDAO,
                                val logEntryDAO: LogEntryDAO,
-                               implicit val imageUrl: ImageUrl) extends Controller  with I18nSupport{
+                               implicit val imageUrl: ImageUrl,
+                               implicit val ec: ExecutionContext) extends InjectedController  with I18nSupport{
+
 
   def editForm(eventId: Long, userId: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
     implicit val user: Option[User] = request.identity
@@ -46,9 +49,9 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
     }
   }
 
-  private def asLogMessage(participation: Participation)(implicit lang: Lang):String = {
+  private def asLogMessage(participation: Participation)(implicit lang: Lang, request: RequestHeader):String = {
     val message = new StringBuffer()
-    message.append(Messages("participation.updated", participation.user.name, StatusHelper.asMessage(participation.status)))
+    message.append(Messages("participation.updated", participation.user.name, StatusHelper.asMessage(participation.status)(request2Messages)))
 
     if(participation.numberOfParticipants > 1) {
       message.append(" ").append(Messages("participation.people", participation.numberOfParticipants))
@@ -77,9 +80,9 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
           // TODO: only do this if there actually is a change, to avoid unneccessary log messages
           participationDAO.update(existingParticipation.get.id.get, participation)
           val updatedParticipation = participationDAO.find(existingParticipation.get.id.get)
-          logEntryDAO.create(updatedParticipation.event, asLogMessage(updatedParticipation))
+          logEntryDAO.create(updatedParticipation.event, asLogMessage(updatedParticipation)(localeHelper.getLang(request),request))
 
-          import play.api.libs.concurrent.Execution.Implicits._
+
           import scala.concurrent.duration._
           actorSystem.scheduler.scheduleOnce(1.second) {
             slackReminder.sendUpdatedParticipationMessage(updatedParticipation)
