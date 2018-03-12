@@ -31,13 +31,10 @@ import scala.concurrent.ExecutionContext
 class SilhouetteModule extends AbstractModule with ScalaModule {
 
   override def configure() {
-    import play.api.libs.concurrent.Execution.Implicits._
-
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
     bind[SecuredErrorHandler].to[ErrorHandler]
     bind[UnsecuredErrorHandler].to[ErrorHandler]
     bind[UserService].to[UserServiceImpl]
-    bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[PasswordHasher].to[MD5PasswordHasher]
     bind[FingerprintGenerator].toInstance(new DefaultFingerprintGenerator(false))
     bind[EventBus].toInstance(EventBus())
@@ -47,6 +44,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[DelegableAuthInfoDAO[OAuth2Info]].to[SignupOAuth2InfoDAO]
   }
 
+  @Provides
+  def provideIDGenerator()(implicit executionContext: ExecutionContext): IDGenerator = new SecureRandomIDGenerator()
 
   @Provides
   def provideHTTPLayer(client: WSClient)(implicit executionContext: ExecutionContext): HTTPLayer = new PlayHTTPLayer(client)
