@@ -9,7 +9,7 @@
 
 <script type="text/javascript">
   addthisevent.settings ({
-    license : '@configuration.getString("addthisevent.license").getOrElse("")',
+    license : '@configuration.get[String]("addthisevent.license")',
     mouse : false,
     css : false,
     google     : {show:true, text:"<i class='fa fa-google fa-fw'></i> @Messages("calendar.google") <small><em>@Messages("calendar.online")</em></small>"},
