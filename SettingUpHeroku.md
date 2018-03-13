@@ -4,7 +4,7 @@ Setting up a SignUp instance on Heroku
 General
 ------
 
-SignUp runs on Heroku. Actually the service can run in any environment that supports the Play Framework and Postgres,
+SignUp runs on Heroku. Actually the service can run in any environment that supports Scala and Postgres,
 but since Heroku was used from start it's a lot easier to deploy in this environment.
 
 

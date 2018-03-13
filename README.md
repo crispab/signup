@@ -10,9 +10,9 @@ This is the fourth version of the SignUp Service.
 - Heroku is used for deployment
 
 ### Play Framework ###
-- Play 2.5.18 - http://www.playframework.org/
-- Scala 2.11.12 - http://www.scala-lang.org/
-- Anorm 2.5.3 - https://www.playframework.com/documentation/2.5.x/Anorm
+- Play 2.6.12 - http://www.playframework.org/
+- Scala 2.12.4 - http://www.scala-lang.org/
+- Anorm 2.6.1 - https://www.playframework.com/documentation/2.6.x/Anorm
 
 ### Presentation ###
 - Bootstrap 3.3.4 - http://getbootstrap.com/
@@ -22,8 +22,8 @@ This is the fourth version of the SignUp Service.
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play 3rd party modules ###
-- Silhouette 4.0.0 authentication library - https://www.silhouette.rocks/s
-- Emailer Plugin 5.0.0 - https://github.com/playframework/play-mailer
+- Silhouette 5.0.3 authentication library - https://www.silhouette.rocks/s
+- Emailer Plugin 6.0.1 - https://github.com/playframework/play-mailer
 
 ### Run-time environment ###
 - Heroku (general app server environment) - http://heroku.com
@@ -61,7 +61,7 @@ The test cases that do exist are divided into three categories: unit, integratio
 #### Unit tests ####
 To execute the unit tests:
 ```
-sbt 'test-only unit.*'
+sbt 'testOnly unit.*'
 ```
 
 #### Integration tests ####
@@ -69,7 +69,7 @@ These tests mainly do database related tests.
 
 To execute the integration tests:
 ```
-sbt 'test-only integration.*'
+sbt 'testOnly integration.*'
 ```
 
 #### Acceptance tests ####
@@ -78,7 +78,7 @@ Chrome and ChromeDriver to be installed in the test environemnt.
 
 To execute the acceptance tests:
 ```
-sbt 'test-only acceptance.*'
+sbt 'testOnly acceptance.*'
 ```
 
 #### Continuous integration ####
@@ -93,7 +93,7 @@ Some clipart comes from http://openclipart.org and is Public Domain, see http://
 
 The libraries, services and tools listed under General above is copyright and licensed by the respective creators and owners.
 
-The rest of the code is Copyright 2012, 2013, 2014, 2015 by Mats Strandberg and Jan Grape and
+The rest of the code is Copyright 2012, 2013, 2014, 2015, 2016, 2017, 2018 by Mats Strandberg and Jan Grape and
 licensed under the Apache License v2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
