@@ -29,7 +29,7 @@ heroku config:set \
     JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8 -javaagent:/app/target/universal/stage/lib/io.codekvast.codekvast-agent-0.22.1.jar" \
     SBT_OPTS="-Dsbt.jse.engineType=Node" \
     SBT_CLEAN="true" \
-    HOSTS_ALLOWED_FILTER='["<your application>.herokuapp.com"]' \
+    HOST_ALLOWED_1="<your application>.herokuapp.com" \
     $*
 
 heroku buildpacks:clear $*
