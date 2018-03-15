@@ -1,16 +1,15 @@
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.util.ThemeHelper
+@import se.crisp.signup4.util.Section.Users
 @import se.crisp.signup4.services.GravatarUrl
-@import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.AuthHelper
 @import helper._
 
-@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, gravatarUrl: GravatarUrl, themeHelper: ThemeHelper, authHelper: AuthHelper,  request: RequestHeader)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, gravatarUrl: GravatarUrl)
 
-@se.crisp.signup4.views.html.page(Messages("user.updateimage", user.firstName, user.lastName), section = Users) {
+@(user: User, errorMessage: Option[String] = None)(implicit loggedInUser: Option[User], messages: Messages, request: RequestHeader)
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list(),
+@page(Messages("user.updateimage", user.firstName, user.lastName), section = Users) {
+
+  @breadcrumbView(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list(),
     user.firstName + " " + user.lastName -> se.crisp.signup4.controllers.routes.Users.show(user.id.get)),
     Messages("navigation.updateimage"))
 

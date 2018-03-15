@@ -19,7 +19,7 @@ import play.api.mvc._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao._
 import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.services.{ImageUrl, MailReminder, RemindAllParticipants, SlackReminder}
+import se.crisp.signup4.services.{MailReminder, RemindAllParticipants, SlackReminder}
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util.DateHelper.sameDay
 import se.crisp.signup4.util._
@@ -27,18 +27,22 @@ import se.crisp.signup4.util._
 import scala.concurrent.ExecutionContext
 
 class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
-                       implicit val configuration: Configuration,
-                       implicit val authHelper: AuthHelper,
-                       implicit val localeHelper: LocaleHelper,
-                       implicit val themeHelper: ThemeHelper,
-                       implicit val formHelper: FormHelper,
-                       implicit val htmlHelper: HtmlHelper,
-                       implicit val eventDAO: EventDAO,
+                       val showcancelledView: se.crisp.signup4.views.html.events.showcancelled,
+                       val showView: se.crisp.signup4.views.html.events.show,
+                       val editView: se.crisp.signup4.views.html.events.edit,
+                       val b73EmailremindermessageView: se.crisp.signup4.views.html.events.b73.emailremindermessage,
+                       val b73EmailcancellationmessageView: se.crisp.signup4.views.html.events.b73.emailcancellationmessage,
+                       val crispEmailremindermessageView: se.crisp.signup4.views.html.events.crisp.emailremindermessage,
+                       val crispEmailcancellationmessageView: se.crisp.signup4.views.html.events.crisp.emailcancellationmessage,
+                       val slackremindermessageView: se.crisp.signup4.views.txt.events.slackremindermessage,
+                       val slackcancellationmessageView: se.crisp.signup4.views.txt.events.slackcancellationmessage,
+                       val configuration: Configuration,
+                       val themeHelper: ThemeHelper,
+                       val eventDAO: EventDAO,
                        val userDAO: UserDAO,
                        val participationDAO: ParticipationDAO,
                        val logEntryDAO: LogEntryDAO,
-                       implicit val reminderDAO: ReminderDAO,
-                       implicit val imageUrl: ImageUrl,
+                       val reminderDAO: ReminderDAO,
                        val actorSystem: ActorSystem,
                        val mailReminder: MailReminder,
                        @Named("event-reminder-actor") val eventReminderActor: ActorRef,
@@ -51,9 +55,9 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     implicit val user: Option[User] =  request.identity
     val event = eventDAO.find(id)
     if (event.isCancelled) {
-      Ok(se.crisp.signup4.views.html.events.showcancelled(event, logEntryDAO.findByEvent(event)))
+      Ok(showcancelledView(event, logEntryDAO.findByEvent(event)))
     } else {
-      Ok(se.crisp.signup4.views.html.events.show(event, participationDAO.findMembers(event), participationDAO.findGuests(event), logEntryDAO.findByEvent(event), reminderDAO.findByEvent(event)))
+      Ok(showView(event, participationDAO.findMembers(event), participationDAO.findGuests(event), logEntryDAO.findByEvent(event), reminderDAO.findByEvent(event)))
     }
   }
 
@@ -100,9 +104,9 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if (themeHelper.THEME == "b73") {
-      Ok(se.crisp.signup4.views.html.events.b73.emailremindermessage(event, user, baseUrl))
+      Ok(b73EmailremindermessageView(event, user, baseUrl))
     } else {
-      Ok(se.crisp.signup4.views.html.events.crisp.emailremindermessage(event, user, baseUrl))
+      Ok(crispEmailremindermessageView(event, user, baseUrl))
     }
   }
 
@@ -114,9 +118,9 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
 
     // TODO: get rid of this by using SendGrid mail templates instead
     if (themeHelper.THEME == "b73") {
-      Ok(se.crisp.signup4.views.html.events.b73.emailcancellationmessage(event, user, baseUrl))
+      Ok(b73EmailcancellationmessageView(event, user, baseUrl))
     } else {
-      Ok(se.crisp.signup4.views.html.events.crisp.emailcancellationmessage(event, user, baseUrl))
+      Ok(crispEmailcancellationmessageView(event, user, baseUrl))
     }
   }
 
@@ -125,7 +129,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     val event = eventDAO.find(id)
 
     val baseUrl = configuration.get[String]("application.base.url")
-    val message: JsValue = Json.parse(se.crisp.signup4.views.txt.events.slackremindermessage(event, baseUrl).toString())
+    val message: JsValue = Json.parse(slackremindermessageView(event, baseUrl).toString())
 
     Ok(message)
   }
@@ -134,7 +138,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     val event = eventDAO.find(id)
 
     val baseUrl = configuration.get[String]("application.base.url")
-    val message: JsValue = Json.parse(se.crisp.signup4.views.txt.events.slackcancellationmessage(event, baseUrl).toString())
+    val message: JsValue = Json.parse(slackcancellationmessageView(event, baseUrl).toString())
 
     Ok(message)
   }
@@ -152,7 +156,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
   def createForm(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
     val group = groupDAO.find(groupId)
-    Ok(se.crisp.signup4.views.html.events.edit(eventForm, group))
+    Ok(editView(eventForm, group))
   }
 
 
@@ -162,7 +166,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
       formWithErrors => {
         val groupId = formWithErrors("groupId").value.get.toLong
         val group = groupDAO.find(groupId)
-        BadRequest(se.crisp.signup4.views.html.events.edit(formWithErrors, group))
+        BadRequest(editView(formWithErrors, group))
       },
       event => {
         val eventId = eventDAO.create(event)
@@ -190,7 +194,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     implicit val loggedInUser: Option[User] = Option(request.identity)
     val event = eventDAO.find(id)
     if (!event.isCancelled) {
-      Ok(se.crisp.signup4.views.html.events.edit(eventForm.fill(event), event.group, Option(id)))
+      Ok(editView(eventForm.fill(event), event.group, Option(id)))
     } else {
       Redirect(routes.Events.show(id)).flashing("error" -> Messages("event.cancelled.noedit"))
     }
@@ -203,7 +207,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
       eventForm.bindFromRequest.fold(
         formWithErrors => {
           val event = eventDAO.find(id)
-          BadRequest(se.crisp.signup4.views.html.events.edit(formWithErrors, event.group, Option(id)))
+          BadRequest(editView(formWithErrors, event.group, Option(id)))
         },
         event => {
           eventDAO.update(id, event)

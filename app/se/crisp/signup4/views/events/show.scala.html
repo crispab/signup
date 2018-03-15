@@ -6,21 +6,19 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.dao.EventDAO
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.DateHelper._
-@import se.crisp.signup4.util.StatusHelper._
-@import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.HtmlHelper
-@import se.crisp.signup4.util.ThemeHelper
-@import se.crisp.signup4.util.LocaleHelper
-@import play.api.Configuration
 @import helper._
+@import se.crisp.signup4.util.DateHelper.{asDayAndDate, asTime, asDateTime, sameDay}
+@import se.crisp.signup4.util.StatusHelper.{asMessage, asCssClass}
+@import se.crisp.signup4.util.Section.Groups
 
-@(event: Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, htmlHelper: HtmlHelper, themeHelper: ThemeHelper, localeHelper: LocaleHelper, eventDAO: EventDAO, configuration: Configuration,  request: RequestHeader)
 
-@se.crisp.signup4.views.html.page(event.name, section = Groups) {
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, addToCalendarButtonTag: se.crisp.signup4.views.html.events.tags.addToCalendarButton, listParticipationsTag: se.crisp.signup4.views.html.events.tags.listParticipations, authHelper: AuthHelper, eventDAO: EventDAO)
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
+@(event: Event, members: ParticipationLists, guests: ParticipationLists, logEntries: Seq[LogEntry], reminders: Seq[Reminder])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], request: RequestHeader)
+
+@page(event.name, section = Groups) {
+
+  @breadcrumbView(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
     event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)),
     event.name)
 
@@ -79,7 +77,7 @@
       <p>@Messages("event.lastsignup", asDayAndDate(event.lastSignUpDate))</p>
     }
 
-    @se.crisp.signup4.views.html.events.tags.addToCalendarButton(event)
+    @addToCalendarButtonTag(event)
 
     @if(authHelper.isAdmin(loggedInUser)) {
       <div class="btn-group">
@@ -244,10 +242,10 @@
   @if(guests.isEmpty) {
     <p>@Messages("event.noguests")</p>
   } else {
-    @se.crisp.signup4.views.html.events.tags.listParticipations(guests.on, withRemoveButton = true)
-    @se.crisp.signup4.views.html.events.tags.listParticipations(guests.maybe, withRemoveButton = true)
-    @se.crisp.signup4.views.html.events.tags.listParticipations(guests.off, withRemoveButton = true)
-    @se.crisp.signup4.views.html.events.tags.listParticipations(guests.unregistered, withRemoveButton = true)
+    @listParticipationsTag(guests.on, withRemoveButton = true)
+    @listParticipationsTag(guests.maybe, withRemoveButton = true)
+    @listParticipationsTag(guests.off, withRemoveButton = true)
+    @listParticipationsTag(guests.unregistered, withRemoveButton = true)
   }
 
   @if(authHelper.isAdmin(loggedInUser)) {
@@ -259,9 +257,9 @@
 
   <h3>@Messages("event.members")</h3>
 
-  @se.crisp.signup4.views.html.events.tags.listParticipations(members.on)
-  @se.crisp.signup4.views.html.events.tags.listParticipations(members.maybe)
-  @se.crisp.signup4.views.html.events.tags.listParticipations(members.off)
-  @se.crisp.signup4.views.html.events.tags.listParticipations(members.unregistered)
+  @listParticipationsTag(members.on)
+  @listParticipationsTag(members.maybe)
+  @listParticipationsTag(members.off)
+  @listParticipationsTag(members.unregistered)
 
 }

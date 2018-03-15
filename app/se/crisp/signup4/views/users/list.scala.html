@@ -1,14 +1,15 @@
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.util.Section.Users
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.services.ImageUrl
 
-@(users: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, imageUrl: ImageUrl, authHelper: AuthHelper)
 
-@se.crisp.signup4.views.html.page(Messages("navigation.users"), section = Users) {
+@(users: Seq[User])(implicit loggedInUser: Option[User], messages: Messages)
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(), Messages("navigation.users"))
+@page(Messages("navigation.users"), section = Users) {
+
+  @breadcrumbView(Seq(), Messages("navigation.users"))
 
   <div class="row">
     <div class="col-md-5">

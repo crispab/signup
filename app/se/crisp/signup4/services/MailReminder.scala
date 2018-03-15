@@ -14,12 +14,16 @@ import se.crisp.signup4.util.{HtmlHelper, ThemeHelper}
 
 @Singleton
 class MailReminder @Inject() (val mailerClient: MailerClient,
+                              val b73EmailremindermessageView: se.crisp.signup4.views.html.events.b73.emailremindermessage,
+                              val b73EmailcancellationmessageView: se.crisp.signup4.views.html.events.b73.emailcancellationmessage,
+                              val crispEmailremindermessageView: se.crisp.signup4.views.html.events.crisp.emailremindermessage,
+                              val crispEmailcancellationmessageView: se.crisp.signup4.views.html.events.crisp.emailcancellationmessage,
                               val userDAO: UserDAO,
                               val membershipDAO: MembershipDAO,
                               val participationDAO: ParticipationDAO,
                               val htmlHelper: HtmlHelper,
                               val logEntryDAO: LogEntryDAO,
-                              implicit val themeHelper: ThemeHelper) {
+                              val themeHelper: ThemeHelper) {
   def sendMessages(event: Event, receivers: Seq[User], createMessage: (Event, User) => Html)(implicit loggedIn: User,  messages: Messages) {
     Logger.debug("Sending messages for: " + event.name)
     receivers foreach { receiver =>
@@ -61,9 +65,9 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
   private def createReminderMessage(event: Event, user: User)(implicit  messages: Messages): Html = {
     // TODO: get rid of this by using SendGrid mail templates instead
     if (themeHelper.THEME == "b73") {
-      se.crisp.signup4.views.html.events.b73.emailremindermessage(event, user, htmlHelper.baseUrl)
+      b73EmailremindermessageView(event, user, htmlHelper.baseUrl)
     } else {
-      se.crisp.signup4.views.html.events.crisp.emailremindermessage(event, user, htmlHelper.baseUrl)
+      crispEmailremindermessageView(event, user, htmlHelper.baseUrl)
     }
   }
 
@@ -87,9 +91,9 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
   private def createCancellationMessage(event: Event, user: User) (implicit messages: Messages): Html = {
     // TODO: get rid of this by using SendGrid mail templates instead
     if (themeHelper.THEME == "b73") {
-      se.crisp.signup4.views.html.events.b73.emailcancellationmessage(event, user, htmlHelper.baseUrl)
+      b73EmailcancellationmessageView(event, user, htmlHelper.baseUrl)
     } else {
-      se.crisp.signup4.views.html.events.crisp.emailcancellationmessage(event, user, htmlHelper.baseUrl)
+      crispEmailcancellationmessageView(event, user, htmlHelper.baseUrl)
     }
   }
 

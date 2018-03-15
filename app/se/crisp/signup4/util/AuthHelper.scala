@@ -11,9 +11,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 @Singleton
-class AuthHelper @Inject() (configuration: Configuration) {
+class AuthHelper @Inject() (val configuration: Configuration,
+                            implicit val ec: ExecutionContext) {
 
-  import ExecutionContext.Implicits.global
   def hasPermission(permission: Permission)(loggedInUser: User): Future[Boolean]
     = Future(authorize(loggedInUser, permission))
 

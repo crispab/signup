@@ -10,23 +10,17 @@ import play.api.mvc._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{GroupDAO, MembershipDAO, UserDAO}
 import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.services.ImageUrl
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
-import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
 
 class Memberships @Inject() (val silhouette: Silhouette[DefaultEnv],
-                             implicit val authHelper: AuthHelper,
-                             implicit val localeHelper: LocaleHelper,
-                             implicit val themeHelper: ThemeHelper,
-                             implicit val formHelper: FormHelper,
+                             val editView: se.crisp.signup4.views.html.memberships.edit,
                              val userDAO: UserDAO,
                              val groupDAO: GroupDAO,
-                             val membershipDAO: MembershipDAO,
-                             implicit val imageUrl: ImageUrl) extends InjectedController with I18nSupport{
+                             val membershipDAO: MembershipDAO) extends InjectedController with I18nSupport{
 
   def createForm(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
-    Ok(se.crisp.signup4.views.html.memberships.edit(membershipForm, groupDAO.find(groupId), userDAO.findNonMembers(groupId)))
+    Ok(editView(membershipForm, groupDAO.find(groupId), userDAO.findNonMembers(groupId)))
   }
 
   def create: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
@@ -35,7 +29,7 @@ class Memberships @Inject() (val silhouette: Silhouette[DefaultEnv],
         formWithErrors => {
           val group = groupDAO.find(formWithErrors("groupId").value.get.toLong)
           val nonMembers = userDAO.findNonMembers(group.id.get)
-          BadRequest(se.crisp.signup4.views.html.memberships.edit(formWithErrors, group, nonMembers))
+          BadRequest(editView(formWithErrors, group, nonMembers))
         },
         membership => {
           membershipDAO.create(membership)

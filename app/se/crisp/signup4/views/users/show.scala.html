@@ -1,22 +1,23 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.dao.{EventDAO, ParticipationDAO}
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.ThemeHelper
-@import se.crisp.signup4.util.Section._
 @import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.DateHelper._
-@import se.crisp.signup4.util.StatusHelper._
+@import se.crisp.signup4.util.DateHelper.{asDayAndDate, asTime, sameDay}
+@import se.crisp.signup4.util.StatusHelper.{asMessage, asCssClass}
 @import helper._
+@import se.crisp.signup4.util.Section.Users
 
-@(user: User)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper, participationDAO: ParticipationDAO, eventDAO: EventDAO,  request: RequestHeader)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, imageUrl: ImageUrl, authHelper: AuthHelper, participationDAO: ParticipationDAO, eventDAO: EventDAO)
 
-@se.crisp.signup4.views.html.page(user.firstName + " " + user.lastName, section = Users) {
+@(user: User)(implicit loggedInUser: Option[User], messages: Messages, request: RequestHeader)
+
+@page(user.firstName + " " + user.lastName, section = Users) {
 
   @if(authHelper.isAdmin(loggedInUser)) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list()),
+    @breadcrumbView(Seq(Messages("navigation.users") -> se.crisp.signup4.controllers.routes.Users.list()),
       user.firstName + " " + user.lastName)
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(), user.firstName + " " + user.lastName)
+    @breadcrumbView(Seq(), user.firstName + " " + user.lastName)
   }
 
   <img class="big-thumb thumb-background80" src="@imageUrl(user, size = 80)" onerror="imgError(this);"/>

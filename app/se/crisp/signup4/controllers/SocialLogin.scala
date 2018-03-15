@@ -20,7 +20,7 @@ class SocialLogin @Inject()(val silhouette: Silhouette[DefaultEnv],
                             val authInfoRepository: AuthInfoRepository,
                             val socialProviderRegistry: SocialProviderRegistry,
                             val userDAO: UserDAO,
-                            implicit val ec: ExecutionContext    )
+                            implicit val ec: ExecutionContext)
   extends InjectedController with I18nSupport {
 
   def authenticate(provider: String): Action[AnyContent] = Action.async { implicit request =>

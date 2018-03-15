@@ -1,9 +1,11 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.User
-@import se.crisp.signup4.util.DateHelper._
+@import se.crisp.signup4.util.DateHelper.{asDayAndDate, asTime, asDateTime, sameDay}
 @import se.crisp.signup4.util.ThemeHelper
 
-@(event: Event, user: User, baseURL: String)(implicit messages: Messages, themeHelper: ThemeHelper)
+@this(themeHelper: ThemeHelper)
+
+@(event: Event, user: User, baseURL: String)(implicit messages: Messages)
 
 <!DOCTYPE html>
 <html lang="@messages.lang.code">

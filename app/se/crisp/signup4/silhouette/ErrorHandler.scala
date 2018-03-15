@@ -22,6 +22,7 @@ class ErrorHandler @Inject()(val env: Environment,
                              val router: Provider[Router],
                              val messagesApi: MessagesApi,
                              val localeHelper: LocaleHelper,
+                             val errorView: se.crisp.signup4.views.html.error,
                              implicit val imageUrl: ImageUrl,
                              implicit val themeHelper: ThemeHelper,
                              implicit val authHelper: AuthHelper)
@@ -47,13 +48,13 @@ class ErrorHandler @Inject()(val env: Environment,
   override protected def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
     val lang = localeHelper.getLang(request)
     implicit val mess: Messages = request2Messages(request)
-    Future.successful(BadRequest(se.crisp.signup4.views.html.error(Messages("http.badrequest"), message)))
+    Future.successful(BadRequest(errorView(Messages("http.badrequest"), message)))
   }
 
   override protected def onNotFound(request: RequestHeader, message: String): Future[Result] = {
     val lang = localeHelper.getLang(request)
     implicit val mess: Messages = request2Messages(request)
-    Future.successful(NotFound(se.crisp.signup4.views.html.error(Messages("http.notfound"), message)))
+    Future.successful(NotFound(errorView(Messages("http.notfound"), message)))
   }
 
   override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
@@ -61,13 +62,13 @@ class ErrorHandler @Inject()(val env: Environment,
     val stackTrace = ExceptionUtils.getStackTrace(cause)
     val lang = localeHelper.getLang(request)
     implicit val mess: Messages = request2Messages(request)
-    Future.successful(InternalServerError(se.crisp.signup4.views.html.error(Messages("http.error"), cause.getLocalizedMessage + "\n" + stackTrace)))
+    Future.successful(InternalServerError(errorView(Messages("http.error"), cause.getLocalizedMessage + "\n" + stackTrace)))
   }
 
   override protected def onProdServerError(request: RequestHeader, exception: UsefulException): Future[Result] = {
     val stackTrace = ExceptionUtils.getStackTrace(exception.getCause)
     implicit val mess: Messages = request2Messages(request)
-    Future.successful(InternalServerError(se.crisp.signup4.views.html.error(Messages("http.error"),
+    Future.successful(InternalServerError(errorView(Messages("http.error"),
       exception.title + "\n" + exception.description +  "\n" + exception.getLocalizedMessage + "\n" + stackTrace)))
   }
 
@@ -77,7 +78,7 @@ class ErrorHandler @Inject()(val env: Environment,
 
   override protected def onOtherClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     implicit val mess: Messages = request2Messages(request)
-    Future.successful(Results.Status(statusCode)(se.crisp.signup4.views.html.error(Messages("http.badrequest"), message)))
+    Future.successful(Results.Status(statusCode)(errorView(Messages("http.badrequest"), message)))
   }
 
 }

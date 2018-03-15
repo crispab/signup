@@ -4,7 +4,6 @@ import javax.inject.{Inject, Singleton}
 
 import akka.actor.ActorSystem
 import com.mohiva.play.silhouette.api.Silhouette
-import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n._
@@ -13,7 +12,7 @@ import se.crisp.signup4.models.Status._
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{EventDAO, LogEntryDAO, ParticipationDAO, UserDAO}
 import se.crisp.signup4.models.security.Administrator
-import se.crisp.signup4.services.{ImageUrl, SlackReminder}
+import se.crisp.signup4.services.SlackReminder
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
 import se.crisp.signup4.util._
 
@@ -22,18 +21,14 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
                                val actorSystem: ActorSystem,
-                               implicit val configuration: Configuration,
-                               implicit val authHelper: AuthHelper,
-                               implicit val localeHelper: LocaleHelper,
-                               implicit val themeHelper: ThemeHelper,
-                               implicit val formHelper: FormHelper,
-                               implicit val htmlHelper: HtmlHelper,
+                               val editView: se.crisp.signup4.views.html.participations.edit,
+                               val addGuestView: se.crisp.signup4.views.html.participations.addGuest,
+                               val localeHelper: LocaleHelper,
                                val slackReminder: SlackReminder,
-                               implicit val eventDAO: EventDAO,
+                               val eventDAO: EventDAO,
                                val userDAO: UserDAO,
                                val participationDAO: ParticipationDAO,
                                val logEntryDAO: LogEntryDAO,
-                               implicit val imageUrl: ImageUrl,
                                implicit val ec: ExecutionContext) extends InjectedController  with I18nSupport{
 
 
@@ -43,7 +38,7 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
     if (!event.isCancelled) {
       val userToAttend = userDAO.find(userId)
       val participation = participationDAO.findByEventAndUser(eventId, userId).getOrElse(new Participation(status = Unregistered, user = userToAttend, event = event))
-      Ok(se.crisp.signup4.views.html.participations.edit(participationForm.fill(participation), userToAttend, event))
+      Ok(editView(participationForm.fill(participation), userToAttend, event))
     } else {
       Redirect(routes.Events.show(eventId)).flashing("error" -> Messages("error.signup.eventcancelled"))
     }
@@ -70,7 +65,7 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
       formWithErrors => {
         val event = eventDAO.find(formWithErrors("eventId").value.get.toLong)
         val userToAttend = userDAO.find(formWithErrors("userId").value.get.toLong)
-        BadRequest(se.crisp.signup4.views.html.participations.edit(formWithErrors, userToAttend, event))
+        BadRequest(editView(formWithErrors, userToAttend, event))
       },
       participation => {
         val existingParticipation = participationDAO.findByEventAndUser(participation.event.id.get, participation.user.id.get)
@@ -133,7 +128,7 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
   def createGuestForm(eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
     val event = eventDAO.find(eventId)
-    Ok(se.crisp.signup4.views.html.participations.addGuest(participationForm, event, userDAO.findNonGuests(event.id.get)))
+    Ok(addGuestView(participationForm, event, userDAO.findNonGuests(event.id.get)))
   }
 
   def createGuest: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
@@ -141,7 +136,7 @@ class Participations @Inject()(val silhouette: Silhouette[DefaultEnv],
     participationForm.bindFromRequest.fold(
       formWithErrors => {
         val event = eventDAO.find(formWithErrors("eventId").value.get.toLong)
-        BadRequest(se.crisp.signup4.views.html.participations.addGuest(formWithErrors, event, userDAO.findNonGuests(event.id.get)))
+        BadRequest(addGuestView(formWithErrors, event, userDAO.findNonGuests(event.id.get)))
       },
       participation => {
         participationDAO.createGuest(participation.event.id.get, participation.user.id.get)

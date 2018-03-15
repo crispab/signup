@@ -2,17 +2,17 @@
 @import se.crisp.signup4.models.LogEntry
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.DateHelper._
-@import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.ThemeHelper
+@import se.crisp.signup4.util.DateHelper.{asDayAndDate, asTime, asDateTime, sameDay}
+@import se.crisp.signup4.util.Section.Groups
 @import helper._
 
-@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper,  request: RequestHeader)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, authHelper: AuthHelper)
 
-@se.crisp.signup4.views.html.page(event.name, section = Groups) {
+@(event: Event, logEntries: Seq[LogEntry])(implicit flash: Flash, messages: Messages, loggedInUser: Option[User], request: RequestHeader)
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
+@page(event.name, section = Groups) {
+
+  @breadcrumbView(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
     event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get)),
     event.name)
 

@@ -1,7 +1,10 @@
 @import se.crisp.signup4.models._
 @import org.json.JSONObject._
 @import se.crisp.signup4.util.HtmlHelper
-@(event: Event, baseURL: String)(implicit messages: Messages, htmlHelper: HtmlHelper)
+
+@this(htmlHelper: HtmlHelper)
+
+@(event: Event, baseURL: String)(implicit messages: Messages)
   {
      "attachments" : [
         {

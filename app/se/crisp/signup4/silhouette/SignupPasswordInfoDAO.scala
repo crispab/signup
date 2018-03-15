@@ -10,7 +10,7 @@ import se.crisp.signup4.models.dao.UserDAO
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SignupPasswordInfoDAO @Inject()(val userDao: UserDAO, val configuration: Configuration)(implicit ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
+class SignupPasswordInfoDAO @Inject()(val userDao: UserDAO, val configuration: Configuration, implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
   private lazy val salt = Option(configuration.get[String]("password.salt"))
 
   override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = Future {

@@ -1,15 +1,15 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.Group
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.ThemeHelper
-@import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.Section.Groups
 
-@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, themeHelper: ThemeHelper)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, authHelper: AuthHelper)
 
-@se.crisp.signup4.views.html.page(Messages("navigation.groups"), section = Groups) {
+@(groups: Seq[Group])(implicit loggedInUser: Option[User], messages: Messages)
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(), Messages("navigation.groups"))
+@page(Messages("navigation.groups"), section = Groups) {
+
+  @breadcrumbView(Seq(), Messages("navigation.groups"))
 
   <h2>@Messages("navigation.groups")</h2>
 

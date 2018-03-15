@@ -16,11 +16,10 @@ import play.api.mvc._
 import play.api.{Configuration, Logger}
 import se.crisp.signup4.models.User
 import se.crisp.signup4.models.dao.UserDAO
-import se.crisp.signup4.services.{CheckEvents, ImageUrl}
+import se.crisp.signup4.services.CheckEvents
 import se.crisp.signup4.silhouette.{DefaultEnv, UserService}
-import se.crisp.signup4.util.{AuthHelper, LocaleHelper, SocialHelper, ThemeHelper}
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import se.crisp.signup4.util.{LocaleHelper, ThemeHelper}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 
@@ -29,20 +28,20 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
                             val actorSystem: ActorSystem,
                             @Named("event-reminder-actor") val eventReminderActor: ActorRef,
                             val configuration: Configuration,
-                            implicit val authHelper: AuthHelper,
-                            implicit val localeHelper: LocaleHelper,
-                            implicit val themeHelper: ThemeHelper,
-                            implicit val socialHelper: SocialHelper,
+                            val indexView: se.crisp.signup4.views.html.index,
+                            val loginView: se.crisp.signup4.views.html.login,
+                            val localeHelper: LocaleHelper,
+                            val themeHelper: ThemeHelper,
                             val credentialsProvider: CredentialsProvider,
                             val userService: UserService,
                             val userDAO: UserDAO,
-                            implicit val imageUrl: ImageUrl) extends InjectedController  with I18nSupport {
+                            implicit val ec: ExecutionContext) extends InjectedController  with I18nSupport {
 
   initialize()
 
   def index: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
     implicit val user: Option[User] = request.identity
-    Future.successful(Ok(se.crisp.signup4.views.html.index()))
+    Future.successful(Ok(indexView()))
   }
 
   val loginForm = Form(
@@ -53,12 +52,12 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
   )
 
   def showLoginForm: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
-    Future.successful(Ok(se.crisp.signup4.views.html.login(loginForm)))
+    Future.successful(Ok(loginView(loginForm)))
   }
 
   def authenticate: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
     loginForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(se.crisp.signup4.views.html.login(form))),
+      form => Future.successful(BadRequest(loginView(form))),
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>

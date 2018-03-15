@@ -1,12 +1,14 @@
 @import se.crisp.signup4.models.Participation
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.DateHelper._
-@import se.crisp.signup4.util.StatusHelper._
+@import se.crisp.signup4.util.DateHelper.asDayAndDate
+@import se.crisp.signup4.util.StatusHelper.{asMessage, asCssClass}
 @import se.crisp.signup4.services.ImageUrl
 @import helper._
 
-@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, request: RequestHeader)
+@this(imageUrl: ImageUrl, authHelper: AuthHelper)
+
+@(participations: Seq[Participation], withRemoveButton: Boolean = false)(implicit loggedInUser: Option[User], messages: Messages, request: RequestHeader)
 
 @participations.map { participation =>
 

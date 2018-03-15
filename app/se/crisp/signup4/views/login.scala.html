@@ -1,13 +1,13 @@
 @import se.crisp.signup4.controllers.Application.LoginFields
-@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.util.Section.Login
 @import se.crisp.signup4.util.ThemeHelper
 @import se.crisp.signup4.util.LocaleHelper
-@import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.AuthHelper
 @import helper._
-
 @import se.crisp.signup4.util.SocialHelper
-@(loginForm: Form[LoginFields])(implicit flash: Flash, messages: Messages, imageUrl: ImageUrl, localeHelper: LocaleHelper, themeHelper: ThemeHelper, authHelper: AuthHelper, socialHelper: SocialHelper,  request: RequestHeader)
+
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, localeHelper: LocaleHelper, themeHelper: ThemeHelper, socialHelper: SocialHelper)
+
+@(loginForm: Form[LoginFields])(implicit flash: Flash, messages: Messages, request: RequestHeader)
 
 @field(fieldName: String) = @{
   loginForm(fieldName).value.getOrElse("")
@@ -19,9 +19,9 @@
   }
 }
 
-@se.crisp.signup4.views.html.page(title = themeHelper.APPLICATION_NAME, section = Login) {
+@page(title = themeHelper.APPLICATION_NAME, section = Login) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(), Messages("login.login"))
+  @breadcrumbView(Seq(), Messages("login.login"))
 
   @if(flash.get("success").isDefined) {
     <div class="alert alert-success">
@@ -73,4 +73,4 @@
     </fieldset>
   }
 
-}(loggedInUser = None, messages = messages, imageUrl = imageUrl, authHelper = authHelper, themeHelper = themeHelper)
+}(loggedInUser = None, messages = messages)

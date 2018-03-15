@@ -3,7 +3,9 @@
 @import se.crisp.signup4.util.LocaleHelper
 @import play.api.Configuration
 
-@(event: Event)(implicit messages: Messages, htmlHelper: HtmlHelper, localeHelper: LocaleHelper, configuration: Configuration)
+@this(htmlHelper: HtmlHelper, localeHelper: LocaleHelper, configuration: Configuration)
+
+@(event: Event)(implicit messages: Messages)
 
 <script type="text/javascript" src="https://addthisevent.com/libs/1.6.0/ate.min.js"></script>
 

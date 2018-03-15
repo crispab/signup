@@ -4,7 +4,7 @@ import org.apache.poi.xssf.usermodel.{XSSFSheet, XSSFWorkbook}
 import play.api.i18n.Messages
 import se.crisp.signup4.models.Participation
 import se.crisp.signup4.models.Status._
-import se.crisp.signup4.util.StatusHelper._
+import se.crisp.signup4.util.StatusHelper.asMessage
 
 object ExcelHelper {
 

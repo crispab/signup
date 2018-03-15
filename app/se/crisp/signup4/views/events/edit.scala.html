@@ -3,13 +3,12 @@
 @import se.crisp.signup4.models.Event
 @import se.crisp.signup4.models.dao.ReminderDAO
 @import se.crisp.signup4.util.FormHelper
-@import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.ThemeHelper
+@import se.crisp.signup4.util.Section.Groups
 @import helper._
 
-@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], imageUrl: ImageUrl, formHelper: FormHelper, authHelper: AuthHelper, themeHelper: ThemeHelper, reminderDAO: ReminderDAO,  request: RequestHeader)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, editDescriptionTag: se.crisp.signup4.views.html.events.tags.editDescription, formHelper: FormHelper, reminderDAO: ReminderDAO)
+
+@(eventForm: Form[Event], group: Group, idToUpdate: Option[Long] = None)(implicit messages: Messages, loggedInUser: Option[User], request: RequestHeader)
 
 @field(fieldName: String) = @{ eventForm(fieldName).value.getOrElse("") }
 
@@ -34,13 +33,13 @@
   se.crisp.signup4.util.DateHelper.asDate(new java.util.Date())
 }
 
-@se.crisp.signup4.views.html.page(Messages("event.edit.title", field("name")), section = Groups){
+@page(Messages("event.edit.title", field("name")), section = Groups){
 
   @if(creatingNew()) {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
+    @breadcrumbView(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
       Messages("edit.new"))
   } else {
-    @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
+    @breadcrumbView(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(), group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get), field("name") -> se.crisp.signup4.controllers.routes.Events.show(idToUpdate.get)),
       Messages("edit.edit"))
   }
 
@@ -57,7 +56,7 @@
       </div>
 
       <div class='form-group @hasErrors("description")'>
-        @se.crisp.signup4.views.html.events.tags.editDescription(field("description"))
+        @editDescriptionTag(field("description"))
         <span class="show-on-error">@Messages("event.edit.description.error")</span>
       </div>
 

@@ -4,12 +4,12 @@
 @import se.crisp.signup4.util.AuthHelper
 @import se.crisp.signup4.util.EmailHelper._
 @import se.crisp.signup4.util.FormHelper
-@import se.crisp.signup4.util.ThemeHelper
-@import se.crisp.signup4.util.Section._
-@import se.crisp.signup4.services.ImageUrl
+@import se.crisp.signup4.util.Section.Groups
 @import helper._
 
-@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper,  request: RequestHeader)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, authHelper: AuthHelper, formHelper: FormHelper)
+
+@(membershipForm: Form[Membership], group: Group, nonMembers: Seq[User])(implicit loggedInUser: Option[User], messages: Messages, request: RequestHeader)
 
 @field(fieldName: String) = @{
   membershipForm(fieldName).value.getOrElse("")
@@ -22,9 +22,9 @@
 }
 
 
-@se.crisp.signup4.views.html.page(Messages("membership.heading", group.name), section = Groups) {
+@page(Messages("membership.heading", group.name), section = Groups) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
+  @breadcrumbView(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
     group.name -> se.crisp.signup4.controllers.routes.Groups.show(group.id.get)),
     Messages("navigation.membership"))
 

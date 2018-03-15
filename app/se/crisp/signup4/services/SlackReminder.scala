@@ -13,6 +13,9 @@ import se.crisp.signup4.util.HtmlHelper
 
 @Singleton
 class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO,
+                               val slackremindermessageView: se.crisp.signup4.views.txt.events.slackremindermessage,
+                               val slackcancellationmessageView: se.crisp.signup4.views.txt.events.slackcancellationmessage,
+                               val slackupdatedparticipationmessageView: se.crisp.signup4.views.txt.events.slackupdatedparticipationmessage,
                                val configuration: Configuration,
                                val wSClient: WSClient) (implicit val htmlHelper: HtmlHelper) {
 
@@ -37,7 +40,7 @@ class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO,
 
   private def createReminderMessage(event: Event)(implicit  messages: Messages) = {
     val baseUrl = htmlHelper.baseUrl
-    Json.parse(se.crisp.signup4.views.txt.events.slackremindermessage(event, baseUrl).toString())
+    Json.parse(slackremindermessageView(event, baseUrl).toString())
   }
 
   def sendReminderMessage(event: Event)(implicit loggedIn: User, messages: Messages)  {
@@ -46,7 +49,7 @@ class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO,
 
   private def createCancellationMessage(event: Event)(implicit  messages: Messages) = {
     val baseUrl = htmlHelper.baseUrl
-    Json.parse(se.crisp.signup4.views.txt.events.slackcancellationmessage(event, baseUrl).toString())
+    Json.parse(slackcancellationmessageView(event, baseUrl).toString())
   }
 
   def sendCancellationMessage(event: Event)(implicit loggedIn: User, messages: Messages) {
@@ -55,7 +58,7 @@ class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO,
 
   private def createUpdatedParticipationMessage(participation: Participation)(implicit  messages: Messages) = {
     val baseUrl = htmlHelper.baseUrl
-    Json.parse(se.crisp.signup4.views.txt.events.slackupdatedparticipationmessage(participation.event, participation, baseUrl).toString())
+    Json.parse(slackupdatedparticipationmessageView(participation.event, participation, baseUrl).toString())
   }
 
   def sendUpdatedParticipationMessage(participation: Participation)(implicit  messages: Messages) {

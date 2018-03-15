@@ -12,7 +12,7 @@ import se.crisp.signup4.models.dao.UserDAO
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SignupOAuth2InfoDAO @Inject()(val userDao: UserDAO, val configuration: Configuration)(implicit ec: ExecutionContext) extends DelegableAuthInfoDAO[OAuth2Info] {
+class SignupOAuth2InfoDAO @Inject()(val userDao: UserDAO, val configuration: Configuration, implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[OAuth2Info] {
   implicit val oauth2InfoReads: Reads[OAuth2Info] = Json.reads[OAuth2Info]
   implicit val oauth2InfoWrites: Writes[OAuth2Info] = Json.writes[OAuth2Info]
 

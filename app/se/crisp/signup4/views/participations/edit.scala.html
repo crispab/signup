@@ -4,26 +4,24 @@
 @import se.crisp.signup4.models.User
 @import se.crisp.signup4.models.dao.EventDAO
 @import se.crisp.signup4.util.AuthHelper
-@import se.crisp.signup4.util.DateHelper._
+@import se.crisp.signup4.util.DateHelper.{asDayAndDate, asTime, asDateTime, sameDay}
 @import se.crisp.signup4.util.FormHelper
-@import se.crisp.signup4.util.ThemeHelper
-@import se.crisp.signup4.util.Section._
+@import se.crisp.signup4.util.Section.Groups
 @import se.crisp.signup4.services.ImageUrl
-@import se.crisp.signup4.util.HtmlHelper
-@import se.crisp.signup4.util.LocaleHelper
-@import play.api.Configuration
 @import helper._
 
-@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, themeHelper: ThemeHelper, htmlHelper: HtmlHelper, localeHelper: LocaleHelper, eventDAO: EventDAO, configuration: Configuration,  request: RequestHeader)
+@this(page: se.crisp.signup4.views.html.page, breadcrumbView: se.crisp.signup4.views.html.breadcrumb, addToCalendarButtonTag: se.crisp.signup4.views.html.events.tags.addToCalendarButton, imageUrl: ImageUrl, authHelper: AuthHelper, formHelper: FormHelper, eventDAO: EventDAO)
+
+@(participationForm: Form[Participation], user: User, event: Event)(implicit loggedInUser: Option[User], messages: Messages, request: RequestHeader)
 
 @field(fieldName: String) = @{ participationForm(fieldName).value.getOrElse("") }
 
 @hasErrors(fieldName: String) = @{ if(participationForm(fieldName).hasErrors) { "has-error" } }
 
 
-@se.crisp.signup4.views.html.page(Messages("participation.heading", event.name), section = Groups) {
+@page(Messages("participation.heading", event.name), section = Groups) {
 
-  @se.crisp.signup4.views.html.breadcrumb(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
+  @breadcrumbView(Seq(Messages("navigation.groups") -> se.crisp.signup4.controllers.routes.Groups.list(),
     event.group.name -> se.crisp.signup4.controllers.routes.Groups.show(event.group.id.get),
     event.name -> se.crisp.signup4.controllers.routes.Events.show(event.id.get)),
     Messages("navigation.participation"))
@@ -68,7 +66,7 @@
       <p>@Messages("event.lastsignup", asDayAndDate(event.lastSignUpDate))</p>
     }
 
-    @se.crisp.signup4.views.html.events.tags.addToCalendarButton(event)
+    @addToCalendarButtonTag(event)
 
     @if(authHelper.isAdmin(loggedInUser)) {
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#notify_participant">

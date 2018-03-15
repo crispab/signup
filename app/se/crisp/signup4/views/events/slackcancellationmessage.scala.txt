@@ -1,5 +1,8 @@
 @import se.crisp.signup4.models._
 @import org.json.JSONObject._
+
+@this()
+
 @(event: Event, baseURL: String)(implicit messages: Messages)
   {
      "attachments" : [

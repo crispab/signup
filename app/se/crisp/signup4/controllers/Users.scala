@@ -15,9 +15,9 @@ import se.crisp.signup4
 import se.crisp.signup4.models._
 import se.crisp.signup4.models.dao.{EventDAO, MembershipDAO, ParticipationDAO, UserDAO}
 import se.crisp.signup4.models.security.{Administrator, NormalUser}
-import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, ImageUrl, RemindParticipant}
+import se.crisp.signup4.services.{CloudinaryUrl, GravatarUrl, RemindParticipant}
 import se.crisp.signup4.silhouette.{DefaultEnv, WithPermission}
-import se.crisp.signup4.util.{AuthHelper, FormHelper, LocaleHelper, ThemeHelper}
+import se.crisp.signup4.util.AuthHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -25,56 +25,55 @@ import scala.concurrent.{ExecutionContext, Future}
 class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
                       val cloudinaryResourceBuilder: CloudinaryResourceBuilder,
                       val cloudinaryUrl: CloudinaryUrl,
-                      implicit val gravatarUrl: GravatarUrl,
-                      implicit val imageUrl: ImageUrl,
-                      implicit val authHelper: AuthHelper,
-                      implicit val localeHelper: LocaleHelper,
-                      implicit val themeHelper: ThemeHelper,
-                      implicit val formHelper: FormHelper,
-                      implicit val eventDAO: EventDAO,
+                      val showView: se.crisp.signup4.views.html.users.show,
+                      val listView: se.crisp.signup4.views.html.users.list,
+                      val editView: se.crisp.signup4.views.html.users.edit,
+                      val updateImageView: se.crisp.signup4.views.html.users.updateImage,
+                      val authHelper: AuthHelper,
+                      val eventDAO: EventDAO,
                       val userDAO: UserDAO,
                       val membershipDAO: MembershipDAO,
-                      implicit val participationDAO: ParticipationDAO,
+                      val participationDAO: ParticipationDAO,
                       @Named("event-reminder-actor") eventReminderActor: ActorRef) extends InjectedController  with I18nSupport{
 
   def show(id: Long): Action[AnyContent] = silhouette.UserAwareAction { implicit request =>
     implicit val user: Option[User] = request.identity
     val userToShow = userDAO.find(id)
-    Ok(se.crisp.signup4.views.html.users.show(userToShow))
+    Ok(showView(userToShow))
   }
 
   def list: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator))  { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
     val usersToList = userDAO.findAll()
-    Ok(se.crisp.signup4.views.html.users.list(usersToList))
+    Ok(listView(usersToList))
   }
 
   def createForm: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
-    Ok(se.crisp.signup4.views.html.users.edit(userCreateForm))
+    Ok(editView(userCreateForm))
   }
 
   def createMemberForm(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
-    Ok(se.crisp.signup4.views.html.users.edit(userCreateForm, groupId = Option(groupId)))
+    Ok(editView(userCreateForm, groupId = Option(groupId)))
   }
 
   def createGuestForm(eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
-    Ok(se.crisp.signup4.views.html.users.edit(userCreateForm, eventId = Option(eventId)))
+    Ok(editView(userCreateForm, eventId = Option(eventId)))
   }
 
 
   def updateForm(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
     val userToUpdate = userDAO.find(id)
-    Ok(se.crisp.signup4.views.html.users.edit(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
+    Ok(editView(userUpdateForm.fill(userToUpdate), idToUpdate = Option(id)))
   }
 
   def create: Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
       userCreateForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
+        formWithErrors => BadRequest(editView(formWithErrors)),
         user => {
           userDAO.create(user)
           Redirect(routes.Users.list())
@@ -85,7 +84,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
   def createMember(groupId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
       userCreateForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
+        formWithErrors => BadRequest(editView(formWithErrors)),
         user => {
           membershipDAO.create(groupId = groupId, userId = userDAO.create(user))
           Redirect(routes.Groups.show(groupId))
@@ -96,7 +95,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
   def createGuest(eventId: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
       userCreateForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors)),
+        formWithErrors => BadRequest(editView(formWithErrors)),
         user => {
           participationDAO.createGuest(eventId = eventId, userId = userDAO.create(user))
           Redirect(routes.Events.show(eventId))
@@ -119,7 +118,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
   def update(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
     userUpdateForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(se.crisp.signup4.views.html.users.edit(formWithErrors, Option(id))),
+        formWithErrors => BadRequest(editView(formWithErrors, Option(id))),
         user => {
           if(authHelper.isAdmin(loggedInUser)) {
             userDAO.updateProperties(id, user)
@@ -148,7 +147,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
   def updateImageForm(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
     implicit val loggedInUser: Option[User] = Option(request.identity)
     val userToUpdate = userDAO.find(id)
-    Ok(se.crisp.signup4.views.html.users.updateImage(userToUpdate))
+    Ok(updateImageView(userToUpdate))
   }
 
   def resetImage(id: Long): Action[AnyContent] = silhouette.SecuredAction(WithPermission(Administrator)) { implicit request =>
@@ -168,7 +167,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
     val body = request.body.asMultipartFormData
     val resourceFile = body.get.file("image")
     if (resourceFile.isEmpty) {
-      Future(BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.nofile")))))
+      Future(BadRequest(updateImageView(userToUpdate, Option(Messages("user.upload.nofile")))))
     } else {
       cloudinaryResourceBuilder.upload(resourceFile.get.ref.path.toFile,
         UploadParameters()
@@ -182,7 +181,7 @@ class Users @Inject()(val silhouette: Silhouette[DefaultEnv],
       } recover {
         case ex: Exception =>
           Logger.error("Failed uploading image to Cloudinary", ex)
-          BadRequest(se.crisp.signup4.views.html.users.updateImage(userToUpdate, Option(Messages("user.upload.error"))))
+          BadRequest(updateImageView(userToUpdate, Option(Messages("user.upload.error"))))
       }
     }
   }
