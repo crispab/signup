@@ -22,10 +22,10 @@ class SlackReminder @Inject() (val logEntryDAO: LogEntryDAO,
   private val ANONYMOUS = User(firstName = "John", lastName = "Doe", email = "")
 
   private def sendMessage(event: Event, message: JsValue)(implicit loggedIn: User, messages: Messages)  {
-    val slackChannelURL = configuration.get[String]("slack.channel.url")
-    if(!slackChannelURL.isEmpty) {
+    val slackChannelURL = configuration.getOptional[String]("slack.channel.url")
+    if(slackChannelURL.isDefined) {
       try {
-        wSClient.url(slackChannelURL).post(message)
+        wSClient.url(slackChannelURL.get).post(message)
       } catch {
         case ex: Exception =>
           Logger.error("FAILED sending Slack message: " + message, ex)
