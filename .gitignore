@@ -36,3 +36,6 @@ hs_err_pid*
 
 # Aspectj dumps
 ajcore.*.txt
+
+
+/conf/generated.keystore
