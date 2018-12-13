@@ -23,7 +23,6 @@ heroku config:set \
     PLAY_MAILER_SSL=false \
     PLAY_MAILER_TLS=true \
     TZ="Europe/Stockholm" \
-    LANG="sv_SE" \
     DATABASE_DRIVER=org.postgresql.Driver \
     JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
     JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8 -javaagent:/app/target/universal/stage/lib/io.codekvast.codekvast-agent-0.22.1.jar" \
