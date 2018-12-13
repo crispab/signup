@@ -1,5 +1,5 @@
 name := """signup"""
-version := "4.7.1-SNAPHOT"
+version := "4.7.1"
 
 
 lazy val root = (project in file(".")).
@@ -29,7 +29,7 @@ libraryDependencies ++= Seq(
   "org.webjars"               %  "jquery"                          % "2.1.4",
   "org.webjars"               %  "bootstrap"                       % "3.3.4",
   "org.webjars"               %  "font-awesome"                    % "4.3.0-2",
-  "org.playframework.anorm"   %% "anorm"                           % "2.6.1",
+  "org.playframework.anorm"   %% "anorm"                           % "2.6.2",
   "com.typesafe.play"         %% "play-json"                       % "2.6.9",
   "com.typesafe.play"         %% "play-iteratees"                  % "2.6.1",
   "com.typesafe.play"         %% "play-iteratees-reactive-streams" % "2.6.1",
