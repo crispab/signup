@@ -144,7 +144,7 @@ Remove anything under "Authorized Javascipt Origins" and store the path
 
 If you want to you can configure the Consent Screen to suit your needs.
 
-Finally, go to `APIs & auth -> APIs` and enable the Google+ API.
+Finally, go to `APIs & auth -> APIs` and enable the Google People API.
 
 
 Configure environment variables for your Heroku application
