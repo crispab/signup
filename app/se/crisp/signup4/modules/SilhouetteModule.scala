@@ -18,17 +18,21 @@ import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
+import net.ceedubs.ficus.readers.ValueReader
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import play.api.libs.ws.WSClient
-import play.api.mvc.CookieHeaderEncoding
+import play.api.mvc.{Cookie, CookieHeaderEncoding}
 import se.crisp.signup4.services.UserServiceImpl
 import se.crisp.signup4.silhouette._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class SilhouetteModule extends AbstractModule with ScalaModule {
+
+  implicit val sameSiteReader: ValueReader[Option[Cookie.SameSite]] =
+    ValueReader.relative(cfg => Cookie.SameSite.parse(cfg.as[String]))
 
   override def configure() {
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
@@ -45,16 +49,16 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   }
 
   @Provides
-  def provideIDGenerator()(implicit ec: ExecutionContext): IDGenerator = new SecureRandomIDGenerator()
+  def provideIDGenerator(): IDGenerator = new SecureRandomIDGenerator()
 
   @Provides
-  def provideHTTPLayer(client: WSClient)(implicit executionContext: ExecutionContext): HTTPLayer = new PlayHTTPLayer(client)
+  def provideHTTPLayer(client: WSClient): HTTPLayer = new PlayHTTPLayer(client)
 
 
   @Provides
   def provideEnvironment(userService: UserService,
                          authenticatorService: AuthenticatorService[CookieAuthenticator],
-                         eventBus: EventBus)(implicit ec: ExecutionContext): Environment[DefaultEnv] = {
+                         eventBus: EventBus): Environment[DefaultEnv] = {
     Environment[DefaultEnv](
       userService,
       authenticatorService,
@@ -74,7 +78,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
   @Provides
   def provideAuthInfoRepository(passwordInfoDAO: SignupPasswordInfoDAO,
-                                oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info])(implicit ec: ExecutionContext): AuthInfoRepository = {
+                                oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info]): AuthInfoRepository = {
     new DelegableAuthInfoRepository(passwordInfoDAO, oauth2InfoDAO)
   }
 
@@ -99,7 +103,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
                                   fingerprintGenerator: FingerprintGenerator,
                                   idGenerator: IDGenerator,
                                   configuration: Configuration,
-                                  clock: Clock)(implicit ec: ExecutionContext): AuthenticatorService[CookieAuthenticator] = {
+                                  clock: Clock): AuthenticatorService[CookieAuthenticator] = {
     val config = configuration.underlying.as[CookieAuthenticatorSettings]("silhouette.authenticator")
     val encoder = new CrypterAuthenticatorEncoder(crypter)
     new CookieAuthenticatorService(config, None, signer, cookieHeaderEncoding, encoder, fingerprintGenerator, idGenerator, clock)
@@ -110,7 +114,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
 
   @Provides
-  def provideCredentialsProvider(authInfoRepository: AuthInfoRepository, passwordHasherRegistry: PasswordHasherRegistry)(implicit ec: ExecutionContext): CredentialsProvider =
+  def provideCredentialsProvider(authInfoRepository: AuthInfoRepository, passwordHasherRegistry: PasswordHasherRegistry): CredentialsProvider =
     new CredentialsProvider(authInfoRepository, passwordHasherRegistry)
 
   /**

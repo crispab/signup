@@ -13,9 +13,9 @@ scalaVersion := "2.12.4"
 libraryDependencies ++= Seq(
   "org.apache.httpcomponents" %  "httpclient"                      % "4.5.5",
   "org.apache.httpcomponents" %  "httpcore"                        % "4.4.9",
-  "com.mohiva"                %% "play-silhouette"                 % "5.0.3",
-  "com.mohiva"                %% "play-silhouette-persistence"     % "5.0.3",
-  "com.mohiva"                %% "play-silhouette-crypto-jca"      % "5.0.3",
+  "com.mohiva"                %% "play-silhouette"                 % "5.0.7",
+  "com.mohiva"                %% "play-silhouette-persistence"     % "5.0.7",
+  "com.mohiva"                %% "play-silhouette-crypto-jca"      % "5.0.7",
   "org.postgresql"            %  "postgresql"                      % "42.2.1",
   "com.typesafe.play"         %% "play-mailer"                     % "6.0.1",
   "com.typesafe.play"         %% "play-mailer-guice"               % "6.0.1",
@@ -47,7 +47,7 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play"    %% "scalatestplus-play"      % "3.1.2"       % "test",
   "org.mockito"               %  "mockito-core"            % "2.15.0"      % "test",
   "org.ocpsoft.prettytime"    %  "prettytime-nlp"          % "4.0.0.Final" % "test",
-  "com.mohiva"                %% "play-silhouette-testkit" % "5.0.3"       % "test",
+  "com.mohiva"                %% "play-silhouette-testkit" % "5.0.7"       % "test",
 
   // Cloudinary stuff
   "com.ning" % "async-http-client" % "1.9.40",
