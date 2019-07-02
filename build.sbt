@@ -1,5 +1,5 @@
 name := """signup"""
-version := "4.7.2-SNAPSHOT"
+version := "4.8"
 
 
 lazy val root = (project in file(".")).
