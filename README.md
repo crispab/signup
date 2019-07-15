@@ -22,7 +22,7 @@ This is the fourth version of the SignUp Service.
 - Apache Poi 3.10-FINAL - http://poi.apache.org
 
 ### Play 3rd party modules ###
-- Silhouette 5.0.3 authentication library - https://www.silhouette.rocks/s
+- Silhouette 5.0.7 authentication library - https://www.silhouette.rocks/s
 - Emailer Plugin 6.0.1 - https://github.com/playframework/play-mailer
 
 ### Run-time environment ###
