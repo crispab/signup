@@ -82,10 +82,14 @@ class Application @Inject()(val silhouette: Silhouette[DefaultEnv],
     )
   }
 
-  def logout: Action[AnyContent] = silhouette.SecuredAction.async { implicit request =>
-    val result = Redirect(routes.Application.index())
-    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
-    silhouette.env.authenticatorService.discard(request.authenticator, result)
+  def logout: Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
+    val redirectToIndex = Redirect(routes.Application.index())
+    if (request.authenticator.isDefined) {
+      silhouette.env.eventBus.publish(LogoutEvent(request.identity.get, request))
+      silhouette.env.authenticatorService.discard(request.authenticator.get, redirectToIndex)
+    } else {
+      Future.successful(redirectToIndex)
+    }
   }
 
   private def initialize(): Unit = {
