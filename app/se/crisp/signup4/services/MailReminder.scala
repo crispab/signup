@@ -63,7 +63,7 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
   }
 
   private def createReminderMessage(event: Event, user: User)(implicit  messages: Messages): Html = {
-    // TODO: get rid of this by using SendGrid mail templates instead
+    // TODO: not pretty; should use a mail/CRM service that can handle template mails instead
     if (themeHelper.THEME == "b73") {
       b73EmailremindermessageView(event, user, htmlHelper.baseUrl)
     } else {
@@ -89,7 +89,7 @@ class MailReminder @Inject() (val mailerClient: MailerClient,
   }
 
   private def createCancellationMessage(event: Event, user: User) (implicit messages: Messages): Html = {
-    // TODO: get rid of this by using SendGrid mail templates instead
+    // TODO: not pretty; should use a mail/CRM service that can handle template mails instead
     if (themeHelper.THEME == "b73") {
       b73EmailcancellationmessageView(event, user, htmlHelper.baseUrl)
     } else {

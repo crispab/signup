@@ -102,7 +102,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     val user = userDAO.find(userId)
     val baseUrl = configuration.get[String]("application.base.url")
 
-    // TODO: get rid of this by using SendGrid mail templates instead
+    // TODO: not pretty; should use a mail/CRM service that can handle template mails instead
     if (themeHelper.THEME == "b73") {
       Ok(b73EmailremindermessageView(event, user, baseUrl))
     } else {
@@ -116,7 +116,7 @@ class Events @Inject()(val silhouette: Silhouette[DefaultEnv],
     val user = userDAO.find(userId)
     val baseUrl = configuration.get[String]("application.base.url")
 
-    // TODO: get rid of this by using SendGrid mail templates instead
+    // TODO: not pretty; should use a mail/CRM service that can handle template mails instead
     if (themeHelper.THEME == "b73") {
       Ok(b73EmailcancellationmessageView(event, user, baseUrl))
     } else {

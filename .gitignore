@@ -14,7 +14,6 @@ run_local.sh
 acceptance_test.sh
 .DS_Store
 opt
-.vagrant
 phantomjsdriver.log
 
 *.class
@@ -39,3 +38,6 @@ ajcore.*.txt
 
 
 /conf/generated.keystore
+
+# jEnv
+/.java-version

@@ -28,10 +28,10 @@ This is the fourth version of the SignUp Service.
 ### Run-time environment ###
 - Heroku (general app server environment) - http://heroku.com
     * PostgreSQL add-on (SQL database)
-    * SendGrid add-on (bulk email) - http://sendgrid.com
     * Cloudinary add-on (profile image storage) - http://cloudinary.com
     * Papertrail add-on (log monitoring) - http://papertrailapp.com
     * Locale build pack (for i18n on Heroku)
+    * An external SMTP server for sending email remiders (e.g. smtp.gmail.com)
 - Gravatar.com (default profile image)
 
 ### Test environment ###
@@ -107,54 +107,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-Alternative 1: Setting up a development environment using Vagrant
+Setting up a development environment using Docker for the database
 ----------------------------------
-In the SignUp development environment Vagrant is used to create a local deployment environment in a virtual machine
-(VirtualBox) with a Java run-time, Play Framework (including Scala) and a PostgreSQL database pre-installed.
-
-The source code tree is shared between your host computer (where you do your editing) and the virtual machine
-(where Play is run).
-
-### Get the source code ###
-The source code is stored on GitHub and managed by the version control system Git. Follow the instructions on
-https://help.github.com/articles/set-up-git to get going with Git and GitHub.
-
-Get a copy of the source code for SignUp by typing on your command line:
-
-    $ git clone https://github.com/crispab/signup.git
-
-This will give you the latest version of the source code.
-
-
-### Set up Vagrant ###
-If you already have Vagrant on your local system, you just need to:
-
-    $ cd signup
-    $ vagrant up
-
-To install and configure Vagrant, follow the instructions in [Using Vagrant](UsingVagrant.md).
-
-### Run SignUp ###
-Once you have the development environment set up you should be able to launch
-SignUp from inside the virtual machine:
-
-    $ vagrant ssh
-    vagrant@vagrant-ubuntu-trusty-64:~$ cd /vagrant
-    vagrant@vagrant-ubuntu-trusty-64:~$ sbt run
-
-And then point your browser on your local computer to [http://localhost:19000](http://localhost:19000)
-
-
-Alternative 2: Setting up a development environment using Docker
-----------------------------------
-Instead of running the whole development environment in a VirtualBox using Vagrant, it's really enough
-to just run the PostgreSQL development database in separate container. The rest of the application can
+The PostgreSQL development database runs in a separate Docker container. The rest of the application can
 be launched in your normal host operating system where you also have your source code.
 
-This is a bit snappier and also makes the Play Framework better at detecting source code changes and 
+This makes the Play Framework able to detect source code changes and 
 initiate re-compilation and reloading.
 
-### Get the source code (same as for the Vagrant option) ###
+### Get the source code  ###
 The source code is stored on GitHub and managed by the version control system Git. Follow the instructions on
 https://help.github.com/articles/set-up-git to get going with Git and GitHub.
 
@@ -165,7 +126,7 @@ Get a copy of the source code for SignUp by typing on your command line:
 This will give you the latest version of the source code.
 
 ### Set up Play Framework ###
-In this solution, Play Framework is installed and run in you normal host operating system. Download and install 
+The Play Framework is installed and run in your normal host operating system. Download and install 
 Play from https://www.playframework.com
 
 SignUp is created with Play Framework version 2.4 so it's recommended you get that version. Later versions might work, 

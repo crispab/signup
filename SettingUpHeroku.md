@@ -61,14 +61,12 @@ Get add-ons for your new Heroku application
 SignUp requires a number of Heroku add-ons to run, and some are just nice to have:
 
 - Heroku Postgres add-on (SQL database)
-- SendGrid add-on (bulk email) - http://sendgrid.com
 - Cloudinary add-on (profile image storage) - http://cloudinary.com
 - Papertrail add-on (log monitoring) - http://papertrailapp.com
 
 Get the add-ons via the command line interface:
 
     $ heroku addons:create heroku-postgresql
-    $ heroku addons:create sendgrid
     $ heroku addons:create cloudinary
     $ heroku addons:create papertrail
 
@@ -113,7 +111,6 @@ First, find out the Git URL to your application's repository on Heroku:
                    heroku-postgresql:hobby-dev
                    papertrail:choklad
                    pgbackups:auto-month
-                   sendgrid:starter
 
     Git URL:       git@heroku.com:signup-<your name>.git
     Owner Email:   yourmail@yourdomain.com

@@ -18,10 +18,12 @@ heroku config:set \
     FACEBOOK_CLIENT_ID="<to enable Facebook login - get from Facebook's dev site>" \
     FACEBOOK_CLIENT_SECRET="<to enable Facebook login - get from Facebook's dev site>" \
     PLAY_MAILER_MOCK=false \
-    PLAY_MAILER_HOST=smtp.sendgrid.net \
+    PLAY_MAILER_HOST=smtp.gmail.com \
     PLAY_MAILER_PORT=587 \
     PLAY_MAILER_SSL=false \
     PLAY_MAILER_TLS=true \
+    PLAY_MAILER_USER="<your_user>@gmail.com" \
+    PLAY_MAILER_PASSWORD="<your app password in gmail>" \
     TZ="Europe/Stockholm" \
     DATABASE_DRIVER=org.postgresql.Driver \
     JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true \
