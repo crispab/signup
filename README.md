@@ -1,6 +1,6 @@
 SignUp
 ======
-[![Build Status](https://travis-ci.org/crispab/signup.svg?branch=master)](https://travis-ci.org/crispab/signup)
+
 General
 -------
 
@@ -11,7 +11,7 @@ This is the fourth version of the SignUp Service.
 
 ### Play Framework ###
 - Play 2.6.12 - http://www.playframework.org/
-- Scala 2.12.4 - http://www.scala-lang.org/
+- Scala 2.12.4 - http://www.scala-lang.org/ (Uses Java 1.8)
 - Anorm 2.6.1 - https://www.playframework.com/documentation/2.6.x/Anorm
 
 ### Presentation ###
@@ -115,6 +115,11 @@ be launched in your normal host operating system where you also have your source
 This makes the Play Framework able to detect source code changes and 
 initiate re-compilation and reloading.
 
+### Before you start  ###
+* Install Java 1.8 and have it in your PATH
+* Install SBT (Scala Build Tool) and have it in your PATH
+* Install Docker and have it in your PATH
+
 ### Get the source code  ###
 The source code is stored on GitHub and managed by the version control system Git. Follow the instructions on
 https://help.github.com/articles/set-up-git to get going with Git and GitHub.
@@ -126,21 +131,18 @@ Get a copy of the source code for SignUp by typing on your command line:
 This will give you the latest version of the source code.
 
 ### Set up Play Framework ###
-The Play Framework is installed and run in your normal host operating system. Download and install 
-Play from https://www.playframework.com
+The Play Framework libraries will be downloaded and installed by SBT when building the application, 
+so nothing needs to be done here except if you want the full Play Framework development environment
+experience.
 
-SignUp is created with Play Framework version 2.4 so it's recommended you get that version. Later versions might work, 
-but Play is known to introduce breaking changes between minor versions so there is no guarantee that version 2.5 or 
-later will work.
+However, Play Framework is known for its breaking changes between minor versions, so unless you find the exact 
+version specified at the top of this file, don't do it.
 
 ### Set up Docker ###
 If you already have Docker on your local system, you just need to:
 
     $ cd signup
     $ ./docker_run_dev_db.sh
-
-To install Docker, follow the instructions in https://www.docker.com/. Although Docker is based on Linux 
-there are official solutions for running Docker on Mac OS X and in Windows as well.
 
 ### Run SignUp ###
 Once you have the development database running in a Docker container you can launch Play using sbt:

@@ -39,7 +39,7 @@ libraryDependencies ++= Seq(
   "net.codingwell"            %% "scala-guice"                     % "4.1.1",
 
   jdbc,
-  evolutions,
+  evolutions, // Remove when co-existing with Signup6 that will take over managing the DB schema
   ws,
   cacheApi,
   guice,
