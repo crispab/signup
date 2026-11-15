@@ -33,7 +33,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.play"         %% "play-json"                       % "2.6.9",
   "com.typesafe.play"         %% "play-iteratees"                  % "2.6.1",
   "com.typesafe.play"         %% "play-iteratees-reactive-streams" % "2.6.1",
-  "io.codekvast"              %  "codekvast-agent"                 % "0.22.3",
   "org.codehaus.groovy"       %  "groovy-all"                      % "2.4.14",
   "com.iheart"                %% "ficus"                           % "1.4.3",
   "net.codingwell"            %% "scala-guice"                     % "4.1.1",
@@ -57,7 +56,7 @@ libraryDependencies ++= Seq(
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("releases"),
-  Resolver.jcenterRepo
+  "Atlassian Maven Public" at "https://packages.atlassian.com/maven-public/"
 )
 
 routesGenerator := InjectedRoutesGenerator
